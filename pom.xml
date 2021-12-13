@@ -182,11 +182,6 @@
                 <artifactId>guava</artifactId>
                 <version>30.0-jre</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>1.8.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
