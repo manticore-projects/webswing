@@ -2,11 +2,13 @@ package org.webswing.server.services.security.api;
 
 import org.webswing.server.services.security.modules.anonym.AnonymSecurityModule;
 import org.webswing.server.services.security.modules.embeded.EmbededSecurityModule;
+import org.webswing.server.services.security.modules.shiro.ShiroSecurityModule;
 
 public enum BuiltInModules {
 	INHERITED(null),
 	NONE(AnonymSecurityModule.class.getName()),
-	EMBEDDED(EmbededSecurityModule.class.getName());
+	EMBEDDED(EmbededSecurityModule.class.getName()),
+        SHIRO(ShiroSecurityModule.class.getName());
 
 	private String type;
 

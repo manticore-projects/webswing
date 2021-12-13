@@ -4,13 +4,13 @@
 // Colors
 $white: #ffffff;
 $black: #000000;
-$primary: #0099CF; // Brand color
-$primary-darker: #0078A5;
+$primary: #ff420e; // Brand color
+$primary-darker: darken($primary,10%);;
 $primary-lighter: lighten($primary,10%);
-$secondary: #2e2f33; // Secondary brand color
-$secondary-darker: #292a2e;
-$secondary-lighter: #333438;
-$primary-text: #0C1726; // For regular text
+$secondary: #030146; // Secondary brand color
+$secondary-darker: darken($secondary,10%);
+$secondary-lighter: lighten($secondary,10%);
+$primary-text: #212121; // For regular text
 $secondary-text: #757575; // For faded text
 
 $light-grey-0: #fafafa; // Lightest background
@@ -28,8 +28,8 @@ $success: #6bb21a;
 $warning: #ffb219;
 
 // Font families
-$body-font: 'open sans', sans-serif;
-$heading-font: 'open sans', sans-serif;
+$body-font: 'Roboto', sans-serif;
+$heading-font: 'Roboto Medium', sans-serif;
 
 //size scale
 $scale: 1;

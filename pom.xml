@@ -62,8 +62,8 @@
         <jackson.databind.version>2.10.5.1</jackson.databind.version>
         <jackson.annotations.version>2.10.5</jackson.annotations.version>
         <jetty.version>9.4.39.v20210325</jetty.version>
-        <log4j.version>2.13.2</log4j.version>
-        <slf4j.version>1.6.6</slf4j.version>
+        <log4j.version>2.15.0</log4j.version>
+        <slf4j.version>1.7.32</slf4j.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -182,7 +182,11 @@
                 <artifactId>guava</artifactId>
                 <version>30.0-jre</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+                <version>1.8.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
