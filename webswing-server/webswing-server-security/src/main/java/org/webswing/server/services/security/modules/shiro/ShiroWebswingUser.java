@@ -6,30 +6,29 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
 
 public class ShiroWebswingUser extends AuthenticatedWebswingUser {
+        private static final long serialVersionUID = -2997239323873658547L;
+        
+	String user;
+	String password;
+	List<String> roles;
 
-	private static final long serialVersionUID = 4579855803170690448L;
-	
-	private final AuthorizingRealm authzrealm;
-	private final AuthenticationInfo authtInfo;
-
-	public ShiroWebswingUser(AuthorizingRealm authzrealm, AuthenticationInfo authtInfo) {
+	public ShiroWebswingUser(String user, String password, List<String> roles) {
 		super();
-		this.authzrealm = authzrealm;
-		this.authtInfo = authtInfo;
+		this.user = user;
+		this.password = password;
+		this.roles = roles;
 	}
 
 	@Override
 	public String getUserId() {
-		return (String) this.authtInfo.getPrincipals().getPrimaryPrincipal();
+		return user;
 	}
 
 	@Override
 	public List<String> getUserRoles() {
-		return Collections.emptyList();
+		return roles;
 	}
 	
 	@Override
@@ -44,10 +43,10 @@ public class ShiroWebswingUser extends AuthenticatedWebswingUser {
 	
 	@Override
 	public boolean hasRole(String role) {
-		return authzrealm.hasRole(this.authtInfo.getPrincipals(), role);
+		return roles.contains(role);
 	}
 
 	public String getPassword() {
-		return null;
+		return password;
 	}
 }

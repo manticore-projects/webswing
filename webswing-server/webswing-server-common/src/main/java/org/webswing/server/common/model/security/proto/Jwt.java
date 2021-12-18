@@ -135,6 +135,10 @@ public final class Jwt {
      * <code>file_upload = 29;</code>
      */
     file_upload(29),
+    /**
+     * <code>rest_controlSessionPool = 30;</code>
+     */
+    rest_controlSessionPool(30),
     ;
 
     /**
@@ -253,6 +257,10 @@ public final class Jwt {
      * <code>file_upload = 29;</code>
      */
     public static final int file_upload_VALUE = 29;
+    /**
+     * <code>rest_controlSessionPool = 30;</code>
+     */
+    public static final int rest_controlSessionPool_VALUE = 30;
 
 
     public final int getNumber() {
@@ -298,6 +306,7 @@ public final class Jwt {
         case 27: return websocket_startMirrorView;
         case 28: return file_download;
         case 29: return file_upload;
+        case 30: return rest_controlSessionPool;
         default: return null;
       }
     }
@@ -4850,7 +4859,7 @@ public final class Jwt {
       "tributes\030\006 \003(\0132>.org.webswing.server.com" +
       "mon.model.security.proto.MapProtoProto\"+" +
       "\n\rMapProtoProto\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\014*\314\005\n\023WebswingActionProto\022\027\n\023master_ad" +
+      "\001(\014*\351\005\n\023WebswingActionProto\022\027\n\023master_ad" +
       "min_access\020\001\022\031\n\025master_support_access\020\002\022" +
       "\027\n\023master_basic_access\020\003\022\021\n\rrest_getPath" +
       "s\020\004\022\023\n\017rest_getAppInfo\020\005\022\023\n\017rest_getSess" +
@@ -4868,7 +4877,7 @@ public final class Jwt {
       "ecordingPlayback\020\031\022#\n\037websocket_startSwi" +
       "ngApplication\020\032\022\035\n\031websocket_startMirror" +
       "View\020\033\022\021\n\rfile_download\020\034\022\017\n\013file_upload" +
-      "\020\035"
+      "\020\035\022\033\n\027rest_controlSessionPool\020\036"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
