@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -61,9 +65,20 @@ public class RedirectedMethods {
 		return SwingMain.swingLibClassLoader.getResources(name);
 	}
 
+	public static File[] getRootDirectories() {
+		List<File> roots = new ArrayList<>();
+
+		for (Path rootPath : FileSystems.getDefault().getRootDirectories()) {
+			roots.add(rootPath.toFile());  // Convert Path to File
+		}
+
+		return roots.toArray(new File[0]);  // Convert List<File> to File[]
+	}
+
 	@SuppressWarnings("restriction")
 	public static File[] listRoots() {
-		return (File[]) sun.awt.shell.ShellFolder.get("roots");
+
+		return (File[]) getRootDirectories();
 	}
 
 	public static void putClientProperty(JDesktopPane target, Object key, Object value) {

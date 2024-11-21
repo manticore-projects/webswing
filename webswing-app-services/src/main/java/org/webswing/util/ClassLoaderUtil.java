@@ -18,9 +18,7 @@ import org.webswing.ext.services.SwingClassLoaderFactoryService;
 import org.webswing.services.impl.DataStoreServiceImpl;
 import org.webswing.services.impl.DirectDrawServiceImpl;
 import org.webswing.services.impl.ImageServiceImpl;
-import org.webswing.services.impl.JPDFWriterPdfServiceImpl;
 import org.webswing.services.impl.JsLinkServiceImpl;
-import org.webswing.services.impl.PdfServiceImpl;
 import org.webswing.services.impl.ServerConnectionServiceImpl;
 import org.webswing.toolkit.util.Services;
 
@@ -43,14 +41,7 @@ public class ClassLoaderUtil {
 		DataStoreServiceImpl dataStoreService = DataStoreServiceImpl.getInstance();
 		JsLinkServiceImpl jsLinkService = JsLinkServiceImpl.getInstance();
 		
-		PdfService pdfService;
-		try {
-			Class.forName("com.qoppa.pdfWriter.PDFDocument");
-			pdfService = JPDFWriterPdfServiceImpl.getInstance();
-		} catch (ClassNotFoundException e) {
-			AppLogger.info("JPDFWriter library not found on classpath, fallback to FreeHEP PDF service.");
-			pdfService = PdfServiceImpl.getInstance();
-		}
+		PdfService pdfService=null;
 		
 		Services.initialize(imageService, pdfService, serverService, dataStoreService, classloaderService, directDrawServiceImpl, jsLinkService);
 		// start jms connection to server
