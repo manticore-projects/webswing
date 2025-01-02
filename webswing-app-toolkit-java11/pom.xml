@@ -25,26 +25,29 @@
                 <version>3.7.0</version>
                 <configuration>
                     <!--keep the code level at 8 to avoid module access compilation errors in IDE-->
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <!--<compilerArgs>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.awt.dnd.peer=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.base/sun.nio.cs=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.java2d=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.awt.image=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.font=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>-->
-                        <!--<arg>&#45;&#45;add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>-->
-                    <!--</compilerArgs>-->
+                    <compilerArgs>
+                        <arg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.dnd.peer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.base/sun.nio.cs=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.java2d=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.image=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.im=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.windows=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.font=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

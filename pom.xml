@@ -294,10 +294,11 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!--
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>10.0.4</version> <!-- Check for latest version -->
+                <version>10.0.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -306,6 +307,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>

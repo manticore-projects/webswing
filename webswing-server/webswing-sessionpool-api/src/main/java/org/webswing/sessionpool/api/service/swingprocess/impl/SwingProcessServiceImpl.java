@@ -156,7 +156,7 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 					}
 					javaFxBootClasspath += File.pathSeparator + CommonUtil.getBootClassPathForClass(JAVA_FX_TOOLKIT_CLASS_NAME) + File.pathSeparator + CommonUtil.getBootClassPathForClass(webFxToolkitFactory) + File.pathSeparator + "\"" + file.getCanonicalPath() + "\"";
 				}
-			} else if (javaVersion.startsWith("11")) {
+			} else if (javaVersion.startsWith("11") || javaVersion.startsWith("17") || javaVersion.startsWith("21")) {
 				webToolkitClass += "11";
 				webFxToolkitFactory += "11";
 				webGraphicsEnvClass += "11";
@@ -179,8 +179,25 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 				j9modules += " --add-opens java.desktop/java.awt=ALL-UNNAMED "; // EventQueue reflective access from SwingMain
 				j9modules += " --add-opens java.desktop/sun.awt.windows=ALL-UNNAMED "; // sun.awt.windows.ThemeReader reflective access from WebToolkit
 				j9modules += " --add-opens java.desktop/java.awt.event=ALL-UNNAMED "; // ava.awt.event.KeyEvent.extendedKeyCode reflective access from Util
-				j9modules += " --add-opens java.desktop/sun.awt.image=ALL-UNNAMED "; // sun.awt.image.BufImgSurfaceManager.getPrimarySurfaceData reflective access from VolatileWebImageWrapper
 				j9modules += " --add-opens java.desktop/javax.swing=ALL-UNNAMED "; // field javax.swing.PopupFactory.popupType reflective access from org.webswing.dispatch.CwmPaintDispatcher$1
+
+				j9modules += " --add-exports=java.desktop/java.awt=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.java2d=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.awt=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.base/sun.security.action=ALL-UNNAMED ";
+
+				j9modules += " --add-opens=java.base/java.util=ALL-UNNAMED ";
+				//j9modules += " --add-opens=java.desktop/java.awt=ALL-UNNAMED ";
+				j9modules += " --add-opens=java.desktop/sun.java2d=ALL-UNNAMED ";
+				j9modules += " --add-opens=java.base/java.lang.reflect=ALL-UNNAMED ";
+
+
+
 			} else {
 				log.error("Java version " + javaVersion + " not supported in this version of Webswing.");
 				throw new RuntimeException("Java version not supported. (Versions starting with 1.8 and 11 are supported.)");
