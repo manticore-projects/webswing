@@ -1,6 +1,5 @@
 package org.webswing.toolkit;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;

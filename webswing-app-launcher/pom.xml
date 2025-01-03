@@ -28,6 +28,17 @@
 			<artifactId>modpatch-jdk-jsobject</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+<!--		<dependency>-->
+<!--			<groupId>net.bytebuddy</groupId>-->
+<!--			<artifactId>byte-buddy</artifactId>-->
+<!--			<version>1.14.11</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>net.bytebuddy</groupId>-->
+<!--			<artifactId>byte-buddy-agent</artifactId>-->
+<!--			<version>1.14.11</version>-->
+<!--		</dependency>-->
 	</dependencies>
 	<build>
 		<finalName>webswing-app-launcher</finalName>

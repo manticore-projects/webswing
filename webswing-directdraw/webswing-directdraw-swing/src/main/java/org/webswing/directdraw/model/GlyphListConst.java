@@ -33,7 +33,7 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
 		GlyphList gl = GlyphList.getInstance();
 		try {
 			gl.setFromString(fontInfo, value.string, (float) value.x, (float) value.y);
-			gl.getBounds();//initialize bounds
+			gl.startGlyphIteration();
 			int numglyphs = gl.getNumGlyphs();
 			//create glyph reference for each char in the string
 			for (int i = 0; i < numglyphs; i++) {
@@ -77,7 +77,7 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
 		return value.string.length()+3;
 	}
 
-	public class StringConstValue {
+	public static class StringConstValue {
 		String string;
 		Font font;
 		double x;

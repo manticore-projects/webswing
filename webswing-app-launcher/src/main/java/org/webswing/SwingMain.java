@@ -22,6 +22,114 @@ import org.webswing.util.ClasspathUtil;
 public class SwingMain {
 
 	public static ClassLoader swingLibClassLoader;
+//	private static final VarHandle MODIFIERS;
+//
+//	static {
+//		try {
+//			ByteBuddyAgent.install();
+//
+//			var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
+//			MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
+//		} catch (IllegalAccessException | NoSuchFieldException ex) {
+//			throw new RuntimeException(ex);
+//		}
+//	}
+//
+//	static {
+//		try {
+//			injectCTCGraphicsEnvironment();
+//
+//			Field toolkit = Toolkit.class.getDeclaredField("toolkit");
+//			toolkit.setAccessible(true);
+//			toolkit.set(null, new WebToolkit11());
+//
+//			Field defaultHeadlessField = java.awt.GraphicsEnvironment.class.getDeclaredField("defaultHeadless");
+//			defaultHeadlessField.setAccessible(true);
+//			defaultHeadlessField.set(null, Boolean.FALSE);
+//			Field headlessField = java.awt.GraphicsEnvironment.class.getDeclaredField("headless");
+//			headlessField.setAccessible(true);
+//			headlessField.set(null, Boolean.FALSE);
+//
+//			Class<?> smfCls = Class.forName("sun.java2d.SurfaceManagerFactory");
+//			Field smf = smfCls.getDeclaredField("instance");
+//			smf.setAccessible(true);
+//			smf.set(null, null);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		System.setProperty("swing.defaultlaf", MetalLookAndFeel.class.getName());
+//	}
+//
+//	public static void injectCTCGraphicsEnvironment() throws ClassNotFoundException, IOException {
+//		/*
+//		 * ByteBuddy is used to intercept the methods that return the graphics environment in use
+//		 * (java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment() and
+//		 *  sun.awt.PlatformGraphicsInfo.createGE())
+//		 *
+//		 * Since java.awt.GraphicsEnvironment is loaded by the bootstrap class loader,
+//		 * all classes used by CTCGraphicsEnvironment also need to be available to the bootstrap class loader,
+//		 * as that class loader also loads the CTCInterceptor class, which will instantiate CTCGraphicsEnvironment.
+//		 */
+//		injectClassIntoBootstrapClassLoader(
+//				WebGraphicsEnvironment.class,
+//				WebGraphicsConfig.class,
+//				WebPlatformFactory.class);
+//
+//		ByteBuddy byteBuddy = new ByteBuddy();
+//
+//		byteBuddy
+//				.redefine(
+//						TypePool.Default.ofSystemLoader().describe("java.awt.GraphicsEnvironment").resolve(),
+//						ClassFileLocator.ForClassLoader.ofSystemLoader())
+//				.method(ElementMatchers.named("getLocalGraphicsEnvironment"))
+//				.intercept(
+//						MethodDelegation.to(CTCInterceptor.class))
+//				.make()
+//				.load(
+//						Object.class.getClassLoader(),
+//						ClassReloadingStrategy.fromInstalledAgent());
+//
+//		TypeDescription platformGraphicInfosType;
+//		platformGraphicInfosType = TypePool.Default.ofSystemLoader().describe("sun.awt.PlatformGraphicsInfo").resolve();
+//		ClassFileLocator locator = ClassFileLocator.ForClassLoader.ofSystemLoader();
+//
+//		byteBuddy
+//				.redefine(
+//						platformGraphicInfosType,
+//						locator)
+//				.method(
+//						nameStartsWith("createGE"))
+//				.intercept(
+//						MethodDelegation.to(GraphicsEnvironmentInterceptor.class))
+//				.make()
+//				.load(
+//						Thread.currentThread().getContextClassLoader(),
+//						ClassReloadingStrategy.fromInstalledAgent());
+//
+//	}
+//
+//	public static class GraphicsEnvironmentInterceptor {
+//		@RuntimeType
+//		public static Object intercept(@Origin Method method, @AllArguments final Object[] args) throws Exception {
+//			return new WebGraphicsEnvironment11();
+//		}
+//	}
+//
+//	public static class CTCInterceptor {
+//		@RuntimeType
+//		public static GraphicsEnvironment intercept() {
+//			return new WebGraphicsEnvironment11();
+//		}
+//	}
+//
+//	private static void injectClassIntoBootstrapClassLoader(Class<?>... classes) throws IOException {
+//		for (Class<?> clazz: classes) {
+//			final byte[] buffer = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/').concat(".class")).readAllBytes();
+//			ClassInjector.UsingUnsafe injector = new ClassInjector.UsingUnsafe(null);
+//			injector.injectRaw(Map.of(clazz.getName(), buffer));
+//		}
+//	}
 
 	public static void main(String[] args) {
 		try {
@@ -132,7 +240,7 @@ public class SwingMain {
 	}
 
 	private static boolean isApplet() {
-		return System.getProperty(Constants.SWING_START_SYS_PROP_APPLET_CLASS) != null;
+		return false;
 	}
 
 	private static void initTempFolder() {

@@ -181,15 +181,18 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 				j9modules += " --add-opens java.desktop/java.awt.event=ALL-UNNAMED "; // ava.awt.event.KeyEvent.extendedKeyCode reflective access from Util
 				j9modules += " --add-opens java.desktop/javax.swing=ALL-UNNAMED "; // field javax.swing.PopupFactory.popupType reflective access from org.webswing.dispatch.CwmPaintDispatcher$1
 
+
 				j9modules += " --add-exports=java.desktop/java.awt=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/sun.java2d=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/sun.awt=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED ";
 				j9modules += " --add-exports=java.base/sun.security.action=ALL-UNNAMED ";
+				j9modules += " --add-exports=java.base/sun.security.util=ALL-UNNAMED ";
 
 				j9modules += " --add-opens=java.base/java.util=ALL-UNNAMED ";
 				//j9modules += " --add-opens=java.desktop/java.awt=ALL-UNNAMED ";

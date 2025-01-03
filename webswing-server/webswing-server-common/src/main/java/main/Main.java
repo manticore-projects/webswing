@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.AWTError;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.Closeable;
 import java.io.File;
@@ -7,6 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,6 +29,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.webswing.Constants;
+import sun.awt.HeadlessToolkit;
+
+import javax.tools.Tool;
 
 public class Main {
 
@@ -61,10 +69,60 @@ public class Main {
 			List<URL> urls = new ArrayList<URL>();
 			if (client) {
 				populateClasspathFromDir("WEB-INF/swing-lib", urls);
+				java.security.AccessController.doPrivileged(
+						new java.security.PrivilegedAction<Void>() {
+							public Void run() {
+								Class<?> cls = null;
+								String nm = System.getProperty("awt.toolkit");
+								try {
+									cls = Class.forName(nm);
+								} catch (ClassNotFoundException e) {
+									ClassLoader cl = ClassLoader.getSystemClassLoader();
+									if (cl != null) {
+										try {
+											cls = cl.loadClass(nm);
+										} catch (final ClassNotFoundException ignored) {
+											throw new AWTError("Toolkit not found: " + nm);
+										}
+									}
+								}
+								try {
+									if (cls != null) {
+										// Create a new instance of your custom Toolkit implementation
+										Toolkit toolkit = (Toolkit) cls.getConstructor().newInstance();
+
+										System.out.println("Loaded Webtoolkit " + toolkit.getClass().getName());
+
+										// Step 1: Access the private final field `Toolkit.toolkit`
+										Field field = Toolkit.class.getDeclaredField("toolkit");
+										field.setAccessible(true);
+										field.set(null, toolkit);
+
+										System.out.println("Forced field accessible.");
+
+										MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(Toolkit.class, MethodHandles.lookup());
+										VarHandle varHandle = lookup.findStaticVarHandle(Toolkit.class, "toolkit", Toolkit.class);
+
+										// Step 3: Set the static field using the VarHandle
+										varHandle.set(toolkit);
+										System.out.println("Toolkit.toolkit field has been set to: " + toolkit);
+
+									}
+
+								} catch (final ReflectiveOperationException ignored) {
+									throw new AWTError("Could not create Toolkit: " + nm);
+								}
+								return null;
+							}
+						});
 				initializeExtLibServices(urls);
-				
+
 				Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
 				defaultToolkit.getClass().getMethod("init").invoke(defaultToolkit);
+
+
+
+				System.out.println("Toolkit.toolkit field has been set to: " + defaultToolkit.getClass().getName());
 				
 				retainOnlyLauncherUrl(urls);
 			} else if (sessionpool) {
@@ -166,7 +224,7 @@ public class Main {
 		List<URL> urls = new ArrayList<URL>();
 		String tempDirPath = getTempDir().getAbsolutePath();
 		if (r.getPath().contains("!")) {
-			String[] splitPath = r.getPath().split("\\!/");
+			String[] splitPath = r.getPath().split("!/");
 			String jar = splitPath[0];
 			String path = splitPath[1];
 			JarFile jarFile = new JarFile(new File(URI.create(jar)));
