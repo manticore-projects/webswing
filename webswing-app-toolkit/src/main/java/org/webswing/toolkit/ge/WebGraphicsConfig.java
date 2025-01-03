@@ -21,8 +21,8 @@ import sun.awt.image.OffScreenImage;
 public class WebGraphicsConfig extends BufferedImageGraphicsConfig {
 
 	WebScreenDevice device;
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 
 	public static WebGraphicsConfig getWebGraphicsConfig(int width, int height) {
 		return new WebGraphicsConfig(width, height);

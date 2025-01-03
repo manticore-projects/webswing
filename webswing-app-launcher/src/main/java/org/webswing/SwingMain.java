@@ -1,6 +1,5 @@
 package org.webswing;
 
-import java.applet.Applet;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.File;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
-import org.webswing.applet.AppletContainer;
 import org.webswing.ext.services.ToolkitFXService;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
@@ -40,15 +38,8 @@ public class SwingMain {
 			swingLibClassLoader = Services.getClassLoaderService().createSwingClassLoader(urls, wrapper);
 			initTempFolder();
 
-			if (isApplet()) {
-				startApplet();
-			} else {
-				startSwingApp(args);
-			}
+			startSwingApp(args);
 
-			if (Util.isEvaluation()) {
-				Util.getWebToolkit().showEvaluationWindow();
-			}
 		} catch (Exception e) {
 			AppLogger.fatal("SwingMain:main", e);
 			System.exit(1);
@@ -58,26 +49,16 @@ public class SwingMain {
 	private static void startSwingApp(String[] args) throws Exception {
 		setupContextClassLoader(swingLibClassLoader);
 		Class<?> clazz = swingLibClassLoader.loadClass(System.getProperty(Constants.SWING_START_SYS_PROP_MAIN_CLASS));
-		Class<?> mainArgType[] = { (new String[0]).getClass() };
+		Class<?>[] mainArgType = {String[].class};
 		java.lang.reflect.Method main = clazz.getMethod("main", mainArgType);
 		Util.getWebToolkit().startDispatchers();
 		initializeJavaFX();
-		Object argsArray[] = { args };
+		Object[] argsArray = { args };
 		main.invoke(null, argsArray);
 	}
 
 	private static void startApplet() throws Exception {
-		setupContextClassLoader(swingLibClassLoader);
-		Class<?> appletClazz = swingLibClassLoader.loadClass(System.getProperty(Constants.SWING_START_SYS_PROP_APPLET_CLASS));
-		Map<String, String> props = resolveProps();
-		Util.getWebToolkit().startDispatchers();
-		initializeJavaFX();
-		if (Applet.class.isAssignableFrom(appletClazz)) {
-			AppletContainer ac = new AppletContainer(appletClazz, props);
-			ac.start();
-		} else {
-			AppLogger.error("Error in SwingMain: " + appletClazz.getCanonicalName() + " class is not a subclass of Applet");
-		}
+		AppLogger.error("Error in SwingMain: Applets have been removed");
 	}
 
 	public static void initializeJavaFX() throws InvocationTargetException, InterruptedException {

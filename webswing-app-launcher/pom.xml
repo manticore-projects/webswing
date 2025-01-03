@@ -33,32 +33,6 @@
 		<finalName>webswing-app-launcher</finalName>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<!--keep the code level at 8 to avoid module access compilation errors in IDE-->
-					<source>11</source>
-					<target>11</target>
-					<compilerArgs>
-						<arg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.awt.dnd.peer=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.base/sun.nio.cs=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.java2d=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.awt.image=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.font=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>
-						<arg>--add-exports=java.base/sun.security.util=ALL-UNNAMED</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>

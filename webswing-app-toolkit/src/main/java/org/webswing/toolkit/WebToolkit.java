@@ -519,15 +519,15 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		this.desktopProperties.put("win.xpstyle.dllName", "C:\\WINDOWS\\resources\\themes\\Aero\\Aero.msstyles");
 		this.desktopProperties.put("win.xpstyle.sizeName", "NormalSize");
 		this.desktopProperties.put("win.xpstyle.themeActive", true);
-		if (System.getProperty("os.name", "").startsWith("Windows")) {
-			try {
-				Field xpStyleEnabledField = sun.awt.windows.ThemeReader.class.getDeclaredField("xpStyleEnabled");
-				xpStyleEnabledField.setAccessible(true);
-				xpStyleEnabledField.setBoolean(null, true);
-			} catch (Exception e) {
-				AppLogger.debug("Failed to set xpStyleEnabled to true", e);
-			}
-		}
+//		if (System.getProperty("os.name", "").startsWith("Windows")) {
+//			try {
+//				Field xpStyleEnabledField = sun.awt.windows.ThemeReader.class.getDeclaredField("xpStyleEnabled");
+//				xpStyleEnabledField.setAccessible(true);
+//				xpStyleEnabledField.setBoolean(null, true);
+//			} catch (Exception e) {
+//				AppLogger.debug("Failed to set xpStyleEnabled to true", e);
+//			}
+//		}
 
 		if(Util.isDD()){
 			RenderingHints hints= new RenderingHints(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
