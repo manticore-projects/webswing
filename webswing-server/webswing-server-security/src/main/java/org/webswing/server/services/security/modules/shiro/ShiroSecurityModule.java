@@ -97,40 +97,44 @@ public class ShiroSecurityModule extends AbstractUserPasswordSecurityModule<Shir
     }
 
     String deobfuscate(String encoded) {
-        byte[] decodedBytes = Base64.getDecoder().decode(encoded);
-        String decoded = new String(decodedBytes, StandardCharsets.UTF_8);
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(encoded);
+            String decoded = new String(decodedBytes, StandardCharsets.UTF_8);
 
-        if (decoded.length() < 8 || !decoded.matches(".*\\d{8}$")) {
-            return encoded; // Doesn't match obfuscated pattern
+            if (decoded.length() < 8 || !decoded.matches(".*\\d{8}$")) {
+                return encoded; // Doesn't match obfuscated pattern
+            }
+
+            String digits = decoded.substring(decoded.length() - 8);
+            String front = decoded.substring(0, decoded.length() - 8);
+
+            int seed = Integer.parseInt(digits);
+            Mulberry32 rng = new Mulberry32(seed);
+
+            // Rebuild original character positions
+            List<Integer> indices = new ArrayList<>();
+            for (int i = 0; i < front.length(); i++) {
+                indices.add(i);
+            }
+
+            // Generate same shuffle as JS
+            for (int i = indices.size() - 1; i > 0; i--) {
+                float rand = rng.next();
+                int j = (int) Math.floor(rand * (i + 1));
+                Collections.swap(indices, i, j);
+            }
+
+            // Reverse the shuffle
+            char[] shuffled = front.toCharArray();
+            char[] unshuffled = new char[shuffled.length];
+            for (int i = 0; i < indices.size(); i++) {
+                unshuffled[indices.get(i)] = shuffled[i];
+            }
+
+            return new String(unshuffled) + digits;
+        } catch (IllegalArgumentException ex) {
+            return encoded;
         }
-
-        String digits = decoded.substring(decoded.length() - 8);
-        String front = decoded.substring(0, decoded.length() - 8);
-
-        int seed = Integer.parseInt(digits);
-        Mulberry32 rng = new Mulberry32(seed);
-
-        // Rebuild original character positions
-        List<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < front.length(); i++) {
-            indices.add(i);
-        }
-
-        // Generate same shuffle as JS
-        for (int i = indices.size() - 1; i > 0; i--) {
-            float rand = rng.next();
-            int j = (int) Math.floor(rand * (i + 1));
-            Collections.swap(indices, i, j);
-        }
-
-        // Reverse the shuffle
-        char[] shuffled = front.toCharArray();
-        char[] unshuffled = new char[shuffled.length];
-        for (int i = 0; i < indices.size(); i++) {
-            unshuffled[indices.get(i)] = shuffled[i];
-        }
-
-        return new String(unshuffled) + digits;
     }
 
     @Override
