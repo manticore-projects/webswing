@@ -67,8 +67,7 @@ public class ShiroSecurityModule extends AbstractUserPasswordSecurityModule<Shir
             if (rolesSection != null) {
                 definedRoles.addAll(rolesSection.keySet());
                 log.info("INI file provided roles: {}", Arrays.deepToString(definedRoles.toArray()));
-            }
-            else {
+            } else {
                 for (String a : new String[]{"IFRSBOX", "ETLBOX", "RISKBOX", "PROFITBOX", "IMPALA", "ALMBOX"}) {
                     for (String r : new String[]{
                             "OFFICER",
@@ -206,8 +205,7 @@ public class ShiroSecurityModule extends AbstractUserPasswordSecurityModule<Shir
             return authenticatedUser.orElseThrow(() ->
                  new WebswingAuthenticationException(
                          "Invalid username or password!"
-                         ,
-                         WebswingAuthenticationException.INVALID_USER_OR_PASSWORD
+                         , WebswingAuthenticationException.INVALID_USER_OR_PASSWORD
                  )
             );
         }
