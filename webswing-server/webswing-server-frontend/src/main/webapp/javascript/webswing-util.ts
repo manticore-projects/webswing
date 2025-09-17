@@ -102,7 +102,7 @@ export function Util(translations: Translations) {
             url: baseUrl + 'login',
             contentType: typeof loginData === 'object' ? 'application/json' : 'application/x-www-form-urlencoded; charset=UTF-8',
             data: typeof loginData === 'object' ? JSON.stringify(loginData) : loginData,
-            timeout: 70000,
+            timeout: 700000,
             success: (data, _, request) => {
             	if (request.responseText) {
                     saveTokens(request.responseText);
@@ -189,7 +189,7 @@ export function Util(translations: Translations) {
             xhrFields: {
                 withCredentials: true
             },
-            timeout: 70000
+            timeout: 700000
         }).always((_, _1, xhr) => {
             if (!tabLogout) {
                 localStorage.setItem("webswingLogout", Date.now().toString());
@@ -238,7 +238,7 @@ export function Util(translations: Translations) {
             },
             type: 'POST',
             url: baseUrl + "rest/refreshToken",
-            timeout: 7000,
+            timeout: 700000,
             complete: (request, textStatus) => {
             	let success = false;
                 if (textStatus === "success" && request.responseText) {
