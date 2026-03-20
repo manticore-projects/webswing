@@ -29,12 +29,12 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/</url>
         </repository>
     </distributionManagement>
 
@@ -49,18 +49,17 @@
         <module>webswing-directdraw</module>
         <module>webswing-server</module>
         <module>webswing-assembly</module>
-<!--        <module>webswing-modpatch</module>-->
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webswing-war-name>webswing-server</webswing-war-name>
         <jersey.version>4.0.0-M1</jersey.version>
         <guice.version>7.0.0</guice.version>
-        <bouncycastle.version>1.78.1</bouncycastle.version>
+        <bouncycastle.version>1.82</bouncycastle.version>
         <jackson.databind.version>2.18.0</jackson.databind.version>
         <jackson.annotations.version>2.18.0</jackson.annotations.version>
-        <jetty.version>9.4.57.v20241219</jetty.version>
-        <log4j.version>2.24.3</log4j.version>
+        <jetty.version>9.4.58.v20250814</jetty.version>
+        <log4j.version>2.25.1</log4j.version>
         <slf4j.version>2.0.17</slf4j.version>
     </properties>
     <dependencyManagement>
@@ -390,7 +389,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    <!--keep th  e code level at 8 to avoid module access compilation errors in IDE-->
+                    <!--keep the code level at 8 to avoid module access compilation errors in IDE-->
                     <source>11</source>
                     <target>11</target>
                     <showWarnings>true</showWarnings>
