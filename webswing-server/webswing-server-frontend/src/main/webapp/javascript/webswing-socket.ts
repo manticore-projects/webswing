@@ -250,7 +250,7 @@ export class SocketModule extends ModuleDef<typeof socketInjectable, ISocketServ
 
                 this.api.processMessage(data);
             } catch (e) {
-                console.error(e.stack);
+                console.error((e as Error).stack);
                 return;
             }
         };

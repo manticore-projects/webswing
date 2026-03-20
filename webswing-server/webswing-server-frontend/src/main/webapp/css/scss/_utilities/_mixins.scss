@@ -1,6 +1,10 @@
 // Filename: _mixins.scss
 // Description: Various utility mixins, mostly for ease of use
 
+@use "sass:meta";
+@use "sass:list";
+@use "sass:math";
+
 // Drop shadows, from low to high altitude
 // Usage: @include dropshadow-1;
 @mixin dropshadow-1 {
@@ -48,25 +52,25 @@
 
 @mixin rel($property, $px-values) {
     // If there is only one (numeric) value, return the property/value line for it.
-    @if type-of($px-values) == "number" {
+    @if meta.type-of($px-values) == "number" {
         #{$property}: $px-values * $scale;
     } @else {
         // Create an empty list that we can dump values into
         $rel-values: ();
         @each $value in $px-values {
             // If the value is zero or not a number, return it
-            @if is-equal( $value , 0 ) or type-of( $value ) != "number" {
-                $rel-values: append($rel-values, $value); }
+            @if is-equal( $value , 0 ) or meta.type-of( $value ) != "number" {
+                $rel-values: list.append($rel-values, $value); }
             @else {
-                $rel-values: append($rel-values, $value * $scale); } }
+                $rel-values: list.append($rel-values, $value * $scale); } }
         // Return the property and its list of converted values
         #{$property}: $rel-values;
     }
 }
 
 @function is-equal($one, $two) {
-    @if type-of($one) == number and type-of($two) == number {
-        @if unit($one) == unit($two) {
+    @if meta.type-of($one) == number and meta.type-of($two) == number {
+        @if math.unit($one) == math.unit($two) {
             @return $one == $two;
         } @else {
             @return false;

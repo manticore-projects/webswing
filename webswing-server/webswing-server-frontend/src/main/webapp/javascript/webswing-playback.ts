@@ -50,29 +50,29 @@ export class PlaybackModule extends ModuleDef<typeof playbackInjectable, IPlayba
     public showControls() {
         this.api.cfg.rootElement.append(html);
         this.playbackBar = this.api.cfg.rootElement.find('div[data-id="playbackBar"]');
-        this.playbackBar.find('button[data-id="reset"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="reset"]').on('click', () => {
             const ctx = this.api.getCanvas().getContext("2d")!;
             ctx.clearRect(0, 0, this.api.getCanvas().width, this.api.getCanvas().height);
             $("canvas.webswing-canvas:not([data-id=canvas])").remove();
 
             this.sendCommand(Command.reset);
         });
-        this.playbackBar.find('button[data-id="play"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="play"]').on('click', () => {
             this.sendCommand(Command.play);
         })
-        this.playbackBar.find('button[data-id="stop"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="stop"]').on('click', () => {
             this.sendCommand(Command.stop);
         })
-        this.playbackBar.find('button[data-id="step"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="step"]').on('click', () => {
             this.sendCommand(Command.step);
         })
-        this.playbackBar.find('button[data-id="10step"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="10step"]').on('click', () => {
             this.sendCommand(Command.step10);
         });
-        this.playbackBar.find('button[data-id="100step"]').on('click', () => {
+        this.playbackBar!.find('button[data-id="100step"]').on('click', () => {
             this.sendCommand(Command.step100);
         });
-        this.playbackBar.show();
+        this.playbackBar!.show();
     }
 
     private sendCommand(cmd: serverBrowserFrameProto.PlaybackCommandMsgInProto.PlaybackCommandProto) {

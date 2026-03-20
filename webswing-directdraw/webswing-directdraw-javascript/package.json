@@ -8,59 +8,31 @@
   "license": "GNU Affero General Public License v3.0 or later",
   "keywords": [],
   "scripts": {
-    "build": "run-s clean && run-s proto && run-s type-check && webpack --config webpack-prd.config.js",
+    "build": "npm run clean && npm run proto && npm run type-check && webpack --config webpack-prd.config.js",
     "rebuild": "tsc -p tsconfig.json",
     "build:main": "tsc -p tsconfig.json",
-    "clean": "trash dist test",
+    "clean": "rimraf dist test",
     "type-check": "tsc --emitDeclarationOnly",
     "proto": "pbjs -t static-module -w commonjs -o src/main/webapp/proto/dd.js --no-encode --no-create --no-verify --no-delimited ../src/proto/javascript/directdraw.proto && pbts -o src/main/webapp/proto/dd.d.ts src/main/webapp/proto/dd.js",
-    "start": "webpack-dev-server --config webpack-dev.config.js"
+    "start": "webpack serve --config webpack-dev.config.js"
   },
   "engines": {
-    "node": ">=10.16.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
-    "protobufjs": "^6.8.8"
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
-    "@babel/core": "^7.6.0",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
-    "@babel/plugin-proposal-optional-chaining": "7.8.3",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/preset-typescript": "^7.6.0",
-    "@types/jquery": "^3.3.37",
-    "@types/node": "^11.15.12",
-    "@types/webpack-env": "^1.15.2",
-    "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "8.0.6",
-    "copy-webpack-plugin": "^5.1.1",
-    "core-js": "^3.6.5",
-    "escodegen": "^1.14.1",
-    "espree": "^3.5.4",
-    "file-loader": "^3.0.0",
-    "gh-pages": "^2.2.0",
-    "html-loader": "^0.5.5",
-    "http-server": "^0.11.1",
-    "jquery": "^3.5.0",
-    "jsdoc": "^3.6.4",
-    "minimist": "^1.2.5",
-    "npm-run-all": "^4.1.5",
-    "opn-cli": "^4.0.0",
-    "prettier": "^1.19.1",
-    "standard-version": "^4.4.0",
-    "tmp": "0.0.33",
-    "trash-cli": "^1.4.0",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-immutable": "^5.0.0",
-    "tslint-loader": "^3.6.0",
-    "typescript": "^3.8.3",
-    "webpack": "^4.23.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2"
+    "@types/node": "^20.0.0",
+    "copy-webpack-plugin": "^12.0.0",
+    "html-webpack-plugin": "^5.6.0",
+    "protobufjs-cli": "^2.0.0",
+    "rimraf": "^5.0.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.5.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-merge": "^6.0.0"
   }
 }

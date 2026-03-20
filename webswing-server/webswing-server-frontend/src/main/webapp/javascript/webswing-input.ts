@@ -393,7 +393,7 @@ export class InputModule extends ModuleDef<typeof inputInjectable, IInputService
         $(input).addClass('ws-input-hidden');
         $(input).removeClass('ws-input-ime');
         input.style.width = '1px';
-        const isIE = this.api.cfg.ieVersion && this.api.cfg.ieVersion <= 11;
+        const isIE = this.api.cfg.ieVersion && (this.api.cfg.ieVersion as number) <= 11;
         const target = event.target as HTMLInputElement
         this.sentWordsUsingKeypressEvent(isIE ? target.value : event.data);
         this.compositionInput = false;
@@ -678,7 +678,7 @@ export class InputModule extends ModuleDef<typeof inputInjectable, IInputService
         	// ignore for canvas-overlay shown in test tool
         	return;
         }
-    	
+
         const newMouseDown = Math.pow(2, evt.which);
         if (this.mouseDownButton !== 0 && this.mouseDownButton !== evt.which && this.mouseDown !== newMouseDown) {
             // mouse has been released outside window (iframe)
@@ -750,7 +750,7 @@ export class InputModule extends ModuleDef<typeof inputInjectable, IInputService
         if (evt.type === 'wheel' && type === MouseEventType.mousewheel) {
             if (detectFF()) {
                 delta = -Math.max(-1, Math.min(1, (-(evt as WheelEvent).deltaY * 100)));
-            } else if (detectIE() <= 11) {
+            } else if ((detectIE() as number) <= 11) {
                 delta = -Math.max(-1, Math.min(1, (-(evt as WheelEvent).deltaY)));
             } else {
                 delta = -Math.max(-1, Math.min(1, ((evt as any).wheelDelta || -evt.detail)));

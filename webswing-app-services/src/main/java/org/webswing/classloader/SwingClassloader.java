@@ -47,7 +47,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableBiMap.Builder;
 
-import sun.security.util.SecurityConstants;
+import java.security.AllPermission;
 
 @SuppressWarnings("restriction")
 public class SwingClassloader extends URLClassLoader {
@@ -310,10 +310,10 @@ public class SwingClassloader extends URLClassLoader {
 
 				if (m == null) {
 					mg = new MethodGen(Constants.ACC_PUBLIC, // access flags
-							returnType, // return type
-							signatureTypes, ClassLoaderUtil.createArgNames(signatureTypes.length), // arg types
-							methodName, cg.getClassName(), // method, class
-							il, cp);
+									   returnType, // return type
+									   signatureTypes, ClassLoaderUtil.createArgNames(signatureTypes.length), // arg types
+									   methodName, cg.getClassName(), // method, class
+									   il, cp);
 				} else {
 					mg = new MethodGen(m, cg.getClassName(), cp);
 				}
@@ -497,7 +497,7 @@ public class SwingClassloader extends URLClassLoader {
 		}
 		if (bytes != null) {
 			java.security.Permissions perms = new java.security.Permissions();
-			perms.add(SecurityConstants.ALL_PERMISSION);
+			perms.add(new AllPermission());
 			String classFilePath = repoClassLoader.getResource(class_name.replace('.', '/') + ".class").toExternalForm();
 			int jarSeparatorIndex = classFilePath.lastIndexOf('!');
 			boolean inJar = classFilePath.startsWith("jar:");

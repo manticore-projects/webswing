@@ -129,7 +129,7 @@ abstract public class WebComponentPeer implements ComponentPeer {
 			}
 			return;
 		}
-		
+
 		int w, h;
 		if (Util.isDD()) {
 			w = webImage.getWidth(null);
@@ -166,27 +166,27 @@ abstract public class WebComponentPeer implements ComponentPeer {
 		}
 		return result;
 	}
-	
+
 	protected boolean isUndecorated() {
 		if (target == null) {
 			return true;
 		}
-		
+
 		if (target instanceof JWindow) {
 			return true;
 		}
-		
+
 		if ((target instanceof JFrame && ((JFrame) target).isUndecorated()) || (target instanceof JDialog && ((JDialog) target).isUndecorated())) {
 			return true;
 		}
-		
+
 		if (this instanceof WebWindowPeer) {
 			WebWindowPeer webPeer = (WebWindowPeer) this;
 			if (webPeer.getUndecoratedOverride() != null) {
 				return webPeer.getUndecoratedOverride();
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -249,6 +249,17 @@ abstract public class WebComponentPeer implements ComponentPeer {
 			foreground = Color.BLACK;
 			((Component) this.target).setForeground(foreground);
 			this.setForeground(foreground);
+		}
+
+		// JDK 21: Component.getGraphicsConfiguration() reads the private graphicsConfig
+		// field directly, bypassing the peer. Override it with WebGraphicsConfig so that
+		// window positioning (setLocationRelativeTo etc.) uses virtual screen bounds.
+		try {
+			java.lang.reflect.Field gcField = Component.class.getDeclaredField("graphicsConfig");
+			gcField.setAccessible(true);
+			gcField.set(this.target, getGraphicsConfiguration());
+		} catch (Exception e) {
+			// non-fatal — window positioning may be off
 		}
 
 	}

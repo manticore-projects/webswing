@@ -36,7 +36,7 @@ export class LoginModule extends ModuleDef<typeof loginInjectable, ILoginService
     public login(successCallback: () => void, failedCallback?: () => void) {
         let surl
         try {
-            surl = window.top.location.href
+            surl = window.top!.location.href
         } catch (e) {
             surl = window.location.href
         }

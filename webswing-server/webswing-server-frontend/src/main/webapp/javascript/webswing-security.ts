@@ -38,14 +38,14 @@ loadTranslations(baseUrl).then((translations) => {
                         loginMsg = JSON.parse(response);
                     } catch (error) {
                         if (baseUrl) {
-                            window.top.location.href = baseUrl;
+                            window.top!.location.href = baseUrl;
                             return;
                         } else {
                             element.html(translate("<p>Invalid request</p>"))
                         }
                     }
                     if (loginMsg.redirectUrl != null) {
-                        window.top.location.href = loginMsg.redirectUrl;
+                        window.top!.location.href = loginMsg.redirectUrl;
                     } else if (loginMsg.partialHtml != null) {
                         showPartial(url, element, loginMsg.partialHtml);
                     } else {

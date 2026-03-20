@@ -3,16 +3,14 @@ package org.webswing.toolkit.ge;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 
-import sun.awt.image.BufferedImageDevice;
-
 @SuppressWarnings("restriction")
 public class WebScreenDevice extends GraphicsDevice{
 
-    BufferedImageDevice imageDevice;
+    GraphicsDevice imageDevice;
     GraphicsConfiguration c;
-    
+
     public WebScreenDevice(GraphicsDevice imageDevice,GraphicsConfiguration c) {
-        this.imageDevice = (BufferedImageDevice) imageDevice;
+        this.imageDevice = imageDevice;
         this.c=c;
     }
 

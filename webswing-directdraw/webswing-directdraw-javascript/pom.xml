@@ -103,7 +103,7 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>install</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <arguments>install</arguments>
                                 </configuration>
@@ -113,7 +113,7 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>install</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <arguments>run build</arguments>
                                 </configuration>

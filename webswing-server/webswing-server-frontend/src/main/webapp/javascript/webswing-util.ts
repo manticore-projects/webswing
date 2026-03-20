@@ -83,7 +83,7 @@ export function Util(translations: Translations) {
                             return;
                     }
                     if (loginMsg.redirectUrl != null) {
-                        window.top.location.href = loginMsg.redirectUrl;
+                        window.top!.location.href = loginMsg.redirectUrl;
                     } else if (loginMsg.partialHtml != null) {
                     	updateLoginDialogContent(elementResolved, translate(loginMsg.partialHtml));
                         const form = elementResolved.find('form').first();
@@ -107,14 +107,14 @@ export function Util(translations: Translations) {
                         } else {
                             elementResolved = element;
                         }
-						
+
 						updateLoginDialogContent(elementResolved, translate("<p>${login.serverNotAvailable}</p>"));
                 	}
                 }
             }
         });
     }
-    
+
     function updateLoginDialogContent(elementResolved: JQuery<HTMLElement>, content: string) {
     	elementResolved.html(content);
     	const dialogParents = elementResolved.parents('.ws-modal-container[data-id=commonDialog]');
@@ -163,7 +163,7 @@ export function Util(translations: Translations) {
                         return;
                 }
                 if (loginMsg.redirectUrl != null) {
-                    window.top.location.href = loginMsg.redirectUrl;
+                    window.top!.location.href = loginMsg.redirectUrl;
                         return;
                 } else if (loginMsg.partialHtml != null) {
 	                updateLoginDialogContent(elementResolved, translate(loginMsg.partialHtml));
@@ -210,7 +210,7 @@ export function Util(translations: Translations) {
     function clearToken() {
         token = null;
     }
-    
+
 }
 
 export function getToken() {

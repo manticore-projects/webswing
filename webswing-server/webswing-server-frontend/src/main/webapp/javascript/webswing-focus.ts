@@ -40,7 +40,7 @@ export class FocusManagerModule extends ModuleDef<typeof focusManagerInjectable,
             return;
         }
 
-        if (detectIE() && detectIE() <= 11) {
+        if (detectIE() && (detectIE() as number) <= 11) {
             input.blur(); // fix issue when compositionend causes focus to be lost in IE
         }
 
@@ -117,7 +117,7 @@ export class FocusManagerModule extends ModuleDef<typeof focusManagerInjectable,
         	this.doManageFocusEvent(focusEvent);
         	return;
         }
-        
+
         // in some cases there is a race condition on input being available right after window is undocked
         if (retryCount < 4) {
         	setTimeout(() => {
@@ -125,11 +125,11 @@ export class FocusManagerModule extends ModuleDef<typeof focusManagerInjectable,
         	}, 50);
         }
     }
-    
+
     private doManageFocusEvent(focusEvent: appFrameProtoOut.IFocusEventMsgOutProto) {
     	const doc = $(this.api.getFocusedWindow().document);
         const input = ((doc.find(".ws-input-hidden") as unknown) as JQuery<HTMLInputElement>)[0];
-        
+
         input.classList.remove('editable');
         input.classList.remove('focused-with-caret');
 
@@ -158,7 +158,7 @@ export class FocusManagerModule extends ModuleDef<typeof focusManagerInjectable,
             const temppos = focusElement.style.position;
             const templeft = focusElement.style.left;
             const temptop = focusElement.style.top;
-            if ((detectIE() && detectIE() <= 11)) {// prevent scroll does not work in IE
+            if ((detectIE() && (detectIE() as number) <= 11)) {// prevent scroll does not work in IE
                 focusElement.style.position = 'fixed';
                 focusElement.style.left = '0px';
                 focusElement.style.top = '0px';
@@ -167,7 +167,7 @@ export class FocusManagerModule extends ModuleDef<typeof focusManagerInjectable,
             if (selectInput) {
                 focusElement.select();
             }
-            if (detectIE() && detectIE() <= 11) {
+            if (detectIE() && (detectIE() as number) <= 11) {
                 focusElement.style.position = temppos;
                 focusElement.style.left = templeft;
                 focusElement.style.top = temptop;

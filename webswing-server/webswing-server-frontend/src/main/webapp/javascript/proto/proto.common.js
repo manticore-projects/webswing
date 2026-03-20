@@ -83,9 +83,9 @@ $root.commonProto = (function() {
         ParamMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.name != null && message.hasOwnProperty("name"))
+            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
-            if (message.value != null && message.hasOwnProperty("value"))
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.value);
             return writer;
         };
@@ -101,19 +101,23 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ParamMsgInProto.decode = function decode(reader, length) {
+        ParamMsgInProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.ParamMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.name = reader.string();
-                    break;
-                case 2:
-                    message.value = reader.string();
-                    break;
+                case 1: {
+                        message.name = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.value = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -176,13 +180,28 @@ $root.commonProto = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for ParamMsgInProto
+         * @function getTypeUrl
+         * @memberof commonProto.ParamMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        ParamMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/commonProto.ParamMsgInProto";
+        };
+
         return ParamMsgInProto;
     })();
 
     /**
      * RecordingStatusEnumProto enum.
      * @name commonProto.RecordingStatusEnumProto
-     * @enum {string}
+     * @enum {number}
      * @property {number} NOT_RECORDING=1 NOT_RECORDING value
      * @property {number} WAITING_FOR_RECORDING_APPROVAL=2 WAITING_FOR_RECORDING_APPROVAL value
      * @property {number} DENIED_RECORDING_BY_USER=3 DENIED_RECORDING_BY_USER value
@@ -200,7 +219,7 @@ $root.commonProto = (function() {
     /**
      * MirroringStatusEnumProto enum.
      * @name commonProto.MirroringStatusEnumProto
-     * @enum {string}
+     * @enum {number}
      * @property {number} NOT_MIRRORING=1 NOT_MIRRORING value
      * @property {number} WAITING_FOR_MIRRORING_APPROVAL=2 WAITING_FOR_MIRRORING_APPROVAL value
      * @property {number} DENIED_MIRRORING_BY_USER=3 DENIED_MIRRORING_BY_USER value
@@ -271,7 +290,7 @@ $root.commonProto = (function() {
         SimpleEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
             return writer;
         };
@@ -287,16 +306,19 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SimpleEventMsgInProto.decode = function decode(reader, length) {
+        SimpleEventMsgInProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.SimpleEventMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1:
-                    message.type = reader.int32();
+                if (tag === error)
                     break;
+                switch (tag >>> 3) {
+                case 1: {
+                        message.type = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -318,6 +340,12 @@ $root.commonProto = (function() {
                 return object;
             var message = new $root.commonProto.SimpleEventMsgInProto();
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "unload":
             case 0:
                 message.type = 0;
@@ -402,7 +430,7 @@ $root.commonProto = (function() {
             if (options.defaults)
                 object.type = options.enums === String ? "unload" : 0;
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.commonProto.SimpleEventMsgInProto.SimpleEventTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.commonProto.SimpleEventMsgInProto.SimpleEventTypeProto[message.type] === undefined ? message.type : $root.commonProto.SimpleEventMsgInProto.SimpleEventTypeProto[message.type] : message.type;
             return object;
         };
 
@@ -418,9 +446,24 @@ $root.commonProto = (function() {
         };
 
         /**
+         * Gets the default type url for SimpleEventMsgInProto
+         * @function getTypeUrl
+         * @memberof commonProto.SimpleEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SimpleEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/commonProto.SimpleEventMsgInProto";
+        };
+
+        /**
          * SimpleEventTypeProto enum.
          * @name commonProto.SimpleEventMsgInProto.SimpleEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} unload=0 unload value
          * @property {number} killSwing=1 killSwing value
          * @property {number} killSwingAdmin=2 killSwingAdmin value
@@ -663,40 +706,40 @@ $root.commonProto = (function() {
         ConnectionHandshakeMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.instanceId != null && message.hasOwnProperty("instanceId"))
+            if (message.instanceId != null && Object.hasOwnProperty.call(message, "instanceId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.instanceId);
-            if (message.viewId != null && message.hasOwnProperty("viewId"))
+            if (message.viewId != null && Object.hasOwnProperty.call(message, "viewId"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.viewId);
-            if (message.browserId != null && message.hasOwnProperty("browserId"))
+            if (message.browserId != null && Object.hasOwnProperty.call(message, "browserId"))
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.browserId);
-            if (message.desktopWidth != null && message.hasOwnProperty("desktopWidth"))
+            if (message.desktopWidth != null && Object.hasOwnProperty.call(message, "desktopWidth"))
                 writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.desktopWidth);
-            if (message.desktopHeight != null && message.hasOwnProperty("desktopHeight"))
+            if (message.desktopHeight != null && Object.hasOwnProperty.call(message, "desktopHeight"))
                 writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.desktopHeight);
-            if (message.applicationName != null && message.hasOwnProperty("applicationName"))
+            if (message.applicationName != null && Object.hasOwnProperty.call(message, "applicationName"))
                 writer.uint32(/* id 6, wireType 2 =*/50).string(message.applicationName);
-            if (message.mirrored != null && message.hasOwnProperty("mirrored"))
+            if (message.mirrored != null && Object.hasOwnProperty.call(message, "mirrored"))
                 writer.uint32(/* id 7, wireType 0 =*/56).bool(message.mirrored);
-            if (message.directDrawSupported != null && message.hasOwnProperty("directDrawSupported"))
+            if (message.directDrawSupported != null && Object.hasOwnProperty.call(message, "directDrawSupported"))
                 writer.uint32(/* id 8, wireType 0 =*/64).bool(message.directDrawSupported);
-            if (message.documentBase != null && message.hasOwnProperty("documentBase"))
+            if (message.documentBase != null && Object.hasOwnProperty.call(message, "documentBase"))
                 writer.uint32(/* id 9, wireType 2 =*/74).string(message.documentBase);
             if (message.params != null && message.params.length)
                 for (var i = 0; i < message.params.length; ++i)
                     $root.commonProto.ParamMsgInProto.encode(message.params[i], writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-            if (message.locale != null && message.hasOwnProperty("locale"))
+            if (message.locale != null && Object.hasOwnProperty.call(message, "locale"))
                 writer.uint32(/* id 11, wireType 2 =*/90).string(message.locale);
-            if (message.url != null && message.hasOwnProperty("url"))
+            if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                 writer.uint32(/* id 12, wireType 2 =*/98).string(message.url);
-            if (message.timeZone != null && message.hasOwnProperty("timeZone"))
+            if (message.timeZone != null && Object.hasOwnProperty.call(message, "timeZone"))
                 writer.uint32(/* id 13, wireType 2 =*/106).string(message.timeZone);
-            if (message.dockingSupported != null && message.hasOwnProperty("dockingSupported"))
+            if (message.dockingSupported != null && Object.hasOwnProperty.call(message, "dockingSupported"))
                 writer.uint32(/* id 14, wireType 0 =*/112).bool(message.dockingSupported);
-            if (message.touchMode != null && message.hasOwnProperty("touchMode"))
+            if (message.touchMode != null && Object.hasOwnProperty.call(message, "touchMode"))
                 writer.uint32(/* id 15, wireType 0 =*/120).bool(message.touchMode);
-            if (message.accessiblityEnabled != null && message.hasOwnProperty("accessiblityEnabled"))
+            if (message.accessiblityEnabled != null && Object.hasOwnProperty.call(message, "accessiblityEnabled"))
                 writer.uint32(/* id 16, wireType 0 =*/128).bool(message.accessiblityEnabled);
-            if (message.tabId != null && message.hasOwnProperty("tabId"))
+            if (message.tabId != null && Object.hasOwnProperty.call(message, "tabId"))
                 writer.uint32(/* id 17, wireType 2 =*/138).string(message.tabId);
             return writer;
         };
@@ -712,66 +755,85 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ConnectionHandshakeMsgInProto.decode = function decode(reader, length) {
+        ConnectionHandshakeMsgInProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.ConnectionHandshakeMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.instanceId = reader.string();
-                    break;
-                case 2:
-                    message.viewId = reader.string();
-                    break;
-                case 3:
-                    message.browserId = reader.string();
-                    break;
-                case 4:
-                    message.desktopWidth = reader.uint32();
-                    break;
-                case 5:
-                    message.desktopHeight = reader.uint32();
-                    break;
-                case 6:
-                    message.applicationName = reader.string();
-                    break;
-                case 7:
-                    message.mirrored = reader.bool();
-                    break;
-                case 8:
-                    message.directDrawSupported = reader.bool();
-                    break;
-                case 9:
-                    message.documentBase = reader.string();
-                    break;
-                case 10:
-                    if (!(message.params && message.params.length))
-                        message.params = [];
-                    message.params.push($root.commonProto.ParamMsgInProto.decode(reader, reader.uint32()));
-                    break;
-                case 11:
-                    message.locale = reader.string();
-                    break;
-                case 12:
-                    message.url = reader.string();
-                    break;
-                case 13:
-                    message.timeZone = reader.string();
-                    break;
-                case 14:
-                    message.dockingSupported = reader.bool();
-                    break;
-                case 15:
-                    message.touchMode = reader.bool();
-                    break;
-                case 16:
-                    message.accessiblityEnabled = reader.bool();
-                    break;
-                case 17:
-                    message.tabId = reader.string();
-                    break;
+                case 1: {
+                        message.instanceId = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.viewId = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.browserId = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.desktopWidth = reader.uint32();
+                        break;
+                    }
+                case 5: {
+                        message.desktopHeight = reader.uint32();
+                        break;
+                    }
+                case 6: {
+                        message.applicationName = reader.string();
+                        break;
+                    }
+                case 7: {
+                        message.mirrored = reader.bool();
+                        break;
+                    }
+                case 8: {
+                        message.directDrawSupported = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        message.documentBase = reader.string();
+                        break;
+                    }
+                case 10: {
+                        if (!(message.params && message.params.length))
+                            message.params = [];
+                        message.params.push($root.commonProto.ParamMsgInProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 11: {
+                        message.locale = reader.string();
+                        break;
+                    }
+                case 12: {
+                        message.url = reader.string();
+                        break;
+                    }
+                case 13: {
+                        message.timeZone = reader.string();
+                        break;
+                    }
+                case 14: {
+                        message.dockingSupported = reader.bool();
+                        break;
+                    }
+                case 15: {
+                        message.touchMode = reader.bool();
+                        break;
+                    }
+                case 16: {
+                        message.accessiblityEnabled = reader.bool();
+                        break;
+                    }
+                case 17: {
+                        message.tabId = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -921,6 +983,21 @@ $root.commonProto = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for ConnectionHandshakeMsgInProto
+         * @function getTypeUrl
+         * @memberof commonProto.ConnectionHandshakeMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        ConnectionHandshakeMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/commonProto.ConnectionHandshakeMsgInProto";
+        };
+
         return ConnectionHandshakeMsgInProto;
     })();
 
@@ -1007,13 +1084,13 @@ $root.commonProto = (function() {
         TimestampsMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.startTimestamp != null && message.hasOwnProperty("startTimestamp"))
+            if (message.startTimestamp != null && Object.hasOwnProperty.call(message, "startTimestamp"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.startTimestamp);
-            if (message.sendTimestamp != null && message.hasOwnProperty("sendTimestamp"))
+            if (message.sendTimestamp != null && Object.hasOwnProperty.call(message, "sendTimestamp"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.sendTimestamp);
-            if (message.renderingTime != null && message.hasOwnProperty("renderingTime"))
+            if (message.renderingTime != null && Object.hasOwnProperty.call(message, "renderingTime"))
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.renderingTime);
-            if (message.ping != null && message.hasOwnProperty("ping"))
+            if (message.ping != null && Object.hasOwnProperty.call(message, "ping"))
                 writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.ping);
             return writer;
         };
@@ -1029,25 +1106,31 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        TimestampsMsgInProto.decode = function decode(reader, length) {
+        TimestampsMsgInProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.TimestampsMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.startTimestamp = reader.string();
-                    break;
-                case 2:
-                    message.sendTimestamp = reader.string();
-                    break;
-                case 3:
-                    message.renderingTime = reader.string();
-                    break;
-                case 4:
-                    message.ping = reader.uint32();
-                    break;
+                case 1: {
+                        message.startTimestamp = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.sendTimestamp = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.renderingTime = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.ping = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1118,6 +1201,21 @@ $root.commonProto = (function() {
          */
         TimestampsMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for TimestampsMsgInProto
+         * @function getTypeUrl
+         * @memberof commonProto.TimestampsMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        TimestampsMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/commonProto.TimestampsMsgInProto";
         };
 
         return TimestampsMsgInProto;

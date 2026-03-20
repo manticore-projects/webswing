@@ -168,25 +168,25 @@ $root.appFrameProtoIn = (function() {
             if (message.events != null && message.events.length)
                 for (var i = 0; i < message.events.length; ++i)
                     $root.appFrameProtoIn.InputEventMsgInProto.encode(message.events[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.paste != null && message.hasOwnProperty("paste"))
+            if (message.paste != null && Object.hasOwnProperty.call(message, "paste"))
                 $root.appFrameProtoIn.PasteEventMsgInProto.encode(message.paste, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.copy != null && message.hasOwnProperty("copy"))
+            if (message.copy != null && Object.hasOwnProperty.call(message, "copy"))
                 $root.appFrameProtoIn.CopyEventMsgInProto.encode(message.copy, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.upload != null && message.hasOwnProperty("upload"))
+            if (message.upload != null && Object.hasOwnProperty.call(message, "upload"))
                 $root.appFrameProtoIn.UploadEventMsgInProto.encode(message.upload, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.selected != null && message.hasOwnProperty("selected"))
+            if (message.selected != null && Object.hasOwnProperty.call(message, "selected"))
                 $root.appFrameProtoIn.FilesSelectedEventMsgInProto.encode(message.selected, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            if (message.jsResponse != null && message.hasOwnProperty("jsResponse"))
+            if (message.jsResponse != null && Object.hasOwnProperty.call(message, "jsResponse"))
                 $root.appFrameProtoIn.JsResultMsgInProto.encode(message.jsResponse, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-            if (message.javaRequest != null && message.hasOwnProperty("javaRequest"))
+            if (message.javaRequest != null && Object.hasOwnProperty.call(message, "javaRequest"))
                 $root.appFrameProtoIn.JavaEvalRequestMsgInProto.encode(message.javaRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-            if (message.pixelsResponse != null && message.hasOwnProperty("pixelsResponse"))
+            if (message.pixelsResponse != null && Object.hasOwnProperty.call(message, "pixelsResponse"))
                 $root.appFrameProtoIn.PixelsAreaResponseMsgInProto.encode(message.pixelsResponse, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-            if (message.window != null && message.hasOwnProperty("window"))
+            if (message.window != null && Object.hasOwnProperty.call(message, "window"))
                 $root.appFrameProtoIn.WindowEventMsgInProto.encode(message.window, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-            if (message.action != null && message.hasOwnProperty("action"))
+            if (message.action != null && Object.hasOwnProperty.call(message, "action"))
                 $root.appFrameProtoIn.ActionEventMsgInProto.encode(message.action, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-            if (message.audio != null && message.hasOwnProperty("audio"))
+            if (message.audio != null && Object.hasOwnProperty.call(message, "audio"))
                 $root.appFrameProtoIn.AudioEventMsgInProto.encode(message.audio, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
             return writer;
         };
@@ -332,6 +332,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for AppFrameMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.AppFrameMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AppFrameMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.AppFrameMsgInProto";
+        };
+
         return AppFrameMsgInProto;
     })();
 
@@ -409,11 +424,11 @@ $root.appFrameProtoIn = (function() {
         InputEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.key != null && message.hasOwnProperty("key"))
+            if (message.key != null && Object.hasOwnProperty.call(message, "key"))
                 $root.appFrameProtoIn.KeyboardEventMsgInProto.encode(message.key, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.mouse != null && message.hasOwnProperty("mouse"))
+            if (message.mouse != null && Object.hasOwnProperty.call(message, "mouse"))
                 $root.appFrameProtoIn.MouseEventMsgInProto.encode(message.mouse, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.focus != null && message.hasOwnProperty("focus"))
+            if (message.focus != null && Object.hasOwnProperty.call(message, "focus"))
                 $root.appFrameProtoIn.WindowFocusMsgInProto.encode(message.focus, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
@@ -486,6 +501,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for InputEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.InputEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        InputEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.InputEventMsgInProto";
+        };
+
         return InputEventMsgInProto;
     })();
 
@@ -554,9 +584,9 @@ $root.appFrameProtoIn = (function() {
         WindowFocusMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.windowId != null && message.hasOwnProperty("windowId"))
+            if (message.windowId != null && Object.hasOwnProperty.call(message, "windowId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.windowId);
-            if (message.htmlPanelId != null && message.hasOwnProperty("htmlPanelId"))
+            if (message.htmlPanelId != null && Object.hasOwnProperty.call(message, "htmlPanelId"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.htmlPanelId);
             return writer;
         };
@@ -613,6 +643,21 @@ $root.appFrameProtoIn = (function() {
          */
         WindowFocusMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for WindowFocusMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.WindowFocusMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowFocusMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.WindowFocusMsgInProto";
         };
 
         return WindowFocusMsgInProto;
@@ -728,19 +773,19 @@ $root.appFrameProtoIn = (function() {
         KeyboardEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-            if (message.character != null && message.hasOwnProperty("character"))
+            if (message.character != null && Object.hasOwnProperty.call(message, "character"))
                 writer.uint32(/* id 2, wireType 0 =*/16).sint32(message.character);
-            if (message.keycode != null && message.hasOwnProperty("keycode"))
+            if (message.keycode != null && Object.hasOwnProperty.call(message, "keycode"))
                 writer.uint32(/* id 3, wireType 0 =*/24).sint32(message.keycode);
-            if (message.alt != null && message.hasOwnProperty("alt"))
+            if (message.alt != null && Object.hasOwnProperty.call(message, "alt"))
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.alt);
-            if (message.ctrl != null && message.hasOwnProperty("ctrl"))
+            if (message.ctrl != null && Object.hasOwnProperty.call(message, "ctrl"))
                 writer.uint32(/* id 5, wireType 0 =*/40).bool(message.ctrl);
-            if (message.shift != null && message.hasOwnProperty("shift"))
+            if (message.shift != null && Object.hasOwnProperty.call(message, "shift"))
                 writer.uint32(/* id 6, wireType 0 =*/48).bool(message.shift);
-            if (message.meta != null && message.hasOwnProperty("meta"))
+            if (message.meta != null && Object.hasOwnProperty.call(message, "meta"))
                 writer.uint32(/* id 7, wireType 0 =*/56).bool(message.meta);
             return writer;
         };
@@ -758,6 +803,12 @@ $root.appFrameProtoIn = (function() {
                 return object;
             var message = new $root.appFrameProtoIn.KeyboardEventMsgInProto();
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "keypress":
             case 0:
                 message.type = 0;
@@ -809,7 +860,7 @@ $root.appFrameProtoIn = (function() {
                 object.meta = false;
             }
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoIn.KeyboardEventMsgInProto.KeyEventTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoIn.KeyboardEventMsgInProto.KeyEventTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoIn.KeyboardEventMsgInProto.KeyEventTypeProto[message.type] : message.type;
             if (message.character != null && message.hasOwnProperty("character"))
                 object.character = message.character;
             if (message.keycode != null && message.hasOwnProperty("keycode"))
@@ -837,9 +888,24 @@ $root.appFrameProtoIn = (function() {
         };
 
         /**
+         * Gets the default type url for KeyboardEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.KeyboardEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        KeyboardEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.KeyboardEventMsgInProto";
+        };
+
+        /**
          * KeyEventTypeProto enum.
          * @name appFrameProtoIn.KeyboardEventMsgInProto.KeyEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} keypress=0 keypress value
          * @property {number} keydown=1 keydown value
          * @property {number} keyup=2 keyup value
@@ -1010,29 +1076,29 @@ $root.appFrameProtoIn = (function() {
         MouseEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-            if (message.x != null && message.hasOwnProperty("x"))
+            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                 writer.uint32(/* id 2, wireType 0 =*/16).sint32(message.x);
-            if (message.y != null && message.hasOwnProperty("y"))
+            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                 writer.uint32(/* id 3, wireType 0 =*/24).sint32(message.y);
-            if (message.wheelDelta != null && message.hasOwnProperty("wheelDelta"))
+            if (message.wheelDelta != null && Object.hasOwnProperty.call(message, "wheelDelta"))
                 writer.uint32(/* id 4, wireType 0 =*/32).sint32(message.wheelDelta);
-            if (message.button != null && message.hasOwnProperty("button"))
+            if (message.button != null && Object.hasOwnProperty.call(message, "button"))
                 writer.uint32(/* id 5, wireType 0 =*/40).sint32(message.button);
-            if (message.ctrl != null && message.hasOwnProperty("ctrl"))
+            if (message.ctrl != null && Object.hasOwnProperty.call(message, "ctrl"))
                 writer.uint32(/* id 6, wireType 0 =*/48).bool(message.ctrl);
-            if (message.alt != null && message.hasOwnProperty("alt"))
+            if (message.alt != null && Object.hasOwnProperty.call(message, "alt"))
                 writer.uint32(/* id 7, wireType 0 =*/56).bool(message.alt);
-            if (message.shift != null && message.hasOwnProperty("shift"))
+            if (message.shift != null && Object.hasOwnProperty.call(message, "shift"))
                 writer.uint32(/* id 8, wireType 0 =*/64).bool(message.shift);
-            if (message.meta != null && message.hasOwnProperty("meta"))
+            if (message.meta != null && Object.hasOwnProperty.call(message, "meta"))
                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.meta);
-            if (message.buttons != null && message.hasOwnProperty("buttons"))
+            if (message.buttons != null && Object.hasOwnProperty.call(message, "buttons"))
                 writer.uint32(/* id 10, wireType 0 =*/80).sint32(message.buttons);
-            if (message.timeMilis != null && message.hasOwnProperty("timeMilis"))
+            if (message.timeMilis != null && Object.hasOwnProperty.call(message, "timeMilis"))
                 writer.uint32(/* id 11, wireType 0 =*/88).sint32(message.timeMilis);
-            if (message.winId != null && message.hasOwnProperty("winId"))
+            if (message.winId != null && Object.hasOwnProperty.call(message, "winId"))
                 writer.uint32(/* id 12, wireType 2 =*/98).string(message.winId);
             return writer;
         };
@@ -1050,6 +1116,12 @@ $root.appFrameProtoIn = (function() {
                 return object;
             var message = new $root.appFrameProtoIn.MouseEventMsgInProto();
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "mousemove":
             case 0:
                 message.type = 0;
@@ -1124,7 +1196,7 @@ $root.appFrameProtoIn = (function() {
                 object.winId = "";
             }
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoIn.MouseEventMsgInProto.MouseEventTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoIn.MouseEventMsgInProto.MouseEventTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoIn.MouseEventMsgInProto.MouseEventTypeProto[message.type] : message.type;
             if (message.x != null && message.hasOwnProperty("x"))
                 object.x = message.x;
             if (message.y != null && message.hasOwnProperty("y"))
@@ -1162,9 +1234,24 @@ $root.appFrameProtoIn = (function() {
         };
 
         /**
+         * Gets the default type url for MouseEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.MouseEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        MouseEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.MouseEventMsgInProto";
+        };
+
+        /**
          * MouseEventTypeProto enum.
          * @name appFrameProtoIn.MouseEventMsgInProto.MouseEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} mousemove=0 mousemove value
          * @property {number} mousedown=1 mousedown value
          * @property {number} mouseup=2 mouseup value
@@ -1249,9 +1336,9 @@ $root.appFrameProtoIn = (function() {
         CopyEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
-            if (message.file != null && message.hasOwnProperty("file"))
+            if (message.file != null && Object.hasOwnProperty.call(message, "file"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.file);
             return writer;
         };
@@ -1269,6 +1356,12 @@ $root.appFrameProtoIn = (function() {
                 return object;
             var message = new $root.appFrameProtoIn.CopyEventMsgInProto();
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "copy":
             case 0:
                 message.type = 0;
@@ -1305,7 +1398,7 @@ $root.appFrameProtoIn = (function() {
                 object.file = "";
             }
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoIn.CopyEventMsgInProto.CopyEventMsgTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoIn.CopyEventMsgInProto.CopyEventMsgTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoIn.CopyEventMsgInProto.CopyEventMsgTypeProto[message.type] : message.type;
             if (message.file != null && message.hasOwnProperty("file"))
                 object.file = message.file;
             return object;
@@ -1323,9 +1416,24 @@ $root.appFrameProtoIn = (function() {
         };
 
         /**
+         * Gets the default type url for CopyEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.CopyEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        CopyEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.CopyEventMsgInProto";
+        };
+
+        /**
          * CopyEventMsgTypeProto enum.
          * @name appFrameProtoIn.CopyEventMsgInProto.CopyEventMsgTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} copy=0 copy value
          * @property {number} cut=1 cut value
          * @property {number} getFileFromClipboard=2 getFileFromClipboard value
@@ -1424,13 +1532,13 @@ $root.appFrameProtoIn = (function() {
         PasteEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.text != null && message.hasOwnProperty("text"))
+            if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.text);
-            if (message.html != null && message.hasOwnProperty("html"))
+            if (message.html != null && Object.hasOwnProperty.call(message, "html"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.html);
-            if (message.img != null && message.hasOwnProperty("img"))
+            if (message.img != null && Object.hasOwnProperty.call(message, "img"))
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.img);
-            if (message.special != null && message.hasOwnProperty("special"))
+            if (message.special != null && Object.hasOwnProperty.call(message, "special"))
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.special);
             return writer;
         };
@@ -1497,6 +1605,21 @@ $root.appFrameProtoIn = (function() {
          */
         PasteEventMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PasteEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.PasteEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PasteEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.PasteEventMsgInProto";
         };
 
         return PasteEventMsgInProto;
@@ -1621,6 +1744,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for FilesSelectedEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.FilesSelectedEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        FilesSelectedEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.FilesSelectedEventMsgInProto";
+        };
+
         return FilesSelectedEventMsgInProto;
     })();
 
@@ -1680,7 +1818,7 @@ $root.appFrameProtoIn = (function() {
         UploadEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.fileId != null && message.hasOwnProperty("fileId"))
+            if (message.fileId != null && Object.hasOwnProperty.call(message, "fileId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.fileId);
             return writer;
         };
@@ -1731,6 +1869,21 @@ $root.appFrameProtoIn = (function() {
          */
         UploadEventMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for UploadEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.UploadEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        UploadEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.UploadEventMsgInProto";
         };
 
         return UploadEventMsgInProto;
@@ -1820,11 +1973,11 @@ $root.appFrameProtoIn = (function() {
         JavaEvalRequestMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.correlationId);
-            if (message.objectId != null && message.hasOwnProperty("objectId"))
+            if (message.objectId != null && Object.hasOwnProperty.call(message, "objectId"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.objectId);
-            if (message.method != null && message.hasOwnProperty("method"))
+            if (message.method != null && Object.hasOwnProperty.call(message, "method"))
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.method);
             if (message.params != null && message.params.length)
                 for (var i = 0; i < message.params.length; ++i)
@@ -1908,6 +2061,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for JavaEvalRequestMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.JavaEvalRequestMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JavaEvalRequestMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.JavaEvalRequestMsgInProto";
+        };
+
         return JavaEvalRequestMsgInProto;
     })();
 
@@ -1985,11 +2153,11 @@ $root.appFrameProtoIn = (function() {
         JsResultMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.correlationId);
-            if (message.error != null && message.hasOwnProperty("error"))
+            if (message.error != null && Object.hasOwnProperty.call(message, "error"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.error);
-            if (message.value != null && message.hasOwnProperty("value"))
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                 $root.appFrameProtoIn.JsParamMsgInProto.encode(message.value, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
@@ -2054,6 +2222,21 @@ $root.appFrameProtoIn = (function() {
          */
         JsResultMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for JsResultMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.JsResultMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JsResultMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.JsResultMsgInProto";
         };
 
         return JsResultMsgInProto;
@@ -2143,11 +2326,11 @@ $root.appFrameProtoIn = (function() {
         JsParamMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.primitive != null && message.hasOwnProperty("primitive"))
+            if (message.primitive != null && Object.hasOwnProperty.call(message, "primitive"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.primitive);
-            if (message.jsObject != null && message.hasOwnProperty("jsObject"))
+            if (message.jsObject != null && Object.hasOwnProperty.call(message, "jsObject"))
                 $root.appFrameProtoIn.JSObjectMsgInProto.encode(message.jsObject, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.javaObject != null && message.hasOwnProperty("javaObject"))
+            if (message.javaObject != null && Object.hasOwnProperty.call(message, "javaObject"))
                 $root.appFrameProtoIn.JavaObjectRefMsgInProto.encode(message.javaObject, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.array != null && message.array.length)
                 for (var i = 0; i < message.array.length; ++i)
@@ -2237,6 +2420,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for JsParamMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.JsParamMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JsParamMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.JsParamMsgInProto";
+        };
+
         return JsParamMsgInProto;
     })();
 
@@ -2306,7 +2504,7 @@ $root.appFrameProtoIn = (function() {
         JavaObjectRefMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
             if (message.methods != null && message.methods.length)
                 for (var i = 0; i < message.methods.length; ++i)
@@ -2376,6 +2574,21 @@ $root.appFrameProtoIn = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for JavaObjectRefMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.JavaObjectRefMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JavaObjectRefMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.JavaObjectRefMsgInProto";
+        };
+
         return JavaObjectRefMsgInProto;
     })();
 
@@ -2435,7 +2648,7 @@ $root.appFrameProtoIn = (function() {
         JSObjectMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
             return writer;
         };
@@ -2486,6 +2699,21 @@ $root.appFrameProtoIn = (function() {
          */
         JSObjectMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for JSObjectMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.JSObjectMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JSObjectMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.JSObjectMsgInProto";
         };
 
         return JSObjectMsgInProto;
@@ -2556,9 +2784,9 @@ $root.appFrameProtoIn = (function() {
         PixelsAreaResponseMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.correlationId);
-            if (message.pixels != null && message.hasOwnProperty("pixels"))
+            if (message.pixels != null && Object.hasOwnProperty.call(message, "pixels"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.pixels);
             return writer;
         };
@@ -2615,6 +2843,21 @@ $root.appFrameProtoIn = (function() {
          */
         PixelsAreaResponseMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PixelsAreaResponseMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.PixelsAreaResponseMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PixelsAreaResponseMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.PixelsAreaResponseMsgInProto";
         };
 
         return PixelsAreaResponseMsgInProto;
@@ -2721,17 +2964,17 @@ $root.appFrameProtoIn = (function() {
         WindowEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
-            if (message.x != null && message.hasOwnProperty("x"))
+            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                 writer.uint32(/* id 2, wireType 0 =*/16).sint32(message.x);
-            if (message.y != null && message.hasOwnProperty("y"))
+            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                 writer.uint32(/* id 3, wireType 0 =*/24).sint32(message.y);
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 writer.uint32(/* id 4, wireType 0 =*/32).sint32(message.width);
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 writer.uint32(/* id 5, wireType 0 =*/40).sint32(message.height);
-            if (message.eventType != null && message.hasOwnProperty("eventType"))
+            if (message.eventType != null && Object.hasOwnProperty.call(message, "eventType"))
                 writer.uint32(/* id 6, wireType 0 =*/48).int32(message.eventType);
             return writer;
         };
@@ -2759,6 +3002,12 @@ $root.appFrameProtoIn = (function() {
             if (object.height != null)
                 message.height = object.height | 0;
             switch (object.eventType) {
+            default:
+                if (typeof object.eventType === "number") {
+                    message.eventType = object.eventType;
+                    break;
+                }
+                break;
             case "close":
             case 0:
                 message.eventType = 0;
@@ -2823,7 +3072,7 @@ $root.appFrameProtoIn = (function() {
             if (message.height != null && message.hasOwnProperty("height"))
                 object.height = message.height;
             if (message.eventType != null && message.hasOwnProperty("eventType"))
-                object.eventType = options.enums === String ? $root.appFrameProtoIn.WindowEventMsgInProto.WindowEventTypeProto[message.eventType] : message.eventType;
+                object.eventType = options.enums === String ? $root.appFrameProtoIn.WindowEventMsgInProto.WindowEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoIn.WindowEventMsgInProto.WindowEventTypeProto[message.eventType] : message.eventType;
             return object;
         };
 
@@ -2839,9 +3088,24 @@ $root.appFrameProtoIn = (function() {
         };
 
         /**
+         * Gets the default type url for WindowEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.WindowEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.WindowEventMsgInProto";
+        };
+
+        /**
          * WindowEventTypeProto enum.
          * @name appFrameProtoIn.WindowEventMsgInProto.WindowEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} close=0 close value
          * @property {number} focus=1 focus value
          * @property {number} maximize=2 maximize value
@@ -2939,11 +3203,11 @@ $root.appFrameProtoIn = (function() {
         AudioEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
-            if (message.stop != null && message.hasOwnProperty("stop"))
+            if (message.stop != null && Object.hasOwnProperty.call(message, "stop"))
                 writer.uint32(/* id 2, wireType 0 =*/16).bool(message.stop);
-            if (message.ping != null && message.hasOwnProperty("ping"))
+            if (message.ping != null && Object.hasOwnProperty.call(message, "ping"))
                 writer.uint32(/* id 3, wireType 0 =*/24).bool(message.ping);
             return writer;
         };
@@ -3005,6 +3269,21 @@ $root.appFrameProtoIn = (function() {
          */
         AudioEventMsgInProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for AudioEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.AudioEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AudioEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.AudioEventMsgInProto";
         };
 
         return AudioEventMsgInProto;
@@ -3102,15 +3381,15 @@ $root.appFrameProtoIn = (function() {
         ActionEventMsgInProto.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.actionName != null && message.hasOwnProperty("actionName"))
+            if (message.actionName != null && Object.hasOwnProperty.call(message, "actionName"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.actionName);
-            if (message.data != null && message.hasOwnProperty("data"))
+            if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.data);
-            if (message.binaryData != null && message.hasOwnProperty("binaryData"))
+            if (message.binaryData != null && Object.hasOwnProperty.call(message, "binaryData"))
                 writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.binaryData);
-            if (message.windowId != null && message.hasOwnProperty("windowId"))
+            if (message.windowId != null && Object.hasOwnProperty.call(message, "windowId"))
                 writer.uint32(/* id 4, wireType 2 =*/34).string(message.windowId);
-            if (message.eventType != null && message.hasOwnProperty("eventType"))
+            if (message.eventType != null && Object.hasOwnProperty.call(message, "eventType"))
                 writer.uint32(/* id 5, wireType 0 =*/40).int32(message.eventType);
             return writer;
         };
@@ -3134,11 +3413,17 @@ $root.appFrameProtoIn = (function() {
             if (object.binaryData != null)
                 if (typeof object.binaryData === "string")
                     $util.base64.decode(object.binaryData, message.binaryData = $util.newBuffer($util.base64.length(object.binaryData)), 0);
-                else if (object.binaryData.length)
+                else if (object.binaryData.length >= 0)
                     message.binaryData = object.binaryData;
             if (object.windowId != null)
                 message.windowId = String(object.windowId);
             switch (object.eventType) {
+            default:
+                if (typeof object.eventType === "number") {
+                    message.eventType = object.eventType;
+                    break;
+                }
+                break;
             case "init":
             case 0:
                 message.eventType = 0;
@@ -3186,7 +3471,7 @@ $root.appFrameProtoIn = (function() {
             if (message.windowId != null && message.hasOwnProperty("windowId"))
                 object.windowId = message.windowId;
             if (message.eventType != null && message.hasOwnProperty("eventType"))
-                object.eventType = options.enums === String ? $root.appFrameProtoIn.ActionEventMsgInProto.ActionEventTypeProto[message.eventType] : message.eventType;
+                object.eventType = options.enums === String ? $root.appFrameProtoIn.ActionEventMsgInProto.ActionEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoIn.ActionEventMsgInProto.ActionEventTypeProto[message.eventType] : message.eventType;
             return object;
         };
 
@@ -3202,9 +3487,24 @@ $root.appFrameProtoIn = (function() {
         };
 
         /**
+         * Gets the default type url for ActionEventMsgInProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoIn.ActionEventMsgInProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        ActionEventMsgInProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoIn.ActionEventMsgInProto";
+        };
+
+        /**
          * ActionEventTypeProto enum.
          * @name appFrameProtoIn.ActionEventMsgInProto.ActionEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} init=0 init value
          * @property {number} user=1 user value
          */
