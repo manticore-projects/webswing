@@ -1,5 +1,6 @@
 package org.webswing.server.services.security.modules.shiro;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -7,6 +8,7 @@ import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.Ini.Section;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.RealmSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -140,73 +142,58 @@ public class ShiroSecurityModule extends AbstractUserPasswordSecurityModule<Shir
     public AuthenticatedWebswingUser verifyUserPassword(String user,
                                                         String password) throws WebswingAuthenticationException {
         String originalPassword = deobfuscate(password);
+        ArrayList<String> definedRolesList = new ArrayList<>(definedRoles);
+        ArrayList<String> authorizedRoles = new ArrayList<>();
 
         // only when init was successful and a security manager was established
         if (securityManager != null) {
             // shiro.conf can define many realms, so test one by one until found a succeeding realm
-            Collection<Realm> realms = ((RealmSecurityManager) securityManager).getRealms();
             UsernamePasswordToken token = new UsernamePasswordToken(user, originalPassword);
-            Optional<ShiroWebswingUser> authenticatedUser
-                    = realms.parallelStream()
-                              .filter(realm -> realm instanceof AuthorizingRealm
-                                               && realm.supports(token))
-                              .map(realm -> {
-                                  try {
-                                      AuthorizingRealm authorizingRealm = (AuthorizingRealm) realm;
-                                      AuthenticationInfo authtInfo = realm.getAuthenticationInfo(
-                                              token);
-                                      String userId = authtInfo.getPrincipals()
-                                                               .getPrimaryPrincipal()
-                                                               .toString();
-                                      ArrayList<String> roles = new ArrayList<>();
-
-                                      final PrincipalCollection principals = authtInfo.getPrincipals();
-                                      for (String role : definedRoles) {
-                                          if (log.isTraceEnabled()) {
-                                              log.trace(
-                                                      "User {} checking role {}",
-                                                      user,
-                                                      role
-                                              );
-                                          }
-                                          if (authorizingRealm.hasRole(
-                                                  principals,
-                                                  role
-                                          )) {
-                                              roles.add(role);
-                                          }
-                                      }
-                                      log.info(
-                                              "User {} authorized for roles: {}",
-                                              user,
-                                              Arrays.deepToString(roles.toArray())
-                                      );
-                                      return new ShiroWebswingUser(
-                                              userId,
-                                              password,
-                                              roles
-                                      );
-                                  } catch (AuthenticationException e) {
-                                      if (log.isTraceEnabled()) {
-                                          log.trace(
-                                                  "User {} not authenticated for realm {}",
-                                                  user,
-                                                  realm.getName(),
-                                                  e
-                                          );
-                                      }
-                                      return null;
-                                  }
-                              })
-                              .filter(Objects::nonNull) // Filter out the null results from failed authentications
-                              .findFirst();
-
-            // If authenticatedUser is present, return it. Otherwise, throw the exception.
-            return authenticatedUser.orElseThrow(() ->
-                 new WebswingAuthenticationException(
-                         "Invalid username or password!"
-                         , WebswingAuthenticationException.INVALID_USER_OR_PASSWORD
-                 )
+            AuthenticationInfo authInfo = securityManager.authenticate(token);
+            for (Realm realm: ((RealmSecurityManager) securityManager).getRealms() ) {
+                if (realm instanceof AuthorizingRealm && realm.supports(token)) {
+                    AuthorizingRealm authorizingRealm = (AuthorizingRealm) realm;
+                    try {
+                        boolean[] b = authorizingRealm.hasRoles(authInfo.getPrincipals(), definedRolesList);
+                        for (int j = 0; j < b.length; j++) {
+                            if (log.isTraceEnabled()) {
+                                log.trace(
+                                        "Realm {} User {} checking role {}",
+                                        realm.getName(),
+                                        user,
+                                        definedRolesList.get(j)
+                                );
+                            }
+                            if (b[j]) {
+                                log.info(
+                                        "Realm {} User {} has role {}",
+                                        realm.getName(),
+                                        user,
+                                        definedRolesList.get(j)
+                                );
+                                authorizedRoles.add(definedRolesList.get(j));
+                            }
+                        }
+                    } catch (Exception ex) {
+                        if (log.isTraceEnabled()) {
+                            log.trace(
+                                    "User {} can't authorize against {}",
+                                    user,
+                                    realm.getName()
+                            );
+                        }
+                    }
+                }
+            }
+            log.info(
+                    "User {} authorized for roles: {}",
+                    user,
+                    Arrays.deepToString(authorizedRoles.toArray())
+            );
+            return new ShiroWebswingUser(
+                    user,
+                    password,
+                    authorizedRoles
             );
         }
         throw new WebswingAuthenticationException(
