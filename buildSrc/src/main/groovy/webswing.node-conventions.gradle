@@ -1,0 +1,33 @@
+// Convention plugin for modules with npm/webpack builds.
+// Configures the node-gradle plugin and provides standard npm tasks.
+//
+// Usage:
+//   apply plugin: 'webswing.node-conventions'
+//   // Then use npmInstallTask, npmBuild, etc.
+
+plugins {
+    id 'com.github.node-gradle.node'
+}
+
+node {
+    download = false          // use root-installed Node
+    nodeProjectDir = projectDir
+}
+
+def isDev = project.hasProperty('dev')
+
+tasks.register('npmInstallTask', com.github.gradle.node.npm.task.NpmTask) {
+    args = ['install']
+    enabled = !isDev
+}
+
+tasks.register('npmBuild', com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn 'npmInstallTask'
+    args = ['run', 'build']
+    enabled = !isDev
+}
+
+// Clean webpack's target/ output alongside Gradle's build/
+clean {
+    delete 'target'
+}

@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.AWTError;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.Closeable;
 import java.io.File;
@@ -29,9 +28,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.webswing.Constants;
-import sun.awt.HeadlessToolkit;
-
-import javax.tools.Tool;
 
 public class Main {
 

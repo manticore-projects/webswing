@@ -1,0 +1,11 @@
+dependencies {
+    api project(':webswing-api')
+    api project(':webswing-server:webswing-server-common')
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    implementation 'com.github.spullara.mustache.java:compiler:0.9.11'
+    implementation 'org.apache.shiro:shiro-core:1.13.0'
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+}

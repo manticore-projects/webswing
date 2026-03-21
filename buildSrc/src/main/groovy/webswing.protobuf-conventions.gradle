@@ -1,0 +1,53 @@
+// Convention plugin for modules with committed protobuf sources.
+// Resolves the platform-specific protoc binary and provides a
+// 'regenerateProto' task factory.
+//
+// Usage:
+//   apply plugin: 'webswing.protobuf-conventions'
+//   createRegenerateProtoTask('src/main/protobuf', 'src/main/java')
+//   // or with multiple outputs:
+//   createRegenerateProtoTask('src/main/protobuf', ['../sibling/src/main/java', 'src/main/java'])
+
+def protocClassifier = {
+    def os = System.getProperty('os.name').toLowerCase()
+    def arch = System.getProperty('os.arch')
+    if (os.contains('linux'))
+        return arch.contains('aarch64') ? 'linux-aarch_64' : 'linux-x86_64'
+    if (os.contains('mac') || os.contains('darwin'))
+        return arch.contains('aarch64') ? 'osx-aarch_64' : 'osx-x86_64'
+    if (os.contains('windows'))
+        return 'windows-x86_64'
+    throw new GradleException("Unsupported OS: ${os} / ${arch}")
+}()
+
+configurations { protoc }
+dependencies {
+    protoc "com.google.protobuf:protoc:${protobufVersion}:${protocClassifier}@exe"
+}
+
+// Factory method: creates a 'regenerateProto' task.
+//   protoDir:   path to .proto files (relative to project dir)
+//   outputDirs: single string or list of strings — output directories for generated Java
+ext.createRegenerateProtoTask = { String protoDir, outputDirs ->
+    def dirs = outputDirs instanceof List ? outputDirs : [outputDirs]
+    def protoDirFile = project.file(protoDir)
+
+    tasks.register('regenerateProto', Exec) {
+        description = 'Regenerate protobuf Java sources (manual, then commit results)'
+        group = 'protobuf'
+
+        doFirst {
+            def protocFile = configurations.protoc.singleFile
+            protocFile.setExecutable(true)
+
+            dirs.each { outDir ->
+                project.exec {
+                    executable protocFile.absolutePath
+                    args "--proto_path=${protoDirFile}"
+                    args "--java_out=${project.file(outDir)}"
+                    args project.fileTree(protoDirFile).matching { include '*.proto' }.files.collect { it.absolutePath }
+                }
+            }
+        }
+    }
+}

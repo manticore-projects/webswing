@@ -162,18 +162,9 @@
                 <artifactId>log4j-core</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
-            <!-- NOTE: With SLF4J 2.x you should use log4j-slf4j2-impl (not log4j-slf4j-impl).
-                 The old log4j-slf4j-impl is for SLF4J 1.x only.
-                 Both are managed here so submodules can migrate gradually. -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j2-impl</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <!-- TODO: migrate submodules from log4j-slf4j-impl to log4j-slf4j2-impl, then remove this -->
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>

@@ -4,8 +4,16 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>modpatch-java-desktop</artifactId>
+	<artifactId>modpatch-jdk-jsobject</artifactId>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.webswing</groupId>
+			<artifactId>webswing-app-toolkit</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 	<parent>
 		<artifactId>webswing-modpatch</artifactId>
 		<groupId>org.webswing</groupId>
@@ -13,6 +21,6 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<build>
-		<finalName>modpatch-java-desktop</finalName>
+		<finalName>modpatch-jdk-jsobject</finalName>
 	</build>
 </project>

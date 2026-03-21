@@ -1,0 +1,67 @@
+plugins {
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+}
+
+apply plugin: 'com.github.node-gradle.node'
+
+// ─── Node.js (installed at root, shared by frontend subprojects) ─────
+node {
+    version = nodeVersion
+    download = true
+    workDir = file('.gradle/nodejs')
+}
+
+// ─── Apply java conventions to all subprojects ───────────────────────
+subprojects {
+    apply plugin: 'webswing.java-conventions'
+    group = rootProject.group
+    version = rootProject.version
+}
+
+// ─── Sonatype Central publishing ─────────────────────────────────────
+// Uses the OSSRH Staging API compatibility layer for Central Portal.
+// Authenticate with a Central Portal user token (not legacy OSSRH creds).
+// Set sonatypeUsername / sonatypePassword in ~/.gradle/gradle.properties
+// or via ORG_GRADLE_PROJECT_sonatypeUsername / ORG_GRADLE_PROJECT_sonatypePassword env vars.
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl = uri('https://ossrh-staging-api.central.sonatype.com/service/local/')
+            snapshotRepositoryUrl = uri('https://central.sonatype.com/repository/maven-snapshots/')
+        }
+    }
+}
+
+// ─── GPG signing (profile: publish) ──────────────────────────────────
+if (project.hasProperty('publish')) {
+    subprojects {
+        apply plugin: 'signing'
+        signing {
+            sign publishing.publications
+        }
+    }
+}
+
+// ─── Release: attach sources + javadoc jars ──────────────────────────
+if (project.hasProperty('release')) {
+    subprojects {
+        plugins.withType(JavaPlugin) {
+            java {
+                withSourcesJar()
+                withJavadocJar()
+            }
+        }
+    }
+}
+
+// ─── Copy the final WAR to root build/libs for convenience ──────────
+apply plugin: 'base'
+
+tasks.register('copyWar', Copy) {
+    dependsOn ':webswing-server:webswing-server-war:repackageWar'
+    from project(':webswing-server:webswing-server-war').layout.buildDirectory.dir('libs')
+    include '*.war'
+    into layout.buildDirectory.dir('libs')
+}
+
+assemble.dependsOn 'copyWar'
