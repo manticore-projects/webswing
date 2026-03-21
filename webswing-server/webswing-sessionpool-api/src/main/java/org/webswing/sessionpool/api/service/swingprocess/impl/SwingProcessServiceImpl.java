@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
-import org.webswing.server.common.model.AppletLauncherConfig;
 import org.webswing.server.common.model.DesktopLauncherConfig;
 import org.webswing.server.common.model.SwingConfig.DockMode;
 import org.webswing.server.common.model.SwingConfig.LauncherType;
@@ -40,9 +39,9 @@ import main.Main;
 
 @Singleton
 public class SwingProcessServiceImpl implements SwingProcessService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(SwingProcessServiceImpl.class);
-	
+
 	private static final String LAUNCHER_CONFIG = "launcherConfig";
 	private static final String WEB_API_CLASS_NAME = "org.webswing.toolkit.api.WebswingApi";
 	private static final String WEB_TOOLKIT_CLASS_NAME = "org.webswing.toolkit.WebToolkit";
@@ -50,15 +49,13 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 	private static final String WEB_PRINTER_JOB_CLASS_NAME = "org.webswing.toolkit.WebPrinterJobWrapper";
 	private static final String SHELL_FOLDER_MANAGER = "sun.awt.shell.PublicShellFolderManager";
 	private static final String JAVA9_PATCHED_JSOBJECT_MODULE_MARKER = "netscape.javascript.WebswingPatchedJSObjectJarMarker";
-	private static final String JAVA_FX_PATH = System.getProperty("java.home") + "/lib/ext/jfxrt.jar";
 	private static final String JAVA_FX_TOOLKIT_CLASS_NAME = "org.webswing.javafx.toolkit.WebsinwgFxToolkitFactory";
-	private static final String JACCESS_JAR_PATH = System.getProperty("java.home") + "/lib/ext/jaccess.jar";
-	
+
 	private Map<String, SwingProcess> processMap = Collections.synchronizedMap(new HashMap<>());
 	private Map<String, List<String>> pathInstanceMap = Collections.synchronizedMap(new HashMap<>());
-	
+
 	private ScheduledExecutorService processHandlerThread;
-	
+
 	@Override
 	public void start() throws WsInitException {
 		processHandlerThread = Executors.newSingleThreadScheduledExecutor(NamedThreadFactory.getInstance("Webswing Process Handler"));
@@ -68,18 +65,18 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 	public void stop() {
 		processHandlerThread.shutdown();
 	}
-	
+
 	@Override
 	public void kill(String instanceId, int delayMs) {
 		synchronized (processMap) {
 			if (!processMap.containsKey(instanceId)) {
 				return;
 			}
-			
+
 			processMap.get(instanceId).destroy(delayMs);
 		}
 	}
-	
+
 	@Override
 	public void killAll(String path) {
 		List<String> instanceIds = null;
@@ -104,14 +101,14 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			return processMap.get(instanceId);
 		}
 	}
-	
+
 	@Override
 	public List<SwingProcess> getAll() {
 		synchronized (processMap) {
 			return new ArrayList<>(processMap.values());
 		}
 	}
-	
+
 	@Override
 	public SwingProcess startProcess(ProcessStartupParams startupParams) throws Exception {
 		SwingProcess swing = null;
@@ -128,109 +125,109 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			processConfig.setClassPath(new File(URI.create(CommonUtil.getWarFileLocation())).getAbsolutePath());
 			String javaVersion = startupParams.getSubs().replace(startupParams.getAppConfig().getJavaVersion());
 			boolean useJFX = startupParams.getAppConfig().isJavaFx();
-			String webToolkitClass = WEB_TOOLKIT_CLASS_NAME;
-			String webFxToolkitFactory = JAVA_FX_TOOLKIT_CLASS_NAME;
-			String javaFxBootClasspath = "";
-			String webGraphicsEnvClass = WEB_GRAPHICS_ENV_CLASS_NAME;
-			String j9modules = "";
-			if (javaVersion.startsWith("1.8")) {
-				webToolkitClass += "8";
-				webFxToolkitFactory += "8";
-				webGraphicsEnvClass += "8";
-				if (useJFX) {
-					File file = new File(JAVA_FX_PATH);
-					if (!file.exists()) {
 
-						//try resolve javafx path from jre executable
-						File jreRelative = new File(java, "../../lib/ext/jfxrt.jar");
-						File jdkRelative = new File(java, "../../jre/lib/ext/jfxrt.jar");
-						if (jreRelative.exists()) {
-							file = jreRelative;
-						} else if (jdkRelative.exists()) {
-							file = jdkRelative;
-						} else {
-							log.warn("JavaFx library not found in '" + file.getCanonicalPath() + "'. ");
-							useJFX = false;
-						}
+			// All JDK 11+ use the "11" suffix classes
+			String webToolkitClass = WEB_TOOLKIT_CLASS_NAME + "11";
+			String webFxToolkitFactory = JAVA_FX_TOOLKIT_CLASS_NAME + "11";
+			String webGraphicsEnvClass = WEB_GRAPHICS_ENV_CLASS_NAME + "11";
 
-					}
-					javaFxBootClasspath += File.pathSeparator + CommonUtil.getBootClassPathForClass(JAVA_FX_TOOLKIT_CLASS_NAME) + File.pathSeparator + CommonUtil.getBootClassPathForClass(webFxToolkitFactory) + File.pathSeparator + "\"" + file.getCanonicalPath() + "\"";
-				}
-			} else if (javaVersion.startsWith("11") || javaVersion.startsWith("17") || javaVersion.startsWith("21")) {
-				webToolkitClass += "11";
-				webFxToolkitFactory += "11";
-				webGraphicsEnvClass += "11";
-				if (useJFX) {
-					String javaFxToolkitCP = CommonUtil.getBootClassPathForClass(JAVA_FX_TOOLKIT_CLASS_NAME, false) + ";" + CommonUtil.getBootClassPathForClass(webFxToolkitFactory, false) + ";";
-					String jfxCp = startupParams.getSubs().replace(CommonUtil.generateClassPathString(startupParams.getAppConfig().getJavaFxClassPathEntries()));
-					URL[] urls = ClasspathUtil.populateClassPath(processConfig.getClassPath() + ";" + javaFxToolkitCP + ";" + jfxCp, homeDir);
-					processConfig.setClassPath(Arrays.stream(urls).map(url -> {
-						try {
-							return new File(url.toURI()).getAbsolutePath();
-						} catch (URISyntaxException e) {
-							return url.getFile();
-						}
-					}).collect(Collectors.joining(File.pathSeparator)));
-				}
-				j9modules = " --patch-module jdk.jsobject=" + CommonUtil.getBootClassPathForClass(JAVA9_PATCHED_JSOBJECT_MODULE_MARKER);
-				j9modules += " --patch-module java.desktop=" + CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER);
-				j9modules += " --add-reads jdk.jsobject=ALL-UNNAMED ";
-				j9modules += " --add-opens java.base/java.net=ALL-UNNAMED "; // URLStreamHandler reflective access from SwingClassloader
-				j9modules += " --add-opens java.desktop/java.awt=ALL-UNNAMED "; // EventQueue reflective access from SwingMain
-				j9modules += " --add-opens java.desktop/sun.awt.windows=ALL-UNNAMED "; // sun.awt.windows.ThemeReader reflective access from WebToolkit
-				j9modules += " --add-opens java.desktop/java.awt.event=ALL-UNNAMED "; // ava.awt.event.KeyEvent.extendedKeyCode reflective access from Util
-				j9modules += " --add-opens java.desktop/javax.swing=ALL-UNNAMED "; // field javax.swing.PopupFactory.popupType reflective access from org.webswing.dispatch.CwmPaintDispatcher$1
-
-
-				j9modules += " --add-exports=java.desktop/java.awt=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.java2d=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.awt=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.base/sun.security.action=ALL-UNNAMED ";
-				j9modules += " --add-exports=java.base/sun.security.util=ALL-UNNAMED ";
-
-				j9modules += " --add-opens=java.base/java.util=ALL-UNNAMED ";
-				//j9modules += " --add-opens=java.desktop/java.awt=ALL-UNNAMED ";
-				j9modules += " --add-opens=java.desktop/sun.java2d=ALL-UNNAMED ";
-				j9modules += " --add-opens=java.base/java.lang.reflect=ALL-UNNAMED ";
-
-
-
-			} else {
-				log.error("Java version " + javaVersion + " not supported in this version of Webswing.");
-				throw new RuntimeException("Java version not supported. (Versions starting with 1.8 and 11 are supported.)");
+			// Verify JDK 11+ (parse major version from strings like "11", "17", "21.0.10", etc.)
+			int majorVersion;
+			try {
+				String major = javaVersion.contains(".") ? javaVersion.substring(0, javaVersion.indexOf('.')) : javaVersion;
+				majorVersion = Integer.parseInt(major);
+			} catch (NumberFormatException e) {
+				majorVersion = 0;
 			}
+			if (majorVersion < 11) {
+				log.error("Java version {} not supported. JDK 11 or later is required.", javaVersion);
+				throw new RuntimeException("Java version not supported. JDK 11 or later is required (detected: " + javaVersion + ").");
+			}
+
+			// JavaFX classpath setup
+			if (useJFX) {
+				String javaFxToolkitCP = CommonUtil.getBootClassPathForClass(JAVA_FX_TOOLKIT_CLASS_NAME, false) + ";" + CommonUtil.getBootClassPathForClass(webFxToolkitFactory, false) + ";";
+				String jfxCp = startupParams.getSubs().replace(CommonUtil.generateClassPathString(startupParams.getAppConfig().getJavaFxClassPathEntries()));
+				URL[] urls = ClasspathUtil.populateClassPath(processConfig.getClassPath() + ";" + javaFxToolkitCP + ";" + jfxCp, homeDir);
+				processConfig.setClassPath(Arrays.stream(urls).map(url -> {
+					try {
+						return new File(url.toURI()).getAbsolutePath();
+					} catch (URISyntaxException e) {
+						return url.getFile();
+					}
+				}).collect(Collectors.joining(File.pathSeparator)));
+			}
+
+			// ── Module system flags (JDK 11+) ──────────────────────────────────
+			StringBuilder modules = new StringBuilder();
+
+			// Patch modules: WebSwing toolkit overrides
+			modules.append(" --patch-module jdk.jsobject=").append(CommonUtil.getBootClassPathForClass(JAVA9_PATCHED_JSOBJECT_MODULE_MARKER));
+			modules.append(" --patch-module java.desktop=").append(CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER));
+			modules.append(" --add-reads jdk.jsobject=ALL-UNNAMED");
+
+			// --add-opens: reflective access needed by WebSwing internals
+			modules.append(" --add-opens=java.base/java.net=ALL-UNNAMED");             // URLStreamHandler in SwingClassloader
+			modules.append(" --add-opens=java.base/java.util=ALL-UNNAMED");             // Collections in SwingClassloader
+			modules.append(" --add-opens=java.base/java.lang.reflect=ALL-UNNAMED");     // Field.setAccessible in Main/WebToolkit
+			modules.append(" --add-opens=java.base/sun.misc=ALL-UNNAMED");              // Unsafe in WebToolkit.init() GE replacement
+			modules.append(" --add-opens=java.desktop/java.awt=ALL-UNNAMED");           // EventQueue in SwingMain
+			modules.append(" --add-opens=java.desktop/java.awt.event=ALL-UNNAMED");     // KeyEvent.extendedKeyCode in Util
+			modules.append(" --add-opens=java.desktop/javax.swing=ALL-UNNAMED");        // PopupFactory.popupType in CwmPaintDispatcher
+			modules.append(" --add-opens=java.desktop/sun.java2d=ALL-UNNAMED");         // SunGraphics2D in DirectDraw
+			modules.append(" --add-opens=java.desktop/sun.awt=ALL-UNNAMED");            // SunToolkit internals
+			modules.append(" --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED");      // SurfaceManager in WebComponentPeer
+			modules.append(" --add-opens=java.desktop/sun.font=ALL-UNNAMED");           // GlyphList/FontInfo in DirectDraw
+
+			// --add-exports: compile-time access to internal APIs
+			modules.append(" --add-exports=java.desktop/java.awt=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.awt=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.java2d=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.font=ALL-UNNAMED");
+			modules.append(" --add-exports=java.desktop/sun.print=ALL-UNNAMED");
+			modules.append(" --add-exports=java.base/sun.security.action=ALL-UNNAMED");
+			modules.append(" --add-exports=java.base/sun.security.util=ALL-UNNAMED");
+			modules.append(" --add-exports=java.base/sun.nio.cs=ALL-UNNAMED");
+
+			// ── Boot classpath ──────────────────────────────────────────────────
 			String webSwingToolkitApiJarPath = CommonUtil.getBootClassPathForClass(WEB_API_CLASS_NAME);
 			String webSwingCommonJarPath = CommonUtil.getBootClassPathForClass(Constants.class.getName());
 			String webSwingToolkitJarPath = CommonUtil.getBootClassPathForClass(WEB_TOOLKIT_CLASS_NAME);
 			String webSwingToolkitJarPathSpecific = CommonUtil.getBootClassPathForClass(webToolkitClass);
-			String shellFolderMgrJarPath = (File.pathSeparator + CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER));
+			String shellFolderMgrJarPath = File.pathSeparator + CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER);
 
-			String bootCp = "-Xbootclasspath/a:" + webSwingToolkitApiJarPath 
-					+ File.pathSeparatorChar + webSwingCommonJarPath 
-					+ File.pathSeparatorChar + webSwingToolkitJarPathSpecific 
-					+ File.pathSeparatorChar + webSwingToolkitJarPath + shellFolderMgrJarPath;
+			String bootCp = "-Xbootclasspath/a:" + webSwingToolkitApiJarPath
+							+ File.pathSeparatorChar + webSwingCommonJarPath
+							+ File.pathSeparatorChar + webSwingToolkitJarPathSpecific
+							+ File.pathSeparatorChar + webSwingToolkitJarPath + shellFolderMgrJarPath;
 
-			if (useJFX) {
-				bootCp += javaFxBootClasspath;
+			// ── Debug flags ─────────────────────────────────────────────────────
+			// Use modern JDWP syntax (no -Xnoagent/-Djava.compiler=NONE, those are JDK 1.3 era)
+			String debug = "";
+			if (startupParams.getAppConfig().isDebug() && startupParams.getDebugPort() != 0) {
+				debug = " -agentlib:jdwp=transport=dt_socket,address=*:" + startupParams.getDebugPort() + ",server=y,suspend=y";
 			}
 
-			if (javaVersion.startsWith("1.8")) {
-				if (!new File(JACCESS_JAR_PATH).exists()) {
-					log.warn("Java access.jar not found in '" + new File(JACCESS_JAR_PATH).getCanonicalPath() + "'. ");
-				} else {
-					bootCp += File.pathSeparatorChar + "\"" + new File(JACCESS_JAR_PATH).getCanonicalPath() + "\"";
-				}
-			}
-			
-			String debug = startupParams.getAppConfig().isDebug() && (startupParams.getDebugPort() != 0) ? " -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=" + startupParams.getDebugPort() + ",server=y,suspend=y " : "";
 			String vmArgs = startupParams.getAppConfig().getVmArgs() == null ? "" : startupParams.getSubs().replace(startupParams.getAppConfig().getVmArgs());
-			processConfig.setJvmArgs(j9modules + bootCp + debug + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider " + " -noverify " + vmArgs);
+
+			// -noverify: required because some deployed application JARs contain
+			// malformed bytecode (e.g. slf4j-api-1.8.0-beta4 has duplicate
+			// LocalVariableTypeTable entries). Deprecated since JDK 13, will be
+			// removed in a future JDK. Fix properly by upgrading SLF4J to 2.0.x.
+			processConfig.setJvmArgs(modules.toString() + " " + bootCp + debug
+									 + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider"
+									 + " -noverify"
+									 + " " + vmArgs);
+
+			// ── System properties ───────────────────────────────────────────────
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID, startupParams.getInstanceId());
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_SESSION_POOL_ID, System.getProperty(Constants.SESSION_POOL_ID));
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_USER_ID, startupParams.getUserId());
@@ -241,7 +238,7 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			processConfig.addProperty(Constants.ROOT_DIR_PATH, System.getProperty(Constants.ROOT_DIR_PATH));
 			processConfig.addProperty(Constants.TEMP_DIR_PATH, System.getProperty(Constants.TEMP_DIR_PATH));
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_WEBSOCKET_URL, startupParams.getWebsocketUrl());
-			processConfig.addProperty(Constants.WEBSWING_CONNECTION_SECRET, serializeAppConnectionSecret(startupParams.getAppConnectionSecret()));			
+			processConfig.addProperty(Constants.WEBSWING_CONNECTION_SECRET, serializeAppConnectionSecret(startupParams.getAppConnectionSecret()));
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_DATA_STORE_CONFIG, startupParams.getDataStoreConfig());
 
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_THEME, startupParams.getSubs().replace(startupParams.getAppConfig().getTheme()));
@@ -284,15 +281,16 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			processConfig.addProperty(Constants.WEBSOCKET_MESSAGE_SIZE, System.getProperty(Constants.WEBSOCKET_MESSAGE_SIZE, "" + Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE));
 			processConfig.addProperty(Constants.WEBSOCKET_MESSAGE_TIMEOUT, System.getProperty(Constants.WEBSOCKET_MESSAGE_TIMEOUT, "" + Constants.WEBSOCKET_MESSAGE_TIMEOUT_DEFAULT));
 
-			copyProperties(processConfig,Constants.WEBSOCKET_CLIENT_TRUSTSTORE,Constants.WEBSOCKET_CLIENT_TRUSTSTORE_TYPE,Constants.WEBSOCKET_CLIENT_TRUSTSTORE_PWD,Constants.WEBSOCKET_CLIENT_HOSTNAME_VERIFIER_DISABLED,Constants.WEBSOCKET_CLIENT_PROXY_URI);
+			copyProperties(processConfig, Constants.WEBSOCKET_CLIENT_TRUSTSTORE, Constants.WEBSOCKET_CLIENT_TRUSTSTORE_TYPE, Constants.WEBSOCKET_CLIENT_TRUSTSTORE_PWD, Constants.WEBSOCKET_CLIENT_HOSTNAME_VERIFIER_DISABLED, Constants.WEBSOCKET_CLIENT_PROXY_URI);
 
 			if (useJFX) {
 				processConfig.addProperty(Constants.SWING_FX_TOOLKIT_FACTORY, webFxToolkitFactory);
 				processConfig.addProperty(Constants.SWING_START_SYS_PROP_JFX_TOOLKIT, Constants.SWING_START_SYS_PROP_JFX_TOOLKIT_WEB);
-				processConfig.addProperty(Constants.SWING_START_SYS_PROP_JFX_PRISM, "web");//PrismSettings
-				processConfig.addProperty("prism.text", "t2k");//PrismFontFactory
-				processConfig.addProperty("prism.lcdtext", "false");//PrismFontFactory
-				processConfig.addProperty("javafx.live.resize", "false");//QuantumToolkit
+				processConfig.addProperty(Constants.SWING_START_SYS_PROP_JFX_PRISM, "web");
+				// T2K font engine was removed in JDK 11; OpenJDK uses FreeType.
+				// prism.text=t2k is no longer needed.
+				processConfig.addProperty("prism.lcdtext", "false");
+				processConfig.addProperty("javafx.live.resize", "false");
 			}
 
 			if (startupParams.getAppConfig().isSessionLogging()) {
@@ -302,31 +300,18 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			}
 
 			switch (startupParams.getAppConfig().getLauncherType()) {
-			case Applet:
-				AppletLauncherConfig applet = startupParams.getAppConfig().getValueAs(LAUNCHER_CONFIG, AppletLauncherConfig.class);
-				processConfig.addProperty(Constants.SWING_START_SYS_PROP_APPLET_DOCUMENT_BASE, startupParams.getDocumentBase());
-				processConfig.addProperty(Constants.SWING_START_SYS_PROP_APPLET_CLASS, applet.getAppletClass());
-				for (String key : applet.getParameters().keySet()) {
-					processConfig.addProperty(Constants.SWING_START_STS_PROP_APPLET_PARAM_PREFIX + startupParams.getSubs().replace(key), startupParams.getSubs().replace(applet.getParameters().get(key)));
-				}
-				if (startupParams.getParams() != null) {
-					for (Entry<String, String> p : startupParams.getParams().entrySet()) {
-						processConfig.addProperty(Constants.SWING_START_STS_PROP_APPLET_PARAM_PREFIX + p.getKey(), p.getValue());
-					}
-				}
-				break;
-			case Desktop:
-				DesktopLauncherConfig desktop = startupParams.getAppConfig().getValueAs(LAUNCHER_CONFIG, DesktopLauncherConfig.class);
-				processConfig.setArgs(startupParams.getSubs().replace(desktop.getArgs()));
-				processConfig.addProperty(Constants.SWING_START_SYS_PROP_MAIN_CLASS, startupParams.getSubs().replace(desktop.getMainClass()));
-				break;
-			default:
-				throw new IllegalStateException("Launcher type not recognized.");
+				case Desktop:
+					DesktopLauncherConfig desktop = startupParams.getAppConfig().getValueAs(LAUNCHER_CONFIG, DesktopLauncherConfig.class);
+					processConfig.setArgs(startupParams.getSubs().replace(desktop.getArgs()));
+					processConfig.addProperty(Constants.SWING_START_SYS_PROP_MAIN_CLASS, startupParams.getSubs().replace(desktop.getMainClass()));
+					break;
+				default:
+					throw new IllegalStateException("Launcher type not recognized: " + startupParams.getAppConfig().getLauncherType());
 			}
 
 			swing = new SwingProcessImpl(startupParams.getInstanceId(), processConfig, startupParams.getAppConfig(), processHandlerThread);
 			swing.execute();
-			
+
 			synchronized (processMap) {
 				processMap.put(startupParams.getInstanceId(), swing);
 			}
@@ -344,9 +329,9 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 	}
 
 	private void copyProperties(SwingProcessConfig processConfig, String... propNames) {
-		for(String prop:propNames){
-			if(System.getProperty(prop)!=null){
-				processConfig.addProperty(prop,System.getProperty(prop));
+		for (String prop : propNames) {
+			if (System.getProperty(prop) != null) {
+				processConfig.addProperty(prop, System.getProperty(prop));
 			}
 		}
 	}
@@ -354,15 +339,15 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 	@Override
 	public void closeProcess(String instanceId) {
 		SwingProcess process = getByInstanceId(instanceId);
-		
+
 		if (process == null) {
 			return;
 		}
-		
+
 		if (process.isRunning()) {
 			process.setProcessExitListener(null);
 		}
-		
+
 		if (process.getSwingConfig().isIsolatedFs() && process.getSwingConfig().isClearTransferDir()) {
 			String transferDir = process.getConfig().getProperties().get(Constants.SWING_START_SYS_PROP_TRANSFER_DIR);
 			try {
@@ -376,11 +361,9 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 				log.error("Failed to delete transfer dir " + transferDir, e);
 			}
 		}
-		
+
 		synchronized (processMap) {
-			if (processMap.containsKey(instanceId)) {
-				processMap.remove(instanceId);
-			}
+			processMap.remove(instanceId);
 		}
 		synchronized (pathInstanceMap) {
 			if (pathInstanceMap.containsKey(process.getConfig().getPath())) {
@@ -388,7 +371,7 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			}
 		}
 	}
-	
+
 	public static class SessionLogAppenderParams {
 		public String singleSize;
 		public String maxSize;
@@ -405,20 +388,20 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			this.sessionLogDir = sessionLogDir;
 		}
 	}
-	
+
 	private String serializeAppConnectionSecret(String secret) {
 		return new String(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 	}
-	
+
 	private String getSessionLogDir() {
 		String logDir = System.getProperty(Constants.LOGS_DIR_PATH, "logs/");
 		if (!logDir.endsWith("/") && !logDir.endsWith("\\")) {
 			logDir = logDir + "/";
 		}
-		
+
 		return logDir + "session/";
 	}
-	
+
 	private String getAbsolutePaths(String paths, boolean b, Function<String, File> fileResolver) throws IOException {
 		String result = "";
 		for (String s : paths.split(File.pathSeparator)) {
@@ -426,7 +409,7 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 		}
 		return result.substring(0, Math.max(0, result.length() - 1));
 	}
-	
+
 	private String getAbsolutePath(String path, boolean create, Function<String, File> fileResolver) throws IOException {
 		if (StringUtils.isBlank(path)) {
 			path = ".";
@@ -451,5 +434,5 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 		}
 		return f.getCanonicalPath();
 	}
-	
+
 }
