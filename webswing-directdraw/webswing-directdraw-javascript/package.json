@@ -16,6 +16,10 @@
     "proto": "pbjs -t static-module -w commonjs -o src/main/webapp/proto/dd.js --no-encode --no-create --no-verify --no-delimited ../src/proto/javascript/directdraw.proto && pbts -o src/main/webapp/proto/dd.d.ts src/main/webapp/proto/dd.js",
     "start": "webpack serve --config webpack-dev.config.js"
   },
+  "overrides": {
+    "glob": "^12.0.0",
+    "inflight": "^2.0.0"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
@@ -23,16 +27,16 @@
     "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "copy-webpack-plugin": "^12.0.0",
-    "html-webpack-plugin": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "copy-webpack-plugin": "^14.0.0",
+    "html-webpack-plugin": "^5.6.6",
     "protobufjs-cli": "^2.0.0",
     "rimraf": "^5.0.0",
-    "ts-loader": "^9.5.0",
-    "typescript": "^5.5.0",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.0",
-    "webpack-dev-server": "^5.1.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.8.0",
+    "webpack": "^5.105.0",
+    "webpack-cli": "^7.0.0",
+    "webpack-dev-server": "^5.2.0",
     "webpack-merge": "^6.0.0"
   }
 }
