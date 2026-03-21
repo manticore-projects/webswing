@@ -65,3 +65,44 @@ tasks.register('copyWar', Copy) {
 }
 
 assemble.dependsOn 'copyWar'
+
+// ─── Ultra-clean: wipe everything including Node, node_modules, caches ──
+tasks.register('ultraClean') {
+    dependsOn 'clean'
+    group = 'build'
+    description = 'Deep clean: Gradle builds + Node installation + node_modules + webpack target/ + buildSrc caches'
+
+    doLast {
+        // Root-level Node installation
+        delete '.gradle/nodejs'
+        delete '.gradle/.cache'
+
+        // buildSrc caches
+        delete 'buildSrc/.gradle'
+        delete 'buildSrc/build'
+
+        // Find and delete all node_modules and webpack target/ dirs
+        def dirsToClean = ['node_modules', 'target', '.tmp']
+        rootProject.allprojects.each { proj ->
+            dirsToClean.each { dirName ->
+                def d = proj.file(dirName)
+                if (d.exists()) {
+                    println "  Cleaning ${proj.path}/${dirName}"
+                    delete d
+                }
+            }
+        }
+
+        // Also clean root node_modules if present
+        def rootNodeModules = file('node_modules')
+        if (rootNodeModules.exists()) {
+            println "  Cleaning root node_modules"
+            delete rootNodeModules
+        }
+
+        // Assembly dist output
+        delete 'webswing-assembly/dist'
+
+        println "\nUltra-clean complete. Next build will re-download Node and reinstall npm packages."
+    }
+}
