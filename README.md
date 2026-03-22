@@ -1,6 +1,6 @@
 <div align="center">
 
-# WebSwing Lite
+# WebSwing Lite 26.0
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
@@ -18,7 +18,7 @@
 
 <br/>
 
-[Getting Started](#-getting-started) · [Build](#-build-instructions) · [What's New](#-whats-new) · [Architecture](#-architecture) · [Commercial Edition](#-commercial-edition)
+[Getting Started](#-getting-started) · [Build](#-build-instructions) · [What's New](#-whats-new) · [Architecture](#-architecture) 
 
 ---
 
@@ -28,7 +28,7 @@
 
 **WebSwing Lite** is a modernized, open-source edition of [WebSwing](https://www.webswing.org) — the web server that renders Java Swing applications in HTML5 Canvas and delivers them to any browser via WebSocket.
 
-This edition is based on the **last open-source release (v20.2.5)** of WebSwing, updated and maintained by [Manticore Projects](https://github.com/manticore-projects) with a focus on **modern JDK compatibility**, **security**, and **build toolchain modernization**.
+This edition is based on the **last open-source release (v20.2.5)** of WebSwing, updated and maintained by [Manticore Projects](https://manticore-projects.com) with a focus on **modern JDK compatibility**, **security**, and **build toolchain modernization**.
 
 > **Looking for the full-featured commercial edition?**
 > WebSwing Lite does not include advanced capabilities such as cluster session pooling, load balancing, recording/playback, advanced admin console, and commercial support.
@@ -59,7 +59,7 @@ All internal APIs adapted for the post-JDK-11 module system — no `--illegal-ac
 
 ### Performance
 
-- **SSE/AVX-optimized PNG encoding** via [fpng-java](https://github.com/nicob/fpng-java) — hardware-accelerated image compression in the DirectDraw rendering pipeline
+- **SSE/AVX-optimized PNG encoding** via [fpng-java](https://manticore-projects.com/FPNG-Java/index.html) — hardware-accelerated image compression in the DirectDraw rendering pipeline
 - **Browser-side font rendering** — text is rendered as font names + coordinates instead of server-side glyph bitmaps, reducing WebSocket bandwidth by up to 80%
 
 ### Security
@@ -162,7 +162,7 @@ cd /opt/webswing && ./run.sh start
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────┬───────────────────────────┘
                                   │
-                    ┌─────────────▼─────────────┐
+                    ┌─────────────▼──────────-───┐
                     │     WebSwing Server        │
                     │    (Jetty 9 / Servlet)     │
                     │                            │
@@ -173,7 +173,7 @@ cd /opt/webswing && ./run.sh start
                     │  └──────────┬───────────┘  │
                     └─────────────┼──────────────┘
                                   │ spawns
-                    ┌─────────────▼─────────────┐
+                    ┌─────────────▼─────────-────┐
                     │     Child JVM Process      │
                     │                            │
                     │  ┌──────────────────────┐  │
@@ -222,7 +222,7 @@ This project is licensed under the [GNU Affero General Public License v3.0](http
 
 <div align="center">
 
-**Maintained by [Manticore Projects](https://github.com/manticore-projects)**
+**Maintained by [Manticore Projects](https://manticore-projects.com)**
 
 *Building enterprise financial software for banks and insurances since 2014.*
 
