@@ -165,10 +165,6 @@ public class SwingMain {
 		main.invoke(null, argsArray);
 	}
 
-	private static void startApplet() throws Exception {
-		AppLogger.error("Error in SwingMain: Applets have been removed");
-	}
-
 	public static void initializeJavaFX() throws InvocationTargetException, InterruptedException {
 		if (Constants.SWING_START_SYS_PROP_JFX_TOOLKIT_WEB.equals(System.getProperty(Constants.SWING_START_SYS_PROP_JFX_TOOLKIT))) {
 
@@ -237,10 +233,6 @@ public class SwingMain {
 			}
 		}
 		return result;
-	}
-
-	private static boolean isApplet() {
-		return false;
 	}
 
 	private static void initTempFolder() {

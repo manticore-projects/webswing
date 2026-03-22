@@ -83,12 +83,12 @@
 		<dependency>
 			<groupId>com.manticore-projects.tools</groupId>
 			<artifactId>fpng-java</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.manticore-projects.tools</groupId>
 			<artifactId>fpnge-java</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

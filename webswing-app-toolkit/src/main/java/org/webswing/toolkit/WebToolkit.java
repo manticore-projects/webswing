@@ -1,6 +1,5 @@
 package org.webswing.toolkit;
 
-import java.applet.Applet;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -620,10 +619,6 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	abstract WebWindowPeer createWebWindowPeer(Window paramWindow);
 
 	public PanelPeer createPanel(Panel panel) {
-		if (panel instanceof Applet) {
-			return super.createPanel(panel);
-		}
-
 		WebPanelPeer localpanelPeer = createWebPanelPeer(panel);
 		return localpanelPeer;
 	}

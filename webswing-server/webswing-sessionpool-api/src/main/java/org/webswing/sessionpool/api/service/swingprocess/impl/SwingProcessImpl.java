@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LifeCycle;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.ConsoleAppender;
@@ -61,19 +63,19 @@ public class SwingProcessImpl implements SwingProcess {
 	private final String instanceId;
 	private final SwingProcessConfig config;
 	private final SwingConfig swingConfig;
-	private Logger defaultLog;
+	private final Logger defaultLog;
 	private Logger log;
-	private Logger childLog;    // dedicated logger for child process output (minimal pattern)
-	private String shortName;   // short display name e.g. "ifrsbox/officer"
+	private final Logger childLog;    // dedicated logger for child process output (minimal pattern)
+	private final String shortName;   // short display name e.g. "ifrsbox/officer"
 	private Process process;
 	private ScheduledFuture<?> logsProcessor;
 	private ScheduledFuture<?> heartbeat;
 	private InputStream out;
 	private InputStream err;
 	private OutputStream in;
-	private StringBuilder bufferOut = new StringBuilder();
-	private StringBuilder bufferErr = new StringBuilder();
-	private byte[] buffer = new byte[4096];
+	private final StringBuilder bufferOut = new StringBuilder();
+	private final StringBuilder bufferErr = new StringBuilder();
+	private final byte[] buffer = new byte[4096];
 	private boolean hasSessionLog;
 	private String sessionLogDestination;
 
@@ -131,7 +133,7 @@ public class SwingProcessImpl implements SwingProcess {
 
 			process = processBuilder.start();
 			long pid = process.pid();
-			log.info("Application process [" + config.getName() + "] started with PID " + pid);
+            log.info("Application process [{}] started with PID {}", config.getName(), pid);
 
 			// Check if the process survived the startup grace period.
 			// If the child JVM crashes immediately (e.g., bad --patch-module JAR,
@@ -145,8 +147,8 @@ public class SwingProcessImpl implements SwingProcess {
 
 			if (hasSessionLog) {
 				log.info("Starting application process [" + config.getName() + "] from [" + config.getBaseDir() + "] :" + protectedCommand);
-				defaultLog.info("Logging into: " + sessionLogDestination);
-				log.info("Logging into: " + sessionLogDestination);
+                defaultLog.info("Logging into: {}", sessionLogDestination);
+                log.info("Logging into: {}", sessionLogDestination);
 			}
 
 			if (statusListener != null) {
@@ -163,7 +165,7 @@ public class SwingProcessImpl implements SwingProcess {
 						processStream(out, bufferOut, buffer, config.getName(), false);
 						processStream(err, bufferErr, buffer, config.getName(), true);
 					} catch (Exception e) {
-						log.error("Failed to process process logs for application process " + config.getName(), e);
+                        log.error("Failed to process process logs for application process {}", config.getName(), e);
 						destroy();
 					}
 					if (!SwingProcessImpl.this.isRunning()) {
@@ -180,7 +182,7 @@ public class SwingProcessImpl implements SwingProcess {
 					try {
 						sendHeartbeat(in);
 					} catch (Exception e) {
-						log.error("Failed to send heartbeat ping to application process " + config.getName(), e);
+                        log.error("Failed to send heartbeat ping to application process {}", config.getName(), e);
 					}
 				}
 			}, HEARTBEAT_PERIOD, HEARTBEAT_PERIOD, TimeUnit.MILLISECONDS);
@@ -201,7 +203,11 @@ public class SwingProcessImpl implements SwingProcess {
 			boolean exited = process.waitFor(STARTUP_GRACE_PERIOD_MS, TimeUnit.MILLISECONDS);
 			if (exited) {
 				int exitCode = process.exitValue();
-				log.error("Application process [" + config.getName() + "] died immediately with exit code " + exitCode + ". Draining output:");
+                log.error(
+                        "Application process [{}] died immediately with exit code {}. Draining output:",
+                        config.getName(),
+                        exitCode
+                );
 
 				// Drain all remaining stdout/stderr so the error is visible
 				drainStream(process.getInputStream(), config.getName(), false);
@@ -245,7 +251,7 @@ public class SwingProcessImpl implements SwingProcess {
 			while ((read = stream.read(drainBuffer)) > 0) {
 				sb.append(new String(drainBuffer, 0, read, StandardCharsets.UTF_8));
 			}
-			if (sb.length() > 0) {
+			if (!sb.isEmpty()) {
 				for (String line : sb.toString().split("\n")) {
 					line = line.replace("\r", "");
 					if (!line.isEmpty()) {
@@ -320,9 +326,9 @@ public class SwingProcessImpl implements SwingProcess {
 				if (heartbeat != null) {
 					heartbeat.cancel(false);
 				}
-				log.info("[" + config.getName() + "] app process terminated. ");
+                log.info("[{}] app process terminated. ", config.getName());
 				if (hasSessionLog) {
-					defaultLog.info("[" + config.getName() + "] app process terminated. ");
+                    defaultLog.info("[{}] app process terminated. ", config.getName());
 				}
 				if (closeListener != null) {
 					try {
@@ -332,10 +338,10 @@ public class SwingProcessImpl implements SwingProcess {
 					}
 				}
 				if (hasSessionLog) {
-					log.getAppenders().values().forEach(appender -> appender.stop());
+					log.getAppenders().values().forEach(LifeCycle::stop);
 				}
 				// Stop the child logger's appenders
-				childLog.getAppenders().values().forEach(appender -> appender.stop());
+				childLog.getAppenders().values().forEach(LifeCycle::stop);
 				destroying = false;
 			}
 		}
@@ -399,9 +405,7 @@ public class SwingProcessImpl implements SwingProcess {
 
 	private void translateAndAdd(List<String> cmd, String args, String fieldName) throws Exception {
 		try {
-			for (String s : translateCommandline(args)) {
-				cmd.add(s);
-			}
+            cmd.addAll(Arrays.asList(translateCommandline(args)));
 		} catch (Exception e) {
 			throw new Exception("Illegal value for '" + fieldName + "' field.", e);
 		}
@@ -424,7 +428,7 @@ public class SwingProcessImpl implements SwingProcess {
 		final int inQuote = 1;
 		final int inDoubleQuote = 2;
 		int state = normal;
-		final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+		final StringTokenizer tok = new StringTokenizer(toProcess, "\"' ", true);
 		final ArrayList<String> result = new ArrayList<>();
 		final StringBuilder current = new StringBuilder();
 		boolean lastTokenHasBeenQuoted = false;
@@ -433,7 +437,7 @@ public class SwingProcessImpl implements SwingProcess {
 			String nextTok = tok.nextToken();
 			switch (state) {
 				case inQuote:
-					if ("\'".equals(nextTok)) {
+					if ("'".equals(nextTok)) {
 						lastTokenHasBeenQuoted = true;
 						state = normal;
 					} else {
@@ -449,12 +453,12 @@ public class SwingProcessImpl implements SwingProcess {
 					}
 					break;
 				default:
-					if ("\'".equals(nextTok)) {
+					if ("'".equals(nextTok)) {
 						state = inQuote;
 					} else if ("\"".equals(nextTok)) {
 						state = inDoubleQuote;
 					} else if (" ".equals(nextTok)) {
-						if (lastTokenHasBeenQuoted || current.length() != 0) {
+						if (lastTokenHasBeenQuoted || !current.isEmpty()) {
 							result.add(current.toString());
 							current.setLength(0);
 						}
@@ -465,7 +469,7 @@ public class SwingProcessImpl implements SwingProcess {
 					break;
 			}
 		}
-		if (lastTokenHasBeenQuoted || current.length() != 0) {
+		if (lastTokenHasBeenQuoted || !current.isEmpty()) {
 			result.add(current.toString());
 		}
 		if (state == inQuote || state == inDoubleQuote) {
@@ -520,19 +524,19 @@ public class SwingProcessImpl implements SwingProcess {
 
 		// Parse JUL level prefixes and map to correct log level
 		if (appMsg.startsWith("SEVERE: ")) {
-			childLog.error(prefix + appMsg.substring(8));
+            childLog.error("{}{}", prefix, appMsg.substring(8));
 		} else if (appMsg.startsWith("WARNING: ")) {
-			childLog.warn(prefix + appMsg.substring(9));
+            childLog.warn("{}{}", prefix, appMsg.substring(9));
 		} else if (appMsg.startsWith("INFO: ")) {
-			childLog.info(prefix + appMsg.substring(6));
+            childLog.info("{}{}", prefix, appMsg.substring(6));
 		} else if (appMsg.startsWith("CONFIG: ")) {
-			childLog.info(prefix + appMsg.substring(8));
+            childLog.info("{}{}", prefix, appMsg.substring(8));
 		} else if (appMsg.startsWith("FINE: ") || appMsg.startsWith("FINER: ") || appMsg.startsWith("FINEST: ")) {
-			childLog.debug(prefix + appMsg.substring(appMsg.indexOf(": ") + 2));
+            childLog.debug("{}{}", prefix, appMsg.substring(appMsg.indexOf(": ") + 2));
 		} else if (isError) {
-			childLog.error(prefix + appMsg);
+            childLog.error("{}{}", prefix, appMsg);
 		} else {
-			childLog.info(prefix + appMsg);
+            childLog.info("{}{}", prefix, appMsg);
 		}
 	}
 
@@ -619,14 +623,15 @@ public class SwingProcessImpl implements SwingProcess {
 		SizeBasedTriggeringPolicy sizeBasedPolicy = SizeBasedTriggeringPolicy.createPolicy(maxLogRollingSize + " B");
 		String maxSize = params.maxSize;
 
-		RollingFileAppender appender = RollingFileAppender.newBuilder()
-														  .withName(SwingProcessImpl.class.getName())
-														  .withFileName(logFileName)
-														  .withFilePattern(logFileName + ".%i")
-														  .withAppend(true)
-														  .withLayout(PatternLayout.newBuilder().withPattern(Constants.SESSION_LOG_PATTERN).build())
-														  .withPolicy(sizeBasedPolicy)
-														  .withStrategy(
+		RollingFileAppender appender = RollingFileAppender.newBuilder().setName(SwingProcessImpl.class.getName())
+                                                          .withFileName(logFileName)
+                                                          .withFilePattern(logFileName + ".%i")
+                                                          .withAppend(true).setLayout(PatternLayout.newBuilder()
+                                                                                                   .withPattern(
+                                                                                                           Constants.SESSION_LOG_PATTERN)
+                                                                                                   .build())
+                                                          .withPolicy(sizeBasedPolicy)
+                                                          .withStrategy(
 																  DefaultRolloverStrategy.newBuilder()
 																						 .withMax("1")
 																						 .withConfig(logConfig)
@@ -637,7 +642,7 @@ public class SwingProcessImpl implements SwingProcess {
 																																 }, null, logConfig)
 																						 })
 																						 .build())
-														  .build();
+                                                          .build();
 		appender.start();
 
 		return appender;

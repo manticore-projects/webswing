@@ -1,6 +1,5 @@
 package org.webswing.dispatch;
 
-import java.applet.Applet;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -291,12 +290,6 @@ public class WebEventDispatcher extends AbstractEventDispatcher {
 		paintDispatcher.notifyFileDialogActive();
 		paintDispatcher.closePasteRequestDialog();
 		Util.getWebToolkit().processApiEvent(handshake);
-		if (System.getProperty(Constants.SWING_START_SYS_PROP_APPLET_CLASS) != null) {
-			// resize and refresh the applet object exposed in javascript in case of page reload/session continue
-			Applet a = (Applet) WebJSObject.getJavaReference(System.getProperty(Constants.SWING_START_SYS_PROP_APPLET_CLASS));
-			a.resize(handshake.getDesktopWidth(), handshake.getDesktopHeight());
-			WebJSObject.setAppletRef(a);
-		}
 		System.setProperty(Constants.SWING_START_SYS_PROP_TOUCH_MODE, handshake.isTouchMode() + "");
 		
 		boolean oldAccessibility = Boolean.valueOf(System.getProperty(Constants.SWING_START_SYS_PROP_ACCESSIBILITY_ENABLED, "false"));

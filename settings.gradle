@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        mavenLocal()
         gradlePluginPortal()
         mavenCentral()
     }
@@ -12,15 +11,6 @@ dependencyResolutionManagement {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven {
-            name = 'webswing-3rd-party'
-            url = 'https://dev.webswing.org/public/nexus/repository/webswing-3rd-parties/'
-        }
-        maven {
-            name = 'sonatype-snapshots'
-            url = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
-            mavenContent { snapshotsOnly() }
-        }
     }
 }
 

@@ -1,8 +1,11 @@
+import com.github.gradle.node.npm.task.NpmTask
+
 apply plugin: 'webswing.node-conventions'
 
 // Override npm install args for this module
 tasks.named('npmInstallTask') {
-    args = ['install', '--unsafe-perm=true', '--allow-root']
+//    args = ['install', '--unsafe-perm=true', '--allow-root']
+    args = ['install']
 }
 
 // Override npm build for release profile
@@ -22,7 +25,7 @@ tasks.register('copyWebapp', Copy) {
 }
 
 // License report
-tasks.register('npmLicenseReport', com.github.gradle.node.npm.task.NpmTask) {
+tasks.register('npmLicenseReport', NpmTask) {
     dependsOn 'npmInstallTask'
     args = ['run', 'license-report']
 }

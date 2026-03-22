@@ -1,6 +1,5 @@
 package org.webswing.toolkit.extra;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -42,11 +41,6 @@ public class WebRepaintManager extends RepaintManager {
 	@Override
 	public void addDirtyRegion(Window window, int x, int y, int w, int h) {
 		addDirtyRegionPrivate(window, x, y, w, h);
-	}
-
-	@Override
-	public void addDirtyRegion(Applet applet, int x, int y, int w, int h) {
-		addDirtyRegionPrivate(applet, x, y, w, h);
 	}
 
 	private void addDirtyRegionPrivate(Container c, int x, int y, int w, int h) {
@@ -124,8 +118,6 @@ public class WebRepaintManager extends RepaintManager {
 					}
 				} else if (c instanceof Window) {
 					delegate.addDirtyRegion((Window) c, r.x, r.y, r.width, r.height);
-				} else if (c instanceof Applet) {
-					delegate.addDirtyRegion((Applet) c, r.x, r.y, r.width, r.height);
 				}
 			}
 			dirty.clear();

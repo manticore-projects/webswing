@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.webswing.server.common.model.meta.ConfigField;
 import org.webswing.server.common.model.meta.ConfigFieldDefaultValueBoolean;
@@ -34,7 +35,6 @@ import org.webswing.server.common.model.meta.VariableSetName;
 public interface SwingConfig extends Config {
 
 	public enum LauncherType {
-		Applet,
 		Desktop;
 	}
 	
@@ -111,7 +111,7 @@ public interface SwingConfig extends Config {
 	@ConfigFieldVariables(VariableSetName.SwingInstance)
 	public String getVmArgs();
 
-	@ConfigField(tab = ConfigGroup.Java, label = "Launcher Type", description = "Select the application type. Applet or regular Desktop Application.")
+	@ConfigField(tab = ConfigGroup.Java, label = "Launcher Type", description = "Select the application type. Only Desktop Application is supported.")
 	@ConfigFieldDefaultValueString("Desktop")
 	@ConfigFieldDiscriminator
 	public LauncherType getLauncherType();
@@ -224,15 +224,11 @@ public interface SwingConfig extends Config {
 		public Class<?> getExplicitType(SwingConfig config, ClassLoader cl, String propertyName, Method readMethod, Object value) throws ClassNotFoundException {
 			if (propertyName.equals("launcherConfig")) {
 				if (config.getLauncherType() != null) {
-					switch (config.getLauncherType()) {
-					case Applet:
-						return AppletLauncherConfig.class;
-					case Desktop:
-						return DesktopLauncherConfig.class;
-					default:
-						return null;
-					}
-				} else {
+                    if (Objects.requireNonNull(config.getLauncherType()) == LauncherType.Desktop) {
+                        return DesktopLauncherConfig.class;
+                    }
+                    return null;
+                } else {
 					return null;
 				}
 			} else {

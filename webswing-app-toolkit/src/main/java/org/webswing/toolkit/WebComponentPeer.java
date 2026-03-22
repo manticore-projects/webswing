@@ -1,6 +1,5 @@
 package org.webswing.toolkit;
 
-import java.applet.Applet;
 import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.BufferCapabilities;
@@ -396,7 +395,7 @@ abstract public class WebComponentPeer implements ComponentPeer {
 	}
 
 	public Point getLocationOnScreen() {
-		if (getTarget() instanceof Applet || getTarget() instanceof Window) {
+		if (getTarget() instanceof Window) {
 			return getBounds().getLocation();
 		} else {
 			Point p = new Point(0, 0);

@@ -261,7 +261,6 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_RECORDING_FLAGGED, startupParams.isRecordingFlagged());
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_RECORDING_ASK_NEEDED, startupParams.isAskForRecordingNeeded());
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_MIRRORING_ASK_NEEDED, startupParams.isAskForMirroringNeeded());
-			processConfig.addProperty(Constants.SWING_START_SYS_PROP_IS_APPLET, LauncherType.Applet.equals(startupParams.getAppConfig().getLauncherType()));
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_SESSION_LOGGING_ENABLED, startupParams.getAppConfig().isSessionLogging());
 
 			processConfig.addProperty(Constants.SWING_START_SYS_PROP_DIRECTDRAW, startupParams.getAppConfig().isDirectdraw());
