@@ -15,11 +15,21 @@ import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
 import com.manticore.tools.FPNGEncoder;
+import com.manticore.tools.FPNGE;
 
 public class ImageServiceImpl implements ImageService {
 
 	private static ImageServiceImpl impl;
 	private WindowDecoratorTheme windowDecorationTheme;
+
+	// find out if to use AVX or SSE encoder
+	private static final boolean HAS_AVX2;
+	static {
+		FPNGEncoder.ENCODER.fpng_init();
+		HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
+
+		AppLogger.info( HAS_AVX2 ? "Can use the AVX2 PNG encoder." : "Will use the SSE PNG encoder.");
+	}
 
 	public static ImageServiceImpl getInstance() {
 		if (impl == null) {
@@ -40,7 +50,9 @@ public class ImageServiceImpl implements ImageService {
 	}
 
 	public byte[] getPngImage(BufferedImage image) {
-		byte[] result = FPNGEncoder.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
+		byte[] result = HAS_AVX2
+			? FPNGE.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2)
+			: FPNGEncoder.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
 		return result;
 	}
 
