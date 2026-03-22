@@ -4,7 +4,7 @@
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
-[![Build](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml/badge.svg)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/manticore-projects/webswing/Gradle.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&label=Build)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
 [![Version](https://img.shields.io/badge/Version-26.0-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
 [![JDK 13+](https://img.shields.io/badge/JDK-13%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Node.js 24](https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
