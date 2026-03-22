@@ -127,34 +127,41 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    WebImageProto.decode = function decode(reader, length) {
+                    WebImageProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.WebImageProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.width = reader.uint32();
-                                break;
-                            case 2:
-                                message.height = reader.uint32();
-                                break;
-                            case 3:
-                                if (!(message.instructions && message.instructions.length))
-                                    message.instructions = [];
-                                message.instructions.push($root.org.webswing.directdraw.proto.DrawInstructionProto.decode(reader, reader.uint32()));
-                                break;
-                            case 4:
-                                if (!(message.constants && message.constants.length))
-                                    message.constants = [];
-                                message.constants.push($root.org.webswing.directdraw.proto.DrawConstantProto.decode(reader, reader.uint32()));
-                                break;
-                            case 5:
-                                if (!(message.fontFaces && message.fontFaces.length))
-                                    message.fontFaces = [];
-                                message.fontFaces.push($root.org.webswing.directdraw.proto.FontFaceProto.decode(reader, reader.uint32()));
-                                break;
+                            case 1: {
+                                    message.width = reader.uint32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.height = reader.uint32();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.instructions && message.instructions.length))
+                                        message.instructions = [];
+                                    message.instructions.push($root.org.webswing.directdraw.proto.DrawInstructionProto.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 4: {
+                                    if (!(message.constants && message.constants.length))
+                                        message.constants = [];
+                                    message.constants.push($root.org.webswing.directdraw.proto.DrawConstantProto.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 5: {
+                                    if (!(message.fontFaces && message.fontFaces.length))
+                                        message.fontFaces = [];
+                                    message.fontFaces.push($root.org.webswing.directdraw.proto.FontFaceProto.decode(reader, reader.uint32()));
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -271,6 +278,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for WebImageProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.WebImageProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WebImageProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.WebImageProto";
+                    };
+
                     return WebImageProto;
                 })();
 
@@ -336,29 +358,34 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    DrawInstructionProto.decode = function decode(reader, length) {
+                    DrawInstructionProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.DrawInstructionProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.inst = reader.int32();
-                                break;
-                            case 2:
-                                if (!(message.args && message.args.length))
-                                    message.args = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                            case 1: {
+                                    message.inst = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    if (!(message.args && message.args.length))
+                                        message.args = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.args.push(reader.uint32());
+                                    } else
                                         message.args.push(reader.uint32());
-                                } else
-                                    message.args.push(reader.uint32());
-                                break;
-                            case 3:
-                                message.webImage = reader.bytes();
-                                break;
+                                    break;
+                                }
+                            case 3: {
+                                    message.webImage = reader.bytes();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -382,6 +409,12 @@ $root.org = (function() {
                             return object;
                         var message = new $root.org.webswing.directdraw.proto.DrawInstructionProto();
                         switch (object.inst) {
+                        default:
+                            if (typeof object.inst === "number") {
+                                message.inst = object.inst;
+                                break;
+                            }
+                            break;
                         case "DRAW":
                         case 0:
                             message.inst = 0;
@@ -453,7 +486,7 @@ $root.org = (function() {
                         if (object.webImage != null)
                             if (typeof object.webImage === "string")
                                 $util.base64.decode(object.webImage, message.webImage = $util.newBuffer($util.base64.length(object.webImage)), 0);
-                            else if (object.webImage.length)
+                            else if (object.webImage.length >= 0)
                                 message.webImage = object.webImage;
                         return message;
                     };
@@ -484,7 +517,7 @@ $root.org = (function() {
                             }
                         }
                         if (message.inst != null && message.hasOwnProperty("inst"))
-                            object.inst = options.enums === String ? $root.org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto[message.inst] : message.inst;
+                            object.inst = options.enums === String ? $root.org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto[message.inst] === undefined ? message.inst : $root.org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto[message.inst] : message.inst;
                         if (message.args && message.args.length) {
                             object.args = [];
                             for (var j = 0; j < message.args.length; ++j)
@@ -507,9 +540,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for DrawInstructionProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.DrawInstructionProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DrawInstructionProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.DrawInstructionProto";
+                    };
+
+                    /**
                      * InstructionProto enum.
                      * @name org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} DRAW=0 DRAW value
                      * @property {number} FILL=1 FILL value
                      * @property {number} DRAW_IMAGE=2 DRAW_IMAGE value
@@ -754,70 +802,91 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    DrawConstantProto.decode = function decode(reader, length) {
+                    DrawConstantProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.DrawConstantProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.id = reader.uint32();
-                                break;
-                            case 2:
-                                message.color = $root.org.webswing.directdraw.proto.ColorProto.decode(reader, reader.uint32());
-                                break;
-                            case 3:
-                                message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
-                                break;
-                            case 4:
-                                message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
-                                break;
-                            case 5:
-                                message.string = reader.string();
-                                break;
-                            case 6:
-                                message.path = $root.org.webswing.directdraw.proto.PathProto.decode(reader, reader.uint32());
-                                break;
-                            case 7:
-                                message.font = $root.org.webswing.directdraw.proto.FontProto.decode(reader, reader.uint32());
-                                break;
-                            case 8:
-                                message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.decode(reader, reader.uint32());
-                                break;
-                            case 9:
-                                message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.decode(reader, reader.uint32());
-                                break;
-                            case 10:
-                                message.points = $root.org.webswing.directdraw.proto.PointsProto.decode(reader, reader.uint32());
-                                break;
-                            case 11:
-                                message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
-                                break;
-                            case 12:
-                                message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.decode(reader, reader.uint32());
-                                break;
-                            case 13:
-                                message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.decode(reader, reader.uint32());
-                                break;
-                            case 14:
-                                message.arc = $root.org.webswing.directdraw.proto.ArcProto.decode(reader, reader.uint32());
-                                break;
-                            case 15:
-                                message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.decode(reader, reader.uint32());
-                                break;
-                            case 16:
-                                message.composite = $root.org.webswing.directdraw.proto.CompositeProto.decode(reader, reader.uint32());
-                                break;
-                            case 17:
-                                message.texture = $root.org.webswing.directdraw.proto.TextureProto.decode(reader, reader.uint32());
-                                break;
-                            case 18:
-                                message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.decode(reader, reader.uint32());
-                                break;
-                            case 19:
-                                message.combined = $root.org.webswing.directdraw.proto.CombinedProto.decode(reader, reader.uint32());
-                                break;
+                            case 1: {
+                                    message.id = reader.uint32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.color = $root.org.webswing.directdraw.proto.ColorProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 3: {
+                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 4: {
+                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 5: {
+                                    message.string = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    message.path = $root.org.webswing.directdraw.proto.PathProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 7: {
+                                    message.font = $root.org.webswing.directdraw.proto.FontProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 8: {
+                                    message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 9: {
+                                    message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 10: {
+                                    message.points = $root.org.webswing.directdraw.proto.PointsProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 11: {
+                                    message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 12: {
+                                    message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 13: {
+                                    message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 14: {
+                                    message.arc = $root.org.webswing.directdraw.proto.ArcProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 15: {
+                                    message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 16: {
+                                    message.composite = $root.org.webswing.directdraw.proto.CompositeProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 17: {
+                                    message.texture = $root.org.webswing.directdraw.proto.TextureProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 18: {
+                                    message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 19: {
+                                    message.combined = $root.org.webswing.directdraw.proto.CombinedProto.decode(reader, reader.uint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1018,6 +1087,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for DrawConstantProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.DrawConstantProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DrawConstantProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.DrawConstantProto";
+                    };
+
                     return DrawConstantProto;
                 })();
 
@@ -1082,22 +1166,27 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    FontFaceProto.decode = function decode(reader, length) {
+                    FontFaceProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.FontFaceProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.name = reader.string();
-                                break;
-                            case 2:
-                                message.font = reader.bytes();
-                                break;
-                            case 3:
-                                message.style = reader.string();
-                                break;
+                            case 1: {
+                                    message.name = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.font = reader.bytes();
+                                    break;
+                                }
+                            case 3: {
+                                    message.style = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1127,7 +1216,7 @@ $root.org = (function() {
                         if (object.font != null)
                             if (typeof object.font === "string")
                                 $util.base64.decode(object.font, message.font = $util.newBuffer($util.base64.length(object.font)), 0);
-                            else if (object.font.length)
+                            else if (object.font.length >= 0)
                                 message.font = object.font;
                         if (object.style != null)
                             message.style = String(object.style);
@@ -1178,6 +1267,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for FontFaceProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.FontFaceProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    FontFaceProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.FontFaceProto";
+                    };
+
                     return FontFaceProto;
                 })();
 
@@ -1224,16 +1328,19 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ColorProto.decode = function decode(reader, length) {
+                    ColorProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ColorProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.rgba = reader.fixed32();
+                            if (tag === error)
                                 break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.rgba = reader.fixed32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1292,6 +1399,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for ColorProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.ColorProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ColorProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.ColorProto";
+                    };
+
                     return ColorProto;
                 })();
 
@@ -1338,16 +1460,19 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ImageProto.decode = function decode(reader, length) {
+                    ImageProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ImageProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.data = reader.bytes();
+                            if (tag === error)
                                 break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.data = reader.bytes();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1373,7 +1498,7 @@ $root.org = (function() {
                         if (object.data != null)
                             if (typeof object.data === "string")
                                 $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
-                            else if (object.data.length)
+                            else if (object.data.length >= 0)
                                 message.data = object.data;
                         return message;
                     };
@@ -1413,6 +1538,21 @@ $root.org = (function() {
                      */
                     ImageProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for ImageProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.ImageProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ImageProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.ImageProto";
                     };
 
                     return ImageProto;
@@ -1506,31 +1646,39 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    TransformProto.decode = function decode(reader, length) {
+                    TransformProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.TransformProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.m00 = reader.float();
-                                break;
-                            case 2:
-                                message.m10 = reader.float();
-                                break;
-                            case 3:
-                                message.m01 = reader.float();
-                                break;
-                            case 4:
-                                message.m11 = reader.float();
-                                break;
-                            case 5:
-                                message.m02 = reader.float();
-                                break;
-                            case 6:
-                                message.m12 = reader.float();
-                                break;
+                            case 1: {
+                                    message.m00 = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.m10 = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.m01 = reader.float();
+                                    break;
+                                }
+                            case 4: {
+                                    message.m11 = reader.float();
+                                    break;
+                                }
+                            case 5: {
+                                    message.m02 = reader.float();
+                                    break;
+                                }
+                            case 6: {
+                                    message.m12 = reader.float();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1613,6 +1761,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for TransformProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.TransformProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransformProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.TransformProto";
+                    };
+
                     return TransformProto;
                 })();
 
@@ -1660,23 +1823,26 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    CombinedProto.decode = function decode(reader, length) {
+                    CombinedProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.CombinedProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                if (!(message.ids && message.ids.length))
-                                    message.ids = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
-                                        message.ids.push(reader.uint32());
-                                } else
-                                    message.ids.push(reader.uint32());
+                            if (tag === error)
                                 break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    if (!(message.ids && message.ids.length))
+                                        message.ids = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.ids.push(reader.uint32());
+                                    } else
+                                        message.ids.push(reader.uint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1741,6 +1907,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for CombinedProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.CombinedProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    CombinedProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.CombinedProto";
+                    };
+
                     return CombinedProto;
                 })();
 
@@ -1787,16 +1968,19 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    GlyphProto.decode = function decode(reader, length) {
+                    GlyphProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.GlyphProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.data = reader.bytes();
+                            if (tag === error)
                                 break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.data = reader.bytes();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1820,7 +2004,7 @@ $root.org = (function() {
                         if (object.data != null)
                             if (typeof object.data === "string")
                                 $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
-                            else if (object.data.length)
+                            else if (object.data.length >= 0)
                                 message.data = object.data;
                         return message;
                     };
@@ -1860,6 +2044,21 @@ $root.org = (function() {
                      */
                     GlyphProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for GlyphProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.GlyphProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    GlyphProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.GlyphProto";
                     };
 
                     return GlyphProto;
@@ -1935,25 +2134,31 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RectangleProto.decode = function decode(reader, length) {
+                    RectangleProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RectangleProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.x = reader.float();
-                                break;
-                            case 2:
-                                message.y = reader.float();
-                                break;
-                            case 3:
-                                message.w = reader.float();
-                                break;
-                            case 4:
-                                message.h = reader.float();
-                                break;
+                            case 1: {
+                                    message.x = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.y = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.w = reader.float();
+                                    break;
+                                }
+                            case 4: {
+                                    message.h = reader.float();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2034,6 +2239,21 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for RectangleProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.RectangleProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    RectangleProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.RectangleProto";
+                    };
+
                     return RectangleProto;
                 })();
 
@@ -2107,25 +2327,31 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    EllipseProto.decode = function decode(reader, length) {
+                    EllipseProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.EllipseProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.x = reader.float();
-                                break;
-                            case 2:
-                                message.y = reader.float();
-                                break;
-                            case 3:
-                                message.w = reader.float();
-                                break;
-                            case 4:
-                                message.h = reader.float();
-                                break;
+                            case 1: {
+                                    message.x = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.y = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.w = reader.float();
+                                    break;
+                                }
+                            case 4: {
+                                    message.h = reader.float();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2204,6 +2430,21 @@ $root.org = (function() {
                      */
                     EllipseProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for EllipseProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.EllipseProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    EllipseProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.EllipseProto";
                     };
 
                     return EllipseProto;
@@ -2297,31 +2538,39 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RoundRectangleProto.decode = function decode(reader, length) {
+                    RoundRectangleProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RoundRectangleProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.x = reader.float();
-                                break;
-                            case 2:
-                                message.y = reader.float();
-                                break;
-                            case 3:
-                                message.w = reader.float();
-                                break;
-                            case 4:
-                                message.h = reader.float();
-                                break;
-                            case 5:
-                                message.arcW = reader.float();
-                                break;
-                            case 6:
-                                message.arcH = reader.float();
-                                break;
+                            case 1: {
+                                    message.x = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.y = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.w = reader.float();
+                                    break;
+                                }
+                            case 4: {
+                                    message.h = reader.float();
+                                    break;
+                                }
+                            case 5: {
+                                    message.arcW = reader.float();
+                                    break;
+                                }
+                            case 6: {
+                                    message.arcH = reader.float();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2410,6 +2659,21 @@ $root.org = (function() {
                      */
                     RoundRectangleProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for RoundRectangleProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.RoundRectangleProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    RoundRectangleProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.RoundRectangleProto";
                     };
 
                     return RoundRectangleProto;
@@ -2512,34 +2776,43 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ArcProto.decode = function decode(reader, length) {
+                    ArcProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ArcProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.x = reader.float();
-                                break;
-                            case 2:
-                                message.y = reader.float();
-                                break;
-                            case 3:
-                                message.w = reader.float();
-                                break;
-                            case 4:
-                                message.h = reader.float();
-                                break;
-                            case 5:
-                                message.start = reader.float();
-                                break;
-                            case 6:
-                                message.extent = reader.float();
-                                break;
-                            case 7:
-                                message.type = reader.int32();
-                                break;
+                            case 1: {
+                                    message.x = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.y = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.w = reader.float();
+                                    break;
+                                }
+                            case 4: {
+                                    message.h = reader.float();
+                                    break;
+                                }
+                            case 5: {
+                                    message.start = reader.float();
+                                    break;
+                                }
+                            case 6: {
+                                    message.extent = reader.float();
+                                    break;
+                                }
+                            case 7: {
+                                    message.type = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2581,6 +2854,12 @@ $root.org = (function() {
                         if (object.extent != null)
                             message.extent = Number(object.extent);
                         switch (object.type) {
+                        default:
+                            if (typeof object.type === "number") {
+                                message.type = object.type;
+                                break;
+                            }
+                            break;
                         case "OPEN":
                         case 0:
                             message.type = 0;
@@ -2632,7 +2911,7 @@ $root.org = (function() {
                         if (message.extent != null && message.hasOwnProperty("extent"))
                             object.extent = options.json && !isFinite(message.extent) ? String(message.extent) : message.extent;
                         if (message.type != null && message.hasOwnProperty("type"))
-                            object.type = options.enums === String ? $root.org.webswing.directdraw.proto.ArcProto.ArcTypeProto[message.type] : message.type;
+                            object.type = options.enums === String ? $root.org.webswing.directdraw.proto.ArcProto.ArcTypeProto[message.type] === undefined ? message.type : $root.org.webswing.directdraw.proto.ArcProto.ArcTypeProto[message.type] : message.type;
                         return object;
                     };
 
@@ -2648,9 +2927,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for ArcProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.ArcProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ArcProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.ArcProto";
+                    };
+
+                    /**
                      * ArcTypeProto enum.
                      * @name org.webswing.directdraw.proto.ArcProto.ArcTypeProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} OPEN=0 OPEN value
                      * @property {number} CHORD=1 CHORD value
                      * @property {number} PIE=2 PIE value
@@ -2729,36 +3023,41 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    PathProto.decode = function decode(reader, length) {
+                    PathProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.PathProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.windingOdd = reader.bool();
-                                break;
-                            case 2:
-                                if (!(message.type && message.type.length))
-                                    message.type = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                            case 1: {
+                                    message.windingOdd = reader.bool();
+                                    break;
+                                }
+                            case 2: {
+                                    if (!(message.type && message.type.length))
+                                        message.type = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.type.push(reader.int32());
+                                    } else
                                         message.type.push(reader.int32());
-                                } else
-                                    message.type.push(reader.int32());
-                                break;
-                            case 3:
-                                if (!(message.points && message.points.length))
-                                    message.points = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.points && message.points.length))
+                                        message.points = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.points.push(reader.float());
+                                    } else
                                         message.points.push(reader.float());
-                                } else
-                                    message.points.push(reader.float());
-                                break;
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2790,6 +3089,10 @@ $root.org = (function() {
                             for (var i = 0; i < object.type.length; ++i)
                                 switch (object.type[i]) {
                                 default:
+                                    if (typeof object.type[i] === "number") {
+                                        message.type[i] = object.type[i];
+                                        break;
+                                    }
                                 case "MOVE":
                                 case 0:
                                     message.type[i] = 0;
@@ -2846,7 +3149,7 @@ $root.org = (function() {
                         if (message.type && message.type.length) {
                             object.type = [];
                             for (var j = 0; j < message.type.length; ++j)
-                                object.type[j] = options.enums === String ? $root.org.webswing.directdraw.proto.PathProto.SegmentTypeProto[message.type[j]] : message.type[j];
+                                object.type[j] = options.enums === String ? $root.org.webswing.directdraw.proto.PathProto.SegmentTypeProto[message.type[j]] === undefined ? message.type[j] : $root.org.webswing.directdraw.proto.PathProto.SegmentTypeProto[message.type[j]] : message.type[j];
                         }
                         if (message.points && message.points.length) {
                             object.points = [];
@@ -2868,9 +3171,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for PathProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.PathProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PathProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.PathProto";
+                    };
+
+                    /**
                      * SegmentTypeProto enum.
                      * @name org.webswing.directdraw.proto.PathProto.SegmentTypeProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} MOVE=0 MOVE value
                      * @property {number} LINE=1 LINE value
                      * @property {number} QUAD=2 QUAD value
@@ -2969,28 +3287,35 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    FontProto.decode = function decode(reader, length) {
+                    FontProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.FontProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.family = reader.string();
-                                break;
-                            case 2:
-                                message.style = reader.int32();
-                                break;
-                            case 3:
-                                message.size = reader.uint32();
-                                break;
-                            case 4:
-                                message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
-                                break;
-                            case 5:
-                                message.fontProvided = reader.bool();
-                                break;
+                            case 1: {
+                                    message.family = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.style = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.size = reader.uint32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 5: {
+                                    message.fontProvided = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3016,6 +3341,12 @@ $root.org = (function() {
                         if (object.family != null)
                             message.family = String(object.family);
                         switch (object.style) {
+                        default:
+                            if (typeof object.style === "number") {
+                                message.style = object.style;
+                                break;
+                            }
+                            break;
                         case "NORMAL":
                         case 0:
                             message.style = 0;
@@ -3068,7 +3399,7 @@ $root.org = (function() {
                         if (message.family != null && message.hasOwnProperty("family"))
                             object.family = message.family;
                         if (message.style != null && message.hasOwnProperty("style"))
-                            object.style = options.enums === String ? $root.org.webswing.directdraw.proto.FontProto.StyleProto[message.style] : message.style;
+                            object.style = options.enums === String ? $root.org.webswing.directdraw.proto.FontProto.StyleProto[message.style] === undefined ? message.style : $root.org.webswing.directdraw.proto.FontProto.StyleProto[message.style] : message.style;
                         if (message.size != null && message.hasOwnProperty("size"))
                             object.size = message.size;
                         if (message.transform != null && message.hasOwnProperty("transform"))
@@ -3090,9 +3421,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for FontProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.FontProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    FontProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.FontProto";
+                    };
+
+                    /**
                      * StyleProto enum.
                      * @name org.webswing.directdraw.proto.FontProto.StyleProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} NORMAL=0 NORMAL value
                      * @property {number} OBLIQUE=1 OBLIQUE value
                      * @property {number} ITALIC=2 ITALIC value
@@ -3199,38 +3545,46 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    StrokeProto.decode = function decode(reader, length) {
+                    StrokeProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.StrokeProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.width = reader.float();
-                                break;
-                            case 2:
-                                message.miterLimit = reader.float();
-                                break;
-                            case 3:
-                                message.join = reader.int32();
-                                break;
-                            case 4:
-                                message.cap = reader.int32();
-                                break;
-                            case 5:
-                                if (!(message.dash && message.dash.length))
-                                    message.dash = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                            case 1: {
+                                    message.width = reader.float();
+                                    break;
+                                }
+                            case 2: {
+                                    message.miterLimit = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.join = reader.int32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.cap = reader.int32();
+                                    break;
+                                }
+                            case 5: {
+                                    if (!(message.dash && message.dash.length))
+                                        message.dash = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.dash.push(reader.float());
+                                    } else
                                         message.dash.push(reader.float());
-                                } else
-                                    message.dash.push(reader.float());
-                                break;
-                            case 6:
-                                message.dashOffset = reader.float();
-                                break;
+                                    break;
+                                }
+                            case 6: {
+                                    message.dashOffset = reader.float();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3258,6 +3612,12 @@ $root.org = (function() {
                         if (object.miterLimit != null)
                             message.miterLimit = Number(object.miterLimit);
                         switch (object.join) {
+                        default:
+                            if (typeof object.join === "number") {
+                                message.join = object.join;
+                                break;
+                            }
+                            break;
                         case "JOIN_MITER":
                         case 0:
                             message.join = 0;
@@ -3272,6 +3632,12 @@ $root.org = (function() {
                             break;
                         }
                         switch (object.cap) {
+                        default:
+                            if (typeof object.cap === "number") {
+                                message.cap = object.cap;
+                                break;
+                            }
+                            break;
                         case "CAP_BUTT":
                         case 0:
                             message.cap = 0;
@@ -3324,9 +3690,9 @@ $root.org = (function() {
                         if (message.miterLimit != null && message.hasOwnProperty("miterLimit"))
                             object.miterLimit = options.json && !isFinite(message.miterLimit) ? String(message.miterLimit) : message.miterLimit;
                         if (message.join != null && message.hasOwnProperty("join"))
-                            object.join = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto[message.join] : message.join;
+                            object.join = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto[message.join] === undefined ? message.join : $root.org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto[message.join] : message.join;
                         if (message.cap != null && message.hasOwnProperty("cap"))
-                            object.cap = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeCapProto[message.cap] : message.cap;
+                            object.cap = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeCapProto[message.cap] === undefined ? message.cap : $root.org.webswing.directdraw.proto.StrokeProto.StrokeCapProto[message.cap] : message.cap;
                         if (message.dash && message.dash.length) {
                             object.dash = [];
                             for (var j = 0; j < message.dash.length; ++j)
@@ -3349,9 +3715,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for StrokeProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.StrokeProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    StrokeProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.StrokeProto";
+                    };
+
+                    /**
                      * StrokeJoinProto enum.
                      * @name org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} JOIN_MITER=0 JOIN_MITER value
                      * @property {number} JOIN_ROUND=1 JOIN_ROUND value
                      * @property {number} JOIN_BEVEL=2 JOIN_BEVEL value
@@ -3367,7 +3748,7 @@ $root.org = (function() {
                     /**
                      * StrokeCapProto enum.
                      * @name org.webswing.directdraw.proto.StrokeProto.StrokeCapProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} CAP_BUTT=0 CAP_BUTT value
                      * @property {number} CAP_ROUND=1 CAP_ROUND value
                      * @property {number} CAP_SQUARE=2 CAP_SQUARE value
@@ -3482,48 +3863,57 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    LinearGradientProto.decode = function decode(reader, length) {
+                    LinearGradientProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.LinearGradientProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.xStart = reader.sint32();
-                                break;
-                            case 2:
-                                message.yStart = reader.sint32();
-                                break;
-                            case 3:
-                                message.xEnd = reader.sint32();
-                                break;
-                            case 4:
-                                message.yEnd = reader.sint32();
-                                break;
-                            case 5:
-                                if (!(message.colors && message.colors.length))
-                                    message.colors = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                            case 1: {
+                                    message.xStart = reader.sint32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.yStart = reader.sint32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.xEnd = reader.sint32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.yEnd = reader.sint32();
+                                    break;
+                                }
+                            case 5: {
+                                    if (!(message.colors && message.colors.length))
+                                        message.colors = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.colors.push(reader.fixed32());
+                                    } else
                                         message.colors.push(reader.fixed32());
-                                } else
-                                    message.colors.push(reader.fixed32());
-                                break;
-                            case 6:
-                                if (!(message.fractions && message.fractions.length))
-                                    message.fractions = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                                    break;
+                                }
+                            case 6: {
+                                    if (!(message.fractions && message.fractions.length))
+                                        message.fractions = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.fractions.push(reader.float());
+                                    } else
                                         message.fractions.push(reader.float());
-                                } else
-                                    message.fractions.push(reader.float());
-                                break;
-                            case 7:
-                                message.repeat = reader.int32();
-                                break;
+                                    break;
+                                }
+                            case 7: {
+                                    message.repeat = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3577,6 +3967,12 @@ $root.org = (function() {
                                 message.fractions[i] = Number(object.fractions[i]);
                         }
                         switch (object.repeat) {
+                        default:
+                            if (typeof object.repeat === "number") {
+                                message.repeat = object.repeat;
+                                break;
+                            }
+                            break;
                         case "NO_CYCLE":
                         case 0:
                             message.repeat = 0;
@@ -3636,7 +4032,7 @@ $root.org = (function() {
                                 object.fractions[j] = options.json && !isFinite(message.fractions[j]) ? String(message.fractions[j]) : message.fractions[j];
                         }
                         if (message.repeat != null && message.hasOwnProperty("repeat"))
-                            object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
+                            object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] === undefined ? message.repeat : $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
                         return object;
                     };
 
@@ -3649,6 +4045,21 @@ $root.org = (function() {
                      */
                     LinearGradientProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for LinearGradientProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.LinearGradientProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    LinearGradientProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.LinearGradientProto";
                     };
 
                     return LinearGradientProto;
@@ -3762,51 +4173,61 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RadialGradientProto.decode = function decode(reader, length) {
+                    RadialGradientProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RadialGradientProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.xCenter = reader.sint32();
-                                break;
-                            case 2:
-                                message.yCenter = reader.sint32();
-                                break;
-                            case 3:
-                                message.xFocus = reader.sint32();
-                                break;
-                            case 4:
-                                message.yFocus = reader.sint32();
-                                break;
-                            case 5:
-                                message.radius = reader.sint32();
-                                break;
-                            case 6:
-                                if (!(message.colors && message.colors.length))
-                                    message.colors = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                            case 1: {
+                                    message.xCenter = reader.sint32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.yCenter = reader.sint32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.xFocus = reader.sint32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.yFocus = reader.sint32();
+                                    break;
+                                }
+                            case 5: {
+                                    message.radius = reader.sint32();
+                                    break;
+                                }
+                            case 6: {
+                                    if (!(message.colors && message.colors.length))
+                                        message.colors = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.colors.push(reader.fixed32());
+                                    } else
                                         message.colors.push(reader.fixed32());
-                                } else
-                                    message.colors.push(reader.fixed32());
-                                break;
-                            case 7:
-                                if (!(message.fractions && message.fractions.length))
-                                    message.fractions = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
+                                    break;
+                                }
+                            case 7: {
+                                    if (!(message.fractions && message.fractions.length))
+                                        message.fractions = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.fractions.push(reader.float());
+                                    } else
                                         message.fractions.push(reader.float());
-                                } else
-                                    message.fractions.push(reader.float());
-                                break;
-                            case 8:
-                                message.repeat = reader.int32();
-                                break;
+                                    break;
+                                }
+                            case 8: {
+                                    message.repeat = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3864,6 +4285,12 @@ $root.org = (function() {
                                 message.fractions[i] = Number(object.fractions[i]);
                         }
                         switch (object.repeat) {
+                        default:
+                            if (typeof object.repeat === "number") {
+                                message.repeat = object.repeat;
+                                break;
+                            }
+                            break;
                         case "NO_CYCLE":
                         case 0:
                             message.repeat = 0;
@@ -3926,7 +4353,7 @@ $root.org = (function() {
                                 object.fractions[j] = options.json && !isFinite(message.fractions[j]) ? String(message.fractions[j]) : message.fractions[j];
                         }
                         if (message.repeat != null && message.hasOwnProperty("repeat"))
-                            object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
+                            object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] === undefined ? message.repeat : $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
                         return object;
                     };
 
@@ -3941,13 +4368,28 @@ $root.org = (function() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
 
+                    /**
+                     * Gets the default type url for RadialGradientProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.RadialGradientProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    RadialGradientProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.RadialGradientProto";
+                    };
+
                     return RadialGradientProto;
                 })();
 
                 /**
                  * CyclicMethodProto enum.
                  * @name org.webswing.directdraw.proto.CyclicMethodProto
-                 * @enum {string}
+                 * @enum {number}
                  * @property {number} NO_CYCLE=0 NO_CYCLE value
                  * @property {number} REFLECT=1 REFLECT value
                  * @property {number} REPEAT=2 REPEAT value
@@ -4004,23 +4446,26 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    PointsProto.decode = function decode(reader, length) {
+                    PointsProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.PointsProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                if (!(message.points && message.points.length))
-                                    message.points = [];
-                                if ((tag & 7) === 2) {
-                                    var end2 = reader.uint32() + reader.pos;
-                                    while (reader.pos < end2)
-                                        message.points.push(reader.sint32());
-                                } else
-                                    message.points.push(reader.sint32());
+                            if (tag === error)
                                 break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    if (!(message.points && message.points.length))
+                                        message.points = [];
+                                    if ((tag & 7) === 2) {
+                                        var end2 = reader.uint32() + reader.pos;
+                                        while (reader.pos < end2)
+                                            message.points.push(reader.sint32());
+                                    } else
+                                        message.points.push(reader.sint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4083,6 +4528,21 @@ $root.org = (function() {
                      */
                     PointsProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for PointsProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.PointsProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PointsProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.PointsProto";
                     };
 
                     return PointsProto;
@@ -4149,22 +4609,27 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    CompositeProto.decode = function decode(reader, length) {
+                    CompositeProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.CompositeProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.type = reader.int32();
-                                break;
-                            case 2:
-                                message.alpha = reader.float();
-                                break;
-                            case 3:
-                                message.color = reader.fixed32();
-                                break;
+                            case 1: {
+                                    message.type = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.alpha = reader.float();
+                                    break;
+                                }
+                            case 3: {
+                                    message.color = reader.fixed32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4188,6 +4653,12 @@ $root.org = (function() {
                             return object;
                         var message = new $root.org.webswing.directdraw.proto.CompositeProto();
                         switch (object.type) {
+                        default:
+                            if (typeof object.type === "number") {
+                                message.type = object.type;
+                                break;
+                            }
+                            break;
                         case "CLEAR":
                         case 1:
                             message.type = 1;
@@ -4267,7 +4738,7 @@ $root.org = (function() {
                             object.color = 0;
                         }
                         if (message.type != null && message.hasOwnProperty("type"))
-                            object.type = options.enums === String ? $root.org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto[message.type] : message.type;
+                            object.type = options.enums === String ? $root.org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto[message.type] === undefined ? message.type : $root.org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto[message.type] : message.type;
                         if (message.alpha != null && message.hasOwnProperty("alpha"))
                             object.alpha = options.json && !isFinite(message.alpha) ? String(message.alpha) : message.alpha;
                         if (message.color != null && message.hasOwnProperty("color"))
@@ -4287,9 +4758,24 @@ $root.org = (function() {
                     };
 
                     /**
+                     * Gets the default type url for CompositeProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.CompositeProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    CompositeProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.CompositeProto";
+                    };
+
+                    /**
                      * CompositeTypeProto enum.
                      * @name org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} CLEAR=1 CLEAR value
                      * @property {number} SRC=2 SRC value
                      * @property {number} DST=9 DST value
@@ -4377,19 +4863,23 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    TextureProto.decode = function decode(reader, length) {
+                    TextureProto.decode = function decode(reader, length, error) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.TextureProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
+                            if (tag === error)
+                                break;
                             switch (tag >>> 3) {
-                            case 1:
-                                message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
-                                break;
-                            case 2:
-                                message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
-                                break;
+                            case 1: {
+                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 2: {
+                                    message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4460,6 +4950,21 @@ $root.org = (function() {
                      */
                     TextureProto.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for TextureProto
+                     * @function getTypeUrl
+                     * @memberof org.webswing.directdraw.proto.TextureProto
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TextureProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/org.webswing.directdraw.proto.TextureProto";
                     };
 
                     return TextureProto;

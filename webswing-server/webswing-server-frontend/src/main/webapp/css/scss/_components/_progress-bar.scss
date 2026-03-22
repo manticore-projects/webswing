@@ -1,28 +1,30 @@
 // Filename: _progress-bar.scss
 // Description: Style for a progress bar with a pulsing animation
 
+@use "sass:color";
+
 // Gradient transition used for pulsing effect
 @mixin innerColor( $color: $neutral ) {
-    background-color: transparentize( $color , 0.05 );
+    background-color: color.adjust( $color, $alpha: -0.05 );
     background-image: linear-gradient(
     90deg,
-    transparentize( lighten( $color, 4% ), 1 ) 10%,
-    transparentize( lighten( $color, 8% ), 0.2 ) 30%,
-    transparentize( lighten( $color, 12% ), 0 ) 70%,
-    transparentize( lighten( $color, 8% ), 0.2 ) 80%,
-    transparentize( lighten( $color, 4% ), 1 ) 90%
+    color.adjust( color.adjust( $color, $lightness: 4% ), $alpha: -1 ) 10%,
+    color.adjust( color.adjust( $color, $lightness: 8% ), $alpha: -0.2 ) 30%,
+    color.adjust( color.adjust( $color, $lightness: 12% ), $alpha: 0 ) 70%,
+    color.adjust( color.adjust( $color, $lightness: 8% ), $alpha: -0.2 ) 80%,
+    color.adjust( color.adjust( $color, $lightness: 4% ), $alpha: -1 ) 90%
     ),
     linear-gradient(
     to right,
-    transparentize( lighten( $color, 12% ), 1 ) 0%,
-    transparentize( lighten( $color, 12% ), 0 ) 100%
+    color.adjust( color.adjust( $color, $lightness: 12% ), $alpha: -1 ) 0%,
+    color.adjust( color.adjust( $color, $lightness: 12% ), $alpha: 0 ) 100%
     ),
     linear-gradient(
     to left,
-    transparentize( lighten( $color, 12% ), 1 ) 0%,
-    transparentize( lighten( $color, 12% ), 0 ) 100%
+    color.adjust( color.adjust( $color, $lightness: 12% ), $alpha: -1 ) 0%,
+    color.adjust( color.adjust( $color, $lightness: 12% ), $alpha: 0 ) 100%
     );
-    border-color: lighten( $color, 20% );
+    border-color: color.adjust( $color, $lightness: 20% );
 }
 
 // Container for the progress bar

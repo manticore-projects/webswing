@@ -292,94 +292,121 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AppFrameMsgOutProto.decode = function decode(reader, length) {
+        AppFrameMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AppFrameMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 2:
-                    message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 3:
-                    message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 4:
-                    message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 5:
-                    message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 6:
-                    message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 7:
-                    if (!(message.windows && message.windows.length))
-                        message.windows = [];
-                    message.windows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 8:
-                    message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 9:
-                    message.event = reader.int32();
-                    break;
-                case 10:
-                    message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 11:
-                    message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 12:
-                    message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 13:
-                    message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 14:
-                    message.instanceId = reader.string();
-                    break;
-                case 15:
-                    message.startTimestamp = reader.string();
-                    break;
-                case 16:
-                    message.sendTimestamp = reader.string();
-                    break;
-                case 17:
-                    message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 18:
-                    if (!(message.componentTree && message.componentTree.length))
-                        message.componentTree = [];
-                    message.componentTree.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 19:
-                    message.directDraw = reader.bool();
-                    break;
-                case 20:
-                    message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 21:
-                    message.compositingWM = reader.bool();
-                    break;
-                case 22:
-                    message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 23:
-                    message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 24:
-                    if (!(message.windowSwitchList && message.windowSwitchList.length))
-                        message.windowSwitchList = [];
-                    message.windowSwitchList.push($root.appFrameProtoOut.WindowSwitchMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 25:
-                    message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.decode(reader, reader.uint32());
-                    break;
+                case 1: {
+                        message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 2: {
+                        message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 3: {
+                        message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 4: {
+                        message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 5: {
+                        message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 6: {
+                        message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 7: {
+                        if (!(message.windows && message.windows.length))
+                            message.windows = [];
+                        message.windows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 8: {
+                        message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 9: {
+                        message.event = reader.int32();
+                        break;
+                    }
+                case 10: {
+                        message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 11: {
+                        message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 12: {
+                        message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 13: {
+                        message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 14: {
+                        message.instanceId = reader.string();
+                        break;
+                    }
+                case 15: {
+                        message.startTimestamp = reader.string();
+                        break;
+                    }
+                case 16: {
+                        message.sendTimestamp = reader.string();
+                        break;
+                    }
+                case 17: {
+                        message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 18: {
+                        if (!(message.componentTree && message.componentTree.length))
+                            message.componentTree = [];
+                        message.componentTree.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 19: {
+                        message.directDraw = reader.bool();
+                        break;
+                    }
+                case 20: {
+                        message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 21: {
+                        message.compositingWM = reader.bool();
+                        break;
+                    }
+                case 22: {
+                        message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 23: {
+                        message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 24: {
+                        if (!(message.windowSwitchList && message.windowSwitchList.length))
+                            message.windowSwitchList = [];
+                        message.windowSwitchList.push($root.appFrameProtoOut.WindowSwitchMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 25: {
+                        message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -446,6 +473,12 @@ $root.appFrameProtoOut = (function() {
                 message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.closedWindow);
             }
             switch (object.event) {
+            default:
+                if (typeof object.event === "number") {
+                    message.event = object.event;
+                    break;
+                }
+                break;
             case "applicationAlreadyRunning":
             case 0:
                 message.event = 0;
@@ -635,7 +668,7 @@ $root.appFrameProtoOut = (function() {
             if (message.closedWindow != null && message.hasOwnProperty("closedWindow"))
                 object.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.closedWindow, options);
             if (message.event != null && message.hasOwnProperty("event"))
-                object.event = options.enums === String ? $root.appFrameProtoOut.SimpleEventMsgOutProto[message.event] : message.event;
+                object.event = options.enums === String ? $root.appFrameProtoOut.SimpleEventMsgOutProto[message.event] === undefined ? message.event : $root.appFrameProtoOut.SimpleEventMsgOutProto[message.event] : message.event;
             if (message.jsRequest != null && message.hasOwnProperty("jsRequest"))
                 object.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.toObject(message.jsRequest, options);
             if (message.javaResponse != null && message.hasOwnProperty("javaResponse"))
@@ -686,6 +719,21 @@ $root.appFrameProtoOut = (function() {
          */
         AppFrameMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for AppFrameMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.AppFrameMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AppFrameMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.AppFrameMsgOutProto";
         };
 
         return AppFrameMsgOutProto;
@@ -1000,104 +1048,135 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AccessibilityMsgOutProto.decode = function decode(reader, length) {
+        AccessibilityMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AccessibilityMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    message.role = reader.string();
-                    break;
-                case 3:
-                    message.text = reader.string();
-                    break;
-                case 4:
-                    message.tooltip = reader.string();
-                    break;
-                case 5:
-                    message.value = reader.string();
-                    break;
-                case 6:
-                    message.description = reader.string();
-                    break;
-                case 7:
-                    message.columnheader = reader.string();
-                    break;
-                case 8:
-                    message.password = reader.bool();
-                    break;
-                case 9:
-                    message.toggle = reader.bool();
-                    break;
-                case 10:
-                    message.selstart = reader.sint32();
-                    break;
-                case 11:
-                    message.selend = reader.sint32();
-                    break;
-                case 12:
-                    message.rowheight = reader.sint32();
-                    break;
-                case 13:
-                    message.rows = reader.sint32();
-                    break;
-                case 14:
-                    message.size = reader.sint32();
-                    break;
-                case 15:
-                    message.position = reader.sint32();
-                    break;
-                case 16:
-                    message.level = reader.sint32();
-                    break;
-                case 17:
-                    message.colindex = reader.sint32();
-                    break;
-                case 18:
-                    message.rowindex = reader.sint32();
-                    break;
-                case 19:
-                    message.colcount = reader.sint32();
-                    break;
-                case 20:
-                    message.rowcount = reader.sint32();
-                    break;
-                case 21:
-                    if (!(message.states && message.states.length))
-                        message.states = [];
-                    message.states.push(reader.string());
-                    break;
-                case 22:
-                    message.min = reader.sint32();
-                    break;
-                case 23:
-                    message.max = reader.sint32();
-                    break;
-                case 24:
-                    message.val = reader.sint32();
-                    break;
-                case 25:
-                    message.screenX = reader.sint32();
-                    break;
-                case 26:
-                    message.screenY = reader.sint32();
-                    break;
-                case 27:
-                    message.width = reader.sint32();
-                    break;
-                case 28:
-                    message.height = reader.sint32();
-                    break;
-                case 29:
-                    if (!(message.hierarchy && message.hierarchy.length))
-                        message.hierarchy = [];
-                    message.hierarchy.push($root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.decode(reader, reader.uint32()));
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.role = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.text = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.tooltip = reader.string();
+                        break;
+                    }
+                case 5: {
+                        message.value = reader.string();
+                        break;
+                    }
+                case 6: {
+                        message.description = reader.string();
+                        break;
+                    }
+                case 7: {
+                        message.columnheader = reader.string();
+                        break;
+                    }
+                case 8: {
+                        message.password = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        message.toggle = reader.bool();
+                        break;
+                    }
+                case 10: {
+                        message.selstart = reader.sint32();
+                        break;
+                    }
+                case 11: {
+                        message.selend = reader.sint32();
+                        break;
+                    }
+                case 12: {
+                        message.rowheight = reader.sint32();
+                        break;
+                    }
+                case 13: {
+                        message.rows = reader.sint32();
+                        break;
+                    }
+                case 14: {
+                        message.size = reader.sint32();
+                        break;
+                    }
+                case 15: {
+                        message.position = reader.sint32();
+                        break;
+                    }
+                case 16: {
+                        message.level = reader.sint32();
+                        break;
+                    }
+                case 17: {
+                        message.colindex = reader.sint32();
+                        break;
+                    }
+                case 18: {
+                        message.rowindex = reader.sint32();
+                        break;
+                    }
+                case 19: {
+                        message.colcount = reader.sint32();
+                        break;
+                    }
+                case 20: {
+                        message.rowcount = reader.sint32();
+                        break;
+                    }
+                case 21: {
+                        if (!(message.states && message.states.length))
+                            message.states = [];
+                        message.states.push(reader.string());
+                        break;
+                    }
+                case 22: {
+                        message.min = reader.sint32();
+                        break;
+                    }
+                case 23: {
+                        message.max = reader.sint32();
+                        break;
+                    }
+                case 24: {
+                        message.val = reader.sint32();
+                        break;
+                    }
+                case 25: {
+                        message.screenX = reader.sint32();
+                        break;
+                    }
+                case 26: {
+                        message.screenY = reader.sint32();
+                        break;
+                    }
+                case 27: {
+                        message.width = reader.sint32();
+                        break;
+                    }
+                case 28: {
+                        message.height = reader.sint32();
+                        break;
+                    }
+                case 29: {
+                        if (!(message.hierarchy && message.hierarchy.length))
+                            message.hierarchy = [];
+                        message.hierarchy.push($root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1316,6 +1395,21 @@ $root.appFrameProtoOut = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for AccessibilityMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.AccessibilityMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AccessibilityMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.AccessibilityMsgOutProto";
+        };
+
         return AccessibilityMsgOutProto;
     })();
 
@@ -1410,28 +1504,35 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AccessibilityHierarchyMsgOutProto.decode = function decode(reader, length) {
+        AccessibilityHierarchyMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    message.role = reader.string();
-                    break;
-                case 3:
-                    message.text = reader.string();
-                    break;
-                case 4:
-                    message.position = reader.sint32();
-                    break;
-                case 5:
-                    message.size = reader.sint32();
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.role = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.text = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.position = reader.sint32();
+                        break;
+                    }
+                case 5: {
+                        message.size = reader.sint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1507,6 +1608,21 @@ $root.appFrameProtoOut = (function() {
          */
         AccessibilityHierarchyMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for AccessibilityHierarchyMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.AccessibilityHierarchyMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AccessibilityHierarchyMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.AccessibilityHierarchyMsgOutProto";
         };
 
         return AccessibilityHierarchyMsgOutProto;
@@ -1639,40 +1755,51 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        FocusEventMsgOutProto.decode = function decode(reader, length) {
+        FocusEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.FocusEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.type = reader.int32();
-                    break;
-                case 2:
-                    message.x = reader.sint32();
-                    break;
-                case 3:
-                    message.y = reader.sint32();
-                    break;
-                case 4:
-                    message.w = reader.uint32();
-                    break;
-                case 5:
-                    message.h = reader.uint32();
-                    break;
-                case 6:
-                    message.caretX = reader.sint32();
-                    break;
-                case 7:
-                    message.caretY = reader.sint32();
-                    break;
-                case 8:
-                    message.caretH = reader.sint32();
-                    break;
-                case 9:
-                    message.editable = reader.bool();
-                    break;
+                case 1: {
+                        message.type = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.x = reader.sint32();
+                        break;
+                    }
+                case 3: {
+                        message.y = reader.sint32();
+                        break;
+                    }
+                case 4: {
+                        message.w = reader.uint32();
+                        break;
+                    }
+                case 5: {
+                        message.h = reader.uint32();
+                        break;
+                    }
+                case 6: {
+                        message.caretX = reader.sint32();
+                        break;
+                    }
+                case 7: {
+                        message.caretY = reader.sint32();
+                        break;
+                    }
+                case 8: {
+                        message.caretH = reader.sint32();
+                        break;
+                    }
+                case 9: {
+                        message.editable = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1696,6 +1823,12 @@ $root.appFrameProtoOut = (function() {
                 return object;
             var message = new $root.appFrameProtoOut.FocusEventMsgOutProto();
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "focusLost":
             case 1:
                 message.type = 1;
@@ -1757,7 +1890,7 @@ $root.appFrameProtoOut = (function() {
                 object.editable = false;
             }
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto[message.type] : message.type;
             if (message.x != null && message.hasOwnProperty("x"))
                 object.x = message.x;
             if (message.y != null && message.hasOwnProperty("y"))
@@ -1789,9 +1922,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for FocusEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.FocusEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        FocusEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.FocusEventMsgOutProto";
+        };
+
+        /**
          * FocusEventTypeProto enum.
          * @name appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} focusLost=1 focusLost value
          * @property {number} focusGained=2 focusGained value
          * @property {number} focusWithCarretGained=3 focusWithCarretGained value
@@ -1855,12 +2003,14 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        StartApplicationMsgOutProto.decode = function decode(reader, length) {
+        StartApplicationMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.StartApplicationMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1906,6 +2056,21 @@ $root.appFrameProtoOut = (function() {
          */
         StartApplicationMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for StartApplicationMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.StartApplicationMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        StartApplicationMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.StartApplicationMsgOutProto";
         };
 
         return StartApplicationMsgOutProto;
@@ -1975,19 +2140,23 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        LinkActionMsgOutProto.decode = function decode(reader, length) {
+        LinkActionMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.LinkActionMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.action = reader.int32();
-                    break;
-                case 2:
-                    message.src = reader.string();
-                    break;
+                case 1: {
+                        message.action = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.src = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2013,6 +2182,12 @@ $root.appFrameProtoOut = (function() {
                 return object;
             var message = new $root.appFrameProtoOut.LinkActionMsgOutProto();
             switch (object.action) {
+            default:
+                if (typeof object.action === "number") {
+                    message.action = object.action;
+                    break;
+                }
+                break;
             case "file":
             case 0:
                 message.action = 0;
@@ -2053,7 +2228,7 @@ $root.appFrameProtoOut = (function() {
                 object.src = "";
             }
             if (message.action != null && message.hasOwnProperty("action"))
-                object.action = options.enums === String ? $root.appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto[message.action] : message.action;
+                object.action = options.enums === String ? $root.appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto[message.action] === undefined ? message.action : $root.appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto[message.action] : message.action;
             if (message.src != null && message.hasOwnProperty("src"))
                 object.src = message.src;
             return object;
@@ -2071,9 +2246,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for LinkActionMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.LinkActionMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        LinkActionMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.LinkActionMsgOutProto";
+        };
+
+        /**
          * LinkActionTypeProto enum.
          * @name appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} file=0 file value
          * @property {number} url=1 url value
          * @property {number} print=2 print value
@@ -2191,31 +2381,39 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowMoveActionMsgOutProto.decode = function decode(reader, length) {
+        WindowMoveActionMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowMoveActionMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.sx = reader.sint32();
-                    break;
-                case 2:
-                    message.sy = reader.sint32();
-                    break;
-                case 3:
-                    message.dx = reader.sint32();
-                    break;
-                case 4:
-                    message.dy = reader.sint32();
-                    break;
-                case 5:
-                    message.width = reader.uint32();
-                    break;
-                case 6:
-                    message.height = reader.uint32();
-                    break;
+                case 1: {
+                        message.sx = reader.sint32();
+                        break;
+                    }
+                case 2: {
+                        message.sy = reader.sint32();
+                        break;
+                    }
+                case 3: {
+                        message.dx = reader.sint32();
+                        break;
+                    }
+                case 4: {
+                        message.dy = reader.sint32();
+                        break;
+                    }
+                case 5: {
+                        message.width = reader.uint32();
+                        break;
+                    }
+                case 6: {
+                        message.height = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2296,6 +2494,21 @@ $root.appFrameProtoOut = (function() {
          */
         WindowMoveActionMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for WindowMoveActionMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.WindowMoveActionMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowMoveActionMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.WindowMoveActionMsgOutProto";
         };
 
         return WindowMoveActionMsgOutProto;
@@ -2393,30 +2606,37 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        CopyEventMsgOutProto.decode = function decode(reader, length) {
+        CopyEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.CopyEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.text = reader.string();
-                    break;
-                case 2:
-                    message.html = reader.string();
-                    break;
-                case 3:
-                    message.img = reader.bytes();
-                    break;
-                case 4:
-                    if (!(message.files && message.files.length))
-                        message.files = [];
-                    message.files.push(reader.string());
-                    break;
-                case 5:
-                    message.other = reader.bool();
-                    break;
+                case 1: {
+                        message.text = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.html = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.img = reader.bytes();
+                        break;
+                    }
+                case 4: {
+                        if (!(message.files && message.files.length))
+                            message.files = [];
+                        message.files.push(reader.string());
+                        break;
+                    }
+                case 5: {
+                        message.other = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2444,7 +2664,7 @@ $root.appFrameProtoOut = (function() {
             if (object.img != null)
                 if (typeof object.img === "string")
                     $util.base64.decode(object.img, message.img = $util.newBuffer($util.base64.length(object.img)), 0);
-                else if (object.img.length)
+                else if (object.img.length >= 0)
                     message.img = object.img;
             if (object.files) {
                 if (!Array.isArray(object.files))
@@ -2510,6 +2730,21 @@ $root.appFrameProtoOut = (function() {
          */
         CopyEventMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for CopyEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.CopyEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        CopyEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.CopyEventMsgOutProto";
         };
 
         return CopyEventMsgOutProto;
@@ -2579,19 +2814,23 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PasteRequestMsgOutProto.decode = function decode(reader, length) {
+        PasteRequestMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PasteRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.title = reader.string();
-                    break;
-                case 2:
-                    message.message = reader.string();
-                    break;
+                case 1: {
+                        message.title = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.message = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2652,6 +2891,21 @@ $root.appFrameProtoOut = (function() {
          */
         PasteRequestMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PasteRequestMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.PasteRequestMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PasteRequestMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.PasteRequestMsgOutProto";
         };
 
         return PasteRequestMsgOutProto;
@@ -2775,37 +3029,47 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        FileDialogEventMsgOutProto.decode = function decode(reader, length) {
+        FileDialogEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.FileDialogEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.eventType = reader.int32();
-                    break;
-                case 2:
-                    message.allowDownload = reader.bool();
-                    break;
-                case 3:
-                    message.allowUpload = reader.bool();
-                    break;
-                case 4:
-                    message.allowDelete = reader.bool();
-                    break;
-                case 5:
-                    message.filter = reader.string();
-                    break;
-                case 6:
-                    message.isMultiSelection = reader.bool();
-                    break;
-                case 7:
-                    message.selection = reader.string();
-                    break;
-                case 8:
-                    message.customDialog = reader.bool();
-                    break;
+                case 1: {
+                        message.eventType = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.allowDownload = reader.bool();
+                        break;
+                    }
+                case 3: {
+                        message.allowUpload = reader.bool();
+                        break;
+                    }
+                case 4: {
+                        message.allowDelete = reader.bool();
+                        break;
+                    }
+                case 5: {
+                        message.filter = reader.string();
+                        break;
+                    }
+                case 6: {
+                        message.isMultiSelection = reader.bool();
+                        break;
+                    }
+                case 7: {
+                        message.selection = reader.string();
+                        break;
+                    }
+                case 8: {
+                        message.customDialog = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2829,6 +3093,12 @@ $root.appFrameProtoOut = (function() {
                 return object;
             var message = new $root.appFrameProtoOut.FileDialogEventMsgOutProto();
             switch (object.eventType) {
+            default:
+                if (typeof object.eventType === "number") {
+                    message.eventType = object.eventType;
+                    break;
+                }
+                break;
             case "Open":
             case 0:
                 message.eventType = 0;
@@ -2887,7 +3157,7 @@ $root.appFrameProtoOut = (function() {
                 object.customDialog = false;
             }
             if (message.eventType != null && message.hasOwnProperty("eventType"))
-                object.eventType = options.enums === String ? $root.appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto[message.eventType] : message.eventType;
+                object.eventType = options.enums === String ? $root.appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto[message.eventType] : message.eventType;
             if (message.allowDownload != null && message.hasOwnProperty("allowDownload"))
                 object.allowDownload = message.allowDownload;
             if (message.allowUpload != null && message.hasOwnProperty("allowUpload"))
@@ -2917,9 +3187,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for FileDialogEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.FileDialogEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        FileDialogEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.FileDialogEventMsgOutProto";
+        };
+
+        /**
          * FileDialogEventTypeProto enum.
          * @name appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} Open=0 Open value
          * @property {number} Close=1 Close value
          * @property {number} AutoUpload=2 AutoUpload value
@@ -3010,22 +3295,27 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowSwitchMsg.decode = function decode(reader, length) {
+        WindowSwitchMsg.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowSwitchMsg();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    message.title = reader.string();
-                    break;
-                case 3:
-                    message.modalBlocked = reader.bool();
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.title = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.modalBlocked = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3093,6 +3383,21 @@ $root.appFrameProtoOut = (function() {
          */
         WindowSwitchMsg.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for WindowSwitchMsg
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.WindowSwitchMsg
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowSwitchMsg.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.WindowSwitchMsg";
         };
 
         return WindowSwitchMsg;
@@ -3299,68 +3604,87 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowMsgOutProto.decode = function decode(reader, length) {
+        WindowMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    if (!(message.content && message.content.length))
-                        message.content = [];
-                    message.content.push($root.appFrameProtoOut.WindowPartialContentMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 3:
-                    message.directDraw = reader.bytes();
-                    break;
-                case 4:
-                    message.title = reader.string();
-                    break;
-                case 5:
-                    message.posX = reader.sint32();
-                    break;
-                case 6:
-                    message.posY = reader.sint32();
-                    break;
-                case 7:
-                    message.width = reader.uint32();
-                    break;
-                case 8:
-                    message.height = reader.uint32();
-                    break;
-                case 9:
-                    message.name = reader.string();
-                    break;
-                case 10:
-                    message.type = reader.int32();
-                    break;
-                case 11:
-                    message.modalBlocked = reader.bool();
-                    break;
-                case 12:
-                    message.ownerId = reader.string();
-                    break;
-                case 13:
-                    message.state = reader.uint32();
-                    break;
-                case 14:
-                    if (!(message.internalWindows && message.internalWindows.length))
-                        message.internalWindows = [];
-                    message.internalWindows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 15:
-                    message.dockMode = reader.int32();
-                    break;
-                case 16:
-                    message.dockState = reader.int32();
-                    break;
-                case 17:
-                    message.classType = reader.int32();
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        if (!(message.content && message.content.length))
+                            message.content = [];
+                        message.content.push($root.appFrameProtoOut.WindowPartialContentMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 3: {
+                        message.directDraw = reader.bytes();
+                        break;
+                    }
+                case 4: {
+                        message.title = reader.string();
+                        break;
+                    }
+                case 5: {
+                        message.posX = reader.sint32();
+                        break;
+                    }
+                case 6: {
+                        message.posY = reader.sint32();
+                        break;
+                    }
+                case 7: {
+                        message.width = reader.uint32();
+                        break;
+                    }
+                case 8: {
+                        message.height = reader.uint32();
+                        break;
+                    }
+                case 9: {
+                        message.name = reader.string();
+                        break;
+                    }
+                case 10: {
+                        message.type = reader.int32();
+                        break;
+                    }
+                case 11: {
+                        message.modalBlocked = reader.bool();
+                        break;
+                    }
+                case 12: {
+                        message.ownerId = reader.string();
+                        break;
+                    }
+                case 13: {
+                        message.state = reader.uint32();
+                        break;
+                    }
+                case 14: {
+                        if (!(message.internalWindows && message.internalWindows.length))
+                            message.internalWindows = [];
+                        message.internalWindows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 15: {
+                        message.dockMode = reader.int32();
+                        break;
+                    }
+                case 16: {
+                        message.dockState = reader.int32();
+                        break;
+                    }
+                case 17: {
+                        message.classType = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3398,7 +3722,7 @@ $root.appFrameProtoOut = (function() {
             if (object.directDraw != null)
                 if (typeof object.directDraw === "string")
                     $util.base64.decode(object.directDraw, message.directDraw = $util.newBuffer($util.base64.length(object.directDraw)), 0);
-                else if (object.directDraw.length)
+                else if (object.directDraw.length >= 0)
                     message.directDraw = object.directDraw;
             if (object.title != null)
                 message.title = String(object.title);
@@ -3413,6 +3737,12 @@ $root.appFrameProtoOut = (function() {
             if (object.name != null)
                 message.name = String(object.name);
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "basic":
             case 1:
                 message.type = 1;
@@ -3451,6 +3781,12 @@ $root.appFrameProtoOut = (function() {
                 }
             }
             switch (object.dockMode) {
+            default:
+                if (typeof object.dockMode === "number") {
+                    message.dockMode = object.dockMode;
+                    break;
+                }
+                break;
             case "none":
             case 1:
                 message.dockMode = 1;
@@ -3465,6 +3801,12 @@ $root.appFrameProtoOut = (function() {
                 break;
             }
             switch (object.dockState) {
+            default:
+                if (typeof object.dockState === "number") {
+                    message.dockState = object.dockState;
+                    break;
+                }
+                break;
             case "docked":
             case 1:
                 message.dockState = 1;
@@ -3475,6 +3817,12 @@ $root.appFrameProtoOut = (function() {
                 break;
             }
             switch (object.classType) {
+            default:
+                if (typeof object.classType === "number") {
+                    message.classType = object.classType;
+                    break;
+                }
+                break;
             case "other":
             case 1:
                 message.classType = 1;
@@ -3569,7 +3917,7 @@ $root.appFrameProtoOut = (function() {
             if (message.name != null && message.hasOwnProperty("name"))
                 object.name = message.name;
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.WindowMsgOutProto.WindowTypeProto[message.type] : message.type;
             if (message.modalBlocked != null && message.hasOwnProperty("modalBlocked"))
                 object.modalBlocked = message.modalBlocked;
             if (message.ownerId != null && message.hasOwnProperty("ownerId"))
@@ -3582,11 +3930,11 @@ $root.appFrameProtoOut = (function() {
                     object.internalWindows[j] = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.internalWindows[j], options);
             }
             if (message.dockMode != null && message.hasOwnProperty("dockMode"))
-                object.dockMode = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockModeProto[message.dockMode] : message.dockMode;
+                object.dockMode = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockModeProto[message.dockMode] === undefined ? message.dockMode : $root.appFrameProtoOut.WindowMsgOutProto.DockModeProto[message.dockMode] : message.dockMode;
             if (message.dockState != null && message.hasOwnProperty("dockState"))
-                object.dockState = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockStateProto[message.dockState] : message.dockState;
+                object.dockState = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockStateProto[message.dockState] === undefined ? message.dockState : $root.appFrameProtoOut.WindowMsgOutProto.DockStateProto[message.dockState] : message.dockState;
             if (message.classType != null && message.hasOwnProperty("classType"))
-                object.classType = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto[message.classType] : message.classType;
+                object.classType = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto[message.classType] === undefined ? message.classType : $root.appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto[message.classType] : message.classType;
             return object;
         };
 
@@ -3602,9 +3950,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for WindowMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.WindowMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.WindowMsgOutProto";
+        };
+
+        /**
          * WindowTypeProto enum.
          * @name appFrameProtoOut.WindowMsgOutProto.WindowTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} basic=1 basic value
          * @property {number} html=2 html value
          * @property {number} internal=3 internal value
@@ -3624,7 +3987,7 @@ $root.appFrameProtoOut = (function() {
         /**
          * WindowClassTypeProto enum.
          * @name appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} other=1 other value
          * @property {number} Window=2 Window value
          * @property {number} JWindow=3 JWindow value
@@ -3648,7 +4011,7 @@ $root.appFrameProtoOut = (function() {
         /**
          * DockModeProto enum.
          * @name appFrameProtoOut.WindowMsgOutProto.DockModeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} none=1 none value
          * @property {number} dockable=2 dockable value
          * @property {number} autoUndock=3 autoUndock value
@@ -3664,7 +4027,7 @@ $root.appFrameProtoOut = (function() {
         /**
          * DockStateProto enum.
          * @name appFrameProtoOut.WindowMsgOutProto.DockStateProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} docked=1 docked value
          * @property {number} undocked=2 undocked value
          */
@@ -3751,22 +4114,27 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowSwitchMsgOutProto.decode = function decode(reader, length) {
+        WindowSwitchMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowSwitchMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    message.title = reader.string();
-                    break;
-                case 3:
-                    message.modalBlocked = reader.bool();
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.title = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.modalBlocked = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3834,6 +4202,21 @@ $root.appFrameProtoOut = (function() {
          */
         WindowSwitchMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for WindowSwitchMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.WindowSwitchMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowSwitchMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.WindowSwitchMsgOutProto";
         };
 
         return WindowSwitchMsgOutProto;
@@ -3930,28 +4313,35 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowPartialContentMsgOutProto.decode = function decode(reader, length) {
+        WindowPartialContentMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowPartialContentMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.positionX = reader.sint32();
-                    break;
-                case 2:
-                    message.positionY = reader.sint32();
-                    break;
-                case 3:
-                    message.width = reader.uint32();
-                    break;
-                case 4:
-                    message.height = reader.uint32();
-                    break;
-                case 5:
-                    message.base64Content = reader.bytes();
-                    break;
+                case 1: {
+                        message.positionX = reader.sint32();
+                        break;
+                    }
+                case 2: {
+                        message.positionY = reader.sint32();
+                        break;
+                    }
+                case 3: {
+                        message.width = reader.uint32();
+                        break;
+                    }
+                case 4: {
+                        message.height = reader.uint32();
+                        break;
+                    }
+                case 5: {
+                        message.base64Content = reader.bytes();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3983,7 +4373,7 @@ $root.appFrameProtoOut = (function() {
             if (object.base64Content != null)
                 if (typeof object.base64Content === "string")
                     $util.base64.decode(object.base64Content, message.base64Content = $util.newBuffer($util.base64.length(object.base64Content)), 0);
-                else if (object.base64Content.length)
+                else if (object.base64Content.length >= 0)
                     message.base64Content = object.base64Content;
             return message;
         };
@@ -4038,13 +4428,28 @@ $root.appFrameProtoOut = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for WindowPartialContentMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.WindowPartialContentMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        WindowPartialContentMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.WindowPartialContentMsgOutProto";
+        };
+
         return WindowPartialContentMsgOutProto;
     })();
 
     /**
      * SimpleEventMsgOutProto enum.
      * @name appFrameProtoOut.SimpleEventMsgOutProto
-     * @enum {string}
+     * @enum {number}
      * @property {number} applicationAlreadyRunning=0 applicationAlreadyRunning value
      * @property {number} shutDownNotification=1 shutDownNotification value
      * @property {number} tooManyClientsNotification=2 tooManyClientsNotification value
@@ -4177,35 +4582,43 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsEvalRequestMsgOutProto.decode = function decode(reader, length) {
+        JsEvalRequestMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsEvalRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.correlationId = reader.string();
-                    break;
-                case 2:
-                    message.thisObjectId = reader.string();
-                    break;
-                case 3:
-                    message.type = reader.int32();
-                    break;
-                case 4:
-                    message.evalString = reader.string();
-                    break;
-                case 5:
-                    if (!(message.params && message.params.length))
-                        message.params = [];
-                    message.params.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 6:
-                    if (!(message.garbageIds && message.garbageIds.length))
-                        message.garbageIds = [];
-                    message.garbageIds.push(reader.string());
-                    break;
+                case 1: {
+                        message.correlationId = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.thisObjectId = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.type = reader.int32();
+                        break;
+                    }
+                case 4: {
+                        message.evalString = reader.string();
+                        break;
+                    }
+                case 5: {
+                        if (!(message.params && message.params.length))
+                            message.params = [];
+                        message.params.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 6: {
+                        if (!(message.garbageIds && message.garbageIds.length))
+                            message.garbageIds = [];
+                        message.garbageIds.push(reader.string());
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4231,6 +4644,12 @@ $root.appFrameProtoOut = (function() {
             if (object.thisObjectId != null)
                 message.thisObjectId = String(object.thisObjectId);
             switch (object.type) {
+            default:
+                if (typeof object.type === "number") {
+                    message.type = object.type;
+                    break;
+                }
+                break;
             case "eval":
             case 0:
                 message.type = 0;
@@ -4310,7 +4729,7 @@ $root.appFrameProtoOut = (function() {
             if (message.thisObjectId != null && message.hasOwnProperty("thisObjectId"))
                 object.thisObjectId = message.thisObjectId;
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto[message.type] : message.type;
+                object.type = options.enums === String ? $root.appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto[message.type] : message.type;
             if (message.evalString != null && message.hasOwnProperty("evalString"))
                 object.evalString = message.evalString;
             if (message.params && message.params.length) {
@@ -4338,9 +4757,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for JsEvalRequestMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.JsEvalRequestMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JsEvalRequestMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.JsEvalRequestMsgOutProto";
+        };
+
+        /**
          * JsEvalRequestTypeProto enum.
          * @name appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} eval=0 eval value
          * @property {number} call=1 call value
          * @property {number} setMember=2 setMember value
@@ -4447,27 +4881,33 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsParamMsgOutProto.decode = function decode(reader, length) {
+        JsParamMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsParamMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.primitive = reader.string();
-                    break;
-                case 2:
-                    message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 3:
-                    message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.decode(reader, reader.uint32());
-                    break;
-                case 4:
-                    if (!(message.array && message.array.length))
-                        message.array = [];
-                    message.array.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
-                    break;
+                case 1: {
+                        message.primitive = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 3: {
+                        message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 4: {
+                        if (!(message.array && message.array.length))
+                            message.array = [];
+                        message.array.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4558,6 +4998,21 @@ $root.appFrameProtoOut = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for JsParamMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.JsParamMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JsParamMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.JsParamMsgOutProto";
+        };
+
         return JsParamMsgOutProto;
     })();
 
@@ -4616,16 +5071,19 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JSObjectMsgOutProto.decode = function decode(reader, length) {
+        JSObjectMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JSObjectMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
+                if (tag === error)
                     break;
+                switch (tag >>> 3) {
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4680,6 +5138,21 @@ $root.appFrameProtoOut = (function() {
          */
         JSObjectMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for JSObjectMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.JSObjectMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JSObjectMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.JSObjectMsgOutProto";
         };
 
         return JSObjectMsgOutProto;
@@ -4750,21 +5223,25 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JavaObjectRefMsgOutProto.decode = function decode(reader, length) {
+        JavaObjectRefMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JavaObjectRefMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    if (!(message.methods && message.methods.length))
-                        message.methods = [];
-                    message.methods.push(reader.string());
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        if (!(message.methods && message.methods.length))
+                            message.methods = [];
+                        message.methods.push(reader.string());
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4833,6 +5310,21 @@ $root.appFrameProtoOut = (function() {
          */
         JavaObjectRefMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for JavaObjectRefMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.JavaObjectRefMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JavaObjectRefMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.JavaObjectRefMsgOutProto";
         };
 
         return JavaObjectRefMsgOutProto;
@@ -4911,22 +5403,27 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsResultMsgOutProto.decode = function decode(reader, length) {
+        JsResultMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsResultMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.correlationId = reader.string();
-                    break;
-                case 2:
-                    message.error = reader.string();
-                    break;
-                case 3:
-                    message.value = $root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32());
-                    break;
+                case 1: {
+                        message.correlationId = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.error = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.value = $root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32());
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4997,6 +5494,21 @@ $root.appFrameProtoOut = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for JsResultMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.JsResultMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        JsResultMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.JsResultMsgOutProto";
+        };
+
         return JsResultMsgOutProto;
     })();
 
@@ -5064,19 +5576,23 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PlaybackInfoMsgOutProto.decode = function decode(reader, length) {
+        PlaybackInfoMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PlaybackInfoMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.current = reader.uint32();
-                    break;
-                case 2:
-                    message.total = reader.uint32();
-                    break;
+                case 1: {
+                        message.current = reader.uint32();
+                        break;
+                    }
+                case 2: {
+                        message.total = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5137,6 +5653,21 @@ $root.appFrameProtoOut = (function() {
          */
         PlaybackInfoMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PlaybackInfoMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.PlaybackInfoMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PlaybackInfoMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.PlaybackInfoMsgOutProto";
         };
 
         return PlaybackInfoMsgOutProto;
@@ -5233,28 +5764,35 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PixelsAreaRequestMsgOutProto.decode = function decode(reader, length) {
+        PixelsAreaRequestMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.correlationId = reader.string();
-                    break;
-                case 2:
-                    message.x = reader.uint32();
-                    break;
-                case 3:
-                    message.y = reader.uint32();
-                    break;
-                case 4:
-                    message.w = reader.uint32();
-                    break;
-                case 5:
-                    message.h = reader.uint32();
-                    break;
+                case 1: {
+                        message.correlationId = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.x = reader.uint32();
+                        break;
+                    }
+                case 3: {
+                        message.y = reader.uint32();
+                        break;
+                    }
+                case 4: {
+                        message.w = reader.uint32();
+                        break;
+                    }
+                case 5: {
+                        message.h = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5330,6 +5868,21 @@ $root.appFrameProtoOut = (function() {
          */
         PixelsAreaRequestMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for PixelsAreaRequestMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.PixelsAreaRequestMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        PixelsAreaRequestMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.PixelsAreaRequestMsgOutProto";
         };
 
         return PixelsAreaRequestMsgOutProto;
@@ -5490,51 +6043,65 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ComponentTreeMsgOutProto.decode = function decode(reader, length) {
+        ComponentTreeMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.ComponentTreeMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.componentType = reader.string();
-                    break;
-                case 2:
-                    message.name = reader.string();
-                    break;
-                case 3:
-                    message.value = reader.string();
-                    break;
-                case 4:
-                    message.screenX = reader.sint32();
-                    break;
-                case 5:
-                    message.screenY = reader.sint32();
-                    break;
-                case 6:
-                    message.width = reader.sint32();
-                    break;
-                case 7:
-                    message.height = reader.sint32();
-                    break;
-                case 8:
-                    message.enabled = reader.bool();
-                    break;
-                case 9:
-                    message.visible = reader.bool();
-                    break;
-                case 10:
-                    if (!(message.components && message.components.length))
-                        message.components = [];
-                    message.components.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
-                    break;
-                case 11:
-                    message.hidden = reader.bool();
-                    break;
-                case 12:
-                    message.selected = reader.bool();
-                    break;
+                case 1: {
+                        message.componentType = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.name = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.value = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.screenX = reader.sint32();
+                        break;
+                    }
+                case 5: {
+                        message.screenY = reader.sint32();
+                        break;
+                    }
+                case 6: {
+                        message.width = reader.sint32();
+                        break;
+                    }
+                case 7: {
+                        message.height = reader.sint32();
+                        break;
+                    }
+                case 8: {
+                        message.enabled = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        message.visible = reader.bool();
+                        break;
+                    }
+                case 10: {
+                        if (!(message.components && message.components.length))
+                            message.components = [];
+                        message.components.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 11: {
+                        message.hidden = reader.bool();
+                        break;
+                    }
+                case 12: {
+                        message.selected = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5659,6 +6226,21 @@ $root.appFrameProtoOut = (function() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
+        /**
+         * Gets the default type url for ComponentTreeMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.ComponentTreeMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        ComponentTreeMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.ComponentTreeMsgOutProto";
+        };
+
         return ComponentTreeMsgOutProto;
     })();
 
@@ -5744,25 +6326,31 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ActionEventMsgOutProto.decode = function decode(reader, length) {
+        ActionEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.ActionEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.actionName = reader.string();
-                    break;
-                case 2:
-                    message.data = reader.string();
-                    break;
-                case 3:
-                    message.binaryData = reader.bytes();
-                    break;
-                case 4:
-                    message.windowId = reader.string();
-                    break;
+                case 1: {
+                        message.actionName = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.data = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.binaryData = reader.bytes();
+                        break;
+                    }
+                case 4: {
+                        message.windowId = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5790,7 +6378,7 @@ $root.appFrameProtoOut = (function() {
             if (object.binaryData != null)
                 if (typeof object.binaryData === "string")
                     $util.base64.decode(object.binaryData, message.binaryData = $util.newBuffer($util.base64.length(object.binaryData)), 0);
-                else if (object.binaryData.length)
+                else if (object.binaryData.length >= 0)
                     message.binaryData = object.binaryData;
             if (object.windowId != null)
                 message.windowId = String(object.windowId);
@@ -5842,6 +6430,21 @@ $root.appFrameProtoOut = (function() {
          */
         ActionEventMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for ActionEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.ActionEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        ActionEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.ActionEventMsgOutProto";
         };
 
         return ActionEventMsgOutProto;
@@ -5938,28 +6541,35 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AudioEventMsgOutProto.decode = function decode(reader, length) {
+        AudioEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AudioEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.id = reader.string();
-                    break;
-                case 2:
-                    message.eventType = reader.int32();
-                    break;
-                case 3:
-                    message.data = reader.bytes();
-                    break;
-                case 4:
-                    message.time = reader.float();
-                    break;
-                case 5:
-                    message.loop = reader.sint32();
-                    break;
+                case 1: {
+                        message.id = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.eventType = reader.int32();
+                        break;
+                    }
+                case 3: {
+                        message.data = reader.bytes();
+                        break;
+                    }
+                case 4: {
+                        message.time = reader.float();
+                        break;
+                    }
+                case 5: {
+                        message.loop = reader.sint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5983,6 +6593,12 @@ $root.appFrameProtoOut = (function() {
             if (object.id != null)
                 message.id = String(object.id);
             switch (object.eventType) {
+            default:
+                if (typeof object.eventType === "number") {
+                    message.eventType = object.eventType;
+                    break;
+                }
+                break;
             case "play":
             case 0:
                 message.eventType = 0;
@@ -6003,7 +6619,7 @@ $root.appFrameProtoOut = (function() {
             if (object.data != null)
                 if (typeof object.data === "string")
                     $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
-                else if (object.data.length)
+                else if (object.data.length >= 0)
                     message.data = object.data;
             if (object.time != null)
                 message.time = Number(object.time);
@@ -6041,7 +6657,7 @@ $root.appFrameProtoOut = (function() {
             if (message.id != null && message.hasOwnProperty("id"))
                 object.id = message.id;
             if (message.eventType != null && message.hasOwnProperty("eventType"))
-                object.eventType = options.enums === String ? $root.appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto[message.eventType] : message.eventType;
+                object.eventType = options.enums === String ? $root.appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto[message.eventType] : message.eventType;
             if (message.data != null && message.hasOwnProperty("data"))
                 object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data;
             if (message.time != null && message.hasOwnProperty("time"))
@@ -6063,9 +6679,24 @@ $root.appFrameProtoOut = (function() {
         };
 
         /**
+         * Gets the default type url for AudioEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.AudioEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        AudioEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.AudioEventMsgOutProto";
+        };
+
+        /**
          * AudioEventTypeProto enum.
          * @name appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto
-         * @enum {string}
+         * @enum {number}
          * @property {number} play=0 play value
          * @property {number} stop=1 stop value
          * @property {number} update=2 update value
@@ -6183,31 +6814,39 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        CursorChangeEventMsgOutProto.decode = function decode(reader, length) {
+        CursorChangeEventMsgOutProto.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.CursorChangeEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
-                case 1:
-                    message.cursor = reader.string();
-                    break;
-                case 2:
-                    message.b64img = reader.bytes();
-                    break;
-                case 3:
-                    message.curFile = reader.string();
-                    break;
-                case 4:
-                    message.x = reader.sint32();
-                    break;
-                case 5:
-                    message.y = reader.sint32();
-                    break;
-                case 6:
-                    message.winId = reader.string();
-                    break;
+                case 1: {
+                        message.cursor = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.b64img = reader.bytes();
+                        break;
+                    }
+                case 3: {
+                        message.curFile = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.x = reader.sint32();
+                        break;
+                    }
+                case 5: {
+                        message.y = reader.sint32();
+                        break;
+                    }
+                case 6: {
+                        message.winId = reader.string();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -6233,7 +6872,7 @@ $root.appFrameProtoOut = (function() {
             if (object.b64img != null)
                 if (typeof object.b64img === "string")
                     $util.base64.decode(object.b64img, message.b64img = $util.newBuffer($util.base64.length(object.b64img)), 0);
-                else if (object.b64img.length)
+                else if (object.b64img.length >= 0)
                     message.b64img = object.b64img;
             if (object.curFile != null)
                 message.curFile = String(object.curFile);
@@ -6297,6 +6936,21 @@ $root.appFrameProtoOut = (function() {
          */
         CursorChangeEventMsgOutProto.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for CursorChangeEventMsgOutProto
+         * @function getTypeUrl
+         * @memberof appFrameProtoOut.CursorChangeEventMsgOutProto
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        CursorChangeEventMsgOutProto.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/appFrameProtoOut.CursorChangeEventMsgOutProto";
         };
 
         return CursorChangeEventMsgOutProto;

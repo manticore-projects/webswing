@@ -1,7 +1,4 @@
 import { ModuleDef, IInjector } from "./webswing-inject";
-import 'promise-polyfill/src/polyfill';
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import { msg as defaultMsg } from "./nls/msg";
 
 export interface ITranslateService {

@@ -111,10 +111,6 @@ public class WebRobotPeer implements RobotPeer {
 		return ((DataBufferInt) resultImage.getRaster().getDataBuffer()).getData();
 	}
 
-	@Override
-	public void dispose() {
-	}
-
 	private void sendKeyEvent(KeyboardEventMsgIn.KeyEventType type, int keycode) {
 		AppFrameMsgIn msgIn = new AppFrameMsgIn();
 		KeyboardEventMsgIn kme = new KeyboardEventMsgIn();

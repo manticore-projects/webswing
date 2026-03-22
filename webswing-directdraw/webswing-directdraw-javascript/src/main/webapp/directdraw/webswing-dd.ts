@@ -962,11 +962,11 @@ export class DirectDraw {
     }
 
     public prepareImages(images: DecodedProtoImage[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             try {
                 if (images.length > 0) {
                     const loadedImages = images.map((image) => {
-                        return new Promise((resolveImg) => {
+                        return new Promise<void>((resolveImg) => {
                             const img = new Image();
                             const dataurl=DirectDraw.getImageData(image.data as Uint8Array);
                             if(dataurl) {
@@ -981,23 +981,23 @@ export class DirectDraw {
                             }
                         });
                     });
-                    Promise.all(loadedImages).then(resolve);
+                    Promise.all(loadedImages).then(() => resolve());
                 } else {
                     resolve();
                 }
             } catch (e) {
-                this.config.onErrorMessage(e);
+                this.config.onErrorMessage(e as Error);
                 reject(e);
             }
         });
     }
 
     public initializeFontFaces(fontFaces: IFontFaceProto[]) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             try {
                 if (fontFaces.length > 0) {
                     const loadedFonts = fontFaces.map((fontFace) => {
-                        return new Promise((resolveFont) => {
+                        return new Promise<void>((resolveFont) => {
                             if (this.fontsArray.indexOf(fontFace.name) >= 0) {
                                 resolveFont();
                             } else {
@@ -1012,12 +1012,12 @@ export class DirectDraw {
                             }
                         });
                     });
-                    Promise.all(loadedFonts).then(resolve);
+                    Promise.all(loadedFonts).then(() => resolve());
                 } else {
                     resolve();
                 }
             } catch (e) {
-                this.config.onErrorMessage(e);
+                this.config.onErrorMessage(e as Error);
                 reject(e);
             }
         });
@@ -1064,17 +1064,17 @@ export class DirectDraw {
     }
 
     private drawWebImage(image: WebImageProto, targetCanvas?: HTMLCanvasElement): PromiseLike<HTMLCanvasElement> {
-        return new Promise((resolve, reject) => {
+        return new Promise<HTMLCanvasElement>((resolve, reject) => {
             try {
                 this.drawWebImageInternal(image, resolve, reject,targetCanvas);
             } catch (e) {
-                this.config.onErrorMessage(e);
+                this.config.onErrorMessage(e as Error);
                 reject(e);
             }
         });
     }
 
-    private drawWebImageInternal(image: WebImageProto, resolve: (value?: HTMLCanvasElement) => void, reject: (value?: Error) => void,targetCanvas?: HTMLCanvasElement) {
+    private drawWebImageInternal(image: WebImageProto, resolve: (value: HTMLCanvasElement) => void, reject: (value?: Error) => void,targetCanvas?: HTMLCanvasElement) {
         let newCanvas: HTMLCanvasElement;
         const renderStart = new Date().getTime();
         const dpr = this.config.dpr;

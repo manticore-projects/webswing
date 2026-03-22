@@ -1,6 +1,5 @@
 package org.webswing.toolkit.jslink;
 
-import java.applet.Applet;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,13 +52,6 @@ public class WebJSObject extends JSObject {
 		}
 	}
 
-	public static Future<?> setAppletRef(Applet a) {
-		return javaEvalThread.submit(() -> {
-			JSObject root = new WebJSObject(new JSObjectMsgIn("instanceObject"));
-			root.setMember("applet", a);
-		});
-	}
-
 	@Override
 	public Object call(String methodName, Object[] args) throws JSException {
 		AppFrameMsgOut msg = JsLinkUtil.generateCallRequest(jsThis, methodName, args);
@@ -100,10 +92,6 @@ public class WebJSObject extends JSObject {
 	public void setSlot(int index, Object value) throws JSException {
 		AppFrameMsgOut msg = JsLinkUtil.generateSetSlotRequest(jsThis, index, value);
 		sendJsRequest(msg);
-	}
-
-	public static JSObject getWindow(Applet paramApplet) throws JSException {
-		return new WebJSObject(null);
 	}
 
 	private static Object sendJsRequest(AppFrameMsgOut frame) {

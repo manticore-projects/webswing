@@ -84,7 +84,7 @@ export interface IBaseService {
 	'base.hasUndockedWindows': () => boolean,
 	'base.getFocusedWindow': () => Window,
 	'base.getAllWindows': () => Window[],
-	'base.getMainWindowVisibilityState': () => VisibilityState,
+	'base.getMainWindowVisibilityState': () => DocumentVisibilityState,
 	'base.closeWindow': (id: string) => void
 	'base.startNewSessionOnShutdown': () => void
 }
@@ -96,7 +96,7 @@ export type IDockableWindow = Window & typeof globalThis & {
 	createTime:number
 	ignoreDockResizeTimestamp:number
 }
-export type HtmlOrCanvasWindow = HtmlWindow | CanvasWindow 
+export type HtmlOrCanvasWindow = HtmlWindow | CanvasWindow
 
 type IAudioClip = HTMLAudioElement & {
 	loopCount: number,
@@ -527,7 +527,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 
 					if (!clip) {
 						// new clip
-						const blob = new Blob([data.audioEvent.data!], { type: 'audio/mpeg' });
+						const blob = new Blob([new Uint8Array(data.audioEvent.data! as Uint8Array)], { type: 'audio/mpeg' });
 						const url = window.URL.createObjectURL(blob);
 
 						clip = new Audio() as IAudioClip;
@@ -538,9 +538,9 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 							clip.currentTime = data.audioEvent.time;
 						}
 						clip.addEventListener('ended', (evt) => this.audioEndedHandler(evt));
-						
+
 						this.audio[data.audioEvent.id!] = clip;
-						
+
 						this.startAudioPing(clip);
 						clip.play();
 					} else {
@@ -903,7 +903,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 							// fix for ie - onload is fired before the image
 							// is ready for rendering to canvas.
 							// This is an ugly quickfix
-							if (this.api.cfg.ieVersion && this.api.cfg.ieVersion <= 10) {
+							if (this.api.cfg.ieVersion && (this.api.cfg.ieVersion as number) <= 10) {
 								window.setTimeout(onloadFunction, 20);
 							} else {
 								onloadFunction();
@@ -940,7 +940,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 								const sy = Math.min(canvas.height, Math.max(0, winContent.positionY! * dpr));
 								const sw = Math.min(canvas.width - sx, winContent.width! * dpr - (sx - winContent.positionX! * dpr));
 								const sh = Math.min(canvas.height - sy, winContent.height! * dpr - (sy - winContent.positionY! * dpr));
-		
+
 								const dx = win.posX! * dpr + sx;
 								const dy = win.posY! * dpr + sy;
 								const dw = sw;
@@ -966,7 +966,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 
 			if (win.type !== WindowType.basic) {
 				// we don't need to draw html window, also do not create canvas
-				ddPromise = new Promise<HTMLCanvasElement>((resolve, _) => {
+				ddPromise = new Promise<HTMLCanvasElement | undefined>((resolve, _) => {
 					resolve(undefined);
 				})
 			} else if (win.directDraw == null) {
@@ -990,14 +990,14 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 					if ((canvas || win.type === WindowType.html) && (typeof this.windowImageHolders[win.id] === 'undefined' || this.windowImageHolders[win.id] == null)) {
 						this.openNewComposedWindow(win, canvas);
 					}
-	
+
 					const htmlOrCanvasWin = this.windowImageHolders[win.id];
 
 					this.handleWindowDockState(win.dockState, htmlOrCanvasWin);
 					this.handleWindowModalityAndBounds(win, htmlOrCanvasWin, index, false);
 					this.handleWindowState(win.state, htmlOrCanvasWin);
 					this.drawInternalWindows(win.internalWindows);
-	
+
 					resolved();
 				}, (error: Error) => {
 					rejected(error);
@@ -1047,7 +1047,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 		if (this.api.cfg.mirrorMode) {
 			return;
 		}
-		
+
 		let ownerWin: IDockableWindow;
 		if (element.parentNode) {
 			ownerWin = element.parentNode.ownerDocument!.defaultView as IDockableWindow;
@@ -1071,7 +1071,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 			return;
 		}
 
-		const canvasWin = this.windowImageHolders[id] as CanvasWindow; 
+		const canvasWin = this.windowImageHolders[id] as CanvasWindow;
 
 		canvasWin.dockOwner = popup;
 		canvasWin.preventDockClose = false;
@@ -1128,19 +1128,19 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 						const el = cw.element;
 						const elRect = el.getBoundingClientRect();
 						const location = { x: elRect.left - origRect.left, y: elRect.top - origRect.top };
-	
+
 						if (el.parentNode) {
 							el.parentNode.removeChild(el);
 						}
-	
+
 						content.appendChild(el);
-	
+
 						$(el).css({ "left": location.x + 'px', "top": location.y + 'px' });
 						if (!cw.htmlWindow) {
 							cw.setLocation(location.x, location.y);
 							cw.ignoreNextPositioning = true;
 						}
-	
+
 						// undock also any internal frames wrapper divs that this window owns
 						for (const ifwId in this.internalFrameWrapperHolders) {
 							if (this.internalFrameWrapperHolders.hasOwnProperty(ifwId)) {
@@ -1149,13 +1149,13 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 									const intEl = ifw;
 									const intElRect = intEl.getBoundingClientRect();
 									const intLocation = { x: intElRect.left - elRect.left, y: intElRect.top - elRect.top };
-		
+
 									if (intEl.parentNode) {
 										intEl.parentNode.removeChild(intEl);
 									}
-		
+
 									content.appendChild(intEl);
-		
+
 									$(intEl).css({ "left": intLocation.x + 'px', "top": intLocation.y + 'px' });
 								}
 							}
@@ -1231,7 +1231,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 		if (this.api.cfg.mirrorMode) {
 			return;
 		}
-		
+
 		const ownerId = canvasWindow.ownerId;
 		let parentWin = this.api.cfg.rootElement[0].ownerDocument?.defaultView;
 		if (ownerId && (this.windowImageHolders[ownerId] && this.windowImageHolders[ownerId] != null) && (this.windowImageHolders[ownerId] as CanvasWindow).isRelocated()) {
@@ -1249,13 +1249,13 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 				const canvasWin = this.windowImageHolders[winId];
 				if (canvasWin.element.parentNode === canvasWindowParent) {
 					const element = canvasWin.element;
-	
+
 					let left = 0;
 					let top = 0;
 					const rect = element.getBoundingClientRect();
-	
+
 					element.parentNode!.removeChild(element);
-	
+
 					if (parentWin && ownerId && (this.windowImageHolders[ownerId] && this.windowImageHolders[ownerId] != null) && (this.windowImageHolders[ownerId] as CanvasWindow).isRelocated()) {
 						// dock back to window's parent if it is relocated (could be detached or undocked in another window)
 						left = popup.screenX - parentWin.screenX + rect.left;
@@ -1273,7 +1273,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 						if (!parentPagePos) {
 							parentPagePos = { x: 0, y: 0 };
 						}
-	
+
 						const origPos = { x: pagePos.x !== 0 ? pagePos.x : popup.screenX, y: pagePos.y !== 0 ? pagePos.y : popup.screenY };
 						const rootRect = this.api.cfg.rootElement[0].getBoundingClientRect();
 						left = origPos.x + rect.left - parentPagePos.x - rootRect.left;
@@ -1282,12 +1282,12 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 						$(canvasWin.element).css({"left": left + 'px', "top": top + 'px'});
 						this.api.cfg.rootElement.append(element);
 					}
-	
+
 					$(canvasWin.element).css({ "left": left + 'px', "top": top + 'px' });
 					if (!canvasWin.htmlWindow) {
 						canvasWin.setLocation(left, top);
 					}
-	
+
 					// dock also any internal frames wrapper divs that this window owns
 					for (const ifwId in this.internalFrameWrapperHolders) {
 						if (this.internalFrameWrapperHolders.hasOwnProperty(ifwId)) {
@@ -1296,12 +1296,12 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 								let intLeft = 0;
 								let intTop = 0;
 								const intRect = ifw.getBoundingClientRect();
-		
+
 								if (parentWin && ownerId && (this.windowImageHolders[ownerId] && this.windowImageHolders[ownerId] != null) && (this.windowImageHolders[ownerId] as CanvasWindow).isRelocated()) {
 									// dock back to window's parent if it is relocated (could be detached or undocked in another window)
 									intLeft = popup.screenX - parentWin.screenX + intRect.left;
 									intTop = popup.screenY - parentWin.screenY + intRect.top;
-		
+
 									this.windowImageHolders[ownerId].element.parentNode!.append(ifw);
 								} else {
 									// dock back to root parent (the base canvas location)
@@ -1313,15 +1313,15 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 									if (!parentPagePos) {
 										parentPagePos = { x: 0, y: 0 };
 									}
-		
+
 									const origPos = { x: pagePos.x !== 0 ? pagePos.x : popup.screenX, y: pagePos.y !== 0 ? pagePos.y : popup.screenY };
 									const rootRect = this.api.cfg.rootElement[0].getBoundingClientRect();
 									intLeft = origPos.x + intRect.left - parentPagePos.x - rootRect.left;
 									intTop = origPos.y + intRect.top - parentPagePos.y - rootRect.top;
-		
+
 									this.api.cfg.rootElement.append(ifw);
 								}
-		
+
 								$(ifw).css({ "left": intLeft + 'px', "top": intTop + 'px' });
 							}
 						}
@@ -1369,7 +1369,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 				const popup = this.windowImageHolders[winId].dockOwner;
 				if (popup != null) {
 					anyUndocked = true;
-	
+
 					if ($(popup.document).find(".webswing-canvas:not(.modal-blocked)").length === 0) {
 						this.api.showOverlay(popup, this.api.dialogs.dockingModalityOverlay);
 						blockedWindows.push($(popup.document).find(".modality-overlay"));
@@ -1843,7 +1843,7 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 			locale: this.api.getLocale(),
 			timeZone: getTimeZone(),
 			mirrored: this.api.cfg.mirrorMode,
-			directDrawSupported: this.api.cfg.typedArraysSupported && !(this.api.cfg.ieVersion && this.api.cfg.ieVersion <= 10),
+			directDrawSupported: this.api.cfg.typedArraysSupported && !(this.api.cfg.ieVersion && (this.api.cfg.ieVersion as number) <= 10),
 			dockingSupported: !this.api.cfg.ieVersion,
 			touchMode: this.api.cfg.touchMode,
 			accessiblityEnabled: this.api.isAccessiblityEnabled(),
@@ -2036,7 +2036,7 @@ class CanvasWindow {
 	public ignoreNextPositioning = false;
 	public validatePositionAndSize: (x: number, y: number) => void;
 	public webswingInstance: IInjected<{ start: "webswing.start"; disconnect: "webswing.disconnect"; configure: "webswing.configure"; kill: "base.kill"; setControl: "webswing.setControl"; repaint: "base.repaint"; instanceId: "socket.instanceId"; requestComponentTree: "base.requestComponentTree"; getWindows: "base.getWindows"; getWindowById: "base.getWindowById"; performAction: "base.performAction"; }>;
-	
+
 	constructor(
 		public id: string,
 		public ownerId: string | null | undefined,
@@ -2217,7 +2217,7 @@ class HtmlWindow {
 		}
 		return false;
 	}
-	
+
 	public isModalBlocked() {
 		return this.element.classList.contains('modal-blocked');
 	}
@@ -2225,7 +2225,7 @@ class HtmlWindow {
 	public performAction(options: {actionName?: string, data?: string, binaryData?: Uint8Array, windowId?: string}) {
 		this.baseModule.performAction($.extend({ "windowId": this.id }, options));
 	}
-	
+
 	public dispose() {
 		$(this.element).remove();
 		delete this.baseModule.windowImageHolders[this.id];

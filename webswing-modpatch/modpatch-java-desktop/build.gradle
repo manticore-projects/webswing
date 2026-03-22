@@ -1,0 +1,20 @@
+// modpatch-java-desktop: compiles against java.desktop internals via --patch-module
+//
+// NOTE: PlatformGraphicsInfo.java is excluded — it replaces the JDK's native-backed
+// version via --patch-module, which breaks AWT native init on JDK 22+.
+// The shell folder classes are the only ones that need patching.
+
+sourceSets {
+    main {
+        java {
+            exclude '**/PlatformGraphicsInfo.java'
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.addAll([
+        '--patch-module',
+        "java.desktop=${sourceSets.main.java.srcDirs.first()}"
+    ])
+}

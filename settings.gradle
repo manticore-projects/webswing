@@ -1,0 +1,46 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    // PREFER_PROJECT: allows plugins (e.g. node-gradle) to add their own repos
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'webswing'
+
+// ── Flat modules ──────────────────────────────────────────────────────
+include 'webswing-api'
+include 'webswing-app-toolkit'
+include 'webswing-app-toolkit-fx'
+include 'webswing-app-toolkit-fx-java11'
+include 'webswing-app-toolkit-java11'
+include 'webswing-app-launcher'
+include 'webswing-app-services'
+
+// ── Directdraw (nested) ──────────────────────────────────────────────
+include 'webswing-directdraw:webswing-directdraw-swing'
+include 'webswing-directdraw:webswing-directdraw-javascript'
+
+// ── Server (nested) ──────────────────────────────────────────────────
+include 'webswing-server:webswing-server-common'
+include 'webswing-server:webswing-sessionpool-api'
+include 'webswing-server:webswing-server-api'
+include 'webswing-server:webswing-server-security'
+include 'webswing-server:webswing-server-launcher'
+include 'webswing-server:webswing-server-frontend'
+include 'webswing-server:webswing-server-war'
+
+// ── Modpatch (nested) ────────────────────────────────────────────────
+include 'webswing-modpatch:modpatch-java-desktop'
+include 'webswing-modpatch:modpatch-jdk-jsobject'
+
+// ── Assembly ─────────────────────────────────────────────────────────
+include 'webswing-assembly'

@@ -1,17 +1,21 @@
 const path = require("path");
-const webpackMerge = require("webpack-merge");
-const ROOT = path.resolve(__dirname, "src/test/webapp");
-
-const commonConfig = require("./webpack.config.js");
-const DESTINATION = path.resolve(__dirname, ".tmp");
+const { merge } = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-module.exports = webpackMerge(commonConfig, {
+const commonConfig = require("./webpack.config.js");
+
+const ROOT = path.resolve(__dirname, "src/test/webapp");
+const DESTINATION = path.resolve(__dirname, ".tmp");
+
+module.exports = merge(commonConfig, {
   context: ROOT,
 
   devtool: "cheap-module-source-map",
   mode: "development",
+
   devServer: {
-    contentBase: path.join(__dirname, ".tmp"),
+    static: {
+      directory: path.join(__dirname, ".tmp"),
+    },
     compress: true,
     port: 9000,
   },
@@ -20,11 +24,14 @@ module.exports = webpackMerge(commonConfig, {
     path: DESTINATION,
     filename: "js/index.js"
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: "index.html",
-    inject: true,
-    templateParameters: {
-      __WEBSWING_URL: ".."
-    }
-  }),]
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "index.html",
+      inject: true,
+      templateParameters: {
+        __WEBSWING_URL: ".."
+      }
+    }),
+  ]
 });

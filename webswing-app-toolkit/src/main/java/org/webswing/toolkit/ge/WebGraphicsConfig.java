@@ -14,15 +14,14 @@ import java.awt.image.WritableRaster;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 
-import sun.awt.image.BufferedImageGraphicsConfig;
 import sun.awt.image.OffScreenImage;
 
 @SuppressWarnings("restriction")
 public class WebGraphicsConfig extends BufferedImageGraphicsConfig {
 
 	WebScreenDevice device;
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 
 	public static WebGraphicsConfig getWebGraphicsConfig(int width, int height) {
 		return new WebGraphicsConfig(width, height);
@@ -33,6 +32,7 @@ public class WebGraphicsConfig extends BufferedImageGraphicsConfig {
 		this.width = width;
 		this.height = height;
 	}
+
 
 	@Override
 	public GraphicsDevice getDevice() {

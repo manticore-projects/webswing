@@ -1,0 +1,109 @@
+plugins {
+    id 'distribution'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
+}
+
+// This module produces distribution archives, not a jar or resources.
+// Disable processResources to avoid output directory conflicts.
+processResources.enabled = false
+
+dependencies {
+    implementation project(':webswing-server:webswing-server-war')
+}
+
+// ── Git info (JSON format) ───────────────────────────────────────────
+gitProperties {
+    failOnNoGitDirectory = false
+    gitPropertiesResourceDir = layout.buildDirectory.dir('dist-meta').get().asFile
+    gitPropertiesName = 'git.info'
+}
+
+// ── Copy version.info with token replacement ─────────────────────────
+tasks.register('copyVersionInfo', Copy) {
+    from('src/main/resources') {
+        include 'version.info'
+        expand(project: [version: project.version])
+    }
+    into layout.buildDirectory.dir('dist-meta')
+}
+
+// ── Main distribution ────────────────────────────────────────────────
+// NOTE: Adapt the contents block below to match your src/main/assembly/dist.xml
+// descriptor. The structure below is a starting template.
+def warProject = project(':webswing-server:webswing-server-war')
+
+distributions {
+    main {
+        distributionBaseName = "webswing-${project.version}"
+        contents {
+            from(warProject.layout.buildDirectory.dir('libs')) {
+                include '*.war'
+                into '/'
+            }
+
+            // Any additional files your dist.xml included (scripts, configs, etc.)
+            // Example:
+            // from('src/main/dist') { into '/' }
+
+            from(layout.buildDirectory.dir('dist-meta')) {
+                include 'git.info'
+                include 'version.info'
+            }
+        }
+    }
+}
+
+distZip {
+    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
+    destinationDirectory = file("${projectDir}/dist")
+}
+
+distTar {
+    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
+    destinationDirectory = file("${projectDir}/dist")
+    compression = Compression.GZIP
+    archiveExtension = 'tar.gz'
+}
+
+// Skip deploy (matches Maven config)
+tasks.withType(PublishToMavenRepository).configureEach { enabled = false }
+
+// Disable jar — this is a distribution-only module
+tasks.withType(Jar).configureEach { enabled = false }
+
+// ── Docker profile ───────────────────────────────────────────────────
+if (project.hasProperty('docker')) {
+    tasks.register('copyDockerfile', Copy) {
+        from 'src/main/docker'
+        include 'Dockerfile'
+        into "${projectDir}/dist/docker"
+    }
+
+    distributions {
+        docker {
+            distributionBaseName = 'webswing'
+            contents {
+                from(warProject.layout.buildDirectory.dir('libs')) {
+                    include '*.war'
+                    into '/'
+                }
+                from(layout.buildDirectory.dir('dist-meta')) {
+                    include 'git.info'
+                    include 'version.info'
+                }
+            }
+        }
+    }
+
+    tasks.named('dockerDistZip') {
+        destinationDirectory = file("${projectDir}/dist/docker")
+    }
+
+    tasks.register('dockerBuild', Exec) {
+        dependsOn 'dockerDistZip', 'copyDockerfile'
+        workingDir "${projectDir}/dist/docker"
+        commandLine 'docker', 'build', '-t', 'meszarv/webswing', '.'
+    }
+
+    assemble.dependsOn 'dockerBuild'
+}

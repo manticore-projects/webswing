@@ -1,6 +1,5 @@
 package org.webswing.toolkit;
 
-import java.applet.Applet;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -173,6 +172,38 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		} catch (Exception e) {
 			AppLogger.error("Failed to init X11 display: ", e.getMessage());
 		}
+
+		// JDK 21: GraphicsEnvironment.getLocalGraphicsEnvironment() ignores the
+		// java.awt.graphicsenv system property and returns X11GraphicsEnvironment.
+		// Replace the cached singleton with WebGraphicsEnvironment11 so that all
+		// screen bounds queries return virtual screen dimensions.
+		try {
+			String geName = System.getProperty("java.awt.graphicsenv");
+			if (geName != null) {
+				// Force initialization of the LocalGE holder (triggers createGE)
+				java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+				// Use Unsafe (via reflection) to replace the final static INSTANCE field
+				Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+				Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+				unsafeField.setAccessible(true);
+				Object unsafe = unsafeField.get(null);
+				Method staticFieldOffsetMethod = unsafeClass.getMethod("staticFieldOffset", Field.class);
+				Method putObjectMethod = unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
+
+				Class<?> localGEClass = Class.forName("java.awt.GraphicsEnvironment$LocalGE");
+				Field instanceField = localGEClass.getDeclaredField("INSTANCE");
+				long offset = (long) staticFieldOffsetMethod.invoke(unsafe, instanceField);
+
+				java.awt.GraphicsEnvironment webGE = (java.awt.GraphicsEnvironment)
+															 Class.forName(geName).getDeclaredConstructor().newInstance();
+				putObjectMethod.invoke(unsafe, localGEClass, offset, webGE);
+				AppLogger.info("Replaced GraphicsEnvironment with: " + webGE.getClass().getName());
+			}
+		} catch (Exception e) {
+			AppLogger.error("Failed to replace GraphicsEnvironment: ", e.getMessage());
+		}
+
 		if (System.getProperty("os.name", "").startsWith("Windows")) {
 			String path = System.getenv("USERPROFILE") + "\\Desktop";
 			File desktopFolder = new File(path);
@@ -227,16 +258,16 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		AppLogger.info("Webswing Event Dispatcher: "+eventDispatcher.getClass().getName());
 		AppLogger.info("Webswing Paint Dispatcher: "+paintDispatcher.getClass().getName());
 		AppLogger.info("Session Watchdog: " + sessionWatchdog.getClass().getName());
-		
+
 		for (WebToolkitStartupListener l : startupListeners) {
 			l.dispatchersStarted();
 		}
-		
+
 		initSessionRecorder();
 		sessionMirror = new SessionMirror();
 		getPaintDispatcher().notifySessionDataChanged();
 	}
-	
+
 	private void initSessionRecorder() {
 		sessionRecorder = new SessionRecorder(System.getProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID));
 
@@ -266,11 +297,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 			getPaintDispatcher().notifyScreenSizeChanged(oldWidht, oldHeight,screenWidth, screenHeight);
 		}
 	}
-	
+
 	public void addStartupListener(WebToolkitStartupListener listener) {
 		startupListeners.add(listener);
 	}
-	
+
 	public void removeStartupListener(WebToolkitStartupListener listener) {
 		startupListeners.remove(listener);
 	}
@@ -303,7 +334,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		try {
 			if (sessionMirror != null && (
 					sessionMirror.getMirroringStatus() == MirroringStatusEnum.NOT_MIRRORING ||
-							sessionMirror.getMirroringStatus() == MirroringStatusEnum.DENIED_MIRRORING_BY_USER
+					sessionMirror.getMirroringStatus() == MirroringStatusEnum.DENIED_MIRRORING_BY_USER
 			)) {
 				sessionMirror.startMirroring();
 				getPaintDispatcher().notifySessionDataChanged();
@@ -317,7 +348,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		try {
 			if (sessionMirror != null && (
 					sessionMirror.getMirroringStatus() == MirroringStatusEnum.MIRRORING ||
-							sessionMirror.getMirroringStatus() == MirroringStatusEnum.WAITING_FOR_MIRRORING_APPROVAL
+					sessionMirror.getMirroringStatus() == MirroringStatusEnum.WAITING_FOR_MIRRORING_APPROVAL
 			)) {
 				sessionMirror.stopMirroring();
 				getPaintDispatcher().notifySessionDataChanged();
@@ -345,7 +376,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		try {
 			if (sessionRecorder != null && (
 					sessionRecorder.getRecordingStatus() == RecordingStatusEnum.NOT_RECORDING ||
-							sessionRecorder.getRecordingStatus() == RecordingStatusEnum.DENIED_RECORDING_BY_USER
+					sessionRecorder.getRecordingStatus() == RecordingStatusEnum.DENIED_RECORDING_BY_USER
 			)) {
 				sessionRecorder.startRecording();
 				getPaintDispatcher().notifyWindowRepaintAll();
@@ -360,7 +391,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		try {
 			if (sessionRecorder != null && (
 					sessionRecorder.getRecordingStatus() == RecordingStatusEnum.RECORDING ||
-							sessionRecorder.getRecordingStatus() == RecordingStatusEnum.WAITING_FOR_RECORDING_APPROVAL
+					sessionRecorder.getRecordingStatus() == RecordingStatusEnum.WAITING_FOR_RECORDING_APPROVAL
 			)) {
 				sessionRecorder.stopRecording();
 				getPaintDispatcher().notifySessionDataChanged();
@@ -519,15 +550,15 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		this.desktopProperties.put("win.xpstyle.dllName", "C:\\WINDOWS\\resources\\themes\\Aero\\Aero.msstyles");
 		this.desktopProperties.put("win.xpstyle.sizeName", "NormalSize");
 		this.desktopProperties.put("win.xpstyle.themeActive", true);
-		if (System.getProperty("os.name", "").startsWith("Windows")) {
-			try {
-				Field xpStyleEnabledField = sun.awt.windows.ThemeReader.class.getDeclaredField("xpStyleEnabled");
-				xpStyleEnabledField.setAccessible(true);
-				xpStyleEnabledField.setBoolean(null, true);
-			} catch (Exception e) {
-				AppLogger.debug("Failed to set xpStyleEnabled to true", e);
-			}
-		}
+//		if (System.getProperty("os.name", "").startsWith("Windows")) {
+//			try {
+//				Field xpStyleEnabledField = sun.awt.windows.ThemeReader.class.getDeclaredField("xpStyleEnabled");
+//				xpStyleEnabledField.setAccessible(true);
+//				xpStyleEnabledField.setBoolean(null, true);
+//			} catch (Exception e) {
+//				AppLogger.debug("Failed to set xpStyleEnabled to true", e);
+//			}
+//		}
 
 		if(Util.isDD()){
 			RenderingHints hints= new RenderingHints(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
@@ -588,10 +619,6 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	abstract WebWindowPeer createWebWindowPeer(Window paramWindow);
 
 	public PanelPeer createPanel(Panel panel) {
-		if (panel instanceof Applet) {
-			return super.createPanel(panel);
-		}
-
 		WebPanelPeer localpanelPeer = createWebPanelPeer(panel);
 		return localpanelPeer;
 	}
@@ -716,7 +743,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	}
 
 	public static void resetGC() {
-		config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+		config = org.webswing.toolkit.ge.WebGraphicsConfig.getWebGraphicsConfig(screenWidth, screenHeight);
 	}
 
 	public abstract void displayChanged();
@@ -1031,12 +1058,12 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 
 	public void showEvaluationWindow() {
 		EvaluationProperties props = Util.getEvaluationProps();
-		
+
 		long timeout = props.getTimeout();
 		String url = props.getLinkUrl();
 		boolean hasUrl = url != null && url.trim().length() > 0;
 		boolean hasDismissText = props.getDismissText() != null && props.getDismissText().trim().length() > 0;
-		
+
 		JFrame evalWin = new JFrame();
 		evalWin.setAlwaysOnTop(true);
 		evalWin.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -1045,7 +1072,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		evalWin.setUndecorated(true);
 		evalWin.getContentPane().setBackground(new Color(247, 215, 218));
 		evalWin.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.RED));
-		
+
 		Timer resizeTimer = new Timer(true);
 		resizeTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -1053,58 +1080,58 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 				evalWin.setSize(getDefaultToolkit().getScreenSize().width, props.getHeight());
 			}
 		}, 250, 250);
-		
+
 		JLabel label = new JLabel(props.getMainText());
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setFont(label.getFont().deriveFont(16f));
 		label.setForeground(new Color(102,38,48));
-		
+
 		JLabel counter = new JLabel();
 		counter.setHorizontalAlignment(JLabel.CENTER);
 		counter.setText(TimeUnit.MILLISECONDS.toSeconds(timeout) + "");
 		counter.setFont(label.getFont().deriveFont(20f));
 		counter.setForeground(new Color(102, 38, 48));
-		
+
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
 		leftPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 		leftPanel.setOpaque(false);
 		leftPanel.add(label);
-		
+
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
 		rightPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 		rightPanel.setOpaque(false);
 		rightPanel.add(counter);
-		
+
 		if (hasUrl) {
 			JButton linkButton = new JButton();
-		    linkButton.setText(props.getLinkText());
-		    linkButton.setHorizontalAlignment(SwingConstants.LEFT);
-		    linkButton.setFont(label.getFont().deriveFont(16f));
-		    linkButton.setForeground(new Color(102, 38, 48));
-		    linkButton.setBorderPainted(false);
-		    linkButton.setMargin(new Insets(0, 5, 0, 5));
-		    linkButton.setOpaque(false);
-		    linkButton.setContentAreaFilled(false);
-		    linkButton.setFocusPainted(false);
-	    	linkButton.setToolTipText(url);
-	    	linkButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-	    	linkButton.addActionListener((event) -> {
-	    		if (Desktop.isDesktopSupported()) {
-	    			try {
-	    				Desktop.getDesktop().browse(URI.create(url));
-	    			} catch (IOException e) {
-	    				// ignore
-	    			}
-	    		}
-	    	});
-	    	
-	    	leftPanel.add(linkButton);
-	    }
-		
+			linkButton.setText(props.getLinkText());
+			linkButton.setHorizontalAlignment(SwingConstants.LEFT);
+			linkButton.setFont(label.getFont().deriveFont(16f));
+			linkButton.setForeground(new Color(102, 38, 48));
+			linkButton.setBorderPainted(false);
+			linkButton.setMargin(new Insets(0, 5, 0, 5));
+			linkButton.setOpaque(false);
+			linkButton.setContentAreaFilled(false);
+			linkButton.setFocusPainted(false);
+			linkButton.setToolTipText(url);
+			linkButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			linkButton.addActionListener((event) -> {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(URI.create(url));
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			});
+
+			leftPanel.add(linkButton);
+		}
+
 		JButton dismissButton = new JButton();
-		
+
 		if (hasDismissText) {
 			dismissButton.setText(props.getDismissText());
 			dismissButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -1121,14 +1148,14 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 				resizeTimer.cancel();
 			});
 			dismissButton.setVisible(false);
-			
+
 			rightPanel.add(dismissButton);
 		}
-		
+
 		evalWin.getContentPane().setLayout(new BorderLayout());
 		evalWin.getContentPane().add(leftPanel, BorderLayout.WEST);
 		evalWin.getContentPane().add(rightPanel, BorderLayout.EAST);
-		
+
 		evalWin.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -1138,7 +1165,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 					@Override
 					public void run() {
 						counter.setText((TimeUnit.MILLISECONDS.toSeconds(end - System.currentTimeMillis()) + 1) + "");
-						
+
 						if (System.currentTimeMillis() > end) {
 							timer.cancel();
 							counter.setVisible(false);
@@ -1150,7 +1177,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 				}, 250, 250);
 			}
 		});
-		
+
 		evalWin.setVisible(true);
 	}
 

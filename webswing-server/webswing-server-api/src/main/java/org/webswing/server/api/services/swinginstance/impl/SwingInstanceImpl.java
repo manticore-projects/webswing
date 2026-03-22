@@ -732,7 +732,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		session.setRecordingStatus(RecordingStatusEnum.NOT_RECORDING);
 		session.setMirroringStatus(MirroringStatusEnum.NOT_MIRRORING);
 		if (sessionData != null) {
-			session.setApplet(sessionData.isApplet());
+			session.setApplet(false);
 			session.setLoggingEnabled(sessionData.isSessionLoggingEnabled());
 			session.setRecordingFile(sessionData.getRecordingFile());
 			session.setRecordingStatus(sessionData.getRecordingStatus());

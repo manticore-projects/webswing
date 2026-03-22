@@ -1,0 +1,161 @@
+plugins {
+    id 'war'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
+}
+
+dependencies {
+    implementation project(':webswing-server:webswing-server-api')
+    implementation(project(':webswing-server:webswing-sessionpool-api')) {
+        exclude group: 'org.webswing', module: 'modpatch-jdk-jsobject'
+        exclude group: 'org.webswing', module: 'modpatch-java-desktop'
+    }
+
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-web:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:${log4jVersion}"
+    implementation "commons-logging:commons-logging:${commonsLoggingVersion}"
+
+    // Used directly in this module (not transitive via implementation scope)
+    implementation "com.google.inject:guice:${guiceVersion}"
+    implementation 'com.google.inject.extensions:guice-multibindings:4.2.3'
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+}
+
+// ── Git properties for manifest ──────────────────────────────────────
+gitProperties {
+    failOnNoGitDirectory = false
+}
+
+// Disable the standard war task — we build via assembleExplodedWar + repackageWar
+war.enabled = false
+
+// ── Copy webswing.properties to build dir ────────────────────────────
+tasks.register('copyWebswingProperties', Copy) {
+    from('src/main/resources') {
+        include 'webswing.properties'
+    }
+    into layout.buildDirectory.dir('dist-meta')
+}
+
+// ── Assemble the exploded WAR from sibling projects ──────────────────
+def explodedDir = layout.buildDirectory.dir("libs/exploded/${webswingWarName}")
+
+def frontendProject     = project(':webswing-server:webswing-server-frontend')
+def serverCommonProject = project(':webswing-server:webswing-server-common')
+def appServicesProject  = project(':webswing-app-services')
+def appLauncherProject  = project(':webswing-app-launcher')
+def serverLauncherProject = project(':webswing-server:webswing-server-launcher')
+
+tasks.register('assembleExplodedWar', Copy) {
+    dependsOn ':webswing-server:webswing-server-frontend:assemble'
+    dependsOn ':webswing-server:webswing-server-common:classes'
+    dependsOn ':webswing-app-services:assemble'
+    dependsOn ':webswing-app-launcher:assemble'
+    dependsOn ':webswing-server:webswing-server-launcher:assemble'
+    dependsOn classes
+
+    // 1a) Frontend static assets (from Gradle copyWebapp task)
+    from(frontendProject.layout.buildDirectory.dir('webswing-server-frontend')) {
+        into '/'
+    }
+    // 1b) Frontend JS/CSS bundles (webpack writes to target/, Maven convention)
+    from(frontendProject.file('target/webswing-server-frontend')) {
+        into '/'
+    }
+
+    // 2) main/*.class from server-common
+    from(serverCommonProject.layout.buildDirectory.dir('classes/java/main')) {
+        include 'main/*.class'
+        into '/'
+    }
+
+    // 3) swing-lib jars from app-services
+    from(appServicesProject.layout.buildDirectory.dir('WEB-INF/swing-lib')) {
+        into 'WEB-INF/swing-lib'
+    }
+
+    // 4) swing-boot jars from app-launcher
+    from(appLauncherProject.layout.buildDirectory.dir('WEB-INF/swing-boot')) {
+        into 'WEB-INF/swing-boot'
+    }
+
+    // 5) server-lib jars from server-launcher
+    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
+        into 'WEB-INF/server-lib'
+    }
+
+    // 6) This module's own compiled classes + dependencies into WEB-INF
+    from(sourceSets.main.output) {
+        into 'WEB-INF/classes'
+    }
+    from(configurations.runtimeClasspath) {
+        into 'WEB-INF/lib'
+    }
+
+    // 7) webapp content (web.xml etc.)
+    from('src/main/webapp') {
+        into '/'
+    }
+
+    into explodedDir
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+// Re-pack the exploded dir into the final WAR with manifest
+tasks.register('repackageWar', Zip) {
+    dependsOn 'assembleExplodedWar', 'generateGitProperties'
+    from explodedDir
+    archiveFileName = "${webswingWarName}.war"
+    destinationDirectory = layout.buildDirectory.dir('libs')
+
+    // Write META-INF/MANIFEST.MF including git properties (matching Maven)
+    into('META-INF') {
+        from({
+            def gitProps = new Properties()
+            def gitFile = layout.buildDirectory.file('resources/main/git.properties').get().asFile
+            if (gitFile.exists()) {
+                gitFile.withInputStream { gitProps.load(it) }
+            }
+
+            def mf = layout.buildDirectory.file('tmp/MANIFEST.MF').get().asFile
+            mf.parentFile.mkdirs()
+            mf.text = [
+                "Manifest-Version: 1.0",
+                "Main-Class: main.Main",
+                "version: ${project.version}",
+                "remoteOriginUrl: ${gitProps.getProperty('git.remote.origin.url', '')}",
+                "branch: ${gitProps.getProperty('git.branch', '')}",
+                "commitId: ${gitProps.getProperty('git.commit.id', '')}",
+                "describe: ${gitProps.getProperty('git.commit.id.describe', '')}",
+                "commitTime: ${gitProps.getProperty('git.commit.time', '')}",
+                "buildTime: ${gitProps.getProperty('git.build.time', '')}",
+                "Ignore-Scanning-Packages: com,org,net",
+                "",  // manifest must end with newline
+            ].join('\n')
+            mf
+        })
+    }
+}
+
+assemble.dependsOn 'repackageWar', 'copyWebswingProperties'
+
+// ── Dev profile: run the interactive server launcher ─────────────────
+if (project.hasProperty('dev')) {
+    tasks.register('runDev', JavaExec) {
+        dependsOn 'assembleExplodedWar'
+        classpath = files(
+            explodedDir,
+            sourceSets.test.output,
+        )
+        mainClass = 'org.webswing.dev.server.InteractiveServerLauncher'
+        args '-example', 'default-all-apps', '-j', 'jetty.properties', '-ctx', '/webswing-server'
+        systemProperty 'webswing.rootDir',
+            "${rootProject.projectDir}/../webswing-examples/webswing-examples-assembly/dist/webswing-examples-distribution/webswing-examples"
+    }
+}

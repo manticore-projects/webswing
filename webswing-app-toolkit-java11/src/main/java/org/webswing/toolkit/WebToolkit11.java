@@ -1,6 +1,5 @@
 package org.webswing.toolkit;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -17,7 +16,6 @@ import java.awt.peer.FramePeer;
 import java.awt.peer.KeyboardFocusManagerPeer;
 import java.lang.reflect.Method;
 
-import org.webswing.applet.WebAppletContext;
 import org.webswing.toolkit.ge.WebGraphicsEnvironment;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
@@ -151,10 +149,6 @@ public class WebToolkit11 extends WebToolkit {
 	public static boolean requestFocus(Object target, Component paramComponent, boolean temporary, boolean focusedWindowChangeAllowed, long time, FocusEvent.Cause paramCause) {
 		if (target instanceof Window) {
 			return Util.getWebToolkit().getWindowManager().activateWindow((Window) target, paramComponent, 0, 0, temporary, focusedWindowChangeAllowed, FocusEventCause.getValue(paramCause));
-		} else if (target instanceof Applet) {
-			Applet applet = (Applet) target;
-			Window window = ((WebAppletContext) applet.getAppletContext()).getContainer();
-			return Util.getWebToolkit().getWindowManager().activateWindow(window, paramComponent, 0, 0, temporary, focusedWindowChangeAllowed, FocusEventCause.getValue(paramCause));
 		} else if (target instanceof Panel){
 			return Util.getWebToolkit().getWindowManager().deliverFocus((Panel)target, paramComponent, temporary, FocusEventCause.getValue(paramCause));
 		} else {

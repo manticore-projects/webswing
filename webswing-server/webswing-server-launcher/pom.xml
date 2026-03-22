@@ -33,16 +33,6 @@
             <artifactId>javax-websocket-server-impl</artifactId>
             <version>${jetty.version}</version>
         </dependency>
-		<dependency>
-			<groupId>org.webswing</groupId>
-			<artifactId>modpatch-java-desktop</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webswing</groupId>
-			<artifactId>modpatch-jdk-jsobject</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>webswing-server-launcher</finalName>
@@ -50,11 +40,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<compilerArguments>
-						<bootclasspath>${basedir}/../../lib/rt-1.8.jar</bootclasspath>
-					</compilerArguments>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>

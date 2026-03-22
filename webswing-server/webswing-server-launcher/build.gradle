@@ -1,0 +1,47 @@
+dependencies {
+    implementation project(':webswing-app-toolkit')
+    implementation 'commons-cli:commons-cli:1.2'
+    implementation "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
+    implementation "org.eclipse.jetty:jetty-annotations:${jettyVersion}"
+    implementation "org.eclipse.jetty.websocket:javax-websocket-server-impl:${jettyVersion}"
+}
+
+jar {
+    archiveBaseName = 'webswing-server-launcher'
+    archiveVersion = ''
+}
+
+tasks.register('copyServerLib', Copy) {
+    from configurations.runtimeClasspath
+    into layout.buildDirectory.dir('WEB-INF/server-lib')
+}
+
+tasks.register('copyJarToServerLib', Copy) {
+    dependsOn jar
+    from jar
+    into layout.buildDirectory.dir('WEB-INF/server-lib')
+}
+
+assemble.dependsOn 'copyServerLib', 'copyJarToServerLib'
+
+if (project.hasProperty('serverless')) {
+    tasks.register('copyServerless', Copy) {
+        from configurations.runtimeClasspath
+        into layout.buildDirectory.dir('serverless')
+    }
+    tasks.register('copyJarToServerless', Copy) {
+        dependsOn jar
+        from jar
+        into layout.buildDirectory.dir('serverless')
+    }
+    tasks.register('writeServerlessReadme') {
+        doLast {
+            def dir = layout.buildDirectory.dir('WEB-INF/server-lib').get().asFile
+            dir.mkdirs()
+            new File(dir, 'README.txt').text =
+                'This is a serverless Webswing build. No embedded server is included. ' +
+                'Deploy to supported Servlet container. (ie. Tomcat)'
+        }
+    }
+    assemble.dependsOn 'copyServerless', 'copyJarToServerless', 'writeServerlessReadme'
+}

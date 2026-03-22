@@ -2,12 +2,15 @@
 # compiled source #
 ###################
 target/
+build/
+out/
 dist/
 bin/
 lib/
 logs/
 node/
 node_modules/
+.gradle/
 .settings/
 .project
 .classpath

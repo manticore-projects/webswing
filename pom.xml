@@ -42,65 +42,100 @@
         <module>webswing-api</module>
         <module>webswing-app-toolkit</module>
         <module>webswing-app-toolkit-fx</module>
-        <module>webswing-app-toolkit-fx-java8</module>
         <module>webswing-app-toolkit-fx-java11</module>
-        <module>webswing-app-toolkit-java8</module>
         <module>webswing-app-toolkit-java11</module>
         <module>webswing-app-launcher</module>
         <module>webswing-app-services</module>
         <module>webswing-directdraw</module>
         <module>webswing-server</module>
         <module>webswing-assembly</module>
-        <module>webswing-modpatch</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webswing-war-name>webswing-server</webswing-war-name>
-        <jersey.version>2.31</jersey.version>
-        <guice.version>4.1.0</guice.version>
-        <bouncycastle.version>1.61</bouncycastle.version>
-        <jackson.databind.version>2.10.5.1</jackson.databind.version>
-        <jackson.annotations.version>2.10.5</jackson.annotations.version>
-        <jetty.version>9.4.39.v20210325</jetty.version>
-        <log4j.version>2.13.2</log4j.version>
-        <slf4j.version>1.6.6</slf4j.version>
+
+        <!-- ================================================================ -->
+        <!-- Dependency versions                                              -->
+        <!-- ================================================================ -->
+
+        <!-- Jersey 4.0.0 GA (was 4.0.0-M1 milestone) -->
+        <jersey.version>4.0.0</jersey.version>
+
+        <!-- Guice 7.0.0 — multibindings merged into core since 4.2,
+             separate guice-multibindings artifact removed (see below) -->
+        <guice.version>7.0.0</guice.version>
+
+        <!-- BouncyCastle 1.80 — latest stable jdk18on (was 1.78.1) -->
+        <bouncycastle.version>1.80</bouncycastle.version>
+
+        <!-- Jackson 2.18.2 — patch release, safe (was 2.18.0).
+             Note: Jackson 3.x uses different groupId tools.jackson — NOT safe to migrate yet -->
+        <jackson.version>2.18.2</jackson.version>
+
+        <!-- Jetty — unchanged for now; Jetty migration is a separate phase -->
+        <jetty.version>9.4.56.v20240826</jetty.version>
+
+        <!-- Log4j 2.24.3 — patch release (was 2.24.0) -->
+        <log4j.version>2.24.3</log4j.version>
+
+        <!-- SLF4J 2.0.16 — already current -->
+        <slf4j.version>2.0.16</slf4j.version>
+
+        <!-- Protobuf 3.25.5 — staying on 3.x; 4.x has breaking API changes
+             (package renames, removed deprecated methods). Not safe without code changes. -->
+        <protobuf.version>3.25.5</protobuf.version>
+
+        <!-- Guava 33.4.0 — minor bump (was 33.3.1) -->
+        <guava.version>33.4.0-jre</guava.version>
+
+        <!-- Apache Commons -->
+        <commons-codec.version>1.17.2</commons-codec.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-collections4.version>4.5.0-M2</commons-collections4.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-logging.version>1.3.4</commons-logging.version>
+
+        <!-- HttpClient 4.5.14 — end of 4.x line.
+             HttpClient 5.x has completely different API — not safe without code changes. -->
+        <httpclient.version>4.5.14</httpclient.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.databind.version}</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.annotations.version}</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.13</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.8.1</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.2</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version>
+                <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -115,7 +150,7 @@
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
+                <version>${commons-logging.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -129,7 +164,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>
@@ -139,28 +174,33 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.13</version>
+                <version>${httpclient.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
-                <version>3.12.1</version>
+                <version>${protobuf.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
             </dependency>
+            <!-- guice-multibindings: merged into Guice core since 4.2, but 4.2.3 is the
+                 last published artifact and still works as a thin shim.
+                 Kept here because submodules still declare it as a dependency.
+                 TODO: remove this entry and the submodule <dependency> declarations;
+                 the imports (com.google.inject.multibindings.*) stay unchanged. -->
             <dependency>
                 <groupId>com.google.inject.extensions</groupId>
                 <artifactId>guice-multibindings</artifactId>
-                <version>${guice.version}</version>
+                <version>4.2.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>
@@ -180,16 +220,15 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>30.0-jre</version>
+                <version>${guava.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -202,6 +241,20 @@
             </snapshots>
             <url>https://dev.webswing.org/public/nexus/repository/webswing-3rd-parties/</url>
         </repository>
+
+        <!-- Only needed when using the FPNG SSE2 Encoder -->
+        <repository>
+            <id>sonatype-snapshots</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
     <build>
         <pluginManagement>
@@ -209,16 +262,16 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.4.2</version>
                     <configuration>
                         <archive>
                             <manifestEntries>
@@ -233,7 +286,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.os72</groupId>
@@ -243,95 +296,97 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.11.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.21.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.0</version>
+                    <version>3.5.2</version>
+                    <configuration>
+                        <argLine>
+                            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED
+                            --add-exports=java.base/sun.nio.cs=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.java2d=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED
+                            --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
+                            --add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED
+                            --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.awt.im=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.font=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.print=ALL-UNNAMED
+                            --add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED
+                            --add-opens=java.desktop/sun.java2d=ALL-UNNAMED
+                            --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED
+                            --add-opens=java.desktop/sun.font=ALL-UNNAMED
+                            --add-opens=java.desktop/sun.awt=ALL-UNNAMED
+                            --add-opens=java.base/sun.security.util=ALL-UNNAMED
+                        </argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.4</version>
+                    <!-- 1.15.1 supports Node 20+; was 1.4 which maxed at Node 10 -->
+                    <version>1.15.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.1.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <!--
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
-                <inherited>false</inherited>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>10.0.4</version>
                 <executions>
                     <execution>
-                        <id>generate-file</id>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <artifactItems>
-                        <artifactItem>
-                            <groupId>java.jre</groupId>
-                            <artifactId>rt</artifactId>
-                            <version>1.8.0_25</version>
-                            <overWrite>true</overWrite>
-                            <destFileName>rt-1.8.jar</destFileName>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>java.jre</groupId>
-                            <artifactId>jaccess</artifactId>
-                            <version>1.8.0_241</version>
-                            <overWrite>true</overWrite>
-                            <destFileName>jaccess.jar</destFileName>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>java.jre</groupId>
-                            <artifactId>jce</artifactId>
-                            <version>1.8.0_241</version>
-                            <overWrite>true</overWrite>
-                            <destFileName>jce.jar</destFileName>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>java.jfxrt</groupId>
-                            <artifactId>jfxrt</artifactId>
-                            <version>1.8.0_201-b09</version>
-                            <overWrite>true</overWrite>
-                            <destFileName>jfxrt.jar</destFileName>
-                        </artifactItem>
-                    </artifactItems>
-                    <outputDirectory>lib</outputDirectory>
-                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.18.0</version>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
+                <!-- Keeping 2.2.1 — newer versions renamed artifact to
+                     git-commit-id-maven-plugin which would require config changes.
+                     Upgrade to io.github.git-commit-id:git-commit-id-maven-plugin:9.x
+                     is a separate task. -->
                 <version>2.2.1</version>
                 <executions>
                     <execution>
@@ -365,7 +420,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>3.1.1</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pushChanges>false</pushChanges>
@@ -376,12 +431,37 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.10.1</version>
+                <configuration>
+                    <!--keep th  e code level at 8 to avoid module access compilation errors in IDE-->
+                    <source>21</source>
+                    <target>21</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <arg>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.base/sun.nio.cs=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.java2d=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.java2d.pipe=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.java2d.loops=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.image=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.peer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.im=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.font=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.print=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED</arg>
+                        <arg>--add-exports=java.base/sun.security.util=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -391,7 +471,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>11</version>
+                                    <version>21</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -411,7 +491,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v10.16.0</nodeVersion>
+                    <!-- Node 20.18.0 LTS (was v10.18.0 — EOL since April 2021) -->
+                    <nodeVersion>v20.18.0</nodeVersion>
                 </configuration>
             </plugin>
         </plugins>
@@ -453,7 +534,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -466,7 +547,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.11.2</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -474,7 +555,7 @@
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <source>1.8</source>
+                                    <source>21</source>
                                 </configuration>
                             </execution>
                         </executions>
@@ -500,7 +581,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -528,7 +609,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.7.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>

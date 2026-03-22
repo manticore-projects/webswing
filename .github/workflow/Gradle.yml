@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build on JDK ${{ matrix.java }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '21', '25' ]
+        os: [ ubuntu-latest ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+
+      - name: Set up Xvfb
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb
+          Xvfb :99 -screen 0 1024x768x24 &
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.gradle/nodejs
+          key: gradle-${{ runner.os }}-jdk${{ matrix.java }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/gradle.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-jdk${{ matrix.java }}-
+            gradle-${{ runner.os }}-
+
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            webswing-directdraw/webswing-directdraw-javascript/node_modules
+            webswing-server/webswing-server-frontend/node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          restore-keys: |
+            node-${{ runner.os }}-
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew clean build --no-daemon --warning-mode all
+
+      - name: Upload distribution
+        if: matrix.java == '21' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: webswing-distribution
+          path: webswing-assembly/dist/webswing-*-distribution.zip
+          retention-days: 14
+          if-no-files-found: warn

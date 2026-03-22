@@ -1,0 +1,23 @@
+apply plugin: 'webswing.node-conventions'
+
+dependencies {
+    implementation project(':webswing-directdraw:webswing-directdraw-swing')
+    testImplementation project(':webswing-app-services')
+    testImplementation project(':webswing-app-toolkit')
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    testImplementation 'commons-io:commons-io:2.16.1'
+    testImplementation "commons-codec:commons-codec:${commonsCodecVersion}"
+    testImplementation "com.google.protobuf:protobuf-java:${protobufVersion}"
+}
+
+processResources.dependsOn 'npmBuild'
+
+tasks.register('generateTestJson', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'org.webswing.TestJsonGenerator'
+    args file('src/test/webapp/generated/tests.json').absolutePath
+    jvmArgs(project.ext.jvmAllModuleArgs)
+}
+
+assemble.dependsOn 'generateTestJson'

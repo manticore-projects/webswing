@@ -1,6 +1,5 @@
 package org.webswing.toolkit.util;
 
-import java.applet.Applet;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Container;
@@ -989,7 +988,7 @@ public class Util {
 
 	public static Panel findHwComponentParent(JComponent c) {
 		for (Container p = c.getParent(); p != null; p = p.getParent()) {
-			if (p instanceof Panel && !(p instanceof Applet)) {
+			if (p instanceof Panel) {
 				return (Panel) p;
 			}
 		}

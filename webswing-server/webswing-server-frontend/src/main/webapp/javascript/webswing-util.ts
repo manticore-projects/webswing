@@ -35,13 +35,64 @@ export function Util(translations: Translations) {
         	doWebswingLogin(baseUrl, element, loginData, successCallback, failedCallback);
         }
     }
+
+    function isBase64(str: string): boolean {
+        if (!str || str.length % 4 !== 0 || /[^A-Za-z0-9+/=]/.test(str)) {
+            return false;
+        }
+        try {
+            const decoded = atob(str);
+            // Additional check: decoded must be printable characters
+            if (!/^[\x00-\x7F]*$/.test(decoded)) return false;
+            return btoa(decoded) === str;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function envelope(password: string): string {
+        const key = password.slice(-8);
+        const body = password.slice(0, -8);
+        const seed = parseInt(key, 10);
+
+        const arr = body.split('');
+        const rng = mulberry32(seed);
+        const swaps: [number, number][] = [];
+
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            swaps.push([i, j]);
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+
+        const scrambled = arr.join('') + key;
+        return btoa(scrambled);
+    }
+
+    function mulberry32(a: number): () => number {
+        return function () {
+            let t = a += 0x6D2B79F5;
+            t = Math.imul(t ^ t >>> 15, t | 1);
+            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+
     
     function doWebswingLogin(baseUrl: string, element: (() => JQuery<HTMLElement>) | JQuery<HTMLElement>, loginData: ILoginData | string, successCallback: (data: any, request: JQuery.jqXHR) => void, failedCallback?: () => void) {
+        if (typeof loginData === 'string') {
+            const params = new URLSearchParams(loginData);
+            const password = params.get('password');
+            if (password && /^\d{8}$/.test(password.slice(-8)) && !isBase64(password)) {
+                params.set('password', envelope(password));
+                loginData = params.toString();
+            }
+        }
     	$.ajax({
         	beforeSend: (xhr) => {
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                 if (token != null && token.length) {
-                	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                 }
             },
             xhrFields: {
@@ -51,7 +102,7 @@ export function Util(translations: Translations) {
             url: baseUrl + 'login',
             contentType: typeof loginData === 'object' ? 'application/json' : 'application/x-www-form-urlencoded; charset=UTF-8',
             data: typeof loginData === 'object' ? JSON.stringify(loginData) : loginData,
-            timeout: 7000,
+            timeout: 700000,
             success: (data, _, request) => {
             	if (request.responseText) {
                     saveTokens(request.responseText);
@@ -83,7 +134,7 @@ export function Util(translations: Translations) {
                             return;
                     }
                     if (loginMsg.redirectUrl != null) {
-                        window.top.location.href = loginMsg.redirectUrl;
+                        window.top!.location.href = loginMsg.redirectUrl;
                     } else if (loginMsg.partialHtml != null) {
                     	updateLoginDialogContent(elementResolved, translate(loginMsg.partialHtml));
                         const form = elementResolved.find('form').first();
@@ -107,14 +158,14 @@ export function Util(translations: Translations) {
                         } else {
                             elementResolved = element;
                         }
-						
+
 						updateLoginDialogContent(elementResolved, translate("<p>${login.serverNotAvailable}</p>"));
                 	}
                 }
             }
         });
     }
-    
+
     function updateLoginDialogContent(elementResolved: JQuery<HTMLElement>, content: string) {
     	elementResolved.html(content);
     	const dialogParents = elementResolved.parents('.ws-modal-container[data-id=commonDialog]');
@@ -138,7 +189,7 @@ export function Util(translations: Translations) {
             xhrFields: {
                 withCredentials: true
             },
-            timeout: 7000
+            timeout: 700000
         }).always((_, _1, xhr) => {
             if (!tabLogout) {
                 localStorage.setItem("webswingLogout", Date.now().toString());
@@ -163,7 +214,7 @@ export function Util(translations: Translations) {
                         return;
                 }
                 if (loginMsg.redirectUrl != null) {
-                    window.top.location.href = loginMsg.redirectUrl;
+                    window.top!.location.href = loginMsg.redirectUrl;
                         return;
                 } else if (loginMsg.partialHtml != null) {
 	                updateLoginDialogContent(elementResolved, translate(loginMsg.partialHtml));
@@ -187,7 +238,7 @@ export function Util(translations: Translations) {
             },
             type: 'POST',
             url: baseUrl + "rest/refreshToken",
-            timeout: 7000,
+            timeout: 700000,
             complete: (request, textStatus) => {
             	let success = false;
                 if (textStatus === "success" && request.responseText) {
@@ -210,7 +261,7 @@ export function Util(translations: Translations) {
     function clearToken() {
         token = null;
     }
-    
+
 }
 
 export function getToken() {

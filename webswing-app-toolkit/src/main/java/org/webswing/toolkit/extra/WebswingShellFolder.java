@@ -1,16 +1,14 @@
 package org.webswing.toolkit.extra;
 
-import sun.awt.shell.PublicDefaultShellFolder;
-import sun.awt.shell.ShellFolder;
-
 import java.io.File;
+import java.io.IOException;
 
-public class WebswingShellFolder extends PublicDefaultShellFolder {
-    public WebswingShellFolder(ShellFolder parent, File f) {
+public class WebswingShellFolder extends DefaultShellFolder {
+    public WebswingShellFolder(DefaultShellFolder parent, File f) throws IOException {
         super(parent, f);
     }
 
-    public WebswingShellFolder(File f) {
+    public WebswingShellFolder(File f) throws IOException {
         super(null, f);
     }
 

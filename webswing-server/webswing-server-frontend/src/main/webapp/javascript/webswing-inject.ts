@@ -1,15 +1,18 @@
-import { IServices } from "./webswing"
+// IServices import removed: DI types relaxed for TS5 compatibility.
+// The runtime injector resolves arbitrary dotted service paths dynamically.
 
 type IModuleServices = {
-	[k in keyof IServices]?: IServices[k]
+	[k: string]: any
 }
 
-interface IInjectable { readonly [K: string]: keyof IServices }
+// Relaxed types: the runtime DI resolves arbitrary dotted service paths,
+// not just keys declared in IServices. TS5 strict mode enforces this.
+interface IInjectable { readonly [K: string]: string }
 
-export type IInjected<I extends IInjectable> = { [K in keyof I]: IServices[I[K]] }
+export type IInjected<I extends IInjectable> = { [K in keyof I]: any }
 
 export interface IInjector {
-	getInjected<I extends IInjectable, P>(module: ModuleDef<I, P>): IInjected<I>
+	getInjected<I extends IInjectable, P extends IModuleServices>(module: ModuleDef<I, P>): IInjected<I>
 }
 
 export abstract class ModuleDef<I extends IInjectable, P extends IModuleServices> {
@@ -110,7 +113,7 @@ export class Injector implements IInjector {
 		}
 	}
 
-	public getInjected<I extends IInjectable, P>(module: ModuleDef<I, P>) {
+	public getInjected<I extends IInjectable, P extends IModuleServices>(module: ModuleDef<I, P>) {
 		const modulename = Object.keys(this.registeredModules).find(k => this.registeredModules[k] === module)
 		if (modulename === undefined || this.modules[modulename] === undefined) {
 			throw new InjectError("IllegalState: module has not been registered by injector.");
@@ -141,7 +144,7 @@ export class Injector implements IInjector {
 
 	private injectObject(injects: IInjectable) {
 		let errors = '';
-		const injected: IInjected<IInjectable> = {}
+		const injected: Record<string, any> = {}
 		for (const key in injects) {
 			if (injects.hasOwnProperty(key)) {
 				try {
@@ -159,7 +162,7 @@ export class Injector implements IInjector {
 		if (errors.length > 0) {
 			throw new InjectError(errors);
 		}
-		return injected;
+		return injected as IInjected<IInjectable>;
 	}
 
 	private resolve(path: string): any {
@@ -188,5 +191,3 @@ class InjectError {
 		return this.message;
 	};
 }
-
-

@@ -18,6 +18,12 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.bcel</groupId>
+			<artifactId>bcel</artifactId>
+			<version>6.10.0</version>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 

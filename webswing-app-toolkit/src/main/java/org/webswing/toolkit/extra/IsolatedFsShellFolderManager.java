@@ -14,11 +14,8 @@ import java.util.List;
 import org.webswing.Constants;
 import org.webswing.util.AppLogger;
 
-import sun.awt.shell.PublicShellFolderManager;
-import sun.awt.shell.ShellFolder;
-
 @SuppressWarnings("restriction")
-public class IsolatedFsShellFolderManager extends PublicShellFolderManager {
+public class IsolatedFsShellFolderManager extends DefaultShellFolderManager {
 
 	private static File root;
 	private static List<File> roots = new ArrayList<File>();
@@ -40,6 +37,17 @@ public class IsolatedFsShellFolderManager extends PublicShellFolderManager {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Constructor that accepts a parent folder and a file.
+	 *
+	 * @param parent the parent DefaultShellFolder
+	 * @param file   the file represented by this folder
+	 * @throws IOException if the file's attributes cannot be read
+	 */
+	public IsolatedFsShellFolderManager(DefaultShellFolder parent, File file) throws IOException {
+		super(parent, file);
 	}
 
 	@Override
@@ -115,7 +123,7 @@ public class IsolatedFsShellFolderManager extends PublicShellFolderManager {
 	}
 
 	@Override
-	public ShellFolder createShellFolder(File paramFile) throws FileNotFoundException {
+	public DefaultShellFolder createShellFolder(File paramFile) throws FileNotFoundException {
 		try {
 			if (isSubfolderOfRoots(paramFile)) {
 				return new WebswingShellFolder(paramFile);

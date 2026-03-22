@@ -168,7 +168,7 @@ class JavaObjectRef {
                                 }
                             };
 
-                            api.awaitResponse((result) => {
+                            api.awaitResponse((result: any) => {
                                 if (Object.prototype.toString.call(result) === '[object Error]') {
                                     reject(result);
                                 } else if (result.error != null) {
@@ -184,4 +184,4 @@ class JavaObjectRef {
             }
         }
     }
-}   
+}

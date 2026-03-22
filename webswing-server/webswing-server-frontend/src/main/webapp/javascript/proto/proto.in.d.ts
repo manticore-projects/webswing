@@ -1,4 +1,5 @@
 import * as $protobuf from "protobufjs";
+import Long = require("long");
 /** Namespace appFrameProtoIn. */
 export namespace appFrameProtoIn {
 
@@ -116,6 +117,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for AppFrameMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of an InputEventMsgInProto. */
@@ -184,6 +192,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for InputEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a WindowFocusMsgInProto. */
@@ -246,6 +261,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for WindowFocusMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a KeyboardEventMsgInProto. */
@@ -338,6 +360,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for KeyboardEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     namespace KeyboardEventMsgInProto {
@@ -470,6 +499,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for MouseEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     namespace MouseEventMsgInProto {
@@ -544,6 +580,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for CopyEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     namespace CopyEventMsgInProto {
@@ -628,6 +671,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PasteEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a FilesSelectedEventMsgInProto. */
@@ -684,6 +734,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for FilesSelectedEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of an UploadEventMsgInProto. */
@@ -740,6 +797,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for UploadEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a JavaEvalRequestMsgInProto. */
@@ -814,6 +878,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for JavaEvalRequestMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a JsResultMsgInProto. */
@@ -882,6 +953,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for JsResultMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a JsParamMsgInProto. */
@@ -956,6 +1034,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for JsParamMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a JavaObjectRefMsgInProto. */
@@ -1018,6 +1103,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for JavaObjectRefMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a JSObjectMsgInProto. */
@@ -1074,6 +1166,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for JSObjectMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a PixelsAreaResponseMsgInProto. */
@@ -1136,6 +1235,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PixelsAreaResponseMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a WindowEventMsgInProto. */
@@ -1222,6 +1328,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for WindowEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     namespace WindowEventMsgInProto {
@@ -1304,6 +1417,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for AudioEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of an ActionEventMsgInProto. */
@@ -1384,6 +1504,13 @@ export namespace appFrameProtoIn {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for ActionEventMsgInProto
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     namespace ActionEventMsgInProto {
