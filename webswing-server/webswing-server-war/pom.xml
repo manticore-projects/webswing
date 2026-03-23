@@ -5,7 +5,7 @@
     <parent>
         <artifactId>webswing-server</artifactId>
         <groupId>org.webswing</groupId>
-        <version>20.2.5</version>
+        <version>26.1.0</version>
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
@@ -50,10 +50,6 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j2-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>

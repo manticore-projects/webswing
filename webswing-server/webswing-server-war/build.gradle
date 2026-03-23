@@ -111,7 +111,7 @@ tasks.register('assembleExplodedWar', Copy) {
 tasks.register('repackageWar', Zip) {
     dependsOn 'assembleExplodedWar', 'generateGitProperties'
     from explodedDir
-    archiveFileName = "${webswingWarName}.war"
+    archiveFileName = "${webswingWarName}-${project.version}.war"
     destinationDirectory = layout.buildDirectory.dir('libs')
 
     // Write META-INF/MANIFEST.MF including git properties (matching Maven)

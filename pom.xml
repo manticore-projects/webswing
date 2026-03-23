@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.webswing</groupId>
     <artifactId>webswing</artifactId>
-    <version>20.2.5</version>
+    <version>26.1.0</version>
     <packaging>pom</packaging>
     <name>Webswing</name>
     <description>Webswing is a web server that allows to run any swing application inside your web browser using only pure HTML5.</description>
@@ -95,10 +95,6 @@
         <commons-collections4.version>4.5.0-M2</commons-collections4.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-logging.version>1.3.4</commons-logging.version>
-
-        <!-- HttpClient 4.5.14 — end of 4.x line.
-             HttpClient 5.x has completely different API — not safe without code changes. -->
-        <httpclient.version>4.5.14</httpclient.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -178,11 +174,6 @@
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
@@ -191,16 +182,6 @@
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
-            </dependency>
-            <!-- guice-multibindings: merged into Guice core since 4.2, but 4.2.3 is the
-                 last published artifact and still works as a thin shim.
-                 Kept here because submodules still declare it as a dependency.
-                 TODO: remove this entry and the submodule <dependency> declarations;
-                 the imports (com.google.inject.multibindings.*) stay unchanged. -->
-            <dependency>
-                <groupId>com.google.inject.extensions</groupId>
-                <artifactId>guice-multibindings</artifactId>
-                <version>4.2.3</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>

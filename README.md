@@ -70,7 +70,6 @@ All internal APIs adapted for the post-JDK-11 module system — no `--illegal-ac
 ### Roadmap
 
 - Migration to **Jetty 12** (EE8 environment for `javax.servlet` compatibility)
-- Migration to **Apache HttpClient 5** replacing the legacy 4.x client
 - `PlatformGraphicsInfo` module patch integrated into the build system (replacing the runtime `Unsafe` workaround)
 
 ---

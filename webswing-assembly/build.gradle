@@ -9,6 +9,8 @@ processResources.enabled = false
 
 dependencies {
     implementation project(':webswing-server:webswing-server-war')
+    implementation project(':webswing-server:webswing-server-security')
+    implementation project(':webswing-api')
 }
 
 // ── Git info (JSON format) ───────────────────────────────────────────
@@ -34,20 +36,31 @@ def warProject = project(':webswing-server:webswing-server-war')
 
 distributions {
     main {
-        distributionBaseName = "webswing-${project.version}"
+        distributionBaseName = "webswing"
         contents {
             from(warProject.layout.buildDirectory.dir('libs')) {
                 include '*.war'
                 into '/'
             }
 
-            // Any additional files your dist.xml included (scripts, configs, etc.)
-            // Example:
-            // from('src/main/dist') { into '/' }
+            from(project(':webswing-server:webswing-server-security').layout.buildDirectory.dir('libs')) {
+                include 'webswing-server-security-${project.version}.jar'
+                into '/api'
+            }
+
+            from(project(':webswing-api').layout.buildDirectory.dir('libs')) {
+                include 'webswing-api-${project.version}.jar'
+                into '/api'
+            }
+
+            from('src/main/demo') {
+                into '/'
+            }
 
             from(layout.buildDirectory.dir('dist-meta')) {
                 include 'git.info'
                 include 'version.info'
+                into '/'
             }
         }
     }
@@ -55,14 +68,14 @@ distributions {
 
 distZip {
     dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
-    destinationDirectory = file("${projectDir}/dist")
+    destinationDirectory = layout.buildDirectory.dir('dist')
 }
 
 distTar {
     dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
-    destinationDirectory = file("${projectDir}/dist")
-    compression = Compression.GZIP
-    archiveExtension = 'tar.gz'
+    destinationDirectory = layout.buildDirectory.dir('dist')
+    compression = Compression.BZIP2
+    archiveExtension = 'tar.bz2'
 }
 
 // Skip deploy (matches Maven config)

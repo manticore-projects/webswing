@@ -3,7 +3,7 @@
     <parent>
         <artifactId>webswing</artifactId>
         <groupId>org.webswing</groupId>
-        <version>20.2.5</version>
+        <version>26.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <dependencies>

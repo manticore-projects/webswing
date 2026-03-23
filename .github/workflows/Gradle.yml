@@ -63,13 +63,22 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build
-        run: ./gradlew clean build --no-daemon --warning-mode all
+        run: ./gradlew clean assemble --no-daemon --warning-mode all
 
-      - name: Upload distribution
+      - name: Upload ZIP distribution
         if: matrix.java == '21' && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
-          name: webswing-distribution
-          path: webswing-assembly/dist/webswing-*-distribution.zip
-          retention-days: 14
+          name: zip
+          path: build/dist/webswing-*.zip
+          retention-days: 365
+          if-no-files-found: warn
+
+      - name: Upload TAR distribution
+        if: matrix.java == '21' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tar
+          path: build/dist/webswing-*.tar.bz2
+          retention-days: 365
           if-no-files-found: warn

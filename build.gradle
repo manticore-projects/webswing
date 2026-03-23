@@ -61,10 +61,16 @@ tasks.register('copyWar', Copy) {
     dependsOn ':webswing-server:webswing-server-war:repackageWar'
     from project(':webswing-server:webswing-server-war').layout.buildDirectory.dir('libs')
     include '*.war'
-    into layout.buildDirectory.dir('libs')
+    into layout.buildDirectory.dir('dist')
 }
 
-assemble.dependsOn 'copyWar'
+tasks.register('copyDist', Copy) {
+    dependsOn ':webswing-assembly:distZip', ':webswing-assembly:distTar'
+    from project(':webswing-assembly').layout.buildDirectory.dir('dist')
+    into layout.buildDirectory.dir('dist')
+}
+
+assemble.dependsOn 'copyWar', 'copyDist'
 
 // ─── Ultra-clean: wipe everything including Node, node_modules, caches ──
 tasks.register('ultraClean') {
