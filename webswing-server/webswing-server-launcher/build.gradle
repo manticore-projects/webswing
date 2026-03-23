@@ -1,14 +1,28 @@
 dependencies {
     implementation project(':webswing-app-toolkit')
     implementation 'commons-cli:commons-cli:1.2'
-    implementation "org.eclipse.jetty:jetty-webapp:${jettyVersion}"
-    implementation "org.eclipse.jetty:jetty-annotations:${jettyVersion}"
-    implementation "org.eclipse.jetty.websocket:javax-websocket-server-impl:${jettyVersion}"
+
+    // Jetty 12 EE8 — javax.servlet / javax.websocket compatibility
+    // Group IDs changed: org.eclipse.jetty → org.eclipse.jetty.ee8
+    // Artifact IDs changed: jetty-xxx → jetty-ee8-xxx
+    implementation "org.eclipse.jetty.ee8:jetty-ee8-webapp:${jettyVersion}"
+    implementation "org.eclipse.jetty.ee8:jetty-ee8-annotations:${jettyVersion}"
+    implementation "org.eclipse.jetty.ee8:jetty-ee8-plus:${jettyVersion}"
+    implementation "org.eclipse.jetty.ee8.websocket:jetty-ee8-websocket-javax-server:${jettyVersion}"
+
+    // Logging — Jetty 12 requires SLF4J on the server classpath
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:${log4jVersion}"
 }
 
 jar {
     archiveBaseName = 'webswing-server-launcher'
     archiveVersion = ''
+    from('../webswing-server-war/src/main/resources') {
+        include 'log4j2.xml'
+    }
 }
 
 tasks.register('copyServerLib', Copy) {
@@ -39,8 +53,8 @@ if (project.hasProperty('serverless')) {
             def dir = layout.buildDirectory.dir('WEB-INF/server-lib').get().asFile
             dir.mkdirs()
             new File(dir, 'README.txt').text =
-                'This is a serverless Webswing build. No embedded server is included. ' +
-                'Deploy to supported Servlet container. (ie. Tomcat)'
+                    'This is a serverless Webswing build. No embedded server is included. ' +
+                            'Deploy to supported Servlet container. (ie. Tomcat)'
         }
     }
     assemble.dependsOn 'copyServerless', 'copyJarToServerless', 'writeServerlessReadme'

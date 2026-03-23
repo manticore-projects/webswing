@@ -1,6 +1,6 @@
 <div align="center">
 
-# WebSwing Lite 26.0
+# WebSwing Lite 26.1
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
@@ -53,9 +53,9 @@ All internal APIs adapted for the post-JDK-11 module system — no `--illegal-ac
 ### Build & Runtime Modernization
 
 - **Node.js 24 LTS** — migrated from Node 10; Webpack 5, TypeScript 5, Dart Sass
-- **Gradle build system** — fast, incremental builds alongside the existing Maven build (Maven will be phased out in a future release)
-- **All dependencies updated** — Jackson, Guava, Log4j2, SLF4J 2.0, Bouncy Castle, Apache Commons, Protocol Buffers, and more
-- **Modernized start/stop script** — `bash` strict mode, graceful shutdown with timeout, Xvfb lifecycle management, clean log rotation
+- **Gradle build system** — fast, incremental builds
+- **All dependencies updated** — Jetty12, Jackson, Guava, Log4j2, SLF4J 2.0, Bouncy Castle, Apache Commons, Protocol Buffers, and more
+- **Modernized start/stop scripts** — graceful shutdown with timeout, Xvfb lifecycle management, clean log rotation
 
 ### Performance
 
@@ -66,11 +66,6 @@ All internal APIs adapted for the post-JDK-11 module system — no `--illegal-ac
 
 - **Apache Shiro integration** — pluggable authentication and authorization supporting Active Directory / LDAP, JDBC realms, and custom providers
 - **TLS/SSL** — full HTTPS and WSS support with configurable keystores and truststores
-
-### Roadmap
-
-- Migration to **Jetty 12** (EE8 environment for `javax.servlet` compatibility)
-- `PlatformGraphicsInfo` module patch integrated into the build system (replacing the runtime `Unsafe` workaround)
 
 ---
 
@@ -87,9 +82,9 @@ All internal APIs adapted for the post-JDK-11 module system — no `--illegal-ac
 
 ```bash
 # Download the latest release
-curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.0-distribution.zip
-unzip webswing-26.0-distribution.zip
-cd webswing-26.0
+curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.1.zip
+unzip webswing-26.1.zip
+cd webswing-26.1
 
 # Start the server
 ./run.sh start
@@ -140,7 +135,7 @@ cd webswing
 
 ```bash
 # Extract to your deployment directory
-unzip webswing-assembly/dist/webswing-26.0-distribution.zip -d /opt/webswing
+unzip build/dist/webswing-26.1.zip -d /opt/webswing
 
 # Configure your Swing application in webswing.config
 vim /opt/webswing/webswing.config
@@ -193,16 +188,15 @@ cd /opt/webswing && ./run.sh start
 
 | Component | Version | Purpose |
 |-----------|---------|---------|
-| Jetty | 9.4.58 | Embedded HTTP/WebSocket server |
-| Jackson | 2.19.0 | JSON serialization |
-| Protocol Buffers | 3.25.5 | Binary wire format (DirectDraw) |
-| Apache Shiro | 1.13.0 | Authentication & authorization |
-| Guava | 33.5.0 | Core utilities |
-| Log4j 2 | 2.25.3 | Logging framework |
-| SLF4J | 2.0.17 | Logging facade |
-| Bouncy Castle | 1.80 | Cryptography |
-| Webpack | 5.x | JavaScript bundling |
-| TypeScript | 5.x | Type-safe frontend code |
+| Jetty | 12.1.7  | Embedded HTTP/WebSocket server |
+| Jackson | 2.19.0  | JSON serialization |
+| Protocol Buffers | 3.25.5  | Binary wire format (DirectDraw) |
+| Apache Shiro | 1.13.0  | Authentication & authorization |
+| Guava | 33.5.0  | Core utilities |
+| Log4j 2 | 2.25.3  | Logging framework |
+| SLF4J | 2.0.17  | Logging facade |
+| Webpack | 5.x     | JavaScript bundling |
+| TypeScript | 5.x     | Type-safe frontend code |
 
 
 ---

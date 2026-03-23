@@ -16,6 +16,11 @@ subprojects {
     apply plugin: 'webswing.java-conventions'
     group = rootProject.group
     version = rootProject.version
+
+    dependencies {
+        compileOnly "org.eclipse.jetty.toolchain:jetty-servlet-api:${jettyServletApiVersion}"
+        compileOnly "org.eclipse.jetty.toolchain:jetty-javax-websocket-api:${jettyWebsocketApiVersion}"
+    }
 }
 
 // ─── Sonatype Central publishing ─────────────────────────────────────

@@ -7,8 +7,6 @@ dependencies {
         exclude group: 'org.webswing', module: 'modpatch-java-desktop'
     }
 
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
-
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
@@ -18,9 +16,9 @@ dependencies {
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.google.inject:guice:${guiceVersion}"
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 }
 
 createRegenerateProtoTask('src/main/protobuf', 'src/main/java')
