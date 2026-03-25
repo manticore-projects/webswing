@@ -17,8 +17,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.security.ProtectionDomain;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommonUtil {
 	public static final int bufferSize = 4 * 1024;
@@ -26,6 +31,18 @@ public class CommonUtil {
 	private static final Logger log = LoggerFactory.getLogger(CommonUtil.class);
 	private static final Map<String, byte[]> iconMap = new HashMap<String, byte[]>();
 	private static URLClassLoader swingBootClassLoader;
+
+	private static final String WHITELISTS_RESOURCE = "webswing-classloader-whitelists.properties";
+
+	/**
+	 * All WEB-INF subdirectories that may contain JARs needed for the
+	 * child Swing process bootclasspath.  Scanned in order; first match wins.
+	 */
+	private static final String[] BOOT_DIRS = {
+			"WEB-INF/swing-boot",
+			"WEB-INF/swing-lib",
+			"WEB-INF/lib"
+	};
 
 	public static byte[] loadImage(File iconFile) {
 		String icon;
@@ -178,21 +195,50 @@ public class CommonUtil {
 		return null;
 	}
 
+	/**
+	 * Build a classloader that spans all WAR directories relevant for the
+	 * child Swing process: swing-boot, swing-lib, and lib (shared).
+	 *
+	 * This replaces the previous implementation that only scanned swing-boot.
+	 * With JAR deduplication, shared third-party JARs now live exclusively
+	 * in WEB-INF/lib/ and must be found there.
+	 */
 	private static URLClassLoader getSwingBootClassLoader() throws IOException {
 		if (swingBootClassLoader == null) {
-			URL swingBootFolder = null;
-			if (new File(URI.create(getWarFileLocation())).isFile()) {
-				swingBootFolder = new URL("jar:" + getWarFileLocation() + "!/WEB-INF/swing-boot");
-			} else if (new File(URI.create(getWarFileLocation())).isDirectory()) {
-				swingBootFolder = new URL(getWarFileLocation() + "WEB-INF/swing-boot");
+			String warLocation = getWarFileLocation();
+			boolean isFile = new File(URI.create(warLocation)).isFile();
+			boolean isDir = new File(URI.create(warLocation)).isDirectory();
+
+			List<URL> allUrls = new ArrayList<>();
+			for (String dir : BOOT_DIRS) {
+				URL dirUrl;
+				if (isFile) {
+					dirUrl = new URL("jar:" + warLocation + "!/" + dir);
+				} else if (isDir) {
+					dirUrl = new URL(warLocation + dir);
+				} else {
+					continue;
+				}
+
+				try {
+					List<URL> filesFromDir = Main.getFilesFromPath(dirUrl);
+					allUrls.addAll(filesFromDir);
+				} catch (Exception e) {
+					// Directory may not exist (e.g. exploded WAR without swing-boot)
+					log.debug("Skipping {} for boot classloader: {}", dir, e.getMessage());
+				}
 			}
-			List<URL> filesFromPath = Main.getFilesFromPath(swingBootFolder);
-			swingBootClassLoader = new URLClassLoader(filesFromPath.toArray(new URL[filesFromPath.size()]));
+
+			log.info("Boot classloader: {} JARs from {}", allUrls.size(),
+					 Arrays.toString(BOOT_DIRS));
+
+			swingBootClassLoader = new URLClassLoader(allUrls.toArray(new URL[0]));
 		}
 		return swingBootClassLoader;
 	}
+
 	public static String getBootClassPathForClass(String className) throws Exception {
-		return getBootClassPathForClass(className,true);
+		return getBootClassPathForClass(className, true);
 	}
 
 	public static String getBootClassPathForClass(String className, boolean withQuotes) throws Exception {
@@ -224,6 +270,7 @@ public class CommonUtil {
 		}
 		return url;
 	}
+
 	public static String getValidURI(String pathOrUri) throws FileNotFoundException {
 		return getValidFile(pathOrUri).toURI().toString();
 	}

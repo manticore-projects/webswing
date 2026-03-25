@@ -42,13 +42,41 @@ tasks.register('copyWebswingProperties', Copy) {
     into layout.buildDirectory.dir('dist-meta')
 }
 
+// ── Load JAR whitelists from shared properties file ──────────────────
+// Single source of truth: webswing-classloader-whitelists.properties
+// Read at build time by Gradle, at runtime by Main.java.
+//
+def whitelistsFile = file('src/main/resources/webswing-classloader.properties')
+def moduleWhitelists = { ->
+    def props = new Properties()
+    if (whitelistsFile.exists()) {
+        whitelistsFile.withInputStream { props.load(it) }
+    } else {
+        throw new GradleException("Missing ${whitelistsFile} — cannot partition JARs")
+    }
+    def result = [:]
+    props.each { dirName, globs ->
+        result[dirName.trim()] = globs.split(',').collect { it.trim() }.findAll { !it.empty }
+    }
+    result
+}()
+
+// Combined exclusion list: union of ALL module whitelists.
+// JARs matching these patterns must NOT appear in WEB-INF/lib/ —
+// they live exclusively in their module directories.
+// Safe because CommonUtil.getSwingBootClassLoader() now scans all dirs.
+def allWhitelistedPatterns = moduleWhitelists.values().flatten().toSet().toList()
+
+logger.lifecycle("[build] Loaded classloader whitelists: ${moduleWhitelists}")
+logger.lifecycle("[build] Excluding from WEB-INF/lib: ${allWhitelistedPatterns}")
+
 // ── Assemble the exploded WAR from sibling projects ──────────────────
 def explodedDir = layout.buildDirectory.dir("libs/exploded/${webswingWarName}")
 
-def frontendProject     = project(':webswing-server:webswing-server-frontend')
-def serverCommonProject = project(':webswing-server:webswing-server-common')
-def appServicesProject  = project(':webswing-app-services')
-def appLauncherProject  = project(':webswing-app-launcher')
+def frontendProject       = project(':webswing-server:webswing-server-frontend')
+def serverCommonProject   = project(':webswing-server:webswing-server-common')
+def appServicesProject    = project(':webswing-app-services')
+def appLauncherProject    = project(':webswing-app-launcher')
 def serverLauncherProject = project(':webswing-server:webswing-server-launcher')
 
 tasks.register('assembleExplodedWar', Copy) {
@@ -74,22 +102,39 @@ tasks.register('assembleExplodedWar', Copy) {
         into '/'
     }
 
-    // 3) swing-lib jars from app-services
+    // ── 3) swing-lib: whitelisted → swing-lib/, rest → lib/ ──
     from(appServicesProject.layout.buildDirectory.dir('WEB-INF/swing-lib')) {
+        include moduleWhitelists['swing-lib']
         into 'WEB-INF/swing-lib'
     }
+    from(appServicesProject.layout.buildDirectory.dir('WEB-INF/swing-lib')) {
+        exclude moduleWhitelists['swing-lib']
+        into 'WEB-INF/lib'
+    }
 
-    // 4) swing-boot jars from app-launcher
+    // ── 4) swing-boot: whitelisted → swing-boot/, rest → lib/ ──
     from(appLauncherProject.layout.buildDirectory.dir('WEB-INF/swing-boot')) {
+        include moduleWhitelists['swing-boot']
         into 'WEB-INF/swing-boot'
     }
-
-    // 5) server-lib jars from server-launcher
-    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
-        into 'WEB-INF/server-lib'
+    from(appLauncherProject.layout.buildDirectory.dir('WEB-INF/swing-boot')) {
+        exclude moduleWhitelists['swing-boot']
+        into 'WEB-INF/lib'
     }
 
-    // 6) This module's own compiled classes + dependencies into WEB-INF
+    // ── 5) server-lib: whitelisted → server-lib/, rest → lib/ ──
+    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
+        include moduleWhitelists['server-lib']
+        into 'WEB-INF/server-lib'
+    }
+    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
+        exclude moduleWhitelists['server-lib']
+        into 'WEB-INF/lib'
+    }
+
+    // ── 6) This module's own classes + deps → lib/ ──
+    //    Exclude whitelisted JARs that arrive as transitive deps —
+    //    they already live in their module dirs above.
     from(sourceSets.main.output) {
         into 'WEB-INF/classes'
     }
@@ -104,7 +149,8 @@ tasks.register('assembleExplodedWar', Copy) {
 
     into explodedDir
 
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    // Same JAR arriving from multiple source dirs → keep first copy
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // Re-pack the exploded dir into the final WAR with manifest
@@ -126,17 +172,17 @@ tasks.register('repackageWar', Zip) {
             def mf = layout.buildDirectory.file('tmp/MANIFEST.MF').get().asFile
             mf.parentFile.mkdirs()
             mf.text = [
-                "Manifest-Version: 1.0",
-                "Main-Class: main.Main",
-                "version: ${project.version}",
-                "remoteOriginUrl: ${gitProps.getProperty('git.remote.origin.url', '')}",
-                "branch: ${gitProps.getProperty('git.branch', '')}",
-                "commitId: ${gitProps.getProperty('git.commit.id', '')}",
-                "describe: ${gitProps.getProperty('git.commit.id.describe', '')}",
-                "commitTime: ${gitProps.getProperty('git.commit.time', '')}",
-                "buildTime: ${gitProps.getProperty('git.build.time', '')}",
-                "Ignore-Scanning-Packages: com,org,net",
-                "",  // manifest must end with newline
+                    "Manifest-Version: 1.0",
+                    "Main-Class: main.Main",
+                    "version: ${project.version}",
+                    "remoteOriginUrl: ${gitProps.getProperty('git.remote.origin.url', '')}",
+                    "branch: ${gitProps.getProperty('git.branch', '')}",
+                    "commitId: ${gitProps.getProperty('git.commit.id', '')}",
+                    "describe: ${gitProps.getProperty('git.commit.id.describe', '')}",
+                    "commitTime: ${gitProps.getProperty('git.commit.time', '')}",
+                    "buildTime: ${gitProps.getProperty('git.build.time', '')}",
+                    "Ignore-Scanning-Packages: com,org,net",
+                    "",  // manifest must end with newline
             ].join('\n')
             mf
         })
@@ -150,12 +196,12 @@ if (project.hasProperty('dev')) {
     tasks.register('runDev', JavaExec) {
         dependsOn 'assembleExplodedWar'
         classpath = files(
-            explodedDir,
-            sourceSets.test.output,
+                explodedDir,
+                sourceSets.test.output,
         )
         mainClass = 'org.webswing.dev.server.InteractiveServerLauncher'
         args '-example', 'default-all-apps', '-j', 'jetty.properties', '-ctx', '/webswing-server'
         systemProperty 'webswing.rootDir',
-            "${rootProject.projectDir}/../webswing-examples/webswing-examples-assembly/dist/webswing-examples-distribution/webswing-examples"
+                "${rootProject.projectDir}/../webswing-examples/webswing-examples-assembly/dist/webswing-examples-distribution/webswing-examples"
     }
 }

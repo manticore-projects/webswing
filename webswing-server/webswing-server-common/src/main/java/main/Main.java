@@ -16,13 +16,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,11 +41,58 @@ public class Main {
 
 	private static ClassLoader defaultCL;
 
+	private static final String WHITELISTS_RESOURCE = "webswing-classloader.properties";
+
+	/**
+	 * Glob whitelists per module directory, loaded from
+	 * webswing-classloader-whitelists.properties on the classpath.
+	 *
+	 * Only JARs matching these patterns are loaded directly by the module
+	 * classloader.  Everything else lives in WEB-INF/lib/ and is loaded
+	 * via parent delegation (shared classloader) or Jetty's WebAppClassLoader.
+	 */
+	private static final Map<String, List<PathMatcher>> WHITELISTS = loadWhitelists();
+
+	private static Map<String, List<PathMatcher>> loadWhitelists() {
+		Properties props = new Properties();
+		try (InputStream in = Main.class.getClassLoader().getResourceAsStream(WHITELISTS_RESOURCE)) {
+			if (in == null) {
+				System.out.println("[Main] WARNING: " + WHITELISTS_RESOURCE
+								   + " not found — no JAR filtering will be applied");
+				return Collections.emptyMap();
+			}
+			props.load(in);
+		} catch (IOException e) {
+			System.err.println("[Main] WARNING: Failed to load " + WHITELISTS_RESOURCE + ": " + e);
+			return Collections.emptyMap();
+		}
+
+		FileSystem fs = FileSystems.getDefault();
+		Map<String, List<PathMatcher>> result = new HashMap<>();
+
+		for (String dirName : props.stringPropertyNames()) {
+			String key = "WEB-INF/" + dirName.trim();
+			List<PathMatcher> matchers = new ArrayList<>();
+			for (String glob : props.getProperty(dirName).split(",")) {
+				glob = glob.trim();
+				if (!glob.isEmpty()) {
+					matchers.add(fs.getPathMatcher("glob:" + glob));
+				}
+			}
+			if (!matchers.isEmpty()) {
+				result.put(key, matchers);
+			}
+		}
+
+		System.out.println("[Main] Loaded whitelists for: " + result.keySet());
+		return result;
+	}
+
 	public static void main(String[] mainArgs) {
 		boolean client = System.getProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID) != null;
 		boolean sessionpool = false;
 		boolean admin = false;
-		
+
 		String[] args = mainArgs;
 		if (args != null) {
 			List<String> argsList = new ArrayList<>();
@@ -57,14 +112,44 @@ public class Main {
 			ProtectionDomain domain = Main.class.getProtectionDomain();
 			URL location = domain.getCodeSource().getLocation();
 			String warLocation = location.toExternalForm();
-			
+
 			System.setProperty(Constants.CREATE_NEW_TEMP, getCreateNewTemp(args));
 			System.setProperty(Constants.CLEAN_TEMP, getBoolParam(args, "-tc", true));
 			System.setProperty(Constants.WAR_FILE_LOCATION, warLocation);
 
-			List<URL> urls = new ArrayList<URL>();
+			// ── Initialize temp dir BEFORE any JAR extraction ─────────────
+			if (sessionpool) {
+				initTempDirPath(args, "tmp/sp");
+			} else if (!client) {
+				initTempDirPath(args, "tmp/server");
+			}
+
+			// ── Shared classloader: WEB-INF/lib/ (standard WAR classpath) ────
+			List<URL> sharedUrls = new ArrayList<>();
+			URL libResource = Main.class.getClassLoader().getResource("WEB-INF/lib");
+			if (libResource != null) {
+				populateClasspathFromDir("WEB-INF/lib", sharedUrls, null);
+			}
+
+			ClassLoader baseParent = ClassLoader.getSystemClassLoader();
+			ClassLoader sharedLoader;
+			if (!sharedUrls.isEmpty()) {
+				sharedLoader = new URLClassLoader(
+						sharedUrls.toArray(URL[]::new), baseParent);
+				System.out.println("[Main] Shared classloader: "
+								   + sharedUrls.size() + " JARs from WEB-INF/lib");
+			} else {
+				sharedLoader = baseParent;
+				System.out.println("[Main] No WEB-INF/lib found, "
+								   + "falling back to flat classloader layout");
+			}
+
+			// ── Module classloaders (whitelisted JARs only) ──────────────
+			List<URL> urls = new ArrayList<>();
 			if (client) {
-				populateClasspathFromDir("WEB-INF/swing-lib", urls);
+				populateClasspathFromDir("WEB-INF/swing-lib", urls,
+										 WHITELISTS.get("WEB-INF/swing-lib"));
+
 				java.security.AccessController.doPrivileged(
 						new java.security.PrivilegedAction<Void>() {
 							public Void run() {
@@ -84,55 +169,48 @@ public class Main {
 								}
 								try {
 									if (cls != null) {
-										// Create a new instance of your custom Toolkit implementation
 										Toolkit toolkit = (Toolkit) cls.getConstructor().newInstance();
-
 										System.out.println("Loaded Webtoolkit " + toolkit.getClass().getName());
 
-										// Step 1: Access the private final field `Toolkit.toolkit`
 										Field field = Toolkit.class.getDeclaredField("toolkit");
 										field.setAccessible(true);
 										field.set(null, toolkit);
-
 										System.out.println("Forced field accessible.");
 
-										MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(Toolkit.class, MethodHandles.lookup());
-										VarHandle varHandle = lookup.findStaticVarHandle(Toolkit.class, "toolkit", Toolkit.class);
-
-										// Step 3: Set the static field using the VarHandle
+										MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(
+												Toolkit.class, MethodHandles.lookup());
+										VarHandle varHandle = lookup.findStaticVarHandle(
+												Toolkit.class, "toolkit", Toolkit.class);
 										varHandle.set(toolkit);
 										System.out.println("Toolkit.toolkit field has been set to: " + toolkit);
-
 									}
-
 								} catch (final ReflectiveOperationException ignored) {
 									throw new AWTError("Could not create Toolkit: " + nm);
 								}
 								return null;
 							}
 						});
-				initializeExtLibServices(urls);
+				initializeExtLibServices(urls, sharedLoader);
 
 				Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
 				defaultToolkit.getClass().getMethod("init").invoke(defaultToolkit);
+				System.out.println("Toolkit.toolkit field has been set to: "
+								   + defaultToolkit.getClass().getName());
 
-
-
-				System.out.println("Toolkit.toolkit field has been set to: " + defaultToolkit.getClass().getName());
-				
 				retainOnlyLauncherUrl(urls);
 			} else if (sessionpool) {
-				initTempDirPath(args,"tmp/sp");
-				populateClasspathFromDir("WEB-INF/sessionpool-lib", urls);
+				populateClasspathFromDir("WEB-INF/sessionpool-lib", urls, null);
 			} else if (admin) {
-				populateClasspathFromDir("WEB-INF/server-lib", urls);
+				populateClasspathFromDir("WEB-INF/server-lib", urls,
+										 WHITELISTS.get("WEB-INF/server-lib"));
 			} else {
-				initTempDirPath(args,"tmp/server");
-				populateClasspathFromDir("WEB-INF/server-lib", urls);
+				populateClasspathFromDir("WEB-INF/server-lib", urls,
+										 WHITELISTS.get("WEB-INF/server-lib"));
 			}
-			
-			defaultCL = new URLClassLoader(urls.toArray(new URL[urls.size()]), ClassLoader.getSystemClassLoader());
+
+			defaultCL = new URLClassLoader(urls.toArray(URL[]::new), sharedLoader);
 			Thread.currentThread().setContextClassLoader(defaultCL);
+
 			Class<?> mainClass;
 			if (client) {
 				mainClass = defaultCL.loadClass("org.webswing.SwingMain");
@@ -142,7 +220,8 @@ public class Main {
 				try {
 					mainClass = defaultCL.loadClass("org.webswing.ServerMain");
 				} catch (ClassNotFoundException e) {
-					InputStream readme = Main.class.getClassLoader().getResourceAsStream("WEB-INF/server-lib/README.txt");
+					InputStream readme = Main.class.getClassLoader()
+												   .getResourceAsStream("WEB-INF/server-lib/README.txt");
 					if (readme != null) {
 						Scanner s = new Scanner(readme).useDelimiter("\\A");
 						String result = s.hasNext() ? s.next() : "";
@@ -158,8 +237,7 @@ public class Main {
 			try {
 				method.invoke(null, new Object[] { args });
 			} catch (IllegalAccessException e) {
-				// This should not happen, as we have
-				// disabled access checks
+				// This should not happen, as we have disabled access checks
 			}
 		} catch (Exception e) {
 			System.err.println("Uncaught exception.");
@@ -169,7 +247,6 @@ public class Main {
 	}
 
 	public static String getCreateNewTemp(String[] args) {
-		// create the command line parser
 		return getBoolParam(args, "-d", false);
 	}
 
@@ -188,37 +265,49 @@ public class Main {
 				i.remove();
 			}
 		}
-
 	}
 
-	private static void initializeExtLibServices(List<URL> urls) throws Exception {
-		// sets up Services class providing jms connection and other services in separated classloader to prevent classpath pollution of swing application.
-
-		//JAVA9 needs to set parent classloader to ClassLoader.getPlatformClassLoader(), otherwise the parent is the boot classloader which only contains the java.base module
-		//we use reflection to be backwards compatible with java8
-		ClassLoader parent = null;
+	private static void initializeExtLibServices(List<URL> urls,
+												 ClassLoader sharedLoader) throws Exception {
+		ClassLoader platformCL = null;
 		try {
-			parent = (ClassLoader) ClassLoader.class.getDeclaredMethod("getPlatformClassLoader").invoke(null);
+			platformCL = (ClassLoader) ClassLoader.class
+											   .getDeclaredMethod("getPlatformClassLoader").invoke(null);
 		} catch (Exception e) {
-			//ignore
+			// ignore — pre-Java 9
 		}
 
-		ClassLoader extLibClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
-		Class<?> classLoaderUtilClass = extLibClassLoader.loadClass("org.webswing.util.ClassLoaderUtil");
-		Method initializeServicesMethod = classLoaderUtilClass.getMethod("initializeServices");
+		ClassLoader extLibClassLoader = new URLClassLoader(
+				urls.toArray(URL[]::new), sharedLoader);
+		Class<?> classLoaderUtilClass = extLibClassLoader
+												.loadClass("org.webswing.util.ClassLoaderUtil");
+		Method initializeServicesMethod = classLoaderUtilClass
+												  .getMethod("initializeServices");
 		Thread.currentThread().setContextClassLoader(extLibClassLoader);
 		initializeServicesMethod.invoke(null);
 	}
 
+	// ── Classpath population with optional glob whitelist ─────────────
+
 	private static void populateClasspathFromDir(String dir, List<URL> urls) throws IOException {
-		for (URL f : getFilesFromPath(Main.class.getClassLoader().getResource(dir))) {
+		populateClasspathFromDir(dir, urls, null);
+	}
+
+	private static void populateClasspathFromDir(String dir, List<URL> urls,
+												 List<PathMatcher> whitelist) throws IOException {
+		for (URL f : getFilesFromPath(Main.class.getClassLoader().getResource(dir), whitelist)) {
 			urls.add(f);
 		}
 	}
 
 	public static List<URL> getFilesFromPath(URL r) throws IOException {
-		List<URL> urls = new ArrayList<URL>();
+		return getFilesFromPath(r, null);
+	}
+
+	public static List<URL> getFilesFromPath(URL r, List<PathMatcher> whitelist) throws IOException {
+		List<URL> urls = new ArrayList<>();
 		String tempDirPath = getTempDir().getAbsolutePath();
+
 		if (r.getPath().contains("!")) {
 			String[] splitPath = r.getPath().split("!/");
 			String jar = splitPath[0];
@@ -227,7 +316,14 @@ public class Main {
 			Enumeration<JarEntry> jarEntries = jarFile.entries();
 			while (jarEntries.hasMoreElements()) {
 				JarEntry jarEntry = jarEntries.nextElement();
-				if (!jarEntry.isDirectory() && jarEntry.getName().endsWith(".jar") && jarEntry.getName().startsWith(path)) {
+				if (!jarEntry.isDirectory()
+					&& jarEntry.getName().endsWith(".jar")
+					&& jarEntry.getName().startsWith(path)) {
+
+					if (whitelist != null && !matchesWhitelist(jarEntry.getName(), whitelist)) {
+						continue;
+					}
+
 					urls.add(jarEntryAsFile(jarFile, jarEntry, tempDirPath).toURI().toURL());
 				}
 			}
@@ -241,6 +337,11 @@ public class Main {
 			if (dir.isDirectory()) {
 				for (File f : dir.listFiles()) {
 					if (f.isFile() && f.getName().endsWith(".jar")) {
+
+						if (whitelist != null && !matchesWhitelist(f.getName(), whitelist)) {
+							continue;
+						}
+
 						urls.add(f.toURI().toURL());
 					}
 				}
@@ -249,7 +350,15 @@ public class Main {
 		return urls;
 	}
 
-	private static File jarEntryAsFile(JarFile jarFile, JarEntry jarEntry, String tempDirPath) throws IOException {
+	private static boolean matchesWhitelist(String nameOrPath, List<PathMatcher> whitelist) {
+		int slash = nameOrPath.lastIndexOf('/');
+		String basename = slash >= 0 ? nameOrPath.substring(slash + 1) : nameOrPath;
+		Path p = Path.of(basename);
+		return whitelist.stream().anyMatch(m -> m.matches(p));
+	}
+
+	private static File jarEntryAsFile(JarFile jarFile, JarEntry jarEntry,
+									   String tempDirPath) throws IOException {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
@@ -290,7 +399,8 @@ public class Main {
 
 	public static File getTempDir() {
 		if (System.getProperty(Constants.TEMP_DIR_PATH) == null) {
-			File baseDir = new File(System.getProperty(Constants.TEMP_DIR_PATH_BASE, System.getProperty("java.io.tmpdir"))).getAbsoluteFile();
+			File baseDir = new File(System.getProperty(Constants.TEMP_DIR_PATH_BASE,
+													   System.getProperty("java.io.tmpdir"))).getAbsoluteFile();
 			if (!baseDir.exists()) {
 				baseDir.mkdirs();
 			}
@@ -313,14 +423,19 @@ public class Main {
 				} else if (Boolean.parseBoolean(System.getProperty(Constants.CLEAN_TEMP, "true"))) {
 					for (File f : tempDir.listFiles()) {
 						if (!delete(f)) {
-							throw new IllegalStateException("Not possible to clean the temp folder. Make sure no other instance of webswing is running or use '-d true' option to create a new temp folder.");
+							throw new IllegalStateException(
+									"Not possible to clean the temp folder. Make sure no other "
+									+ "instance of webswing is running or use '-d true' option "
+									+ "to create a new temp folder.");
 						}
 					}
 				}
 				System.setProperty(Constants.TEMP_DIR_PATH, tempDir.toURI().toString());
 				return tempDir;
 			}
-			throw new IllegalStateException("Failed to create directory within " + 10 + " attempts (tried " + baseName + " to " + baseName + (100 - 1) + ')');
+			throw new IllegalStateException("Failed to create directory within "
+											+ 10 + " attempts (tried " + baseName + " to "
+											+ baseName + (100 - 1) + ')');
 		} else {
 			return new File(URI.create(System.getProperty(Constants.TEMP_DIR_PATH)));
 		}
@@ -341,16 +456,20 @@ public class Main {
 					System.setProperty(Constants.ROOT_DIR_PATH, file.getAbsolutePath());
 					return file;
 				} else {
-					throw new IllegalArgumentException("File " + file.getAbsolutePath() + "not found.");
+					throw new IllegalArgumentException(
+							"File " + file.getAbsolutePath() + "not found.");
 				}
 			} catch (IllegalArgumentException e) {
 				File absoluteConfigFile = new File(pathOrUri).getAbsoluteFile();
 				if (absoluteConfigFile.exists()) {
-					System.setProperty(Constants.ROOT_DIR_URI, absoluteConfigFile.toURI().toString());
-					System.setProperty(Constants.ROOT_DIR_PATH, absoluteConfigFile.getAbsolutePath());
+					System.setProperty(Constants.ROOT_DIR_URI,
+									   absoluteConfigFile.toURI().toString());
+					System.setProperty(Constants.ROOT_DIR_PATH,
+									   absoluteConfigFile.getAbsolutePath());
 					return absoluteConfigFile;
 				} else {
-					throw new IllegalArgumentException("File " + absoluteConfigFile.getAbsolutePath() + " not found.");
+					throw new IllegalArgumentException(
+							"File " + absoluteConfigFile.getAbsolutePath() + " not found.");
 				}
 			}
 		}
@@ -371,7 +490,8 @@ public class Main {
 					if (absolute.exists()) {
 						return absolute;
 					} else {
-						throw new IOException("Failed to resolve configuration profile path for '" + configProfile + "'");
+						throw new IOException("Failed to resolve configuration profile path for '"
+											  + configProfile + "'");
 					}
 				}
 			} catch (IOException e) {
