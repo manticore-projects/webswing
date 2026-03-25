@@ -59,20 +59,41 @@ public class CommonUtil {
 		}
 
 		double scale = Math.min((double) maxWidth / w, (double) maxHeight / h);
-		int newW = Math.max(1, (int) Math.round(w * scale));
-		int newH = Math.max(1, (int) Math.round(h * scale));
+		int targetW = Math.max(1, (int) Math.round(w * scale));
+		int targetH = Math.max(1, (int) Math.round(h * scale));
 
-		BufferedImage scaled = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = scaled.createGraphics();
+		// Progressive downscale: halve repeatedly until within 2× of target,
+		// then do one final bicubic pass.  This avoids the blurriness of a
+		// single large-ratio bicubic step.
+		BufferedImage current = src;
+		int curW = w;
+		int curH = h;
+
+		while (curW > targetW * 2 || curH > targetH * 2) {
+			curW = Math.max(targetW, curW / 2);
+			curH = Math.max(targetH, curH / 2);
+			current = resampleBicubic(current, curW, curH);
+		}
+
+		if (curW != targetW || curH != targetH) {
+			current = resampleBicubic(current, targetW, targetH);
+		}
+
+		return current;
+	}
+
+	private static BufferedImage resampleBicubic(BufferedImage src, int w, int h) {
+		BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = dst.createGraphics();
 		try {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-			g.drawImage(src, 0, 0, newW, newH, null);
+			g.drawImage(src, 0, 0, w, h, null);
 		} finally {
 			g.dispose();
 		}
-		return scaled;
+		return dst;
 	}
 
 	public static byte[] loadImage(File iconFile) {
@@ -117,8 +138,12 @@ public class CommonUtil {
 		}
 	}
 
+	/** Supersample factor: render SVG at Nx resolution, then downscale. */
+	private static final int SUPERSAMPLE = 3;
+
 	/**
 	 * Render an SVG file to a BufferedImage at the given dimensions.
+	 * Uses 3× supersampling for sharp edges at small icon sizes.
 	 * If width/height are 0, the SVG's intrinsic size is used.
 	 */
 	public static BufferedImage renderSvg(File svgFile, int width, int height) throws IOException {
@@ -130,27 +155,12 @@ public class CommonUtil {
 		if (document == null) {
 			throw new IOException("Failed to parse SVG: " + svgFile);
 		}
-
-		FloatSize size = document.size();
-		if (width <= 0 || height <= 0) {
-			width = Math.max(1, Math.round(size.width));
-			height = Math.max(1, Math.round(size.height));
-		}
-
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = image.createGraphics();
-		try {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-			document.render(null, g, new ViewBox(width, height));
-		} finally {
-			g.dispose();
-		}
-		return image;
+		return renderSvgDocument(document, width, height);
 	}
 
 	/**
 	 * Render an SVG from a classpath resource to a BufferedImage.
+	 * Uses 3× supersampling for sharp edges at small icon sizes.
 	 */
 	public static BufferedImage renderSvg(InputStream svgStream, int width, int height) throws IOException {
 		SVGLoader loader = new SVGLoader();
@@ -158,23 +168,33 @@ public class CommonUtil {
 		if (document == null) {
 			throw new IOException("Failed to parse SVG from stream");
 		}
+		return renderSvgDocument(document, width, height);
+	}
 
+	private static BufferedImage renderSvgDocument(SVGDocument document, int width, int height) {
 		FloatSize size = document.size();
 		if (width <= 0 || height <= 0) {
 			width = Math.max(1, Math.round(size.width));
 			height = Math.max(1, Math.round(size.height));
 		}
 
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = image.createGraphics();
+		// Render at Nx resolution for supersampling
+		int ssWidth = width * SUPERSAMPLE;
+		int ssHeight = height * SUPERSAMPLE;
+
+		BufferedImage hires = new BufferedImage(ssWidth, ssHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = hires.createGraphics();
 		try {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-			document.render(null, g, new ViewBox(width, height));
+			g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+			document.render(null, g, new ViewBox(ssWidth, ssHeight));
 		} finally {
 			g.dispose();
 		}
-		return image;
+
+		// Downscale with high-quality bicubic interpolation
+		return scaleToFit(hires, width, height);
 	}
 
 	/**
