@@ -15,6 +15,9 @@ dependencies {
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.google.inject:guice:${guiceVersion}"
+    implementation 'com.github.weisj:jsvg:+'
+    implementation 'com.manticore-projects.tools:fpng-java:+'
+    implementation 'com.manticore-projects.tools:fpnge-java:+'
 
     implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"

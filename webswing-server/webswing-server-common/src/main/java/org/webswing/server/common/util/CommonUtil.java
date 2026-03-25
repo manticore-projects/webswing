@@ -1,5 +1,7 @@
 package org.webswing.server.common.util;
 
+import com.github.weisj.jsvg.view.FloatSize;
+import com.github.weisj.jsvg.view.ViewBox;
 import main.Main;
 import org.apache.commons.lang3.ClassUtils.Interfaces;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -8,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.annotation.Annotation;
@@ -17,15 +20,60 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 import java.util.*;
+
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.parser.LoaderContext;
+import com.github.weisj.jsvg.parser.SVGLoader;
+import com.manticore.tools.FPNGEncoder;
+import com.manticore.tools.FPNGE;
 
 public class CommonUtil {
 	public static final int bufferSize = 4 * 1024;
 	private static final String DEFAULT = "default";
 	private static final Logger log = LoggerFactory.getLogger(CommonUtil.class);
-	private static final Map<String, byte[]> iconMap = new HashMap<String, byte[]>();
+	private static final Map<String, byte[]> iconMap = new HashMap<>();
 	private static URLClassLoader swingBootClassLoader;
+
+	/** Maximum icon dimension (pixels). Both SVG and PNG are scaled to fit. */
+	private static final int MAX_ICON_SIZE = 96;
+
+	private static final boolean HAS_AVX2;
+	static {
+		FPNGEncoder.ENCODER.fpng_init();
+		HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
+		log.info(HAS_AVX2 ? "Using AVX2 PNG encoder" : "Using SSE PNG encoder");
+	}
+
+	/**
+	 * Scale image down to fit within maxWidth × maxHeight, preserving aspect ratio.
+	 * Returns the original image if it already fits.
+	 */
+	private static BufferedImage scaleToFit(BufferedImage src, int maxWidth, int maxHeight) {
+		int w = src.getWidth();
+		int h = src.getHeight();
+		if (w <= maxWidth && h <= maxHeight) {
+			return src;
+		}
+
+		double scale = Math.min((double) maxWidth / w, (double) maxHeight / h);
+		int newW = Math.max(1, (int) Math.round(w * scale));
+		int newH = Math.max(1, (int) Math.round(h * scale));
+
+		BufferedImage scaled = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = scaled.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			g.drawImage(src, 0, 0, newW, newH, null);
+		} finally {
+			g.dispose();
+		}
+		return scaled;
+	}
 
 	public static byte[] loadImage(File iconFile) {
 		String icon;
@@ -39,7 +87,10 @@ public class CommonUtil {
 				if (iconMap.containsKey(DEFAULT)) {
 					return iconMap.get(DEFAULT);
 				} else {
-					BufferedImage defaultIcon = ImageIO.read(CommonUtil.class.getClassLoader().getResourceAsStream("images/java.png"));
+					BufferedImage defaultIcon = ImageIO.read(Objects.requireNonNull(
+							CommonUtil.class.getClassLoader()
+											.getResourceAsStream("images/java.png")));
+					defaultIcon = scaleToFit(defaultIcon, MAX_ICON_SIZE, MAX_ICON_SIZE);
 					byte[] byteIcon = getPngImage(defaultIcon);
 					iconMap.put(DEFAULT, byteIcon);
 					return byteIcon;
@@ -48,8 +99,14 @@ public class CommonUtil {
 				if (iconMap.containsKey(icon)) {
 					return iconMap.get(icon);
 				} else {
-					BufferedImage defaultIcon = ImageIO.read(new File(icon));
-					byte[] byteIcon = getPngImage(defaultIcon);
+					BufferedImage image;
+					if (icon.toLowerCase().endsWith(".svg")) {
+						image = renderSvg(new File(icon), MAX_ICON_SIZE, MAX_ICON_SIZE);
+					} else {
+						image = ImageIO.read(new File(icon));
+						image = scaleToFit(image, MAX_ICON_SIZE, MAX_ICON_SIZE);
+					}
+					byte[] byteIcon = getPngImage(image);
 					iconMap.put(icon, byteIcon);
 					return byteIcon;
 				}
@@ -58,6 +115,80 @@ public class CommonUtil {
 			log.error("Failed to load image " + icon, e);
 			return null;
 		}
+	}
+
+	/**
+	 * Render an SVG file to a BufferedImage at the given dimensions.
+	 * If width/height are 0, the SVG's intrinsic size is used.
+	 */
+	public static BufferedImage renderSvg(File svgFile, int width, int height) throws IOException {
+		SVGLoader loader = new SVGLoader();
+		SVGDocument document;
+		try (InputStream in = new FileInputStream(svgFile)) {
+			document = loader.load(in, svgFile.toURI(), LoaderContext.createDefault());
+		}
+		if (document == null) {
+			throw new IOException("Failed to parse SVG: " + svgFile);
+		}
+
+		FloatSize size = document.size();
+		if (width <= 0 || height <= 0) {
+			width = Math.max(1, Math.round(size.width));
+			height = Math.max(1, Math.round(size.height));
+		}
+
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = image.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			document.render(null, g, new ViewBox(width, height));
+		} finally {
+			g.dispose();
+		}
+		return image;
+	}
+
+	/**
+	 * Render an SVG from a classpath resource to a BufferedImage.
+	 */
+	public static BufferedImage renderSvg(InputStream svgStream, int width, int height) throws IOException {
+		SVGLoader loader = new SVGLoader();
+		SVGDocument document = loader.load(svgStream, null, LoaderContext.createDefault());
+		if (document == null) {
+			throw new IOException("Failed to parse SVG from stream");
+		}
+
+		FloatSize size = document.size();
+		if (width <= 0 || height <= 0) {
+			width = Math.max(1, Math.round(size.width));
+			height = Math.max(1, Math.round(size.height));
+		}
+
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = image.createGraphics();
+		try {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			document.render(null, g, new ViewBox(width, height));
+		} finally {
+			g.dispose();
+		}
+		return image;
+	}
+
+	/**
+	 * Encode a BufferedImage as PNG using fpng-java (SIMD-accelerated).
+	 * Uses AVX2 encoder when available, falls back to SSE.
+	 */
+	private static byte[] getPngImage(BufferedImage image) {
+		if (image == null) {
+			return null;
+		}
+		int channels = image.getColorModel().hasAlpha() ? 4 : 3;
+		return HAS_AVX2
+			   ? FPNGE.encode(image, channels, 2)
+			   : FPNGEncoder.encode(image, channels, 2);
 	}
 
 	public static File resolveFile(String name, String homeDir, VariableSubstitutor subs) {
@@ -80,20 +211,6 @@ public class CommonUtil {
 		File absolute = new File(name).getAbsoluteFile();
 		if (absolute.exists()) {
 			return absolute;
-		}
-		return null;
-	}
-
-	private static byte[] getPngImage(BufferedImage imageContent) {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
-			ImageIO.write(imageContent, "png", ios);
-			byte[] result = baos.toByteArray();
-			baos.close();
-			return result;
-		} catch (IOException e) {
-			log.error("Writing image interupted:" + e.getMessage(), e);
 		}
 		return null;
 	}
@@ -137,14 +254,16 @@ public class CommonUtil {
 	}
 
 	public static String generateClassPathString(Collection<String> classPathEntries) {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		if (classPathEntries != null) {
 			for (String cpe : classPathEntries) {
-				result += cpe + ";";
+				result.append(cpe).append(";");
 			}
-			result = result.length() > 0 ? result.substring(0, result.length() - 1) : result;
+			result = new StringBuilder((!result.isEmpty())
+									   ? result.substring(0, result.length() - 1)
+									   : result.toString());
 		}
-		return result;
+		return result.toString();
 	}
 
 	public static boolean isSubPath(String subpath, String path) {
@@ -207,7 +326,7 @@ public class CommonUtil {
 		String classfile = className.replace(".", "/") + ".class";
 		URL url = getSwingBootClassLoader().getResource(classfile);
 		if (url != null) {
-			String cp = URLDecoder.decode(url.getPath(), "UTF-8");
+			String cp = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
 			if (cp.endsWith(classfile)) {
 				cp = cp.substring(0, cp.length() - (classfile.length() + 2));
 				if (cp.startsWith("file:")) {
