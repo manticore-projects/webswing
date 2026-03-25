@@ -44,12 +44,13 @@ public class Main {
 	private static final String WHITELISTS_RESOURCE = "webswing-classloader.properties";
 
 	/**
-	 * Glob whitelists per module directory, loaded from
+	 * Glob whitelists per logical classloader role, loaded from
 	 * webswing-classloader-whitelists.properties on the classpath.
 	 *
-	 * Only JARs matching these patterns are loaded directly by the module
-	 * classloader.  Everything else lives in WEB-INF/lib/ and is loaded
-	 * via parent delegation (shared classloader) or Jetty's WebAppClassLoader.
+	 * ALL JARs live in WEB-INF/lib/ (single copy).  Each module classloader
+	 * reads from lib/ but only picks JARs matching its whitelist.
+	 * Non-matching JARs are available via parent delegation to the shared
+	 * classloader (which loads everything from lib/ unfiltered).
 	 */
 	private static final Map<String, List<PathMatcher>> WHITELISTS = loadWhitelists();
 
@@ -70,21 +71,20 @@ public class Main {
 		FileSystem fs = FileSystems.getDefault();
 		Map<String, List<PathMatcher>> result = new HashMap<>();
 
-		for (String dirName : props.stringPropertyNames()) {
-			String key = "WEB-INF/" + dirName.trim();
+		for (String name : props.stringPropertyNames()) {
 			List<PathMatcher> matchers = new ArrayList<>();
-			for (String glob : props.getProperty(dirName).split(",")) {
+			for (String glob : props.getProperty(name).split(",")) {
 				glob = glob.trim();
 				if (!glob.isEmpty()) {
 					matchers.add(fs.getPathMatcher("glob:" + glob));
 				}
 			}
 			if (!matchers.isEmpty()) {
-				result.put(key, matchers);
+				result.put(name.trim(), matchers);
 			}
 		}
 
-		System.out.println("[Main] Loaded whitelists for: " + result.keySet());
+		System.out.println("[Main] Loaded whitelists: " + result.keySet());
 		return result;
 	}
 
@@ -124,7 +124,7 @@ public class Main {
 				initTempDirPath(args, "tmp/server");
 			}
 
-			// ── Shared classloader: WEB-INF/lib/ (standard WAR classpath) ────
+			// ── Shared classloader: ALL JARs from WEB-INF/lib/ ───────────
 			List<URL> sharedUrls = new ArrayList<>();
 			URL libResource = Main.class.getClassLoader().getResource("WEB-INF/lib");
 			if (libResource != null) {
@@ -144,11 +144,12 @@ public class Main {
 								   + "falling back to flat classloader layout");
 			}
 
-			// ── Module classloaders (whitelisted JARs only) ──────────────
+			// ── Module classloaders: filtered view of WEB-INF/lib/ ───────
 			List<URL> urls = new ArrayList<>();
 			if (client) {
-				populateClasspathFromDir("WEB-INF/swing-lib", urls,
-										 WHITELISTS.get("WEB-INF/swing-lib"));
+				// swing-lib role: pick only swing-lib whitelisted JARs from lib/
+				populateClasspathFromDir("WEB-INF/lib", urls,
+										 WHITELISTS.get("swing-lib"));
 
 				java.security.AccessController.doPrivileged(
 						new java.security.PrivilegedAction<Void>() {
@@ -199,13 +200,12 @@ public class Main {
 
 				retainOnlyLauncherUrl(urls);
 			} else if (sessionpool) {
-				populateClasspathFromDir("WEB-INF/sessionpool-lib", urls, null);
-			} else if (admin) {
-				populateClasspathFromDir("WEB-INF/server-lib", urls,
-										 WHITELISTS.get("WEB-INF/server-lib"));
+				// sessionpool: no filtering — load everything
+				populateClasspathFromDir("WEB-INF/lib", urls, null);
 			} else {
-				populateClasspathFromDir("WEB-INF/server-lib", urls,
-										 WHITELISTS.get("WEB-INF/server-lib"));
+				// server / admin: pick only server-lib whitelisted JARs from lib/
+				populateClasspathFromDir("WEB-INF/lib", urls,
+										 WHITELISTS.get("server-lib"));
 			}
 
 			defaultCL = new URLClassLoader(urls.toArray(URL[]::new), sharedLoader);

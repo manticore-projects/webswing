@@ -42,35 +42,16 @@ tasks.register('copyWebswingProperties', Copy) {
     into layout.buildDirectory.dir('dist-meta')
 }
 
-// ── Load JAR whitelists from shared properties file ──────────────────
-// Single source of truth: webswing-classloader-whitelists.properties
-// Read at build time by Gradle, at runtime by Main.java.
+// ── Assemble the exploded WAR ────────────────────────────────────────
 //
-def whitelistsFile = file('src/main/resources/webswing-classloader.properties')
-def moduleWhitelists = { ->
-    def props = new Properties()
-    if (whitelistsFile.exists()) {
-        whitelistsFile.withInputStream { props.load(it) }
-    } else {
-        throw new GradleException("Missing ${whitelistsFile} — cannot partition JARs")
-    }
-    def result = [:]
-    props.each { dirName, globs ->
-        result[dirName.trim()] = globs.split(',').collect { it.trim() }.findAll { !it.empty }
-    }
-    result
-}()
+// ALL JARs go into WEB-INF/lib/ — one copy each, zero duplication.
+// Jetty's WebAppClassLoader, ExtensionClassLoader, and CommonUtil all
+// find everything in the standard WAR classpath location.
+//
+// Class isolation is handled at runtime by Main.java, which reads
+// WEB-INF/lib/ with different whitelist filters per classloader.
+//
 
-// Combined exclusion list: union of ALL module whitelists.
-// JARs matching these patterns must NOT appear in WEB-INF/lib/ —
-// they live exclusively in their module directories.
-// Safe because CommonUtil.getSwingBootClassLoader() now scans all dirs.
-def allWhitelistedPatterns = moduleWhitelists.values().flatten().toSet().toList()
-
-logger.lifecycle("[build] Loaded classloader whitelists: ${moduleWhitelists}")
-logger.lifecycle("[build] Excluding from WEB-INF/lib: ${allWhitelistedPatterns}")
-
-// ── Assemble the exploded WAR from sibling projects ──────────────────
 def explodedDir = layout.buildDirectory.dir("libs/exploded/${webswingWarName}")
 
 def frontendProject       = project(':webswing-server:webswing-server-frontend')
@@ -87,11 +68,11 @@ tasks.register('assembleExplodedWar', Copy) {
     dependsOn ':webswing-server:webswing-server-launcher:assemble'
     dependsOn classes
 
-    // 1a) Frontend static assets (from Gradle copyWebapp task)
+    // 1a) Frontend static assets
     from(frontendProject.layout.buildDirectory.dir('webswing-server-frontend')) {
         into '/'
     }
-    // 1b) Frontend JS/CSS bundles (webpack writes to target/, Maven convention)
+    // 1b) Frontend JS/CSS bundles
     from(frontendProject.file('target/webswing-server-frontend')) {
         into '/'
     }
@@ -102,39 +83,18 @@ tasks.register('assembleExplodedWar', Copy) {
         into '/'
     }
 
-    // ── 3) swing-lib: whitelisted → swing-lib/, rest → lib/ ──
+    // 3) ALL module JARs → WEB-INF/lib/
     from(appServicesProject.layout.buildDirectory.dir('WEB-INF/swing-lib')) {
-        include moduleWhitelists['swing-lib']
-        into 'WEB-INF/swing-lib'
-    }
-    from(appServicesProject.layout.buildDirectory.dir('WEB-INF/swing-lib')) {
-        exclude moduleWhitelists['swing-lib']
         into 'WEB-INF/lib'
-    }
-
-    // ── 4) swing-boot: whitelisted → swing-boot/, rest → lib/ ──
-    from(appLauncherProject.layout.buildDirectory.dir('WEB-INF/swing-boot')) {
-        include moduleWhitelists['swing-boot']
-        into 'WEB-INF/swing-boot'
     }
     from(appLauncherProject.layout.buildDirectory.dir('WEB-INF/swing-boot')) {
-        exclude moduleWhitelists['swing-boot']
+        into 'WEB-INF/lib'
+    }
+    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
         into 'WEB-INF/lib'
     }
 
-    // ── 5) server-lib: whitelisted → server-lib/, rest → lib/ ──
-    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
-        include moduleWhitelists['server-lib']
-        into 'WEB-INF/server-lib'
-    }
-    from(serverLauncherProject.layout.buildDirectory.dir('WEB-INF/server-lib')) {
-        exclude moduleWhitelists['server-lib']
-        into 'WEB-INF/lib'
-    }
-
-    // ── 6) This module's own classes + deps → lib/ ──
-    //    Exclude whitelisted JARs that arrive as transitive deps —
-    //    they already live in their module dirs above.
+    // 4) This module's own classes + deps → lib/
     from(sourceSets.main.output) {
         into 'WEB-INF/classes'
     }
@@ -142,14 +102,14 @@ tasks.register('assembleExplodedWar', Copy) {
         into 'WEB-INF/lib'
     }
 
-    // 7) webapp content (web.xml etc.)
+    // 5) webapp content (web.xml etc.)
     from('src/main/webapp') {
         into '/'
     }
 
     into explodedDir
 
-    // Same JAR arriving from multiple source dirs → keep first copy
+    // Same JAR from multiple sources → keep first copy
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -160,7 +120,6 @@ tasks.register('repackageWar', Zip) {
     archiveFileName = "${webswingWarName}-${project.version}.war"
     destinationDirectory = layout.buildDirectory.dir('libs')
 
-    // Write META-INF/MANIFEST.MF including git properties (matching Maven)
     into('META-INF') {
         from({
             def gitProps = new Properties()
@@ -182,7 +141,7 @@ tasks.register('repackageWar', Zip) {
                     "commitTime: ${gitProps.getProperty('git.commit.time', '')}",
                     "buildTime: ${gitProps.getProperty('git.build.time', '')}",
                     "Ignore-Scanning-Packages: com,org,net",
-                    "",  // manifest must end with newline
+                    "",
             ].join('\n')
             mf
         })
@@ -191,7 +150,7 @@ tasks.register('repackageWar', Zip) {
 
 assemble.dependsOn 'repackageWar', 'copyWebswingProperties'
 
-// ── Dev profile: run the interactive server launcher ─────────────────
+// ── Dev profile ──────────────────────────────────────────────────────
 if (project.hasProperty('dev')) {
     tasks.register('runDev', JavaExec) {
         dependsOn 'assembleExplodedWar'
