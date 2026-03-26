@@ -50,22 +50,25 @@ This edition is based on the **last open-source release (v20.2.5)** of WebSwing,
 
 All internal APIs adapted for the post-JDK-11 module system — no `--illegal-access=permit`, no `-noverify` required.
 
+### Features
+
+- **Shiro Security Plugin** with hot configuration reloading provides authorization via AD/LDAP/Database/Text Files with or without 2FA (Second Factory authorization)
+- **SVG Application Icons**
+- better server start scripts supporting SSL certificate registration and WAR version numbers
+- Deduplication of the java libraries in the WAR file, reducing the size drastically
+
 ### Build & Runtime Modernization
 
 - **Node.js 24 LTS** — migrated from Node 10; Webpack 5, TypeScript 5, Dart Sass
 - **Gradle build system** — fast, incremental builds
-- **All dependencies updated** — Jetty12, Jackson, Guava, Log4j2, SLF4J 2.0, Bouncy Castle, Apache Commons, Protocol Buffers, and more
-- **Modernized start/stop scripts** — graceful shutdown with timeout, Xvfb lifecycle management, clean log rotation
+- **All dependencies updated** — Jetty12, Jackson, Guava, Log4j2, SLF4J 2.0, Bouncy Castle, Apache Commons, Protocol Buffers, LZ4, and more
+- Active monitoring via [SNYK](https://app/snyk.io) 
 
 ### Performance
 
 - **SSE/AVX-optimized PNG encoding** via [fpng-java](https://manticore-projects.com/FPNG-Java/index.html) — hardware-accelerated image compression in the DirectDraw rendering pipeline
 - **Browser-side font rendering** — text is rendered as font names + coordinates instead of server-side glyph bitmaps, reducing WebSocket bandwidth by up to 80%
-
-### Security
-
-- **Apache Shiro integration** — pluggable authentication and authorization supporting Active Directory / LDAP, JDBC realms, and custom providers
-- **TLS/SSL** — full HTTPS and WSS support with configurable keystores and truststores
+- **GZIP/Brotli pre-compression** for all static assets (reducing the JS size from 5 MB to less than 1 MB), GZIP compression for all content (JSON)
 
 ---
 

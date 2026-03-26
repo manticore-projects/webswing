@@ -11,18 +11,14 @@ import sun.awt.datatransfer.ToolkitThreadBlockedHandler;
 
 @SuppressWarnings("restriction")
 public class WebDataTransfer extends DataTransferer {
-	private static WebDataTransfer transfer;
-	private final ToolkitThreadBlockedHandler handler = new WebToolkitThreadBlockedHandler();
+    private final ToolkitThreadBlockedHandler handler = new WebToolkitThreadBlockedHandler();
 
-	public static WebDataTransfer getInstanceImpl() {
-		if (transfer == null) {
-			synchronized (WebDataTransfer.class) {
-				if (transfer == null) {
-					transfer = new WebDataTransfer();
-				}
-			}
-		}
-		return transfer;
+    private static final class TransferHolder {
+        private static final WebDataTransfer transfer = new WebDataTransfer();
+    }
+
+    public static WebDataTransfer getInstanceImpl() {
+        return TransferHolder.transfer;
 	}
 
 	@Override

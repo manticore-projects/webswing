@@ -38,3 +38,4 @@ audit.log*
 /tmp/
 .openapi-generator-ignore
 .openapi-generator
+/CHANGELOG.md
