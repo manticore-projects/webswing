@@ -25,7 +25,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		super(parent);
 		this.webResourceProvider = webResourceProvider;
 	}
-	
+
 	@Override
 	protected String getPath() {
 		return "";
@@ -46,11 +46,11 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 	}
 
 	protected static interface LookupResult {
-		public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException;
+		boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException;
 
-		public boolean respondHead(HttpServletRequest req, HttpServletResponse resp) throws IOException;
+		boolean respondHead(HttpServletRequest req, HttpServletResponse resp) throws IOException;
 
-		public long getLastModified();
+		long getLastModified();
 	}
 
 	protected static class ErrorResult implements LookupResult {
@@ -82,7 +82,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 
 	private static class RedirectResult implements LookupResult {
 
-		private String path;
+		private final String path;
 
 		public RedirectResult(String path) {
 			if (path.startsWith("/")) {
@@ -108,7 +108,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 
 	private static class ResourceUrl implements LookupResult {
 		protected final URLConnection url;
-		private String mime;
+		private final String mime;
 
 		public ResourceUrl(String mime, URLConnection url) {
 			this.mime = mime;
@@ -145,7 +145,23 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 			return true;
 		}
 	}
-	
+
+	private static class PreCompressedResourceUrl extends ResourceUrl {
+		private final String contentEncoding;
+
+		public PreCompressedResourceUrl(String mime, URLConnection url, String contentEncoding) {
+			super(mime, url);
+			this.contentEncoding = contentEncoding;
+		}
+
+		@Override
+		protected void setHeaders(HttpServletResponse resp) {
+			super.setHeaders(resp);
+			resp.setHeader("Content-Encoding", contentEncoding);
+			resp.setHeader("Vary", "Accept-Encoding");
+		}
+	}
+
 	@Override
 	public long getLastModified(HttpServletRequest req) {
 		return lookup(req).getLastModified();
@@ -166,10 +182,10 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 	}
 
 	protected LookupResult lookupNoCache(HttpServletRequest req, String path) {
-		if (path.equals("")) {
+		if (path.isEmpty()) {
 			path = "/index.html";
 		}
-		
+
 		if (isForbidden(path))
 			return new ErrorResult(HttpServletResponse.SC_NOT_FOUND, "Forbidden");
 
@@ -185,10 +201,37 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		}
 
 		String mimeType = getMimeType(url.getPath());
+
+		// Check for pre-compressed variants (.br, .gz)
+		String acceptEncoding = req.getHeader("Accept-Encoding");
+		if (acceptEncoding != null) {
+			// Prefer brotli over gzip
+			if (acceptEncoding.contains("br")) {
+				URL brUrl = webResourceProvider.getWebResource(path + ".br");
+				if (brUrl != null) {
+					try {
+						return new PreCompressedResourceUrl(mimeType, brUrl.openConnection(), "br");
+					} catch (IOException e) {
+                        log.error("Failed to serve pre-compressed brotli for {}", path, e);
+					}
+				}
+			}
+			if (acceptEncoding.contains("gzip")) {
+				URL gzUrl = webResourceProvider.getWebResource(path + ".gz");
+				if (gzUrl != null) {
+					try {
+						return new PreCompressedResourceUrl(mimeType, gzUrl.openConnection(), "gzip");
+					} catch (IOException e) {
+                        log.error("Failed to serve pre-compressed gzip for {}", path, e);
+					}
+				}
+			}
+		}
+
 		try {
 			return new ResourceUrl(mimeType, url.openConnection());
 		} catch (IOException e) {
-			log.error("Failed to serve path " + path + " with resource " + url.toString(), e);
+            log.error("Failed to serve path {} with resource {}", path, url.toString(), e);
 			return new ErrorResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
@@ -202,5 +245,5 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		String mime = getServletContext().getMimeType(path);
 		return mime != null ? mime : "application/octet-stream";
 	}
-	
+
 }

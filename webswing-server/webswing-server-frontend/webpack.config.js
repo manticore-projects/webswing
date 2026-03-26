@@ -10,6 +10,8 @@ const NODE_PATH = path.resolve(__dirname, "node_modules");
  */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const zlib = require('zlib');
 
 module.exports = {
   context: ROOT,
@@ -88,6 +90,21 @@ module.exports = {
         },
         { from: NODE_PATH + '/pdfjs-dist-viewer-min/build/minified/web/locale/en-US', to: TARGET + '/print/web/locale/en-US' }
       ]
+    }),
+    // Pre-generate .gz files
+    new CompressionPlugin({
+      filename: '[path][base].gz',
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+    }),
+    // Pre-generate .br files
+    new CompressionPlugin({
+      filename: '[path][base].br',
+      algorithm: 'brotliCompress',
+      test: /\.(js|css|html|svg)$/,
+      compressionOptions: {
+        params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 },
+      },
     }),
   ],
 

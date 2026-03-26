@@ -14,6 +14,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ErrorHandler;
+import org.eclipse.jetty.compression.server.CompressionHandler;
+import org.eclipse.jetty.compression.server.CompressionConfig;
 import org.eclipse.jetty.util.StringUtil;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
@@ -97,6 +99,11 @@ public class ServerMain {
 					https_config.setResponseHeaderSize(Integer.getInteger(Constants.JETTY_REQUEST_HEADER_SIZE, Constants.JETTY_REQUEST_HEADER_SIZE_DEFAULT));
 
 					SecureRequestCustomizer src = new SecureRequestCustomizer();
+					/* SNI (Server Name Indication) is a TLS extension where the browser sends the hostname
+					during the handshake. Jetty 12 has strict SNI checking enabled by default
+					— it's rejecting the request when localhost doesn't match the CN or SAN in your SSL certificate.
+					 */
+					src.setSniHostCheck(false);
 					https_config.addCustomizer(src);
 
 					// Jetty 12: SSL requires explicit SslConnectionFactory wrapping the HTTP factory
@@ -118,7 +125,10 @@ public class ServerMain {
 		webapp.setPersistTempDirectory(true);
 		webapp.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern", ".*/webswing-server-api-[^/]*\\.jar$");
 
-		server.setHandler(webapp);
+		CompressionHandler compressionHandler = new CompressionHandler();
+		compressionHandler.setHandler(webapp);
+
+		server.setHandler(compressionHandler);
 
 		// Hide server version in error pages (pen test requirement)
 		ErrorHandler errorHandler = new ErrorHandler();
