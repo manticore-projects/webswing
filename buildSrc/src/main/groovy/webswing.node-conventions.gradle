@@ -21,8 +21,15 @@ tasks.register('npmInstallTask', com.github.gradle.node.npm.task.NpmTask) {
     enabled = !isDev
 }
 
-tasks.register('npmBuild', com.github.gradle.node.npm.task.NpmTask) {
+tasks.register('npmAuditFix', com.github.gradle.node.npm.task.NpmTask) {
     dependsOn 'npmInstallTask'
+    args = ['audit', 'fix']
+    enabled = !isDev
+    ignoreExitValue = true     // npm audit fix returns non-zero when it cannot fix everything
+}
+
+tasks.register('npmBuild', com.github.gradle.node.npm.task.NpmTask) {
+    dependsOn 'npmAuditFix'
     args = ['run', 'build']
     enabled = !isDev
 }
