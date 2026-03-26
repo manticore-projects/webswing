@@ -21,6 +21,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.PathMatcher;
 import java.security.ProtectionDomain;
 import java.util.*;
 
@@ -38,7 +41,7 @@ public class CommonUtil {
 	private static URLClassLoader swingBootClassLoader;
 
 	/** Maximum icon dimension (pixels). Both SVG and PNG are scaled to fit. */
-	private static final int MAX_ICON_SIZE = 96;
+	private static final int MAX_ICON_SIZE = 112;
 
 	private static final boolean HAS_AVX2;
 	static {
@@ -317,9 +320,50 @@ public class CommonUtil {
 		return null;
 	}
 
+	private static final String WHITELISTS_RESOURCE = "webswing-classloader.properties";
+
 	/**
-	 * Build a classloader covering all JARs in WEB-INF/lib/.
-	 * With deduplicated WAR layout, all JARs live in this single directory.
+	 * Load glob patterns for a given key from the whitelists properties file.
+	 */
+	private static List<PathMatcher> loadWhitelist(String key) {
+		Properties props = new Properties();
+		try (InputStream in = CommonUtil.class.getClassLoader().getResourceAsStream(WHITELISTS_RESOURCE)) {
+			if (in == null) {
+				log.warn("{} not found — no filtering for '{}'", WHITELISTS_RESOURCE, key);
+				return null;
+			}
+			props.load(in);
+		} catch (IOException e) {
+			log.warn("Failed to load {}: {}", WHITELISTS_RESOURCE, e.getMessage());
+			return null;
+		}
+
+		String value = props.getProperty(key);
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+
+		FileSystem fs = FileSystems.getDefault();
+		List<PathMatcher> matchers = new ArrayList<>();
+		for (String glob : value.split(",")) {
+			glob = glob.trim();
+			if (!glob.isEmpty()) {
+				matchers.add(fs.getPathMatcher("glob:" + glob));
+			}
+		}
+		return matchers.isEmpty() ? null : matchers;
+	}
+
+	/**
+	 * Build a classloader for the Swing child process, filtered by the
+	 * 'swing-classpath' whitelist from webswing-classloader-whitelists.properties.
+	 *
+	 * Only JARs matching the whitelist patterns are included — server-only
+	 * JARs (jetty, shiro, asm, tyrus, etc.) are excluded.
+	 * Falls back to loading all JARs if no whitelist is configured.
+	 *
+	 * Filtering is done inside Main.getFilesFromPath() BEFORE jarEntryAsFile()
+	 * mangles the names — so glob patterns match against original JAR basenames.
 	 */
 	private static URLClassLoader getSwingBootClassLoader() throws IOException {
 		if (swingBootClassLoader == null) {
@@ -331,9 +375,18 @@ public class CommonUtil {
 			} else {
 				throw new IOException("WAR location not found: " + getWarFileLocation());
 			}
-			List<URL> filesFromPath = Main.getFilesFromPath(libFolder);
-			log.info("Boot classloader: {} JARs from WEB-INF/lib", filesFromPath.size());
-			swingBootClassLoader = new URLClassLoader(filesFromPath.toArray(new URL[0]));
+
+			List<PathMatcher> whitelist = loadWhitelist("swing-classpath");
+			List<URL> jars = Main.getFilesFromPath(libFolder, whitelist);
+
+			if (whitelist != null) {
+				log.info("Swing boot classloader: {} JARs from WEB-INF/lib (filtered by swing-classpath)",
+						 jars.size());
+			} else {
+				log.info("Swing boot classloader: {} JARs from WEB-INF/lib (unfiltered)", jars.size());
+			}
+
+			swingBootClassLoader = new URLClassLoader(jars.toArray(new URL[0]));
 		}
 		return swingBootClassLoader;
 	}
