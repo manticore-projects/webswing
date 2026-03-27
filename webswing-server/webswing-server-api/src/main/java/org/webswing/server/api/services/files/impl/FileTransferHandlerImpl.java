@@ -89,7 +89,8 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 				}
 			}
 		} catch (Exception e) {
-			log.error("Failed to decode file data [" + fileId + "]!", e);
+			String sanitizedFileId = fileId != null ? fileId.replaceAll("[\\r\\n]", "_") : "null";
+			log.error("Failed to decode file data [{}]!", sanitizedFileId, e);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
 			return;
 		}
