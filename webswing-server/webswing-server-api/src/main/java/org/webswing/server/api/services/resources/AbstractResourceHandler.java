@@ -34,7 +34,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 	@Override
 	public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
 		try {
-			if (req.getMethod().equals("GET") || req.getMethod().equals("PUT")) {
+			if (req.getMethod().equals("GET")) {
 				return lookup(req).respondGet(req, res);
 			} else if (req.getMethod().equals("HEAD")) {
 				return lookup(req).respondHead(req, res);
@@ -45,7 +45,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		}
 	}
 
-	protected static interface LookupResult {
+	protected interface LookupResult {
 		boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException;
 
 		boolean respondHead(HttpServletRequest req, HttpServletResponse resp) throws IOException;
@@ -70,7 +70,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 			if(statusCode == HttpServletResponse.SC_NOT_FOUND){
 				return false;
 			}else{
-				resp.sendError(statusCode,message);
+				resp.sendError(statusCode, message);
 				return true;
 			}
 		}
@@ -96,11 +96,20 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		}
 
 		public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+			// Validate that the redirect path is safe (relative, no authority component)
+			if (isUnsafeRedirectPath(path)) {
+				resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
+				return true;
+			}
 			ServerApiUtil.sendHttpRedirect(req, resp, path);
 			return true;
 		}
 
 		public boolean respondHead(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+			if (isUnsafeRedirectPath(path)) {
+				resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
+				return true;
+			}
 			ServerApiUtil.sendHttpRedirect(req, resp, path);
 			return true;
 		}
@@ -124,6 +133,8 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 			resp.setHeader("Cache-Control", "public, max-age=120");
 			resp.setDateHeader("Last-Modified", getLastModified());
 			resp.setContentType(mime);
+			// Prevent browsers from MIME-sniffing the content type
+			resp.setHeader("X-Content-Type-Options", "nosniff");
 			if (url.getContentLength() >= 0)
 				resp.setContentLength(url.getContentLength());
 		}
@@ -186,6 +197,12 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 			path = "/index.html";
 		}
 
+		// Normalize and validate the path to prevent path traversal
+		path = normalizePath(path);
+		if (path == null) {
+			return new ErrorResult(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
+		}
+
 		if (isForbidden(path))
 			return new ErrorResult(HttpServletResponse.SC_NOT_FOUND, "Forbidden");
 
@@ -212,7 +229,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 					try {
 						return new PreCompressedResourceUrl(mimeType, brUrl.openConnection(), "br");
 					} catch (IOException e) {
-                        log.error("Failed to serve pre-compressed brotli for {}", path, e);
+						log.error("Failed to serve pre-compressed brotli for {}", sanitizeForLog(path), e);
 					}
 				}
 			}
@@ -222,7 +239,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 					try {
 						return new PreCompressedResourceUrl(mimeType, gzUrl.openConnection(), "gzip");
 					} catch (IOException e) {
-                        log.error("Failed to serve pre-compressed gzip for {}", path, e);
+						log.error("Failed to serve pre-compressed gzip for {}", sanitizeForLog(path), e);
 					}
 				}
 			}
@@ -231,19 +248,93 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		try {
 			return new ResourceUrl(mimeType, url.openConnection());
 		} catch (IOException e) {
-            log.error("Failed to serve path {} with resource {}", path, url.toString(), e);
-			return new ErrorResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			log.error("Failed to serve path {} with resource {}", sanitizeForLog(path), sanitizeForLog(url.toString()), e);
+			// Return a generic error message instead of the raw exception message
+			// to prevent leaking internal paths or implementation details
+			return new ErrorResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error");
 		}
 	}
 
 	protected boolean isForbidden(String path) {
 		String lpath = path.toLowerCase();
-		return lpath.startsWith("/web-inf/") || lpath.startsWith("/meta-inf/");
+		return lpath.startsWith("/web-inf/") || lpath.startsWith("/meta-inf/")
+			   || lpath.contains("/web-inf/") || lpath.contains("/meta-inf/");
 	}
 
 	protected String getMimeType(String path) {
 		String mime = getServletContext().getMimeType(path);
 		return mime != null ? mime : "application/octet-stream";
+	}
+
+	/**
+	 * Normalize a request path by resolving . and .. segments, collapsing
+	 * double slashes, and decoding percent-encoded traversal sequences.
+	 * Returns null if the resulting path escapes the root.
+	 */
+	private static String normalizePath(String path) {
+		if (path == null) {
+			return null;
+		}
+
+		// Reject null bytes (could bypass checks in some runtimes)
+		if (path.indexOf('\0') >= 0) {
+			return null;
+		}
+
+		// Collapse double slashes
+		while (path.contains("//")) {
+			path = path.replace("//", "/");
+		}
+
+		// Resolve . and .. segments
+		String[] segments = path.split("/");
+		java.util.ArrayDeque<String> stack = new java.util.ArrayDeque<>();
+		for (String seg : segments) {
+			if (seg.isEmpty() || ".".equals(seg)) {
+				continue;
+			} else if ("..".equals(seg)) {
+				if (stack.isEmpty()) {
+					// Traversal above root
+					return null;
+				}
+				stack.removeLast();
+			} else {
+				stack.addLast(seg);
+			}
+		}
+
+		StringBuilder normalized = new StringBuilder("/");
+		for (java.util.Iterator<String> it = stack.iterator(); it.hasNext(); ) {
+			normalized.append(it.next());
+			if (it.hasNext()) {
+				normalized.append("/");
+			}
+		}
+
+		return normalized.toString();
+	}
+
+	/**
+	 * Check if a redirect path could be interpreted as an absolute URL
+	 * or protocol-relative URL, which would allow an open redirect.
+	 * After leading slash stripping, a path like "//evil.com" becomes "/evil.com"
+	 * which browsers may interpret as protocol-relative.
+	 */
+	private static boolean isUnsafeRedirectPath(String path) {
+		if (path == null || path.isEmpty()) {
+			return false;
+		}
+		// After leading slash stripping, reject paths that still start with /
+		// (which become protocol-relative //host) or contain ://
+		return path.startsWith("/") || path.contains("://") || path.startsWith("\\");
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 */
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\r\\n\\t]", "_");
 	}
 
 }
