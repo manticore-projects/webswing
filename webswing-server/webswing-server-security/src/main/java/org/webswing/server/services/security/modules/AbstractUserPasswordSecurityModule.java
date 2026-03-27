@@ -32,10 +32,19 @@ public abstract class AbstractUserPasswordSecurityModule<T extends WebswingExten
 	}
 
 	public String getUserName(HttpServletRequest request) {
+		// Only accept credentials from POST request body to prevent
+		// leakage via URL query strings, browser history, server access logs, and Referer headers
+		if (!"POST".equalsIgnoreCase(request.getMethod())) {
+			return null;
+		}
 		return request.getParameter("username");
 	}
 
 	public String getPassword(HttpServletRequest request) {
+		// Only accept credentials from POST request body
+		if (!"POST".equalsIgnoreCase(request.getMethod())) {
+			return null;
+		}
 		return request.getParameter("password");
 	}
 
@@ -62,7 +71,13 @@ public abstract class AbstractUserPasswordSecurityModule<T extends WebswingExten
 	protected void serveLoginPartial(HttpServletRequest request, HttpServletResponse response, WebswingAuthenticationException exception) throws IOException {
 		Map<String, Object> variables = new HashMap<>();
 		if (exception != null) {
-			variables.put("errorMessage", exception.getLocalizedMessage());
+			// Use a generic error message for the user-facing template to prevent
+			// information leakage. The detailed message is already captured in audit logs.
+			String errorMessage = exception.getLocalizedMessage();
+			if (errorMessage == null || errorMessage.isEmpty()) {
+				errorMessage = "Authentication failed.";
+			}
+			variables.put("errorMessage", errorMessage);
 		}
 		sendPartialHtml(request, response, getPartialTemplateName(), variables);
 	}
@@ -70,7 +85,7 @@ public abstract class AbstractUserPasswordSecurityModule<T extends WebswingExten
 	/**
 	 * Check if username and password is valid. If it is valid return an instance of {@link AuthenticatedWebswingUser}
 	 * otherwise throw {@link WebswingAuthenticationException}.
-	 * 
+	 *
 	 * @throws WebswingAuthenticationException if authentication failed.
 	 */
 	public abstract AuthenticatedWebswingUser verifyUserPassword(String user, String password) throws WebswingAuthenticationException;

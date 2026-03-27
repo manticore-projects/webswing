@@ -3,6 +3,7 @@ package org.webswing.server.services.security.modules;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +23,10 @@ import org.webswing.server.services.security.extension.api.WebswingExtendableSec
 /**
  * Adds extensions support to {@link AbstractSecurityModule}. Four extension points are provided ( See {@link SecurityModuleExtension}) prototype.
  * <p>
- * A list of extension can be registered using 
+ * A list of extension can be registered using
  * Security Module's JSON configuration. Extension must be one of the {@link BuiltInModuleExtensions} or a custom subclass of {@link SecurityModuleExtension}.
  * </p>
- * JSON configuration example : 
+ * JSON configuration example :
  * <pre>
  * "securityConfig" : {
  *   "securityModule" : "MyExtendableModule",
@@ -39,8 +40,8 @@ import org.webswing.server.services.security.extension.api.WebswingExtendableSec
  *     }
  *   }
  * },
- * </pre>  
- * 
+ * </pre>
+ *
  * @param <T> configuration which extends {@link WebswingExtendableSecurityModuleConfig}
  */
 public abstract class AbstractExtendableSecurityModule<T extends WebswingExtendableSecurityModuleConfig> extends AbstractSecurityModule<T> {
@@ -60,7 +61,24 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 				SecurityModuleExtension<?> extension = null;
 				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				try {
-					Class<?> extensionClass = cl.loadClass(BuiltInModuleExtensions.getExtensionClassName(extensionName));
+					String extensionClassName = BuiltInModuleExtensions.getExtensionClassName(extensionName);
+
+					// Validate that the resolved class name is not null/empty
+					if (extensionClassName == null || extensionClassName.isEmpty()) {
+						log.error("Failed to resolve extension class name for: {}", sanitizeForLog(extensionName));
+						continue;
+					}
+
+					Class<?> extensionClass = cl.loadClass(extensionClassName);
+
+					// Verify the loaded class actually implements SecurityModuleExtension
+					// to prevent arbitrary class instantiation
+					if (!SecurityModuleExtension.class.isAssignableFrom(extensionClass)) {
+						log.error("Extension class [{}] does not implement SecurityModuleExtension, skipping.",
+								  sanitizeForLog(extensionClassName));
+						continue;
+					}
+
 					Constructor<?> defaultConstructor = null;
 					Constructor<?> configConstructor = null;
 					for (Constructor<?> constructor : extensionClass.getConstructors()) {
@@ -78,26 +96,42 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 					if (configConstructor != null) {
 						Class<?> configClass = configConstructor.getParameterTypes()[0];
 						try {
-							extension = (SecurityModuleExtension<?>) configConstructor.newInstance(getConfig().getValueAs(extensionName, configClass));
+							Object instance = configConstructor.newInstance(getConfig().getValueAs(extensionName, configClass));
+							if (instance instanceof SecurityModuleExtension) {
+								extension = (SecurityModuleExtension<?>) instance;
+							} else {
+								log.error("Constructed instance is not a SecurityModuleExtension: {}",
+										  sanitizeForLog(extensionClassName));
+							}
 						} catch (Exception e) {
 							log.error("Could not construct security module extension class (using SecurityModuleExtensionConfig constructor).", e);
 						}
 					}
 					if (extension == null && defaultConstructor != null) {
 						try {
-							extension = (SecurityModuleExtension<?>) defaultConstructor.newInstance();
+							Object instance = defaultConstructor.newInstance();
+							if (instance instanceof SecurityModuleExtension) {
+								extension = (SecurityModuleExtension<?>) instance;
+							} else {
+								log.error("Constructed instance is not a SecurityModuleExtension: {}",
+										  sanitizeForLog(extensionClassName));
+							}
 						} catch (Exception e) {
 							log.error("Could not construct security module extension class (using Default constructor).", e);
 						}
 					}
 					if (extension != null) {
 						extensions.add(extension);
+					} else {
+						log.warn("No suitable constructor found for extension: {}", sanitizeForLog(extensionClassName));
 					}
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException("Failed to load Security module extensions.", e);
 				}
 			}
 		}
+		// Make the extensions list unmodifiable after initialization
+		extensions = Collections.unmodifiableList(extensions);
 	}
 
 	@Override
@@ -108,13 +142,10 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 				if (result != null) {
 					onAuthenticationSuccess(result, request, response, securedPath);
 					return result;
-				} else {
-					continue;
 				}
 			} catch (WebswingAuthenticationException e) {
 				log.error("Extension failed to authenticate:", e);
-				continue;
-			} catch (LoginResponseClosedException e) {
+            } catch (LoginResponseClosedException e) {
 				return null;
 			}
 		}
@@ -125,27 +156,15 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 	@Override
 	protected void preVerify(HttpServletRequest request, HttpServletResponse response) throws WebswingAuthenticationException, LoginResponseClosedException {
 		for (SecurityModuleExtension<?> extension : extensions) {
-			try {
-				extension.doRequiredPreValidation(this, request, response);
-			} catch (WebswingAuthenticationException e) {
-				throw e;
-			} catch (LoginResponseClosedException e) {
-				throw e;
-			}
-		}
+            extension.doRequiredPreValidation(this, request, response);
+        }
 	}
 
 	@Override
 	protected void postVerify(AuthenticatedWebswingUser user, HttpServletRequest request, HttpServletResponse response) throws LoginResponseClosedException, WebswingAuthenticationException {
 		for (SecurityModuleExtension<?> extension : extensions) {
-			try {
-				extension.doRequiredPostValidation(this, user, request, response);
-			} catch (WebswingAuthenticationException e) {
-				throw e;
-			} catch (LoginResponseClosedException e) {
-				throw e;
-			}
-		}
+            extension.doRequiredPostValidation(this, user, request, response);
+        }
 	}
 
 	@Override
@@ -164,5 +183,13 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 */
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\r\\n\\t]", "_");
 	}
 }

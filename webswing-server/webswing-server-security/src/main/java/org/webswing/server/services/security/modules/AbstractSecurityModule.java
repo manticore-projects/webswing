@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -40,7 +41,7 @@ import com.github.mustachejava.MustacheResolver;
  * proper handling of Ajax and non-Ajax requests and implementing the default login flow for {@link WebswingSecurityModule#doLogin(HttpServletRequest, HttpServletResponse) doLogin}.
  * </p>
  * <p>
- * By default, Webswing's javascript client use Ajax call for authentication. This implicates that the login page
+ * By default, Webswing's JavaScript client use Ajax call for authentication. This implicates that the login page
  * served by the security module should be a partial HTML containing only the login form. On the other hand if user is redirected
  * to the /login url, module should respond with full HTML login page. Two abstract methods: {@link #serveLoginPartial(HttpServletRequest, HttpServletResponse, WebswingAuthenticationException) serveLoginPartial}
  * and {@link #serveLoginPage(HttpServletRequest, HttpServletResponse, WebswingAuthenticationException) serveLoginPage} are called as appropriate for this purpose.
@@ -93,7 +94,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 						InputStream is = url.openStream();
 						return new InputStreamReader(is);
 					} catch (IOException e) {
-						log.error("Failed to open Template from url:" + url);
+						log.error("Failed to open Template from url: {}", sanitizeForLog(url.toString()));
 					}
 				}
 				return null;
@@ -125,7 +126,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 			AuthenticatedWebswingUser user = authenticate(request);
 			if (user != null) {
 				postVerify(user, request, response);
-				user= decorateUser(user, request, response);
+				user = decorateUser(user, request, response);
 				onAuthenticationSuccess(user, request, response, securedPath);
 				return user;
 			}
@@ -159,7 +160,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 	@Override
 	public void doServeAuthenticated(AbstractWebswingUser user, String path, HttpServletRequest req, HttpServletResponse res) throws IOException {
 		res.setStatus(HttpServletResponse.SC_OK);
-		res.setHeader("webswingUsername", user.getUserId());
+		res.setHeader("webswingUsername", sanitizeHeaderValue(user.getUserId()));
 		serveAuthenticated(user, path, req, res);
 	}
 
@@ -206,15 +207,23 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 	 */
 	protected void onAuthenticationSuccess(AuthenticatedWebswingUser user, HttpServletRequest request, HttpServletResponse response, String securedPath) throws IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.setHeader("webswingUsername", user.getUserId());
-		
+		response.setHeader("webswingUsername", sanitizeHeaderValue(user.getUserId()));
+
 		WebswingSecuritySubject subject = WebswingSecuritySubject.get();
 		subject.login(response, securedPath, user);
-		
+
 		if (!isAjax(request)) {
 			Map<String, Object> msg = getLoginRequest(request);
 			if (msg != null && msg.containsKey(SUCCESS_URL)) {
-				sendRedirect(request, response, (String) msg.get(SUCCESS_URL));
+				String successUrl = (String) msg.get(SUCCESS_URL);
+				// Validate redirect URL to prevent open redirect
+				if (isRelativeUrl(successUrl)) {
+					sendRedirect(request, response, successUrl);
+				} else {
+					log.warn("Blocked open redirect attempt to: {}", sanitizeForLog(successUrl));
+					String defaultPath = config.getContext().getSecuredPath();
+					sendRedirect(request, response, defaultPath);
+				}
 			} else {
 				String defaultPath = config.getContext().getSecuredPath();
 				sendRedirect(request, response, defaultPath);
@@ -232,9 +241,9 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 	 */
 	protected void onAuthenticationFailed(HttpServletRequest request, HttpServletResponse response, WebswingAuthenticationException exception) throws IOException {
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		
+
 		WebswingSecuritySubject.get().saveLoginSession(response);
-		
+
 		if (isAjax(request)) {
 			serveLoginPartial(request, response, exception);
 		} else {
@@ -271,11 +280,8 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 	 */
 	protected boolean isAjax(HttpServletRequest request) {
 		String requestedWithHeader = request.getHeader("X-Requested-With");
-		if (requestedWithHeader != null && requestedWithHeader.equals("XMLHttpRequest")) {
-			return true;
-		}
-		return false;
-	}
+        return requestedWithHeader != null && requestedWithHeader.equals("XMLHttpRequest");
+    }
 
 	/**
 	 * Sends 302 redirect response or redirect JSON message if request is Ajax call.
@@ -360,6 +366,11 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 		String proto = req.getHeader("X-Forwarded-Proto");
 		if (proto == null) {
 			proto = req.getRequestURL().toString().startsWith("https") ? "https" : "http";
+		} else {
+			// Validate X-Forwarded-Proto to prevent host header injection
+			if (!"http".equals(proto) && !"https".equals(proto)) {
+				proto = "https";
+			}
 		}
 		String host = req.getHeader("X-Forwarded-Host");
 		if (host == null) {
@@ -367,6 +378,23 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 			int port = req.getServerPort();
 			if (port != 80 && port != 443) {
 				host += ":" + port;
+			}
+		} else {
+			// Sanitize X-Forwarded-Host: strip whitespace, take only the first entry
+			// (in case of comma-separated list), and reject values with path/query components
+			host = host.trim();
+			int commaIdx = host.indexOf(',');
+			if (commaIdx >= 0) {
+				host = host.substring(0, commaIdx).trim();
+			}
+			if (host.contains("/") || host.contains("?") || host.contains("#")
+				|| host.contains("\r") || host.contains("\n")) {
+				log.warn("Rejected suspicious X-Forwarded-Host header value");
+				host = req.getServerName();
+				int port = req.getServerPort();
+				if (port != 80 && port != 443) {
+					host += ":" + port;
+				}
 			}
 		}
 		String result = proto + "://" + host + config.getContext().getSecuredPath();
@@ -469,10 +497,64 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 
 		String protocol = r.getScheme();
 		String ipAddress = r.getHeader("X-FORWARDED-FOR");
-		if (ipAddress == null) {
+		if (ipAddress != null) {
+			// Take only the first IP (client IP) from a potentially comma-separated list,
+			// and note that this is from a forwarded header (may be spoofed)
+			int commaIdx = ipAddress.indexOf(',');
+			if (commaIdx >= 0) {
+				ipAddress = ipAddress.substring(0, commaIdx).trim();
+			}
+			// Append the direct remote address for auditability
+			ipAddress = ipAddress + " (fwd, direct: " + r.getRemoteAddr() + ")";
+		} else {
 			ipAddress = r.getRemoteAddr();
 		}
-		auditLog.info("{} | {} | {} | {} | {} | {} | {}", new Object[] { status, username, reason, path, protocol, ipAddress, module });
+		auditLog.info("{} | {} | {} | {} | {} | {} | {}",
+					  new Object[] { sanitizeForLog(status), sanitizeForLog(username), sanitizeForLog(reason),
+							  sanitizeForLog(path), sanitizeForLog(protocol), sanitizeForLog(ipAddress), sanitizeForLog(module) });
+	}
+
+	/**
+	 * Validate that a URL is relative (path-only) to prevent open redirect attacks.
+	 * Rejects absolute URLs, protocol-relative URLs, and URLs with authority components.
+	 */
+	private static boolean isRelativeUrl(String url) {
+		if (url == null || url.isEmpty()) {
+			return false;
+		}
+		// Reject protocol-relative URLs and absolute URLs
+		if (url.startsWith("//") || url.contains("://")) {
+			return false;
+		}
+		// Must start with / (relative to server root) or be a plain relative path
+		try {
+			URI uri = new URI(url);
+			// If it has a scheme or authority, it's not a safe relative URL
+			if (uri.getScheme() != null || uri.getAuthority() != null) {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in HTTP response headers.
+	 * Strips CR and LF characters to prevent HTTP response header injection.
+	 */
+	private static String sanitizeHeaderValue(String value) {
+		if (value == null) return "";
+		return value.replaceAll("[\\r\\n]", "");
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 * Strips newlines, tabs, and carriage returns to prevent log injection.
+	 */
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\r\\n\\t]", "_");
 	}
 
 }
