@@ -151,7 +151,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 			String filename = getFilename(filePart);
 			if (maxsize > 0 && filePart.getSize() > maxsize) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write(String.format("File '%s' is too large. (Max. file size is %.1fMB)", escapeHtml(filename), maxMB));
+				resp.getWriter().write(String.format("File is too large. (Max. file size is %.1fMB)", maxMB));
 			} else {
 				String fileId = createHashedUploadFileId(filename, filePart.getSize() + "");
 				try (InputStream filecontent = filePart.getInputStream()) {
@@ -195,18 +195,6 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private String escapeHtml(String input) {
-		if (input == null) {
-			return null;
-		}
-		return input
-			.replace("&", "&amp;")
-			.replace("<", "&lt;")
-			.replace(">", "&gt;")
-			.replace("\"", "&quot;")
-			.replace("'", "&#x27;");
 	}
 
 	private String getFilename(Part part) {
