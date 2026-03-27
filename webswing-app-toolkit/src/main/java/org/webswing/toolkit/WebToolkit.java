@@ -87,7 +87,6 @@ import java.awt.peer.TrayIconPeer;
 import java.awt.peer.WindowPeer;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -98,7 +97,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -144,7 +142,7 @@ import sun.print.PrintJob2D;
 
 @SuppressWarnings("restriction")
 public abstract class WebToolkit extends SunToolkit implements WebswingApiProvider {
-	public static final Font defaultFont = new Font("Dialog", 0, 12);
+	public static final Font defaultFont = new Font("Dialog", Font.PLAIN, 12);
 
 	public static final String BACKGROUND_WINDOW_ID = "BG";
 	private static final int DEFAULT_SCREEN_RESOLUTION = Integer.getInteger("webswing.screenResolution", 96);
@@ -153,13 +151,13 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	private EventDispatcher eventDispatcher;
 	private PaintDispatcher paintDispatcher;
 	private SessionWatchdog sessionWatchdog;
-	private WebswingApiImpl api = new WebswingApiImpl();
+	private final WebswingApiImpl api = new WebswingApiImpl();
 
-	private WindowManager windowManager = WindowManager.getInstance();
+	private final WindowManager windowManager = WindowManager.getInstance();
 	private ClassLoader swingClassLoader;
 	private SessionRecorder sessionRecorder;
 	private SessionMirror sessionMirror;
-	private java.util.List<WebToolkitStartupListener> startupListeners = Collections.synchronizedList(new ArrayList<>());
+	private final java.util.List<WebToolkitStartupListener> startupListeners = Collections.synchronizedList(new ArrayList<>());
 
 	public void init() {
 		try {
@@ -205,10 +203,15 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		}
 
 		if (System.getProperty("os.name", "").startsWith("Windows")) {
-			String path = System.getenv("USERPROFILE") + "\\Desktop";
-			File desktopFolder = new File(path);
-			if (!desktopFolder.exists() && !desktopFolder.mkdir()) {
-				AppLogger.error("Failed to create Desktop folder: " + path);
+			String userProfile = System.getenv("USERPROFILE");
+			if (userProfile != null && !userProfile.isEmpty() && !userProfile.contains("..")) {
+				String path = userProfile + "\\Desktop";
+				File desktopFolder = new File(path);
+				if (!desktopFolder.exists() && !desktopFolder.mkdir()) {
+					AppLogger.error("Failed to create Desktop folder: " + path);
+				}
+			} else {
+				AppLogger.error("USERPROFILE environment variable is not set or invalid");
 			}
 		}
 
@@ -221,11 +224,26 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 			Properties fontsProp = new Properties();
 			String fontConfig = System.getProperty("sun.awt.fontconfig");
 			if (fontConfig != null) {
-				fontsProp.load(new FileInputStream(new File(fontConfig)));
+				File fontConfigFile = new File(fontConfig);
+				// Validate the font config file exists and is a regular file
+				if (!fontConfigFile.isFile()) {
+					AppLogger.error("Font config path is not a valid file: " + fontConfig);
+					return;
+				}
+				// Use try-with-resources to prevent FileInputStream leak
+				try (FileInputStream fis = new FileInputStream(fontConfigFile)) {
+					fontsProp.load(fis);
+				}
 				for (String name : fontsProp.stringPropertyNames()) {
 					if (name.startsWith("filename.")) {
-						String file = fontsProp.getProperty(name);
-						Font font = Font.createFont(Font.TRUETYPE_FONT, new File(file));
+						String filePath = fontsProp.getProperty(name);
+						File fontFile = new File(filePath);
+						// Validate each font file exists before attempting to load
+						if (!fontFile.isFile()) {
+							AppLogger.error("Font file not found, skipping: " + filePath);
+							continue;
+						}
+						Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
 						ge.registerFont(font);
 					}
 				}
@@ -434,11 +452,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	public static int screenWidth = Math.max(Constants.SWING_SCREEN_WIDTH_MIN,Integer.parseInt(System.getProperty(Constants.SWING_SCREEN_WIDTH, Constants.SWING_SCREEN_WIDTH_MIN + "")));
 	public static int screenHeight = Math.max(Constants.SWING_SCREEN_HEIGHT_MIN,Integer.parseInt(System.getProperty(Constants.SWING_SCREEN_HEIGHT, Constants.SWING_SCREEN_HEIGHT_MIN + "")));
 
-	public static final Object targetToPeer(Object paramObject) {
+	public static Object targetToPeer(Object paramObject) {
 		return SunToolkit.targetToPeer(paramObject);
 	}
 
-	public static final void targetDisposedPeer(Object paramObject1, Object paramObject2) {
+	public static void targetDisposedPeer(Object paramObject1, Object paramObject2) {
 		SunToolkit.targetDisposedPeer(paramObject1, paramObject2);
 	}
 
@@ -550,15 +568,6 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		this.desktopProperties.put("win.xpstyle.dllName", "C:\\WINDOWS\\resources\\themes\\Aero\\Aero.msstyles");
 		this.desktopProperties.put("win.xpstyle.sizeName", "NormalSize");
 		this.desktopProperties.put("win.xpstyle.themeActive", true);
-//		if (System.getProperty("os.name", "").startsWith("Windows")) {
-//			try {
-//				Field xpStyleEnabledField = sun.awt.windows.ThemeReader.class.getDeclaredField("xpStyleEnabled");
-//				xpStyleEnabledField.setAccessible(true);
-//				xpStyleEnabledField.setBoolean(null, true);
-//			} catch (Exception e) {
-//				AppLogger.debug("Failed to set xpStyleEnabled to true", e);
-//			}
-//		}
 
 		if(Util.isDD()){
 			RenderingHints hints= new RenderingHints(RenderingHints.KEY_FRACTIONALMETRICS,RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
@@ -628,7 +637,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	public FileDialogPeer createFileDialog(FileDialog paramFileDialog) throws HeadlessException{
 		WebFileDialogPeer localFileDialogPeer= createWebFileDialogPeer(paramFileDialog);
 		return localFileDialogPeer;
-	};
+	}
 
 	abstract WebFileDialogPeer createWebFileDialogPeer(FileDialog paramFileDialog);
 
@@ -653,15 +662,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 			}
 		}
 		localObject = new WebFontPeer(paramString, paramInt);
-		if (localObject != null) {
-			if (null == this.cacheFontPeer) {
-				this.cacheFontPeer = new Hashtable<String, FontPeer>(5, 0.9F);
-			}
-			if (null != this.cacheFontPeer) {
-				this.cacheFontPeer.put(str + paramInt, localObject);
-			}
-		}
-		return ((FontPeer) localObject);
+        if (null == this.cacheFontPeer) {
+            this.cacheFontPeer = new Hashtable<>(5, 0.9F);
+        }
+        this.cacheFontPeer.put(str + paramInt, localObject);
+        return ((FontPeer) localObject);
 	}
 
 	public Clipboard getSystemClipboard() throws HeadlessException {
@@ -756,7 +761,8 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	// });
 	// }
 
-	public InputMethodDescriptor getInputMethodAdapterDescriptor() throws AWTException {
+	@Override
+	public InputMethodDescriptor getInputMethodAdapterDescriptor() {
 		return new WebInputMethodDescriptor();
 	}
 
@@ -764,6 +770,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		return true;
 	}
 
+	@Override
 	public void grab(Window paramWindow) {
 	}
 
@@ -826,7 +833,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		throw new UnsupportedOperationException();
 	}
 
-	public TrayIconPeer createTrayIcon(TrayIcon paramTrayIcon) throws HeadlessException, AWTException {
+	public TrayIconPeer createTrayIcon(TrayIcon paramTrayIcon) throws HeadlessException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -838,7 +845,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		return false;
 	}
 
-	public RobotPeer createRobot(Robot robot, GraphicsDevice device) throws AWTException {
+	public RobotPeer createRobot(Robot robot, GraphicsDevice device) {
 		return new WebRobotPeer(robot, device);
 	}
 
@@ -850,11 +857,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		return true;
 	}
 
-	public boolean isWindowShapingSupported() {
-		return false;
-	}
-
-	public boolean isWindowTranslucencySupported() {
+    public boolean isWindowTranslucencySupported() {
 		return true;
 	}
 
@@ -955,16 +958,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 		ExecutorService executor = Executors.newSingleThreadExecutor(NamedThreadFactory.getInstance("Webswing pre-shutdown thread"));
 		try {
 			long wait = Long.getLong(Constants.SWING_START_SYS_PROP_SYNC_TIMEOUT, Constants.SWING_START_SYS_PROP_SYNC_TIMEOUT_DEFAULT_VALUE);
-			Integer delay = executor.submit(new Callable<Integer>() {
-				@Override
-				public Integer call() throws Exception {
-					return api.fireBeforeShutdownListeners(reason);
-				}
-			}).get(wait, TimeUnit.MILLISECONDS);
+			Integer delay = executor.submit(() -> api.fireBeforeShutdownListeners(reason)).get(wait, TimeUnit.MILLISECONDS);
 			return delay;
 		} catch (Exception e) {
 			AppLogger.error("Failed to execute before-shutdown listeners",e);
-		}finally {
+		} finally {
 			executor.shutdownNow();
 		}
 		return 0;
@@ -973,21 +971,18 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	public synchronized void exitSwing(final int i) {
 		if (!exiting) {
 			exiting = true;
-			Thread shutdownThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					//tell server to kill this application after defined time
-					try {
-						stopRecording();
-						getSessionWatchdog().notifyExit();
-						getPaintDispatcher().notifyApplicationExiting();
-						api.fireShutdownListeners();
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.exit(1);
-					}
-				}
-			});
+			Thread shutdownThread = new Thread(() -> {
+                //tell server to kill this application after defined time
+                try {
+                    stopRecording();
+                    getSessionWatchdog().notifyExit();
+                    getPaintDispatcher().notifyApplicationExiting();
+                    api.fireShutdownListeners();
+                } catch (Exception e) {
+                    AppLogger.error("Error during shutdown sequence", e);
+                    System.exit(1);
+                }
+            });
 			shutdownThread.setName("Webswing shutdown thread");
 			shutdownThread.setDaemon(true);
 			shutdownThread.start();
@@ -995,27 +990,19 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 	}
 
 	public void defaultShutdownProcedure() {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				//first send windows closing event to all windows
-				for (Window w : Window.getWindows()) {
-					w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
-				}
-			}
-		});
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				//make sure we close windows created by window close listeners executed above
-				for (Window w : Window.getWindows()) {
-					w.setVisible(false);
-					w.dispose();
-				}
-			}
-		});
+		SwingUtilities.invokeLater(() -> {
+            //first send windows closing event to all windows
+            for (Window w : Window.getWindows()) {
+                w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+		SwingUtilities.invokeLater(() -> {
+            //make sure we close windows created by window close listeners executed above
+            for (Window w : Window.getWindows()) {
+                w.setVisible(false);
+                w.dispose();
+            }
+        });
 	}
 
 	public Object getTreeLock() {
@@ -1061,8 +1048,8 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 
 		long timeout = props.getTimeout();
 		String url = props.getLinkUrl();
-		boolean hasUrl = url != null && url.trim().length() > 0;
-		boolean hasDismissText = props.getDismissText() != null && props.getDismissText().trim().length() > 0;
+		boolean hasUrl = url != null && !url.trim().isEmpty();
+		boolean hasDismissText = props.getDismissText() != null && !props.getDismissText().trim().isEmpty();
 
 		JFrame evalWin = new JFrame();
 		evalWin.setAlwaysOnTop(true);
@@ -1120,8 +1107,13 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
 			linkButton.addActionListener((event) -> {
 				if (Desktop.isDesktopSupported()) {
 					try {
-						Desktop.getDesktop().browse(URI.create(url));
-					} catch (IOException e) {
+						URI targetUri = URI.create(url);
+						// Only allow http/https schemes to prevent file:// or other protocol abuse
+						String scheme = targetUri.getScheme();
+						if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
+							Desktop.getDesktop().browse(targetUri);
+						}
+					} catch (Exception e) {
 						// ignore
 					}
 				}

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
@@ -220,25 +221,23 @@ public class Main {
 				try {
 					mainClass = defaultCL.loadClass("org.webswing.ServerMain");
 				} catch (ClassNotFoundException e) {
-					InputStream readme = Main.class.getClassLoader()
-												   .getResourceAsStream("WEB-INF/server-lib/README.txt");
-					if (readme != null) {
-						Scanner s = new Scanner(readme).useDelimiter("\\A");
-						String result = s.hasNext() ? s.next() : "";
-						throw new Exception(result, e);
-					} else {
-						throw new Exception("Unexpected error.", e);
+					// Use try-with-resources to prevent resource leaks
+					try (InputStream readme = Main.class.getClassLoader()
+														.getResourceAsStream("WEB-INF/server-lib/README.txt")) {
+						if (readme != null) {
+							try (Scanner s = new Scanner(readme).useDelimiter("\\A")) {
+								String result = s.hasNext() ? s.next() : "";
+								throw new Exception(result, e);
+							}
+						} else {
+							throw new Exception("Unexpected error.", e);
+						}
 					}
 				}
 			}
 
 			Method method = mainClass.getMethod("main", args.getClass());
-			method.setAccessible(true);
-			try {
-				method.invoke(null, new Object[] { args });
-			} catch (IllegalAccessException e) {
-				// This should not happen, as we have disabled access checks
-			}
+			method.invoke(null, new Object[] { args });
 		} catch (Exception e) {
 			System.err.println("Uncaught exception.");
 			e.printStackTrace();
@@ -260,11 +259,7 @@ public class Main {
 	}
 
 	private static void retainOnlyLauncherUrl(List<URL> urls) {
-		for (Iterator<URL> i = urls.iterator(); i.hasNext(); ) {
-			if (!i.next().getFile().contains("webswing-app-launcher")) {
-				i.remove();
-			}
-		}
+        urls.removeIf(url -> !url.getFile().contains("webswing-app-launcher"));
 	}
 
 	private static void initializeExtLibServices(List<URL> urls,
@@ -316,6 +311,14 @@ public class Main {
 			Enumeration<JarEntry> jarEntries = jarFile.entries();
 			while (jarEntries.hasMoreElements()) {
 				JarEntry jarEntry = jarEntries.nextElement();
+
+				// Reject jar entries with path traversal sequences (Zip Slip protection)
+				if (jarEntry.getName().contains("..")) {
+					System.err.println("[Main] WARNING: Skipping jar entry with path traversal: "
+									   + jarEntry.getName());
+					continue;
+				}
+
 				if (!jarEntry.isDirectory()
 					&& jarEntry.getName().endsWith(".jar")
 					&& jarEntry.getName().startsWith(path)) {
@@ -335,7 +338,7 @@ public class Main {
 				dir = new File(r.getPath());
 			}
 			if (dir.isDirectory()) {
-				for (File f : dir.listFiles()) {
+				for (File f : Objects.requireNonNull(dir.listFiles())) {
 					if (f.isFile() && f.getName().endsWith(".jar")) {
 
 						if (whitelist != null && !matchesWhitelist(f.getName(), whitelist)) {
@@ -370,6 +373,15 @@ public class Main {
 				name = name.substring(0, name.length() - extension.length()) + extension;
 			}
 			File file = new File(tempDirPath + File.separator + name).getAbsoluteFile();
+
+			// Zip Slip protection: verify the resolved canonical path stays
+			// within the intended temp directory
+			String canonicalTempDir = new File(tempDirPath).getCanonicalPath();
+			String canonicalFile = file.getCanonicalPath();
+			if (!canonicalFile.startsWith(canonicalTempDir + File.separator)) {
+				throw new IOException("Jar entry would extract outside temp directory: " + name);
+			}
+
 			if (!file.exists()) {
 				file.createNewFile();
 				input = jarFile.getInputStream(jarEntry);
@@ -392,7 +404,7 @@ public class Main {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("[Main] Failed to close resource: " + e.getMessage());
 			}
 		}
 	}
@@ -411,6 +423,8 @@ public class Main {
 				for (int counter = 0; counter < 10; counter++) {
 					File tempDir = new File(baseDir, baseName + counter);
 					if (tempDir.mkdir()) {
+						// Restrict permissions: owner-only read/write/execute
+						restrictPermissions(tempDir);
 						System.setProperty(Constants.TEMP_DIR_PATH, tempDir.toURI().toString());
 						return tempDir;
 					}
@@ -420,13 +434,17 @@ public class Main {
 				File tempDir = new File(baseDir, baseName).getAbsoluteFile();
 				if (!tempDir.exists()) {
 					tempDir.mkdir();
+					restrictPermissions(tempDir);
 				} else if (Boolean.parseBoolean(System.getProperty(Constants.CLEAN_TEMP, "true"))) {
-					for (File f : tempDir.listFiles()) {
-						if (!delete(f)) {
-							throw new IllegalStateException(
-									"Not possible to clean the temp folder. Make sure no other "
-									+ "instance of webswing is running or use '-d true' option "
-									+ "to create a new temp folder.");
+					File[] children = tempDir.listFiles();
+					if (children != null) {
+						for (File f : children) {
+							if (!delete(f)) {
+								throw new IllegalStateException(
+										"Not possible to clean the temp folder. Make sure no other "
+										+ "instance of webswing is running or use '-d true' option "
+										+ "to create a new temp folder.");
+							}
 						}
 					}
 				}
@@ -439,6 +457,20 @@ public class Main {
 		} else {
 			return new File(URI.create(System.getProperty(Constants.TEMP_DIR_PATH)));
 		}
+	}
+
+	/**
+	 * Restrict directory permissions to owner-only access where supported.
+	 * Prevents other users on shared systems from reading extracted JARs
+	 * or injecting malicious files into the temp directory.
+	 */
+	private static void restrictPermissions(File dir) {
+		dir.setReadable(false, false);
+		dir.setWritable(false, false);
+		dir.setExecutable(false, false);
+		dir.setReadable(true, true);
+		dir.setWritable(true, true);
+		dir.setExecutable(true, true);
 	}
 
 	public static File getRootDir() {
@@ -457,7 +489,7 @@ public class Main {
 					return file;
 				} else {
 					throw new IllegalArgumentException(
-							"File " + file.getAbsolutePath() + "not found.");
+							"File " + file.getAbsolutePath() + " not found.");
 				}
 			} catch (IllegalArgumentException e) {
 				File absoluteConfigFile = new File(pathOrUri).getAbsoluteFile();
@@ -482,9 +514,21 @@ public class Main {
 		} else {
 			try {
 				String configProfile = System.getProperty(Constants.CONFIG_PATH);
+
+				// Reject path traversal in config profile
+				if (configProfile.contains("..")) {
+					throw new IOException("Config profile path contains traversal sequence");
+				}
+
 				File relative = new File(getRootDir(), configProfile);
-				if (relative.exists()) {
+				// Validate canonical path stays within root directory
+				String canonicalRoot = getRootDir().getCanonicalPath();
+				String canonicalRelative = relative.getCanonicalPath();
+				if (relative.exists() && canonicalRelative.startsWith(canonicalRoot + File.separator)) {
 					return relative;
+				} else if (relative.exists()) {
+					// Relative path resolved outside root — treat as untrusted
+					throw new IOException("Config profile resolved outside root directory");
 				} else {
 					File absolute = new File(configProfile);
 					if (absolute.exists()) {
@@ -505,9 +549,12 @@ public class Main {
 
 	private static boolean delete(File f) {
 		if (f.isDirectory()) {
-			for (File fx : f.listFiles()) {
-				if (!delete(fx)) {
-					return false;
+			File[] children = f.listFiles();
+			if (children != null) {
+				for (File fx : children) {
+					if (!delete(fx)) {
+						return false;
+					}
 				}
 			}
 		}
@@ -518,7 +565,13 @@ public class Main {
 		if (args != null) {
 			for (int i = 0; i < args.length - 1; i++) {
 				if ("-t".equals(args[i]) || "-temp".equals(args[i])) {
-					System.setProperty(Constants.TEMP_DIR_PATH_BASE, args[i + 1]);
+					String tempPath = args[i + 1];
+					// Reject traversal sequences in user-supplied temp path
+					if (tempPath.contains("..")) {
+						System.err.println("[Main] WARNING: Temp path contains traversal sequence, using default");
+						break;
+					}
+					System.setProperty(Constants.TEMP_DIR_PATH_BASE, tempPath);
 					return;
 				}
 			}
