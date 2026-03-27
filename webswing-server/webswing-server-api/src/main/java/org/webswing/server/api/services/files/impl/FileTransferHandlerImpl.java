@@ -10,6 +10,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +34,26 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 	private static final Logger log = LoggerFactory.getLogger(FileTransferHandlerImpl.class);
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
+	private static final String HMAC_ALGORITHM = "HmacSHA256";
 
 	private final AppPathHandler manager;
-	
+
+	/**
+	 * Instance-scoped HMAC key for file ID signing.
+	 * Generated once per server lifecycle — all file IDs issued by this instance
+	 * can be verified. File IDs do not survive a server restart, which is
+	 * acceptable since the transfer data store is also ephemeral.
+	 */
+	private final byte[] hmacKey;
+
 	public FileTransferHandlerImpl(AppPathHandler parent) {
 		super(parent);
 		this.manager = parent;
+
+		// Generate a random HMAC key at startup
+		java.security.SecureRandom sr = new java.security.SecureRandom();
+		this.hmacKey = new byte[32];
+		sr.nextBytes(this.hmacKey);
 	}
 
 	@Override
@@ -50,7 +66,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		// override security subject resolution using transfer token
 		// FIXME find a better solution
 		WebswingSecuritySubject.buildAndSetTransferSubjectFrom(req);
-		
+
 		try {
 			if (req.getMethod().equals("GET")) {
 				handleDownload(req, res);
@@ -58,7 +74,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 			} else if (req.getMethod().equals("POST")) {
 				handleUpload(req, res);
 				return true;
-			} else if (req.getMethod().equals("OPTIONS")){
+			} else if (req.getMethod().equals("OPTIONS")) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -70,6 +86,14 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 	private void handleDownload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, WsException {
 		String fileId = request.getParameter("id");
+
+		// Validate fileId format: only Base64URL characters and underscores
+		if (fileId == null || !fileId.matches("[A-Za-z0-9_\\-=]+")) {
+			log.warn("Invalid file id parameter received");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 		String userId = getUser() != null ? getUser().getUserId() : "null";
 
 		String fileUserId = null;
@@ -77,34 +101,41 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		String fileSize = "";
 		try {
 			String[] fileData = fileId.split("_");
-			if (fileData != null) {
-				if (fileData.length > 0) {
-					fileName = decodeHashedFileData(fileData[0]);
-				}
-				if (fileData.length > 1) {
-					fileUserId = decodeHashedFileData(fileData[1]);
-				}
-				if (fileData.length > 2) {
-					fileSize = decodeHashedFileData(fileData[2]);
-				}
-			}
-		} catch (Exception e) {
-			log.error("Failed to decode file data [" + fileId + "]!", e);
+            // Expect at least 4 segments: name, userId, size, hmac
+            if (fileData.length < 4) {
+                log.warn("File id has insufficient segments: {}", sanitizeForLog(fileId));
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            fileName = decodeHashedFileData(fileData[0]);
+            fileUserId = decodeHashedFileData(fileData[1]);
+            fileSize = decodeHashedFileData(fileData[2]);
+
+            // Verify HMAC to prevent forged file IDs
+            String payload = fileData[0] + "_" + fileData[1] + "_" + fileData[2];
+            String expectedMac = fileData[3];
+            if (!verifyHmac(payload, expectedMac)) {
+                log.warn("HMAC verification failed for file id [{}]", sanitizeForLog(fileId));
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+        } catch (Exception e) {
+			log.error("Failed to decode file data [{}]!", sanitizeForLog(fileId), e);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
 			return;
 		}
-		
+
 		checkPermission(WebswingAction.file_download);
 
 		if (!userId.equals(fileUserId)) {
-			log.error("Requested file for user [" + fileUserId + "] by user [" + userId + "] not allowed!");
+			log.error("Requested file for user [{}] by user [{}] not allowed!", sanitizeForLog(fileUserId), sanitizeForLog(userId));
 			response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403.
 			return;
 		}
-		
+
 		try {
 			InputStream is = manager.getDataStore().readData(WebswingDataStoreType.transfer.name(), fileId, Long.getLong(Constants.FILE_SERVLET_WAIT_TIMEOUT, 300000));
-			
+
 			if (is != null) {
 				response.reset();
 				response.setBufferSize(DEFAULT_BUFFER_SIZE);
@@ -113,7 +144,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 				if (longSize != null && longSize > 0) {
 					response.setHeader("Content-Length", fileSize);
 				}
-				String encodedName= URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+","%20");
+				String encodedName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedName + "\"; filename*=UTF-8''" + encodedName);
 				BufferedInputStream input = null;
 				BufferedOutputStream output = null;
@@ -131,16 +162,15 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 					close(output);
 					close(input);
 				}
-				
+
 				return;
 			}
 		} catch (Exception e) {
-			log.error("Error while downloading file id [" + fileId + "], name [" + fileName + "]!", e);
+			log.error("Error while downloading file id [{}], name [{}]!", sanitizeForLog(fileId), sanitizeForLog(fileName), e);
 		}
-		
+
 		response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-		return;
-	}
+    }
 
 	private void handleUpload(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException, WsException {
 		checkPermission(WebswingAction.file_upload);
@@ -148,72 +178,142 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 			double maxMB = manager.getConfig().getUploadMaxSize();
 			long maxsize = (long) (maxMB * 1024 * 1024);
 			Part filePart = request.getPart("files[]"); // Retrieves <input type="file" name="file">
+
+			if (filePart == null) {
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				resp.getWriter().write("No file part found in request.");
+				return;
+			}
+
 			String filename = getFilename(filePart);
+
+			// Validate filename
+			if (filename == null || filename.isEmpty()) {
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				resp.getWriter().write("Invalid or missing filename.");
+				return;
+			}
+
 			if (maxsize > 0 && filePart.getSize() > maxsize) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write(String.format("File '%s' is too large. (Max. file size is %.1fMB)", escapeHtml(filename), maxMB));
+				resp.getWriter().write(String.format("File '%s' is too large. (Max. file size is %.1fMB)", escapeJson(filename), maxMB));
 			} else {
 				String fileId = createHashedUploadFileId(filename, filePart.getSize() + "");
 				try (InputStream filecontent = filePart.getInputStream()) {
 					manager.getDataStore().storeData(WebswingDataStoreType.transfer.name(), fileId, filecontent, true);
 				}
 
-				log.info("File " + filename + " uploaded (size:" + filePart.getSize() + ")");
-				
+				log.info("File {} uploaded (size:{})", sanitizeForLog(filename), filePart.getSize());
+
 				resp.setContentType("application/json; charset=UTF-8");
 				resp.setCharacterEncoding("UTF-8");
-				resp.getWriter().write("{\"files\":[{\"name\":\"" + filename + "\", \"id\":\"" + fileId + "\"}]}"); // FIXME size
+				resp.getWriter().write("{\"files\":[{\"name\":\"" + escapeJson(filename) + "\", \"id\":\"" + escapeJson(fileId) + "\"}]}");
 			}
 		} catch (Exception e) {
 			if (e.getCause() instanceof EOFException) {
-				log.warn("File upload canceled by user: " + e.getMessage());
+				log.warn("File upload canceled by user: {}", sanitizeForLog(e.getMessage()));
 			} else {
 				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				resp.getWriter().write("Upload finished with error...");
-				log.error("Error while uploading file: " + e.getMessage(), e);
+				log.error("Error while uploading file: {}", sanitizeForLog(e.getMessage()), e);
 			}
 		}
 	}
-	
+
 	private String createHashedUploadFileId(String fileName, String fileSize) {
 		String hashedName = new String(Base64.getUrlEncoder().encode(fileName.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 		String hashedUserId = getUser() != null ? getUser().getUserId() : "null";
 		String hashedSize = new String(Base64.getUrlEncoder().encode(fileSize.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 		hashedUserId = new String(Base64.getUrlEncoder().encode(hashedUserId.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-		return hashedName + "_" + hashedUserId + "_" + hashedSize;
+
+		String payload = hashedName + "_" + hashedUserId + "_" + hashedSize;
+		String mac = computeHmac(payload);
+		return payload + "_" + mac;
 	}
 
 	private String decodeHashedFileData(String data) {
 		return new String(Base64.getUrlDecoder().decode(data.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 	}
-	
+
+	/**
+	 * Compute HMAC-SHA256 over the given payload, returned as URL-safe Base64.
+	 */
+	private String computeHmac(String payload) {
+		try {
+			Mac mac = Mac.getInstance(HMAC_ALGORITHM);
+			mac.init(new SecretKeySpec(hmacKey, HMAC_ALGORITHM));
+			byte[] raw = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
+			return Base64.getUrlEncoder().withoutPadding().encodeToString(raw);
+		} catch (Exception e) {
+			throw new RuntimeException("HMAC computation failed", e);
+		}
+	}
+
+	/**
+	 * Verify that the given HMAC matches the payload.
+	 * Uses constant-time comparison to prevent timing attacks.
+	 */
+	private boolean verifyHmac(String payload, String expectedMac) {
+		String computedMac = computeHmac(payload);
+		return java.security.MessageDigest.isEqual(
+				computedMac.getBytes(StandardCharsets.UTF_8),
+				expectedMac.getBytes(StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 * Strips newlines, tabs, and carriage returns to prevent log injection.
+	 */
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\r\\n\\t]", "_");
+	}
+
+	/**
+	 * Escape a string for safe inclusion in a JSON string value.
+	 * Handles backslash, double-quote, and control characters.
+	 */
+	private static String escapeJson(String input) {
+		if (input == null) return "";
+		return input
+					   .replace("\\", "\\\\")
+					   .replace("\"", "\\\"")
+					   .replace("\n", "\\n")
+					   .replace("\r", "\\r")
+					   .replace("\t", "\\t");
+	}
+
 	private void close(Closeable resource) {
 		if (resource != null) {
 			try {
 				resource.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.warn("Failed to close resource", e);
 			}
 		}
 	}
 
-	private String escapeHtml(String input) {
-		if (input == null) {
+	private String getFilename(Part part) {
+		if (part == null) {
 			return null;
 		}
-		return input
-			.replace("&", "&amp;")
-			.replace("<", "&lt;")
-			.replace(">", "&gt;")
-			.replace("\"", "&quot;")
-			.replace("'", "&#x27;");
-	}
-
-	private String getFilename(Part part) {
-		for (String cd : part.getHeader("Content-Disposition").split(";")) {
+		String header = part.getHeader("Content-Disposition");
+		if (header == null) {
+			return null;
+		}
+		for (String cd : header.split(";")) {
 			if (cd.trim().startsWith("filename")) {
 				String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-				return filename.substring(filename.lastIndexOf('/') + 1).substring(filename.lastIndexOf('\\') + 1); // MSIE fix.
+				// Extract base name — handle both forward and back slashes
+				int lastSlash = filename.lastIndexOf('/');
+				int lastBackslash = filename.lastIndexOf('\\');
+				int lastSep = Math.max(lastSlash, lastBackslash);
+				String baseName = filename.substring(lastSep + 1);
+				// Reject path traversal patterns and empty names
+				if (baseName.isEmpty() || baseName.contains("..")) {
+					return null;
+				}
+				return baseName;
 			}
 		}
 		return null;
