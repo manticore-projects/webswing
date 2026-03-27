@@ -101,8 +101,9 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		String fileSize = "";
 		try {
 			String[] fileData = fileId.split("_");
-            // Expect at least 4 segments: name, userId, size, hmac
-            if (fileData.length < 4) {
+            // Accept 3 segments (legacy: name_userId_size)
+            // or 4 segments (HMAC-signed: name_userId_size_hmac)
+            if (fileData.length < 3) {
                 log.warn("File id has insufficient segments: {}", sanitizeForLog(fileId));
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
@@ -111,13 +112,17 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
             fileUserId = decodeHashedFileData(fileData[1]);
             fileSize = decodeHashedFileData(fileData[2]);
 
-            // Verify HMAC to prevent forged file IDs
-            String payload = fileData[0] + "_" + fileData[1] + "_" + fileData[2];
-            String expectedMac = fileData[3];
-            if (!verifyHmac(payload, expectedMac)) {
-                log.warn("HMAC verification failed for file id [{}]", sanitizeForLog(fileId));
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
+            // Verify HMAC if present (4-segment format from new uploads)
+            if (fileData.length >= 4) {
+                String payload = fileData[0] + "_" + fileData[1] + "_" + fileData[2];
+                String expectedMac = fileData[3];
+                if (!verifyHmac(payload, expectedMac)) {
+                    log.warn("HMAC verification failed for file id [{}]", sanitizeForLog(fileId));
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    return;
+                }
+            } else {
+                log.debug("Legacy file id without HMAC: {}", sanitizeForLog(fileId));
             }
         } catch (Exception e) {
 			log.error("Failed to decode file data [{}]!", sanitizeForLog(fileId), e);
@@ -170,7 +175,8 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		}
 
 		response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-    }
+		return;
+	}
 
 	private void handleUpload(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException, WsException {
 		checkPermission(WebswingAction.file_upload);
@@ -304,7 +310,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		for (String cd : header.split(";")) {
 			if (cd.trim().startsWith("filename")) {
 				String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-				// Extract base name — handle both forward and back slashes
+				// Extract base name — handle both forward and backslashes
 				int lastSlash = filename.lastIndexOf('/');
 				int lastBackslash = filename.lastIndexOf('\\');
 				int lastSep = Math.max(lastSlash, lastBackslash);
