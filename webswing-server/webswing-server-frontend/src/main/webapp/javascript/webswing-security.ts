@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { loadTranslations } from "./webswing-translate";
+import DOMPurify from 'dompurify';
 
 const baseUrl = (window as any).webswingRequestBaseUrl ? ((window as any).webswingRequestBaseUrl + '/') : '';
 loadTranslations(baseUrl).then((translations) => {
@@ -8,7 +9,8 @@ loadTranslations(baseUrl).then((translations) => {
     showPartial(window.location.href, $('#webswing-content'), (window as any).webswingPartialHtml);
 
     function showPartial(url: string, element: any, html: any) {
-        element.html(translate(html));
+        const sanitized = DOMPurify.sanitize(translate(html));
+        element.html(sanitized);
         const form = element.find('form').first();
         if (form != null) {
             form.submit((event: any) => {
@@ -41,7 +43,8 @@ loadTranslations(baseUrl).then((translations) => {
                             window.top!.location.href = baseUrl;
                             return;
                         } else {
-                            element.html(translate("<p>Invalid request</p>"))
+                            const sanitized = DOMPurify.sanitize(translate("<p>Invalid request</p>"));
+                            element.html(sanitized);
                         }
                     }
                     if (loginMsg.redirectUrl != null) {
@@ -49,10 +52,12 @@ loadTranslations(baseUrl).then((translations) => {
                     } else if (loginMsg.partialHtml != null) {
                         showPartial(url, element, loginMsg.partialHtml);
                     } else {
-                        element.html(translate("<p>${login.unexpectedError}</p>"));
+                        const sanitized = DOMPurify.sanitize(translate("<p>${login.unexpectedError}</p>"));
+                        element.html(sanitized);
                     }
                 } else {
-                    element.html(translate("<p>${login.serverNotAvailable}</p>"));
+                    const sanitized = DOMPurify.sanitize(translate("<p>${login.serverNotAvailable}</p>"));
+                    element.html(sanitized);
                 }
             }
         });

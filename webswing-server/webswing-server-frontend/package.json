@@ -51,7 +51,8 @@
     "webpack": "^5.105.0",
     "webpack-cli": "^7.0.0",
     "webpack-dev-server": "^5.2.0",
-    "webpack-merge": "^6.0.0"
+    "webpack-merge": "^6.0.0",
+    "@types/dompurify": "^3.0.5"
   },
   "dependencies": {
     "jquery": "^3.7.0",
@@ -61,6 +62,7 @@
     "webswing-directdraw-javascript": "../../webswing-directdraw/webswing-directdraw-javascript",
     "blueimp-file-upload": "^10.1.0",
     "jquery.iframe-transport": "^1.0.0",
-    "pdfjs-dist-viewer-min": "^2.4.456"
+    "pdfjs-dist-viewer-min": "^2.4.456",
+    "dompurify": "^3.2.4"
   }
 }

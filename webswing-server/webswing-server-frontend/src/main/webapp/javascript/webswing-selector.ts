@@ -1,5 +1,6 @@
 import { Util, getParam, checkCookie, getImageString } from "./webswing-util"
 import { loadTranslations } from "./webswing-translate";
+import DOMPurify from 'dompurify';
 
 loadTranslations().then(
     (translations) => {
@@ -8,7 +9,8 @@ loadTranslations().then(
         const translate = (key: string) => translations.translate(key);
         const util = Util(translations);
         if (!checkCookie()) {
-            $('#webswing-content').html(translate('${dialog.cookiesDisabledDialog}'));
+            const sanitized = DOMPurify.sanitize(translate('${dialog.cookiesDisabledDialog}'));
+            $('#webswing-content').html(sanitized);
             return;
         }
 
@@ -123,9 +125,14 @@ loadTranslations().then(
                 }
                 content += '</div>';
             }
-            $('#webswing-header').html(translate(header));
-            $('#webswing-links').html(translate(links));
-            $('#webswing-content').html(translate(content));
+            let sanitized = DOMPurify.sanitize(translate(header));
+            $('#webswing-header').html(sanitized);
+
+            sanitized = DOMPurify.sanitize(translate(links));
+            $('#webswing-links').html(sanitized);
+
+            sanitized = DOMPurify.sanitize(translate(content));
+            $('#webswing-content').html(sanitized);
         }
 
         function logout() {

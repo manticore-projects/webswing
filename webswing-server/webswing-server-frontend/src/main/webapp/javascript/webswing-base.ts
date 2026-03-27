@@ -5,6 +5,7 @@ import { DirectDraw as WebswingDirectDraw } from "webswing-directdraw-javascript
 import { getDpr, GUID, getImageString, getTimeZone, fixConnectionUrl } from './webswing-util';
 import { ModuleDef, IInjected } from "./webswing-inject";
 import { AppFrame } from "./webswing-socket";
+import DOMPurify from 'dompurify';
 
 export const baseInjectable = {
 	getExternalApi: 'external.api' as const,
@@ -1096,10 +1097,11 @@ export class BaseModule extends ModuleDef<typeof baseInjectable, IBaseService> {
 		wrapper.appendChild(content);
 		body.appendChild(wrapper);
 
-		$(popup.document.head).append("<link rel='stylesheet' href='" + baseUrl + "css/style.css' type='text/css'>");
+        const sanitized = DOMPurify.sanitize("<link rel='stylesheet' href='" + baseUrl + "css/style.css' type='text/css'>");
+		$(popup.document.head).append(sanitized);
 
 		// to allow directdraw.fontProvided
-		$(popup.document.head).append("<link rel='stylesheet' href='" + baseUrl + "css/custom.css' type='text/css'>");
+		$(popup.document.head).append(sanitized);
 
 		const fonts = document.querySelectorAll("style[data-dd-ctx]");
 		// tslint:disable-next-line: prefer-for-of
