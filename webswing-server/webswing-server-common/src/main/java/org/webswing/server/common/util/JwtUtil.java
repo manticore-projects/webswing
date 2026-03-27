@@ -16,8 +16,11 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import java.security.SecureRandom;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.io.IOUtils;
@@ -48,7 +51,8 @@ public class JwtUtil {
 	private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
 	private static final byte[] signingKey = System.getProperty(Constants.WEBSWING_CONNECTION_SECRET).getBytes(StandardCharsets.UTF_8);
-	private static final String encryptionAlg = "AES/ECB/PKCS5Padding";
+	private static final String encryptionAlg = "AES/CBC/PKCS5Padding";
+	private static final int IV_LENGTH = 16;
 	private static final String encryptionKeySpec = "AES";
 	
 	private static boolean usegGzip = Boolean.valueOf(System.getProperty(Constants.JWT_SERIALIZATION_USE_GZIP, Constants.JWT_SERIALIZATION_USE_GZIP_DEFAULT));
@@ -267,9 +271,17 @@ public class JwtUtil {
 				return null;
 			}
 			try {
+				byte[] iv = new byte[IV_LENGTH];
+				new SecureRandom().nextBytes(iv);
+				IvParameterSpec ivSpec = new IvParameterSpec(iv);
 				Cipher cipher = Cipher.getInstance(encryptionAlg);
-				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-				claimBytes = Base64.getUrlEncoder().encode(cipher.doFinal(claimBytes));
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+				byte[] encrypted = cipher.doFinal(claimBytes);
+				// Prepend IV to encrypted data
+				byte[] combined = new byte[iv.length + encrypted.length];
+				System.arraycopy(iv, 0, combined, 0, iv.length);
+				System.arraycopy(encrypted, 0, combined, iv.length, encrypted.length);
+				claimBytes = Base64.getUrlEncoder().encode(combined);
 			} catch (Exception e) {
 				log.error("Failed to encrypt user map for JWT token!", e);
 			}
@@ -387,11 +399,16 @@ public class JwtUtil {
 			if (secretKey == null) {
 				return null;
 			}
-			
+
 			try {
+				byte[] decoded = Base64.getUrlDecoder().decode(claimBytes);
+				// Extract IV (first 16 bytes)
+				byte[] iv = Arrays.copyOfRange(decoded, 0, IV_LENGTH);
+				byte[] encrypted = Arrays.copyOfRange(decoded, IV_LENGTH, decoded.length);
+				IvParameterSpec ivSpec = new IvParameterSpec(iv);
 				Cipher cipher = Cipher.getInstance(encryptionAlg);
-				cipher.init(Cipher.DECRYPT_MODE, secretKey);
-				claimBytes = cipher.doFinal(Base64.getUrlDecoder().decode(claimBytes));
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+				claimBytes = cipher.doFinal(encrypted);
 			} catch (Exception e) {
 				log.error("Failed to decrypt user map for JWT token!", e);
 			}
