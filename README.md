@@ -40,15 +40,19 @@ This edition is based on the **last open-source release (v20.2.5)** of WebSwing,
 
 ### JDK Compatibility
 
-| JDK | Status | Notes |
-|:---:|:------:|:------|
-| 13–17 | 🔶 Should work | Untested — community feedback welcome |
-| 21 (LTS) | ✅ Fully supported | Primary target |
-| 23 | ✅ Supported | Short-term release |
-| 25 (LTS) | ✅ Supported | Current LTS |
-| 26 | ✅ Supported | Requires `--sun-misc-unsafe-memory-access=allow` |
+Recommended standard OpenJDK distributions: [Eclipse Temurin](https://adoptium.net/), [BellSoft Liberica](https://bell-sw.com/pages/downloads/), or [Amazon Corretto](https://aws.amazon.com/corretto/).
+
+| JDK |      Status       | Notes                                            |
+|:---:|:-----------------:|:-------------------------------------------------|
+| 13–17 |  🔶 Should work   | Untested — community feedback welcome            |
+| 21 (LTS) | ✅ Fully supported | Primary build target                             |
+| 23 |    ✅ Supported    | Short-term release                               |
+| 25 (LTS) | ✅ Fully Supported | Current LTS                                      |
+| 26 |    ✅ Supported    | Requires `--sun-misc-unsafe-memory-access=allow` |
 
 All internal APIs adapted for the post-JDK-11 module system — no `--illegal-access=permit`, no `-noverify` required.
+
+**Beware:** JetBrains Runtime modifies AWT's internal keyboard focus dispatch, which breaks when Webswing replaces the toolkit. Mouse events are unaffected because they bypass the patched focus path.
 
 ### Demo
 
