@@ -2,6 +2,7 @@ plugins {
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
     id "com.github.spotbugs" version "latest.release"
     id "com.diffplug.spotless" version "latest.release"
+    id "org.sonarqube" version "latest.release"
     id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "latest.release"
 }
 
@@ -177,5 +178,15 @@ tasks.register('ultraClean') {
         delete 'webswing-assembly/dist'
 
         println "\nUltra-clean complete. Next build will re-download Node and reinstall npm packages."
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.organization", "manticore-projects")
+        property("sonar.projectKey", "manticore-projects")
+        property("sonar.token", System.getenv("SONAR_TOKEN")
+                ?: providers.gradleProperty("SONARQUBE_TOKEN").getOrElse(""))
     }
 }
