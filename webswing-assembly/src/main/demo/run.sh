@@ -4,13 +4,25 @@ set -eu
 
 APP="WebSwing"
 WAR_PREFIX="webswing-server"
+CONFIG_DIR="."
 BASE="$(cd "$(dirname "$0")" && pwd -P)"
-JAVA_HOME="/usr/lib/jvm/java-26-openjdk"
-LOGGING="-Djava.util.logging.config.file=logging.properties"
+JAVA_HOME="/usr/lib/jvm/default-runtime"
+LOGGING="-Djava.util.logging.config.file=${HOME}/.manticore/logging.properties"
 MIN_JAVA_VERSION=13
+
+# SSL certificates to import into the JVM truststore on startup.
+# Format: alias|host|port (one per line)
+# Add new certificates by appending lines.
+SSL_CERTS=""
+SSL_KEYSTORE="${JAVA_HOME}/lib/security/cacerts"
+SSL_KEYSTORE_PASS="changeit"
 
 # Server JVM flags
 JAVA_OPTS="\
+ -server -Xmx2G -Xms256m -Xss228k \
+ -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true \
+ -Dwebswing.websocketMessageSizeLimit=1024000 \
+ -Djava.security.egd=file:/dev/urandom \
  --add-modules=java.desktop \
  --add-exports=java.desktop/sun.awt=ALL-UNNAMED \
  --add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED \
@@ -24,9 +36,10 @@ JAVA_OPTS="\
  --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED \
  --add-exports=java.desktop/java.awt.dnd=ALL-UNNAMED \
  --add-exports=java.base/sun.nio.cs=ALL-UNNAMED \
- --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED"
+ --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED \
+"
 
-WEBSWING_OPTS="-h 0.0.0.0 -j jetty.properties"
+WEBSWING_OPTS="-h 0.0.0.0 -j $CONFIG_DIR/jetty.properties -c $CONFIG_DIR/webswing.config -pf $CONFIG_DIR/webswing.properties"
 NICE_LEVEL=10
 LOG_RETENTION_DAYS=10
 
@@ -281,6 +294,93 @@ check_xvfb() {
     exit 1
 }
 
+import_ssl_certs() {
+    if [ -z "${SSL_CERTS}" ]; then
+        return 0
+    fi
+
+    if ! command -v openssl > /dev/null 2>&1; then
+        echo "WARN: openssl not found, skipping SSL certificate import."
+        return 0
+    fi
+
+    keytool_bin="${JAVA_HOME}/bin/keytool"
+    if [ ! -x "${keytool_bin}" ]; then
+        echo "WARN: keytool not found at ${keytool_bin}, skipping SSL certificate import."
+        return 0
+    fi
+
+    tmp_cert_dir=$(mktemp -d)
+    trap_cleanup() { rm -rf "${tmp_cert_dir}"; }
+    trap trap_cleanup EXIT
+
+    echo "${SSL_CERTS}" | while IFS='|' read -r alias host port; do
+        # Skip empty lines
+        [ -z "${alias}" ] && continue
+
+        echo "  Importing SSL cert: ${alias} (${host}:${port})"
+
+        cert_bundle="${tmp_cert_dir}/${alias}-bundle.pem"
+
+        # Download the full certificate chain
+        if ! openssl s_client -connect "${host}:${port}" -showcerts </dev/null 2>/dev/null \
+            | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > "${cert_bundle}" \
+            || [ ! -s "${cert_bundle}" ]; then
+            echo "    WARN: Failed to retrieve certificate from ${host}:${port}, skipping."
+            continue
+        fi
+
+        # Split the chain into individual certs and import each one
+        cert_index=0
+        current_cert=""
+        while IFS= read -r line; do
+            case "${line}" in
+                "-----BEGIN CERTIFICATE-----")
+                    current_cert="${line}"
+                    ;;
+                "-----END CERTIFICATE-----")
+                    current_cert="${current_cert}
+${line}"
+                    cert_file="${tmp_cert_dir}/${alias}-${cert_index}.pem"
+                    echo "${current_cert}" > "${cert_file}"
+
+                    cert_alias="${alias}-${cert_index}"
+
+                    # Remove old entry (ignore errors if it doesn't exist)
+                    "${keytool_bin}" -delete \
+                        -keystore "${SSL_KEYSTORE}" \
+                        -storepass "${SSL_KEYSTORE_PASS}" \
+                        -alias "${cert_alias}" 2>/dev/null || true
+
+                    # Import the certificate
+                    if "${keytool_bin}" -import -noprompt -trustcacerts \
+                        -alias "${cert_alias}" \
+                        -file "${cert_file}" \
+                        -keystore "${SSL_KEYSTORE}" \
+                        -storepass "${SSL_KEYSTORE_PASS}" 2>/dev/null; then
+                        echo "    Imported: ${cert_alias}"
+                    else
+                        echo "    WARN: Failed to import ${cert_alias}"
+                    fi
+
+                    cert_index=$((cert_index + 1))
+                    current_cert=""
+                    ;;
+                *)
+                    if [ -n "${current_cert}" ]; then
+                        current_cert="${current_cert}
+${line}"
+                    fi
+                    ;;
+            esac
+        done < "${cert_bundle}"
+
+        echo "    Imported ${cert_index} certificate(s) for ${alias}."
+    done
+
+    rm -rf "${tmp_cert_dir}"
+}
+
 # ── Helpers ──────────────────────────────────────────────────────────────
 
 log_msg() {
@@ -364,6 +464,7 @@ cmd_start() {
 
     check_java
     check_xvfb
+    import_ssl_certs
 
     # Resolve WAR file
     if [ -n "${REQUESTED_VERSION}" ]; then
