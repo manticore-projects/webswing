@@ -4,8 +4,6 @@ import DOMPurify from 'dompurify';
 
 loadTranslations().then(
     (translations) => {
-        (window as any).selectorLogout = logout;
-
         const translate = (key: string) => translations.translate(key);
         const util = Util(translations);
         if (!checkCookie()) {
@@ -100,10 +98,27 @@ loadTranslations().then(
             });
         }
 
+        function formatUsername(user) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (emailRegex.test(user)) {
+                user = user.substring(0, user.indexOf('@'));
+            }
+
+            // Split on common separators (dot, underscore, hyphen)
+            // but only if they're not the first or last character
+            return user
+                .split(/[._\-]/)
+                .filter(part => part.length > 0)
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+                .join(' ');
+        }
+
         function show(apps: any, showAdmin: boolean, adminConsoleUrl?: string) {
-            let header: any = '<h1 class="ws-selector-title">${selector.welcome} <span>' + user + '</span>${selector.message}</h1>';
+            let displayName = formatUsername(user);
+            let header: any = '<h1 class="ws-selector-title">${selector.welcome} <span>' + displayName + '</span>${selector.message}</h1>';
+
             const links = '${selector.lang} '+(showAdmin ? ' <a href="' + adminConsoleUrl + '" id="admin">${selector.admin}</a> | ' : '')
-                 + '<a href="javascript: selectorLogout();" id="logout">${selector.logout}</a>';
+                 + '<a href="#" id="logout">${selector.logout}</a>';
             let content;
             $('#commonDialog').addClass('ws-selector')
             if (apps == null || apps.length === 0) {
@@ -133,6 +148,13 @@ loadTranslations().then(
 
             sanitized = DOMPurify.sanitize(translate(content));
             $('#webswing-content').html(sanitized);
+
+            // Bind logout click after DOM insertion
+            // (replaces javascript: URI which DOMPurify strips)
+            $('#logout').on('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
         }
 
         function logout() {
@@ -149,4 +171,3 @@ loadTranslations().then(
 ).catch((e) => {
     console.error("Failed to load Translations", e);
 })
-
