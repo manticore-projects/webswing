@@ -17,6 +17,7 @@ node {
 
 // ─── Apply java conventions to all subprojects ───────────────────────
 subprojects {
+    apply plugin: 'java'
     apply plugin: 'webswing.java-conventions'
     apply plugin:  'pmd'
     apply plugin:  'checkstyle'
@@ -29,6 +30,14 @@ subprojects {
     dependencies {
         compileOnly "org.eclipse.jetty.toolchain:jetty-servlet-api:${jettyServletApiVersion}"
         compileOnly "org.eclipse.jetty.toolchain:jetty-javax-websocket-api:${jettyWebsocketApiVersion}"
+    }
+
+    java {
+        toolchain {
+            sourceCompatibility = '17'
+            targetCompatibility = '17'
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
 
     spotbugs {
@@ -113,10 +122,17 @@ if (project.hasProperty('publish')) {
 // ─── Release: attach sources + javadoc jars ──────────────────────────
 if (project.hasProperty('release')) {
     subprojects {
-        plugins.withType(JavaPlugin) {
-            java {
-                withSourcesJar()
-                withJavadocJar()
+        plugins.withType(JavaPlugin).tap {
+            configureEach {
+                java {
+                    withSourcesJar()
+                    withJavadocJar()
+                    sourceCompatibility = '17'
+                    targetCompatibility = '17'
+                    toolchain {
+                        languageVersion.set(JavaLanguageVersion.of(17))
+                    }
+                }
             }
         }
     }

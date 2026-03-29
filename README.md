@@ -6,7 +6,7 @@
 
 [![Build](https://img.shields.io/github/actions/workflow/status/manticore-projects/webswing/Gradle.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&label=Build)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
 [![Version](https://img.shields.io/badge/Version-26.1-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
-[![JDK 13+](https://img.shields.io/badge/JDK-13%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![JDK 17+](https://img.shields.io/badge/JDK-17%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Node.js 24](https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-red?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 [![Build](https://img.shields.io/badge/Build-Gradle%20%7C%20Maven-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
@@ -18,7 +18,7 @@
 
 <br/>
 
-[Getting Started](#-getting-started) · [Build](#-build-instructions) · [What's New](#-whats-new) · [Architecture](#-architecture) 
+[Getting Started](#-getting-started) · [Build](#-build-instructions) · [What's New](#-whats-new) · [Architecture](#-architecture)
 
 ---
 
@@ -42,13 +42,13 @@ This edition is based on the **last open-source release (v20.2.5)** of WebSwing,
 
 Recommended standard OpenJDK distributions: [Eclipse Temurin](https://adoptium.net/), [BellSoft Liberica](https://bell-sw.com/pages/downloads/), or [Amazon Corretto](https://aws.amazon.com/corretto/).
 
-| JDK |      Status       | Notes                                            |
-|:---:|:-----------------:|:-------------------------------------------------|
-| 13–17 |  🔶 Should work   | Untested — community feedback welcome            |
-| 21 (LTS) | ✅ Fully supported | Primary build target                             |
-| 23 |    ✅ Supported    | Short-term release                               |
-| 25 (LTS) | ✅ Fully Supported | Current LTS                                      |
-| 26 |    ✅ Supported    | Requires `--sun-misc-unsafe-memory-access=allow` |
+| JDK |    Status    | Temurin Support | Notes                                                     |
+|:---:|:------------:|:---------------:|:----------------------------------------------------------|
+| 17 (LTS) | 🔶 Supported | Oct 2027 | Toolchain of the build                                    |
+| 21 (LTS) | ✅ Supported  | Dec 2029 |                                       |
+| 23 | ✅ Supported  | ⛔ EOL (Mar 2025) | Non-LTS, 6-month lifecycle                                |
+| 25 (LTS) | ✅ Supported  | Sep 2031 | Current LTS                                               |
+| 26 | ✅ Supported  | Sep 2026 | Non-LTS; requires `--sun-misc-unsafe-memory-access=allow` |
 
 All internal APIs adapted for the post-JDK-11 module system — no `--illegal-access=permit`, no `-noverify` required.
 
@@ -69,8 +69,8 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 
 - **Node.js 24 LTS** — migrated from Node 10; Webpack 5, TypeScript 5, Dart Sass
 - **Gradle build system** — fast, incremental builds
-- **All dependencies updated** — Jetty12, Jackson, Guava, Log4j2, SLF4J 2.0, Bouncy Castle, Apache Commons, Protocol Buffers, LZ4, and more
-- Active monitoring via [SNYK](https://app/snyk.io) 
+- **All dependencies updated** — Jetty12, Jackson3, Guava, Log4j2, SLF4J 2.0, Apache Commons, Protocol Buffers, LZ4, and more
+- Active monitoring via [SNYK](https://app.snyk.io) and [Semgrep](https://semgrep.dev/)
 
 ### Performance
 
@@ -86,7 +86,7 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 
 | Component | Version |
 |-----------|---------|
-| JDK | 13 or later (21+ recommended; [Eclipse Temurin](https://adoptium.net/)) |
+| JDK | 17 or later (21+ recommended; [Eclipse Temurin](https://adoptium.net/)) |
 | Xvfb | Required on headless Linux servers |
 
 ### Quick Start
@@ -169,7 +169,7 @@ cd /opt/webswing && ./run.sh start
                                   │
                     ┌─────────────▼──────────-───┐
                     │     WebSwing Server        │
-                    │    (Jetty 9 / Servlet)     │
+                    │    (Jetty 12 / Servlet)    │
                     │                            │
                     │  ┌──────────────────────┐  │
                     │  │  Session Manager     │  │
@@ -200,7 +200,7 @@ cd /opt/webswing && ./run.sh start
 | Component | Version | Purpose |
 |-----------|---------|---------|
 | Jetty | 12.1.7  | Embedded HTTP/WebSocket server |
-| Jackson | 2.19.0  | JSON serialization |
+| Jackson | 3.1.1   | JSON serialization |
 | Protocol Buffers | 3.25.5  | Binary wire format (DirectDraw) |
 | Apache Shiro | 1.13.0  | Authentication & authorization |
 | Guava | 33.5.0  | Core utilities |

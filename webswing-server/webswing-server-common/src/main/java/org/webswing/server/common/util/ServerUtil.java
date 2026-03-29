@@ -244,7 +244,7 @@ public class ServerUtil {
 			return null;
 		}
 
-		return paramValues.getFirst();
+		return paramValues.get(0);
 	}
 
 	private static String extractBearerToken(Iterator<String> headers) {

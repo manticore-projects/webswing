@@ -300,12 +300,12 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			switch (query.getMethod()) {
 				case HasRole:
 					if (currentUser != null) {
-						resultMsg.setResult(currentUser.hasRole((String) query.getArgs().getFirst()) + "");
+						resultMsg.setResult(currentUser.hasRole((String) query.getArgs().get(0)) + "");
 					}
 					break;
 				case IsPermitted:
 					if (currentUser != null) {
-						resultMsg.setResult(currentUser.isPermitted((String) query.getArgs().getFirst()) + "");
+						resultMsg.setResult(currentUser.isPermitted((String) query.getArgs().get(0)) + "");
 					}
 					break;
 				default:
