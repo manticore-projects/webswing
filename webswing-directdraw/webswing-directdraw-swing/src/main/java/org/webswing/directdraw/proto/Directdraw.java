@@ -3,6 +3,8 @@
 
 package org.webswing.directdraw.proto;
 
+import java.util.Objects;
+
 public final class Directdraw {
   private Directdraw() {}
   public static void registerAllExtensions(
@@ -237,9 +239,8 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -1129,9 +1130,7 @@ public final class Directdraw {
       public Builder setInstructions(
           int index, org.webswing.directdraw.proto.Directdraw.DrawInstructionProto value) {
         if (instructionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureInstructionsIsMutable();
           instructions_.set(index, value);
           onChanged();
@@ -1159,9 +1158,7 @@ public final class Directdraw {
        */
       public Builder addInstructions(org.webswing.directdraw.proto.Directdraw.DrawInstructionProto value) {
         if (instructionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureInstructionsIsMutable();
           instructions_.add(value);
           onChanged();
@@ -1176,9 +1173,7 @@ public final class Directdraw {
       public Builder addInstructions(
           int index, org.webswing.directdraw.proto.Directdraw.DrawInstructionProto value) {
         if (instructionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureInstructionsIsMutable();
           instructions_.add(index, value);
           onChanged();
@@ -1369,9 +1364,7 @@ public final class Directdraw {
       public Builder setConstants(
           int index, org.webswing.directdraw.proto.Directdraw.DrawConstantProto value) {
         if (constantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureConstantsIsMutable();
           constants_.set(index, value);
           onChanged();
@@ -1399,9 +1392,7 @@ public final class Directdraw {
        */
       public Builder addConstants(org.webswing.directdraw.proto.Directdraw.DrawConstantProto value) {
         if (constantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureConstantsIsMutable();
           constants_.add(value);
           onChanged();
@@ -1416,9 +1407,7 @@ public final class Directdraw {
       public Builder addConstants(
           int index, org.webswing.directdraw.proto.Directdraw.DrawConstantProto value) {
         if (constantsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureConstantsIsMutable();
           constants_.add(index, value);
           onChanged();
@@ -1609,9 +1598,7 @@ public final class Directdraw {
       public Builder setFontFaces(
           int index, org.webswing.directdraw.proto.Directdraw.FontFaceProto value) {
         if (fontFacesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureFontFacesIsMutable();
           fontFaces_.set(index, value);
           onChanged();
@@ -1639,9 +1626,7 @@ public final class Directdraw {
        */
       public Builder addFontFaces(org.webswing.directdraw.proto.Directdraw.FontFaceProto value) {
         if (fontFacesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureFontFacesIsMutable();
           fontFaces_.add(value);
           onChanged();
@@ -1656,9 +1641,7 @@ public final class Directdraw {
       public Builder addFontFaces(
           int index, org.webswing.directdraw.proto.Directdraw.FontFaceProto value) {
         if (fontFacesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ensureFontFacesIsMutable();
           fontFaces_.add(index, value);
           onChanged();
@@ -1916,9 +1899,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -2665,9 +2646,7 @@ public final class Directdraw {
        * <code>required .org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto inst = 1;</code>
        */
       public Builder setInst(org.webswing.directdraw.proto.Directdraw.DrawInstructionProto.InstructionProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000001;
         inst_ = value.getNumber();
         onChanged();
@@ -2766,10 +2745,8 @@ public final class Directdraw {
        * <code>optional bytes webImage = 3;</code>
        */
       public Builder setWebImage(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000004;
         webImage_ = value;
         onChanged();
         return this;
@@ -3111,9 +3088,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -4929,9 +4904,7 @@ public final class Directdraw {
        */
       public Builder setColor(org.webswing.directdraw.proto.Directdraw.ColorProto value) {
         if (colorBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           color_ = value;
           onChanged();
         } else {
@@ -5047,9 +5020,7 @@ public final class Directdraw {
        */
       public Builder setImage(org.webswing.directdraw.proto.Directdraw.ImageProto value) {
         if (imageBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           image_ = value;
           onChanged();
         } else {
@@ -5165,9 +5136,7 @@ public final class Directdraw {
        */
       public Builder setTransform(org.webswing.directdraw.proto.Directdraw.TransformProto value) {
         if (transformBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           transform_ = value;
           onChanged();
         } else {
@@ -5304,10 +5273,8 @@ public final class Directdraw {
        */
       public Builder setString(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000010;
         string_ = value;
         onChanged();
         return this;
@@ -5326,10 +5293,8 @@ public final class Directdraw {
        */
       public Builder setStringBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000010;
         string_ = value;
         onChanged();
         return this;
@@ -5359,9 +5324,7 @@ public final class Directdraw {
        */
       public Builder setPath(org.webswing.directdraw.proto.Directdraw.PathProto value) {
         if (pathBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           path_ = value;
           onChanged();
         } else {
@@ -5477,9 +5440,7 @@ public final class Directdraw {
        */
       public Builder setFont(org.webswing.directdraw.proto.Directdraw.FontProto value) {
         if (fontBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           font_ = value;
           onChanged();
         } else {
@@ -5595,9 +5556,7 @@ public final class Directdraw {
        */
       public Builder setLinearGrad(org.webswing.directdraw.proto.Directdraw.LinearGradientProto value) {
         if (linearGradBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           linearGrad_ = value;
           onChanged();
         } else {
@@ -5713,9 +5672,7 @@ public final class Directdraw {
        */
       public Builder setRadialGrad(org.webswing.directdraw.proto.Directdraw.RadialGradientProto value) {
         if (radialGradBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           radialGrad_ = value;
           onChanged();
         } else {
@@ -5831,9 +5788,7 @@ public final class Directdraw {
        */
       public Builder setPoints(org.webswing.directdraw.proto.Directdraw.PointsProto value) {
         if (pointsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           points_ = value;
           onChanged();
         } else {
@@ -5949,9 +5904,7 @@ public final class Directdraw {
        */
       public Builder setRectangle(org.webswing.directdraw.proto.Directdraw.RectangleProto value) {
         if (rectangleBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           rectangle_ = value;
           onChanged();
         } else {
@@ -6067,9 +6020,7 @@ public final class Directdraw {
        */
       public Builder setEllipse(org.webswing.directdraw.proto.Directdraw.EllipseProto value) {
         if (ellipseBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           ellipse_ = value;
           onChanged();
         } else {
@@ -6185,9 +6136,7 @@ public final class Directdraw {
        */
       public Builder setRoundRectangle(org.webswing.directdraw.proto.Directdraw.RoundRectangleProto value) {
         if (roundRectangleBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           roundRectangle_ = value;
           onChanged();
         } else {
@@ -6303,9 +6252,7 @@ public final class Directdraw {
        */
       public Builder setArc(org.webswing.directdraw.proto.Directdraw.ArcProto value) {
         if (arcBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           arc_ = value;
           onChanged();
         } else {
@@ -6421,9 +6368,7 @@ public final class Directdraw {
        */
       public Builder setStroke(org.webswing.directdraw.proto.Directdraw.StrokeProto value) {
         if (strokeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           stroke_ = value;
           onChanged();
         } else {
@@ -6539,9 +6484,7 @@ public final class Directdraw {
        */
       public Builder setComposite(org.webswing.directdraw.proto.Directdraw.CompositeProto value) {
         if (compositeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           composite_ = value;
           onChanged();
         } else {
@@ -6657,9 +6600,7 @@ public final class Directdraw {
        */
       public Builder setTexture(org.webswing.directdraw.proto.Directdraw.TextureProto value) {
         if (textureBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           texture_ = value;
           onChanged();
         } else {
@@ -6775,9 +6716,7 @@ public final class Directdraw {
        */
       public Builder setGlyph(org.webswing.directdraw.proto.Directdraw.GlyphProto value) {
         if (glyphBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           glyph_ = value;
           onChanged();
         } else {
@@ -6893,9 +6832,7 @@ public final class Directdraw {
        */
       public Builder setCombined(org.webswing.directdraw.proto.Directdraw.CombinedProto value) {
         if (combinedBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           combined_ = value;
           onChanged();
         } else {
@@ -7108,9 +7045,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -7697,10 +7632,8 @@ public final class Directdraw {
        */
       public Builder setName(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         name_ = value;
         onChanged();
         return this;
@@ -7719,10 +7652,8 @@ public final class Directdraw {
        */
       public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         name_ = value;
         onChanged();
         return this;
@@ -7745,10 +7676,8 @@ public final class Directdraw {
        * <code>required bytes font = 2;</code>
        */
       public Builder setFont(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000002;
         font_ = value;
         onChanged();
         return this;
@@ -7808,10 +7737,8 @@ public final class Directdraw {
        */
       public Builder setStyle(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000004;
         style_ = value;
         onChanged();
         return this;
@@ -7830,10 +7757,8 @@ public final class Directdraw {
        */
       public Builder setStyleBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000004;
         style_ = value;
         onChanged();
         return this;
@@ -7930,9 +7855,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -8442,9 +8365,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -8848,10 +8769,8 @@ public final class Directdraw {
        * <code>required bytes data = 1;</code>
        */
       public Builder setData(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         data_ = value;
         onChanged();
         return this;
@@ -9007,9 +8926,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -9919,9 +9836,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -10491,9 +10406,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -10890,10 +10803,8 @@ public final class Directdraw {
        * <code>optional bytes data = 1;</code>
        */
       public Builder setData(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         data_ = value;
         onChanged();
         return this;
@@ -11029,9 +10940,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -11835,9 +11744,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -12661,9 +12568,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -13657,9 +13562,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -14673,9 +14576,7 @@ public final class Directdraw {
        * <code>optional .org.webswing.directdraw.proto.ArcProto.ArcTypeProto type = 7;</code>
        */
       public Builder setType(org.webswing.directdraw.proto.Directdraw.ArcProto.ArcTypeProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000040;
         type_ = value.getNumber();
         onChanged();
@@ -14810,9 +14711,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -15563,9 +15462,7 @@ public final class Directdraw {
        */
       public Builder setType(
           int index, org.webswing.directdraw.proto.Directdraw.PathProto.SegmentTypeProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         ensureTypeIsMutable();
         type_.set(index, value.getNumber());
         onChanged();
@@ -15575,9 +15472,7 @@ public final class Directdraw {
        * <code>repeated .org.webswing.directdraw.proto.PathProto.SegmentTypeProto type = 2;</code>
        */
       public Builder addType(org.webswing.directdraw.proto.Directdraw.PathProto.SegmentTypeProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         ensureTypeIsMutable();
         type_.add(value.getNumber());
         onChanged();
@@ -15810,9 +15705,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`value` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -16593,10 +16486,8 @@ public final class Directdraw {
        */
       public Builder setFamily(
           java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         family_ = value;
         onChanged();
         return this;
@@ -16615,10 +16506,8 @@ public final class Directdraw {
        */
       public Builder setFamilyBytes(
           com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
+        Objects.requireNonNull(value, "`value` must not be null here.");
+        bitField0_ |= 0x00000001;
         family_ = value;
         onChanged();
         return this;
@@ -16643,9 +16532,7 @@ public final class Directdraw {
        * <code>optional .org.webswing.directdraw.proto.FontProto.StyleProto style = 2;</code>
        */
       public Builder setStyle(org.webswing.directdraw.proto.Directdraw.FontProto.StyleProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000002;
         style_ = value.getNumber();
         onChanged();
@@ -16717,9 +16604,7 @@ public final class Directdraw {
        */
       public Builder setTransform(org.webswing.directdraw.proto.Directdraw.TransformProto value) {
         if (transformBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           transform_ = value;
           onChanged();
         } else {
@@ -16988,9 +16873,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -17941,9 +17824,7 @@ public final class Directdraw {
        * <code>optional .org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto join = 3;</code>
        */
       public Builder setJoin(org.webswing.directdraw.proto.Directdraw.StrokeProto.StrokeJoinProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000004;
         join_ = value.getNumber();
         onChanged();
@@ -17978,9 +17859,7 @@ public final class Directdraw {
        * <code>optional .org.webswing.directdraw.proto.StrokeProto.StrokeCapProto cap = 4;</code>
        */
       public Builder setCap(org.webswing.directdraw.proto.Directdraw.StrokeProto.StrokeCapProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000008;
         cap_ = value.getNumber();
         onChanged();
@@ -18253,9 +18132,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -19293,9 +19170,7 @@ public final class Directdraw {
        * <code>required .org.webswing.directdraw.proto.CyclicMethodProto repeat = 7;</code>
        */
       public Builder setRepeat(org.webswing.directdraw.proto.Directdraw.CyclicMethodProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000040;
         repeat_ = value.getNumber();
         onChanged();
@@ -19480,9 +19355,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -20604,9 +20477,7 @@ public final class Directdraw {
        * <code>required .org.webswing.directdraw.proto.CyclicMethodProto repeat = 8;</code>
        */
       public Builder setRepeat(org.webswing.directdraw.proto.Directdraw.CyclicMethodProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000080;
         repeat_ = value.getNumber();
         onChanged();
@@ -20717,9 +20588,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -21309,9 +21178,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -22007,9 +21874,7 @@ public final class Directdraw {
        * <code>required .org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto type = 1;</code>
        */
       public Builder setType(org.webswing.directdraw.proto.Directdraw.CompositeProto.CompositeTypeProto value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
+        Objects.requireNonNull(value, "`value` must not be null here.");
         bitField0_ |= 0x00000001;
         type_ = value.getNumber();
         onChanged();
@@ -22196,9 +22061,7 @@ public final class Directdraw {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
+      Objects.requireNonNull(extensionRegistry, "`extensionRegistry` must not be null here.");
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -22721,9 +22584,7 @@ public final class Directdraw {
        */
       public Builder setImage(org.webswing.directdraw.proto.Directdraw.ImageProto value) {
         if (imageBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           image_ = value;
           onChanged();
         } else {
@@ -22839,9 +22700,7 @@ public final class Directdraw {
        */
       public Builder setAnchor(org.webswing.directdraw.proto.Directdraw.RectangleProto value) {
         if (anchorBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
+          Objects.requireNonNull(value, "`value` must not be null here.");
           anchor_ = value;
           onChanged();
         } else {

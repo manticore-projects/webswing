@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ import javafx.stage.Modality;
  */
 public class WebWindow extends Window {
 
-	private static Map<Long, WebWindow> windowRegister = new HashMap<>();
+	private static final Map<Long, WebWindow> windowRegister = new HashMap<>();
 
 	WindowAdapter w;
 	private java.awt.Cursor dragCursor;
@@ -78,9 +79,8 @@ public class WebWindow extends Window {
 			@Override
 			public void componentResized(ComponentEvent componentEvent) {
 				notifyResize(com.sun.glass.events.WindowEvent.RESIZE, getContentBounds().width, getContentBounds().height);
-				if (getView() != null && getView() instanceof WebFxView) {
-					WebFxView wv = (WebFxView) getView();
-					wv.canvas.setSize(getContentBounds().getSize());
+				if (getView() != null && getView() instanceof WebFxView wv) {
+                    wv.canvas.setSize(getContentBounds().getSize());
 				}
 			}
 
@@ -136,7 +136,7 @@ public class WebWindow extends Window {
 	private void tryResolveModality() {
 		SwingUtilities.invokeLater(() -> {
 			try {
-				Class windowStageClass = Class.forName("com.sun.javafx.tk.quantum.WindowStage");
+				Class<?> windowStageClass = Class.forName("com.sun.javafx.tk.quantum.WindowStage");
 				Method findWindowStageMethod = windowStageClass.getDeclaredMethod("findWindowStage", Window.class);
 				findWindowStageMethod.setAccessible(true);
 				Object windowStage = findWindowStageMethod.invoke(null, WebWindow.this);
@@ -182,7 +182,7 @@ public class WebWindow extends Window {
 	@Override
 	protected boolean _setView(long ptr, View view) {
 		w.getContentPane().removeAll();
-		if (view != null && view instanceof WebFxView wv) {
+		if (view instanceof WebFxView wv) {
 			wv.setupWindow(w,getContentBounds());
 		}
 		return true;
@@ -327,7 +327,7 @@ public class WebWindow extends Window {
 
 	@Override
 	protected void _setIcon(long ptr, Pixels pixels) {
-		w.setIconImages(Arrays.asList(WebFxUtil.pixelsToImage(null,pixels)));
+		w.setIconImages(Collections.singletonList(WebFxUtil.pixelsToImage(null, pixels)));
 	}
 
 	protected void setDragCursor(java.awt.Cursor c) {
