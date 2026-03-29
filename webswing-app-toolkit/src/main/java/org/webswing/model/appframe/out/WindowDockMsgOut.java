@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class WindowDockMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -5473405345399477117L;
+    @Serial
+    private static final long serialVersionUID = -5473405345399477117L;
 
 	private String windowId;
 	

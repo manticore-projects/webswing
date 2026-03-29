@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class AccessTokenCreatedMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -7458405228520457102L;
+    @Serial
+    private static final long serialVersionUID = -7458405228520457102L;
 
 	private String refreshToken;
 	private String accessId;

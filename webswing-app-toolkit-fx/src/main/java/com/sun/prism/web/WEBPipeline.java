@@ -41,7 +41,7 @@ public class WEBPipeline extends GraphicsPipeline {
 
 	@Override
 	public ResourceFactory getResourceFactory(Screen screen) {
-		Integer index = new Integer(screen.getAdapterOrdinal());
+		Integer index = Integer.valueOf(screen.getAdapterOrdinal());
 		WebResourceFactory factory = factories.get(index);
 		if (factory == null) {
 			ResourceFactory originalFactory = pipeline.getResourceFactory(screen);

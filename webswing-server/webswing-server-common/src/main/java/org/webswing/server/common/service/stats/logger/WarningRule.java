@@ -17,7 +17,7 @@ public abstract class WarningRule {
 				if (allocated != null && allocated.doubleValue() != 0 && used != null) {
 					double utilization = used.doubleValue() / allocated.doubleValue();
 					if (utilization >= threshold) {
-						return warning(StatisticsLogger.MEMORY_USED_METRIC, String.format("Utilization is too high! (%.1f)", utilization * 100));
+						return warning(StatisticsLogger.MEMORY_USED_METRIC, "Utilization is too high! (%.1f)".formatted(utilization * 100));
 					}
 				}
 				return null;
@@ -36,7 +36,7 @@ public abstract class WarningRule {
 				Number value = lastMetrics.get(metric);
 				if (metric != null) {
 					if (value.doubleValue() >= threshold) {
-						return warning(metric, String.format(msg, value));
+						return warning(metric, msg.formatted(value));
 					}
 				}
 				return null;

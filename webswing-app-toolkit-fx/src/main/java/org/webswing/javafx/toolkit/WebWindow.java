@@ -145,8 +145,8 @@ public class WebWindow extends Window {
 					modalityField.setAccessible(true);
 					Modality modality = (Modality) modalityField.get(windowStage);
 					if (modality != null) {
-						if (w instanceof JDialogAdapter) {
-							((JDialogAdapter) w).setModalityType(modality == Modality.APPLICATION_MODAL ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
+						if (w instanceof JDialogAdapter adapter) {
+							adapter.setModalityType(modality == Modality.APPLICATION_MODAL ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
 						}
 					}
 				}
@@ -182,8 +182,7 @@ public class WebWindow extends Window {
 	@Override
 	protected boolean _setView(long ptr, View view) {
 		w.getContentPane().removeAll();
-		if (view != null && view instanceof WebFxView) {
-			WebFxView wv = (WebFxView) view;
+		if (view != null && view instanceof WebFxView wv) {
 			wv.setupWindow(w,getContentBounds());
 		}
 		return true;
@@ -347,12 +346,10 @@ public class WebWindow extends Window {
 
 	@Override
 	protected void _setCursor(long ptr, Cursor cursor) {
-		if (cursor instanceof WebFxCursor) {
+		if (cursor instanceof WebFxCursor wfxCursor) {
 			if (dragCursor != null) {
-				WebFxCursor wfxCursor = (WebFxCursor) cursor;
 				this.originalCursor = wfxCursor.c;
 			} else {
-				WebFxCursor wfxCursor = (WebFxCursor) cursor;
 				w.getContentPane().setCursor(wfxCursor.c);
 			}
 		}

@@ -3,6 +3,7 @@ package org.webswing.model.appframe.out;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.IllegalComponentStateException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import org.webswing.model.MsgOut;
 
 public class ComponentTreeMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8433885502194335248L;
+    @Serial
+    private static final long serialVersionUID = -8433885502194335248L;
 	
 	private String componentType;
 	private String name;
@@ -39,29 +41,28 @@ public class ComponentTreeMsgOut implements MsgOut {
 		
 		msg.setComponentType(componentType);
 		msg.setName(c.getName());
-		if (c instanceof Frame) {
-			msg.setValue(((Frame) c).getTitle());
+		if (c instanceof Frame frame) {
+			msg.setValue(frame.getTitle());
 		}
-		if (c instanceof AbstractButton) {
-			msg.setValue(((AbstractButton) c).getText());
+		if (c instanceof AbstractButton button) {
+			msg.setValue(button.getText());
 		}
-		if (c instanceof JLabel) {
-			msg.setValue(((JLabel) c).getText());
+		if (c instanceof JLabel label) {
+			msg.setValue(label.getText());
 		}
-		if (c instanceof JTextComponent) {
-			msg.setValue(((JTextComponent) c).getText());
+		if (c instanceof JTextComponent component) {
+			msg.setValue(component.getText());
 		}
-		if (c instanceof JToggleButton) {
-			msg.setSelected(((JToggleButton) c).isSelected());
+		if (c instanceof JToggleButton button) {
+			msg.setSelected(button.isSelected());
 		}
-		if (c instanceof JComboBox) {
-			JComboBox<?> combo = (JComboBox<?>) c;
+		if (c instanceof JComboBox<?> combo) {
 			if (combo.getSelectedItem() != null) {
 				msg.setValue(combo.getSelectedItem().toString());
 			}
 		}
-		if (c instanceof JSlider) {
-			msg.setValue(((JSlider) c).getValue() + "");
+		if (c instanceof JSlider slider) {
+			msg.setValue(slider.getValue() + "");
 		}
 		
 		try {

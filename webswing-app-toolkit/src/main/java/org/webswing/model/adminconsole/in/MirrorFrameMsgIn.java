@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class MirrorFrameMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -9216019450138355731L;
+    @Serial
+    private static final long serialVersionUID = -9216019450138355731L;
 
 	private byte[] frame;
 	private String instanceId;

@@ -2,9 +2,12 @@ package org.webswing.model.app.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class ExitMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8007742149401885272L;
+    @Serial
+    private static final long serialVersionUID = -8007742149401885272L;
 	
 	private int waitForExit;
 	

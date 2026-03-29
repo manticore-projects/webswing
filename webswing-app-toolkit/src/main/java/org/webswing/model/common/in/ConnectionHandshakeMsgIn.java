@@ -1,5 +1,6 @@
 package org.webswing.model.common.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.CommonMsg;
@@ -7,7 +8,8 @@ import org.webswing.model.MsgIn;
 
 public class ConnectionHandshakeMsgIn implements MsgIn, CommonMsg {
 
-	private static final long serialVersionUID = -7143564320373144470L;
+    @Serial
+    private static final long serialVersionUID = -7143564320373144470L;
 
 	private String instanceId;
 	private String browserId;

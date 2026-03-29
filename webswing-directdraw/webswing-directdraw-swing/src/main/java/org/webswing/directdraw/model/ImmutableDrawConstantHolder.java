@@ -28,6 +28,6 @@ public abstract class ImmutableDrawConstantHolder<T> extends DrawConstant<T> {
 	@Override
 	public boolean equals(Object o) {
 		return o == this ||
-			o instanceof ImmutableDrawConstantHolder && value.equals(((ImmutableDrawConstantHolder<?>) o).getValue());
+			o instanceof ImmutableDrawConstantHolder<?> idch && value.equals(idch.getValue());
 	}
 }

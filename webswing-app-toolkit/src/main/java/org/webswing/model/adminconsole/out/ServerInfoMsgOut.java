@@ -1,12 +1,14 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class ServerInfoMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -562205063402702649L;
+    @Serial
+    private static final long serialVersionUID = -562205063402702649L;
 
 	private String id;
 	private List<ApplicationInfoMsgOut> appInfos;

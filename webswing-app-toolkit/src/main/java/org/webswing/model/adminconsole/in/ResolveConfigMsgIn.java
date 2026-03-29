@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.in;
 
+import java.io.Serial;
 import java.util.UUID;
 
 import org.webswing.model.MsgIn;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class ResolveConfigMsgIn implements SyncMsg, MsgIn {
 
-	private static final long serialVersionUID = -51242809130068878L;
+    @Serial
+    private static final long serialVersionUID = -51242809130068878L;
 
 	private String path;
 	private String type;

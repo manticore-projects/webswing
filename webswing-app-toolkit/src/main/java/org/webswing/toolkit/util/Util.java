@@ -307,9 +307,9 @@ public class Util {
 	public static WebWindowPeer findWindowPeerById(String id) {
 		for (Window w : Window.getWindows()) {
 			Object peer = WebToolkit.targetToPeer(w);
-			if (peer != null && peer instanceof WebWindowPeer) {
-				if (((WebWindowPeer) peer).getGuid().equals(id)) {
-					return (WebWindowPeer) peer;
+			if (peer != null && peer instanceof WebWindowPeer windowPeer) {
+				if (windowPeer.getGuid().equals(id)) {
+					return windowPeer;
 				}
 
 			}
@@ -320,8 +320,8 @@ public class Util {
 	public static Window findWindowById(String id) {
 		for (Window w : Window.getWindows()) {
 			Object peer = WebToolkit.targetToPeer(w);
-			if (peer != null && peer instanceof WebWindowPeer) {
-				if (((WebWindowPeer) peer).getGuid().equals(id)) {
+			if (peer != null && peer instanceof WebWindowPeer windowPeer) {
+				if (windowPeer.getGuid().equals(id)) {
 					return w;
 				}
 				
@@ -530,9 +530,9 @@ public class Util {
 				htmlWin.setContent(Collections.emptyList());
 			}
 			
-			if (htmlPanel instanceof HtmlPanelImpl) {
-				Container container = ((HtmlPanelImpl) htmlPanel).getWebContainer();
-				JComponent component = ((HtmlPanelImpl) htmlPanel).getWebComponent();
+			if (htmlPanel instanceof HtmlPanelImpl impl) {
+				Container container = impl.getWebContainer();
+				JComponent component = impl.getWebComponent();
 				if (container != null && component != null) {
 					// if HtmlPanel has a registered container, process later when web containers are processed (see handleWebContainers method)
 					if (!htmlWebComponentsMap.containsKey(container)) {
@@ -562,8 +562,8 @@ public class Util {
 			}
 
 			Rectangle containerBounds = new Rectangle(container.getLocationOnScreen(), container.getSize());
-			if (container instanceof JComponent) {
-				Rectangle visibleRect = ((JComponent) container).getVisibleRect();
+			if (container instanceof JComponent component) {
+				Rectangle visibleRect = component.getVisibleRect();
 				// if container is inside a scrollpane, visibleRect has non-0 x/y
 				// we have to add the visibleRect location to the container.getLocationOnScreen to compensate for the scroll offset
 				containerBounds.x += visibleRect.x;
@@ -653,15 +653,15 @@ public class Util {
 		}
 		switch (getDockMode()) {
 			case "ALL" :
-				if (windowTarget instanceof Dockable) {
-					window.setDockMode(((Dockable) windowTarget).isAutoUndock() ? DockMode.autoUndock : DockMode.dockable);
+				if (windowTarget instanceof Dockable dockable1) {
+					window.setDockMode(dockable1.isAutoUndock() ? DockMode.autoUndock : DockMode.dockable);
 				} else {
 					window.setDockMode(DockMode.dockable);
 				}
 				break;
 			case "MARKED":
-				if (windowTarget instanceof Dockable) {
-					window.setDockMode(((Dockable) windowTarget).isAutoUndock() ? DockMode.autoUndock : DockMode.dockable);
+				if (windowTarget instanceof Dockable dockable1) {
+					window.setDockMode(dockable1.isAutoUndock() ? DockMode.autoUndock : DockMode.dockable);
 				}
 				break;
 			case "NONE":
@@ -702,8 +702,8 @@ public class Util {
 	}
 
 	public static boolean isWindowDecorationEvent(Window w, AWTEvent e) {
-		if (e instanceof MouseEvent && MouseEvent.MOUSE_WHEEL != e.getID() && w != null && w.isEnabled() && w.isShowing()) {
-			return isWindowDecorationPosition((Window) w, new Point(((MouseEvent) e).getXOnScreen(), ((MouseEvent) e).getYOnScreen()));
+		if (e instanceof MouseEvent event && MouseEvent.MOUSE_WHEEL != e.getID() && w != null && w.isEnabled() && w.isShowing()) {
+			return isWindowDecorationPosition((Window) w, new Point(event.getXOnScreen(), event.getYOnScreen()));
 		}
 		return false;
 	}
@@ -882,12 +882,11 @@ public class Util {
 	}
 
 	public static JFileChooser discoverFileChooser(Window w) {
-		if (w instanceof JDialog) {
-			Container pane = ((JDialog) w).getContentPane();
+		if (w instanceof JDialog dialog) {
+			Container pane = dialog.getContentPane();
 			if (pane != null) {
 				Component[] coms = pane.getComponents();
-				if (coms != null && coms.length > 0 && coms[0] instanceof JFileChooser) {
-					JFileChooser chooser = (JFileChooser) coms[0];
+				if (coms != null && coms.length > 0 && coms[0] instanceof JFileChooser chooser) {
 					chooser.putClientProperty(WebswingFileChooserUtil.CUSTOM_FILE_CHOOSER, false);
 					return chooser;
 				}
@@ -977,8 +976,8 @@ public class Util {
 			for (Window w : Util.getAllWindows()) {
 				if (w.isShowing()) {
 					final Object peer = WebToolkit.targetToPeer(w);
-					if (peer != null && peer instanceof WebWindowPeer) {
-						((WebWindowPeer) peer).updateWindowDecorationImage();
+					if (peer != null && peer instanceof WebWindowPeer windowPeer) {
+						windowPeer.updateWindowDecorationImage();
 						RepaintManager.currentManager(null).addDirtyRegion(w, 0, 0, w.getWidth(), w.getHeight());
 					}
 				}
@@ -988,8 +987,8 @@ public class Util {
 
 	public static Panel findHwComponentParent(JComponent c) {
 		for (Container p = c.getParent(); p != null; p = p.getParent()) {
-			if (p instanceof Panel) {
-				return (Panel) p;
+			if (p instanceof Panel panel) {
+				return panel;
 			}
 		}
 		return null;

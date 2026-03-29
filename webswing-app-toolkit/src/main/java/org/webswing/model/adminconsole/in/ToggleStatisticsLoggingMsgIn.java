@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class ToggleStatisticsLoggingMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 1865769324317571740L;
+    @Serial
+    private static final long serialVersionUID = 1865769324317571740L;
 
 	private String path;
 	private String instanceId;

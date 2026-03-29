@@ -180,8 +180,8 @@ public abstract class AbstractWebApplication extends Application {
 
 	private java.awt.Window getWindow(Window owner) {
 		java.awt.Window parent = null;
-		if (owner instanceof WebWindow) {
-			WindowAdapter adapter = ((WebWindow) owner).w;
+		if (owner instanceof WebWindow window) {
+			WindowAdapter adapter = window.w;
 			parent = adapter != null ? adapter.getThis() : null;
 		}
 		return parent;

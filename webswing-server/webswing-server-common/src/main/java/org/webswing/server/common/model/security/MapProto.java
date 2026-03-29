@@ -1,10 +1,12 @@
 package org.webswing.server.common.model.security;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class MapProto implements Serializable {
 
-	private static final long serialVersionUID = -27076384699449480L;
+    @Serial
+    private static final long serialVersionUID = -27076384699449480L;
 	
 	private String key;
 	private byte[] value; // serialized with ObjectMapper

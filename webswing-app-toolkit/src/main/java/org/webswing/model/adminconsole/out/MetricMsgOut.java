@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class MetricMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -5556290122276899717L;
+    @Serial
+    private static final long serialVersionUID = -5556290122276899717L;
 
 	private String key;
 	private long value;

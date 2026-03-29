@@ -1,12 +1,14 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class AdminConsoleFrameMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 3253892297375570414L;
+    @Serial
+    private static final long serialVersionUID = 3253892297375570414L;
 
 	private String path;
 	private ThreadDumpMsgOut threadDump;

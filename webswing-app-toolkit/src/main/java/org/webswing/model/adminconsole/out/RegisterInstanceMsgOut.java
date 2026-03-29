@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class RegisterInstanceMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -4389200203211810885L;
+    @Serial
+    private static final long serialVersionUID = -4389200203211810885L;
 
 	private String path;
 	private String instanceId;

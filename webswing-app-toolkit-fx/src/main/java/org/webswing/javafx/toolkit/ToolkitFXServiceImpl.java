@@ -50,8 +50,8 @@ public class ToolkitFXServiceImpl implements ToolkitFXService {
 	
 	@Override
 	public void registerStage(Object stage) {
-		if (stage instanceof Stage) {
-			stages.add((Stage) stage);
+		if (stage instanceof Stage stage1) {
+			stages.add(stage1);
 		}
 	}
 	
@@ -59,10 +59,10 @@ public class ToolkitFXServiceImpl implements ToolkitFXService {
 	public List<ComponentTreeMsgOut> requestNodeTree(Object node) {
 		List<ComponentTreeMsgOut> componentTree = new ArrayList<ComponentTreeMsgOut>();
 		
-		if (node != null && node instanceof Node) {
-			componentTree.add(createComponentTreeMsg((Node) node));
-		} else if (node != null && node instanceof JFXPanel) {
-			componentTree.add(createComponentTreeMsg(((JFXPanel) node).getScene().getRoot()));
+		if (node != null && node instanceof Node node1) {
+			componentTree.add(createComponentTreeMsg(node1));
+		} else if (node != null && node instanceof JFXPanel panel) {
+			componentTree.add(createComponentTreeMsg(panel.getScene().getRoot()));
 		} else {
 			stages.forEach(stage -> componentTree.add(createComponentTreeMsg(stage.getScene().getRoot())));
 		}
@@ -82,12 +82,12 @@ public class ToolkitFXServiceImpl implements ToolkitFXService {
 			return msg;
 		}
 		
-		if (n instanceof Parent) {
-			((Parent) n).getChildrenUnmodifiable().forEach(child -> msg.addChildComponent(createComponentTreeMsg(child)));
+		if (n instanceof Parent parent) {
+			parent.getChildrenUnmodifiable().forEach(child -> msg.addChildComponent(createComponentTreeMsg(child)));
 		}
 		
-		if (n instanceof SwingNode) {
-			JComponent swingComponent = ((SwingNode) n).getContent();
+		if (n instanceof SwingNode node) {
+			JComponent swingComponent = node.getContent();
 			if (swingComponent != null) {
 				try {
 					msg.setComponents(ToolkitUtil.getComponentTree(swingComponent));
@@ -111,45 +111,42 @@ public class ToolkitFXServiceImpl implements ToolkitFXService {
 		boolean transparent = n.getOpacity() == 0d;
 		msg.setHidden(transparent);
 		
-		if (n instanceof TextInputControl) {
-			msg.setValue(((TextInputControl) n).getText());
+		if (n instanceof TextInputControl control) {
+			msg.setValue(control.getText());
 		}
 		
-		if (n instanceof Labeled) {
-			msg.setValue(((Labeled) n).getText());
+		if (n instanceof Labeled labeled) {
+			msg.setValue(labeled.getText());
 		}
 		
-		if (n instanceof Slider) {
-			msg.setValue(((Slider) n).getValue() + "");
+		if (n instanceof Slider slider) {
+			msg.setValue(slider.getValue() + "");
 		}
 		
-		if (n instanceof Spinner<?>) {
-			Spinner<?> spinner = (Spinner<?>) n;
+		if (n instanceof Spinner<?> spinner) {
 			if (spinner.getValue() != null) {
 				msg.setValue(spinner.getValue().toString());
 			}
 		}
 		
-		if (n instanceof ComboBoxBase<?>) {
-			ComboBoxBase<?> combo = (ComboBoxBase<?>) n;
+		if (n instanceof ComboBoxBase<?> combo) {
 			if (combo.getValue() != null) {
 				msg.setValue(combo.getValue().toString());
 			}
 		}
 		
-		if (n instanceof ChoiceBox<?>) {
-			ChoiceBox<?> choicebox = (ChoiceBox<?>) n;
+		if (n instanceof ChoiceBox<?> choicebox) {
 			if (choicebox.getValue() != null) {
 				msg.setValue(choicebox.getValue().toString());
 			}
 		}
 		
-		if (n instanceof ToggleButton) {
-			msg.setSelected(((ToggleButton) n).isSelected());
+		if (n instanceof ToggleButton button) {
+			msg.setSelected(button.isSelected());
 		}
 		
-		if (n instanceof CheckBox) {
-			msg.setSelected(((CheckBox) n).isSelected());
+		if (n instanceof CheckBox box) {
+			msg.setSelected(box.isSelected());
 		}
 		
 		Bounds bounds = n.localToScreen(n.getBoundsInLocal());

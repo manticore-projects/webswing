@@ -20,7 +20,7 @@ public class ShiroConfigMonitor {
     private static final long DEBOUNCE_DELAY_MS = 1000;
 
     public ShiroConfigMonitor(String filePath, Consumer<String> reloadCallback) {
-        this.configPath = Paths.get(filePath).toAbsolutePath();
+        this.configPath = Path.of(filePath).toAbsolutePath();
         this.reloadCallback = reloadCallback;
         // Utilizing a fixed pool size of 4 for background monitoring and reload tasks
         this.reloadExecutor = Executors.newFixedThreadPool(4);

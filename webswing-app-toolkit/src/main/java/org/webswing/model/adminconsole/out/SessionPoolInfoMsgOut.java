@@ -1,12 +1,14 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class SessionPoolInfoMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 7963526114521293161L;
+    @Serial
+    private static final long serialVersionUID = 7963526114521293161L;
 
 	private String id;
 	private int maxInstances;

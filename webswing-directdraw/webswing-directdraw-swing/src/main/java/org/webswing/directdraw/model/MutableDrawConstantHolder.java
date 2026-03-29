@@ -31,6 +31,6 @@ public abstract class MutableDrawConstantHolder<T, M extends Message> extends Dr
 	@Override
 	public final boolean equals(Object o) {
 		return o == this ||
-			o instanceof MutableDrawConstantHolder && message.equals(((MutableDrawConstantHolder<?, ?>) o).message);
+			o instanceof MutableDrawConstantHolder<?, ?> mdch && message.equals(mdch.message);
 	}
 }

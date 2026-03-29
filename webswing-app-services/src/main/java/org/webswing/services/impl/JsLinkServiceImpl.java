@@ -46,12 +46,11 @@ public class JsLinkServiceImpl implements JsLinkService {
 		if (arg != null) {
 			if (isPrimitive(arg)) {
 				result.setPrimitive(mapper.writeValueAsString(arg));
-			} else if (arg instanceof WebJSObject) {
-				WebJSObject jsobj = (WebJSObject) arg;
+			} else if (arg instanceof WebJSObject jsobj) {
 				result.setJsObject(new JSObjectMsgOut(jsobj.getThisId().getId()));
-			} else if (arg instanceof Iterable<?> && includeArrays) {
+			} else if (arg instanceof Iterable<?> iterable && includeArrays) {
 				List<JsParamMsgOut> array = new ArrayList<>();
-                for (Object o : (Iterable<?>) arg) {
+                for (Object o : iterable) {
                     array.add(generateParam(o, false));
                 }
 				result.setArray(array);
@@ -104,9 +103,9 @@ public class JsLinkServiceImpl implements JsLinkService {
 			Object value = parseValue(javaReq.getParams().get(i));
 			if (ClassUtils.isAssignable(value == null ? null : value.getClass(), type, true)) {
 				params[i] = value;
-			} else if (value instanceof String) {
+			} else if (value instanceof String string) {
 				try {
-					params[i] = mapper.readValue((String) value, type);
+					params[i] = mapper.readValue(string, type);
 				} catch (Exception e) {
 					throw new RuntimeException("Method " + m + " has incompatible parameter " + i + ". Expected " + type.getName() + ". Error when reading as json:" + e.getLocalizedMessage());
 				}

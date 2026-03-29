@@ -49,10 +49,10 @@ public class AppLogger {
 				for (Object obj : o) {
 					if (obj == null) {
 						sb.append("null");
-					} else if (obj instanceof Throwable) {
+					} else if (obj instanceof Throwable throwable) {
 						StringWriter sw = new StringWriter();
 						PrintWriter pw = new PrintWriter(sw);
-						((Throwable) obj).printStackTrace(pw);
+						throwable.printStackTrace(pw);
 						sb.append(sw.toString());
 					} else {
 						sb.append(o.toString());

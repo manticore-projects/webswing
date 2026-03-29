@@ -275,8 +275,8 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 			firstButton = false;
 		}
 
-		if (isDockButtonVisible(window) && window instanceof Window) {
-			boolean undocked = Util.isWindowUndocked((Window) window);
+		if (isDockButtonVisible(window) && window instanceof Window window1) {
+			boolean undocked = Util.isWindowUndocked(window1);
 			BufferedImage img = undocked ? is.DOCK : is.UNDOCK;
 			x -= (firstButton ? 0 : BUTTON_SPACING) + img.getWidth();
 
@@ -332,20 +332,20 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 	}
 
 	private static String getTitle(Object o) {
-		if (o instanceof Frame) {
-			return ((Frame) o).getTitle();
-		} else if (o instanceof Dialog) {
-			return ((Dialog) o).getTitle();
+		if (o instanceof Frame frame) {
+			return frame.getTitle();
+		} else if (o instanceof Dialog dialog) {
+			return dialog.getTitle();
 		} else {
 			return null;
 		}
 	}
 
 	private static Image getIcon(Object o) {
-		if (o instanceof Frame) {
-			return ((Frame) o).getIconImage();
-		} else if (o instanceof Dialog) {
-			List<Image> images = ((Dialog) o).getIconImages();
+		if (o instanceof Frame frame) {
+			return frame.getIconImage();
+		} else if (o instanceof Dialog dialog) {
+			List<Image> images = dialog.getIconImages();
 			if (images.size() > 0) {
 				return images.get(0);
 			}
@@ -442,8 +442,8 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 			break;
 		case maximize:
 			rect = getMaximizeRect(window);
-			if (window instanceof Frame) {
-				if ((((Frame) window).getExtendedState() & Frame.MAXIMIZED_BOTH) != 0) {
+			if (window instanceof Frame frame) {
+				if ((frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != 0) {
 					// maximized
 					result.setText("accessibility.window.button.restore");
 				} else {
@@ -472,14 +472,14 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 	}
 
 	public boolean isMinMaxButtonVisible(Object w) {
-		if (w instanceof Window && Util.isWindowUndocked((Window) w)) {
+		if (w instanceof Window window && Util.isWindowUndocked(window)) {
 			return false;
 		}
-		return (w instanceof Frame) && ((Frame) w).isResizable();
+		return (w instanceof Frame f) && f.isResizable();
 	}
 
 	public boolean isCloseButtonVisible(Object w) {
-		if (w instanceof Window && Util.isWindowUndocked((Window) w)) {
+		if (w instanceof Window window && Util.isWindowUndocked(window)) {
 			return false;
 		}
 		return true;
@@ -489,7 +489,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 		if (Util.isWindowUndocked(w)) {
 			return false;
 		}
-		return (w instanceof Dialog && ((Dialog) w).isResizable()) || (w instanceof Frame) && ((Frame) w).isResizable();
+		return (w instanceof Dialog d && d.isResizable()) || (w instanceof Frame f) && f.isResizable();
 	}
 
 	private boolean isDockButtonVisible(Object w) {

@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class AccessibilityHierarchyMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 511384426503762955L;
+    @Serial
+    private static final long serialVersionUID = 511384426503762955L;
 	
 	// ! make sure to regenerate hashcode and equals after change to this class
 	

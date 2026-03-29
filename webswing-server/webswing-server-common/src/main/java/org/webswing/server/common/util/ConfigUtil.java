@@ -53,9 +53,7 @@ public class ConfigUtil {
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				BeanInfo info = Introspector.getBeanInfo(method.getDeclaringClass());
 				PropertyDescriptor[] pds = info.getPropertyDescriptors();
-				if (method.getName().equals("getValueAs") && method.getParameterTypes().length == 2 && args[0] instanceof String && args[1] instanceof Class) {
-					String s = (String) args[0];
-					Class c = (Class) args[1];
+				if (method.getName().equals("getValueAs") && method.getParameterTypes().length == 2 && args[0] instanceof String s && args[1] instanceof Class c) {
 					Object o = config.get(s);
 					Map<String, Object> subConfig = (Map<String, Object>) (o instanceof HashMap
                                                                            ? o : new HashMap());
@@ -74,10 +72,9 @@ public class ConfigUtil {
 						Object value = config.get(pd.getName());
 						if (value != null) {
 							if (ClassUtils.isAssignable(value.getClass(), method.getReturnType(), true)) {
-								if (value instanceof Map) {
+								if (value instanceof Map valueMap) {
 									Class generic = getGenericClass(method.getGenericReturnType(), 1);
 									if (generic != null && generic.isInterface()) {
-										Map valueMap = (Map) value;
 										Map resultMap = new HashMap();
 										for (Object key : valueMap.keySet()) {
 											Object entryValue = valueMap.get(key);
@@ -86,10 +83,9 @@ public class ConfigUtil {
 										return resultMap;
 									}
 								}
-								if (value instanceof List) {
+								if (value instanceof List valuelist) {
 									Class generic = getGenericClass(method.getGenericReturnType(), 0);
 									if (generic != null && generic.isInterface()) {
-										List valuelist = (List) value;
 										List resultList = new ArrayList();
 										for (Object item : valuelist) {
 											resultList.add(instantiateConfig((Map<String, Object>) item, generic, context));
@@ -97,17 +93,17 @@ public class ConfigUtil {
 										return resultList;
 									}
 								}
-								if (value instanceof Number) {
-									return convertNumberToTargetClass((Number) value, method.getReturnType());
+								if (value instanceof Number number) {
+									return convertNumberToTargetClass(number, method.getReturnType());
 								}
 								return value;
 							} else if (ClassUtils.isAssignable(value.getClass(), Number.class, true) && ClassUtils.isAssignable(method.getReturnType(), Number.class, true)) {
 								return convertNumberToTargetClass((Number) value, method.getReturnType());
-							} else if (value instanceof Map && method.getReturnType().isInterface() && !Collection.class.isAssignableFrom(method.getReturnType())) {
-								return instantiateConfig((Map) value, method.getReturnType(), context);
-							} else if (value instanceof String && method.getReturnType().isEnum()) {
+							} else if (value instanceof Map map && method.getReturnType().isInterface() && !Collection.class.isAssignableFrom(method.getReturnType())) {
+								return instantiateConfig(map, method.getReturnType(), context);
+							} else if (value instanceof String string && method.getReturnType().isEnum()) {
 								try {
-									return Enum.valueOf((Class<Enum>) method.getReturnType(), (String) value);
+									return Enum.valueOf((Class<Enum>) method.getReturnType(), string);
 								} catch (Exception e) {
 									return null;
 								}
@@ -163,9 +159,9 @@ public class ConfigUtil {
 								if (defaultObject != null) {
 									Object newInstance;
 									if (Void.class.equals(defaultObject.value())) {
-										newInstance = returnType.newInstance();
+										newInstance = returnType.getDeclaredConstructor().newInstance();
 									} else {
-										newInstance = defaultObject.value().newInstance();
+										newInstance = defaultObject.value().getDeclaredConstructor().newInstance();
 									}
 									config.put(pd.getName(), newInstance);
 									return newInstance;
@@ -225,10 +221,10 @@ public class ConfigUtil {
 	}
 
 	private static Class<?> getGenericClass(Type genericType, int index) {
-		if (genericType instanceof ParameterizedType) {
-			Type[] generics = ((ParameterizedType) genericType).getActualTypeArguments();
-			if (generics[index] instanceof Class) {
-				return (Class<?>) generics[index];
+		if (genericType instanceof ParameterizedType type) {
+			Type[] generics = type.getActualTypeArguments();
+			if (generics[index] instanceof Class<?> class1) {
+				return class1;
 			}
 		}
 		return null;

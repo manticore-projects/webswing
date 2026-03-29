@@ -235,7 +235,7 @@ public class MetadataGenerator<T> {
 			if (obj != null) {
 				ConfigType configType = findAnnotation(obj.getClass(), ConfigType.class);
 				if (configType != null && configType.metadataGenerator() != null) {
-					result = configType.metadataGenerator().newInstance();
+					result = configType.metadataGenerator().getDeclaredConstructor().newInstance();
 				}
 			}
 		} catch (Exception e) {
@@ -411,10 +411,10 @@ public class MetadataGenerator<T> {
 	}
 
 	public static Class<?> getGenericClass(Type genericType, int index) {
-		if (genericType instanceof ParameterizedType) {
-			Type[] generics = ((ParameterizedType) genericType).getActualTypeArguments();
-			if (generics != null && generics[index] instanceof Class) {
-				return (Class<?>) generics[index];
+		if (genericType instanceof ParameterizedType parameterizedType) {
+			Type[] generics = parameterizedType.getActualTypeArguments();
+			if (generics != null && generics[index] instanceof Class<?> class1) {
+				return class1;
 			}
 		}
 		return null;

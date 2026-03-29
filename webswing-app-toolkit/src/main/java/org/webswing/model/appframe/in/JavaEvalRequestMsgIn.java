@@ -1,12 +1,14 @@
 package org.webswing.model.appframe.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
 
 public class JavaEvalRequestMsgIn implements MsgIn, SyncMsg {
-	private static final long serialVersionUID = 7491354280941799313L;
+    @Serial
+    private static final long serialVersionUID = 7491354280941799313L;
 
 	private String correlationId;
 	private String objectId;

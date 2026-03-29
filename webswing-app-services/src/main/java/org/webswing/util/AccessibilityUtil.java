@@ -181,8 +181,8 @@ public class AccessibilityUtil {
 		Accessible a = null;
 		
 		if (c != null) {
-			if (c instanceof Accessible) {
-				a = (Accessible) c;
+			if (c instanceof Accessible accessible) {
+				a = accessible;
 			} else {
 				a = Translator.getAccessible(c);
 			}
@@ -198,8 +198,8 @@ public class AccessibilityUtil {
 		Accessible a = null;
 
 		if (deepC != null) {
-			if (deepC instanceof Accessible) {
-				a = (Accessible) deepC;
+			if (deepC instanceof Accessible accessible) {
+				a = accessible;
 			} else {
 				a = Translator.getAccessible(deepC);
 			}
@@ -222,8 +222,8 @@ public class AccessibilityUtil {
 			return null;
 		}
 		
-		if (a instanceof Component) {
-			Window w = SwingUtilities.getWindowAncestor((Component) a);
+		if (a instanceof Component component) {
+			Window w = SwingUtilities.getWindowAncestor(component);
 			if (w != null) {
 				JFileChooser fc = Util.discoverFileChooser(w);
 				if (fc != null) {
@@ -265,22 +265,21 @@ public class AccessibilityUtil {
 			MenuElement[] me = MenuSelectionManager.defaultManager().getSelectedPath();
 			
 			if (me != null && me.length > 0) {
-				if (me[me.length - 1] instanceof Accessible) {
-					a = (Accessible) me[me.length - 1];
+				if (me[me.length - 1] instanceof Accessible accessible1) {
+					a = accessible1;
 				}
 			}
 			
 			// we want either JMenu or JMenuItem, JPopupMenu has no text, this happens when a popup menu of a JMenu is open but no JMenuItem is selected
-			if (a instanceof JPopupMenu) {
-				if (((JPopupMenu) a).getInvoker() instanceof JMenu) {
-					a = (JMenu) ((JPopupMenu) a).getInvoker();
+			if (a instanceof JPopupMenu menu) {
+				if (menu.getInvoker() instanceof JMenu) {
+					a = (JMenu) menu.getInvoker();
 				}
 			}
 		}
 		
 		JDialog optionPaneDialog = null;
-		if (a instanceof JDialog) {
-			JDialog dialog = (JDialog) a;
+		if (a instanceof JDialog dialog) {
 			
 			JOptionPane optionPane = findOptionPane(dialog.getContentPane());
 			if (optionPane != null) {
@@ -321,12 +320,12 @@ public class AccessibilityUtil {
 			result.setStates(states);
 		}
 		
-		if (a instanceof Component) {
-			handleComponent(result, (Component) a);
+		if (a instanceof Component component) {
+			handleComponent(result, component);
 		}
 		
-		if (a instanceof JComponent) {
-			String tooltip = ((JComponent) a).getToolTipText();
+		if (a instanceof JComponent component) {
+			String tooltip = component.getToolTipText();
 			if (tooltip != null && tooltip.trim().length() > 0) {
 				result.setTooltip(tooltip);
 			}
@@ -339,8 +338,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (a instanceof JOptionPane) {
-			JOptionPane optionPane = (JOptionPane) a;
+		if (a instanceof JOptionPane optionPane) {
 			
 			if (optionPane.getMessage() instanceof String) {
 				description = (String) optionPane.getMessage();
@@ -352,14 +350,14 @@ public class AccessibilityUtil {
 				result.setText(optionPaneDialog.getTitle());
 			} else {
 				Window w = SwingUtilities.getWindowAncestor(optionPane);
-				if (w != null && w instanceof Dialog) {
-					result.setText(((Dialog) w).getTitle());
+				if (w != null && w instanceof Dialog dialog) {
+					result.setText(dialog.getTitle());
 				}
 			}
 		}
 		
-		if (a instanceof JLabel) {
-			View view = (View) ((JLabel) a).getClientProperty("html");
+		if (a instanceof JLabel label) {
+			View view = (View) label.getClientProperty("html");
 			if (view != null) {
 				Document doc = view.getDocument();
 				try {
@@ -371,8 +369,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (a instanceof JTextComponent) {
-			JTextComponent textComponent = (JTextComponent) a;
+		if (a instanceof JTextComponent textComponent) {
 			
 			Document doc = textComponent.getDocument();
 	        try {
@@ -392,15 +389,14 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (a instanceof JTextArea) {
+		if (a instanceof JTextArea area) {
 			int height = result.getHeight();
-			int rowHeight = ((JTextArea) a).getFontMetrics(((JTextArea) a).getFont()).getHeight();
+			int rowHeight = area.getFontMetrics(area.getFont()).getHeight();
 			result.setRowheight(rowHeight);
 			result.setRows((int) (height / rowHeight));
 		}
 		
-		if (a instanceof JEditorPane) {
-			JEditorPane editor = (JEditorPane) a;
+		if (a instanceof JEditorPane editor) {
 			
 			if (ctx.getAccessibleDescription() != null && ctx.getAccessibleDescription().equals(editor.getContentType())) {
 				// see AccessibleJEditorPane.getAccessibleDescription()
@@ -424,8 +420,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.COMBO_BOX && a instanceof JComboBox) {
-			JComboBox combo = (JComboBox) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.COMBO_BOX && a instanceof JComboBox combo) {
 			result.setSize(combo.getItemCount());
 			if (combo.getSelectedIndex() > -1) {
 				result.setPosition(combo.getSelectedIndex() + 1);
@@ -446,8 +441,8 @@ public class AccessibilityUtil {
 								if (renderer != null && value != null) {
 									Component listC = list.getCellRenderer().getListCellRendererComponent(list, value, index, list.isSelectedIndex(index), true);
 									if (listC != null) {
-										if (listC instanceof JLabel) {
-											valueText = getTextFromLabel((JLabel) listC);
+										if (listC instanceof JLabel label) {
+											valueText = getTextFromLabel(label);
 										}
 										if (listC instanceof Accessible && listC.getAccessibleContext() != null) {
 											if (valueText == null) {
@@ -474,8 +469,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.PAGE_TAB_LIST && a instanceof JTabbedPane) {
-			JTabbedPane tabPane = (JTabbedPane) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.PAGE_TAB_LIST && a instanceof JTabbedPane tabPane) {
 			
 			result.setSize(tabPane.getTabCount());
 			result.setPosition(tabPane.getSelectedIndex() + 1);
@@ -488,8 +482,7 @@ public class AccessibilityUtil {
 			result.setPosition(ctx.getAccessibleIndexInParent() + 1);
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.LIST && a instanceof JList<?>) {
-			JList list = (JList) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.LIST && a instanceof JList list) {
 			
 			if (list.getModel() != null) {
 				int index = list.getLeadSelectionIndex();
@@ -506,8 +499,8 @@ public class AccessibilityUtil {
 					if (renderer != null && value != null) {
 						Component listC = list.getCellRenderer().getListCellRendererComponent(list, value, index, list.isSelectedIndex(index), true);
 						if (listC != null) {
-							if (listC instanceof JLabel) {
-								valueText = getTextFromLabel((JLabel) listC);
+							if (listC instanceof JLabel label) {
+								valueText = getTextFromLabel(label);
 							}
 							if (listC instanceof Accessible && listC.getAccessibleContext() != null) {
 								if (valueText == null) {
@@ -535,8 +528,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.TREE && a instanceof JTree) {
-			JTree tree = (JTree) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.TREE && a instanceof JTree tree) {
 			
 			if (tree.getSelectionModel() != null && tree.getModel() != null) {
 				TreePath path = tree.getSelectionModel().getLeadSelectionPath();
@@ -580,8 +572,7 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.TABLE && a instanceof JTable) {
-			JTable table = (JTable) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.TABLE && a instanceof JTable table) {
 			
 			if (table.getSelectionModel() != null && table.getColumnModel() != null && table.getColumnModel().getSelectionModel() != null) {
 				int rowIndex = table.getSelectionModel().getLeadSelectionIndex();
@@ -605,8 +596,8 @@ public class AccessibilityUtil {
 						Component cellC = renderer.getTableCellRendererComponent(table, value, table.isCellSelected(rowIndex, colIndex), true, rowIndex, colIndex);
 						if (cellC != null) {
 							String text = null;
-							if (cellC instanceof JLabel) {
-								text = getTextFromLabel((JLabel) cellC);
+							if (cellC instanceof JLabel label) {
+								text = getTextFromLabel(label);
 							}
 							if (cellC instanceof Accessible && cellC.getAccessibleContext() != null) {
 								if (text == null) {
@@ -637,16 +628,14 @@ public class AccessibilityUtil {
 			}
 		}
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.MENU_ITEM && a instanceof JMenuItem) {
-			// menu inside menu as menuitem with aria-haspopup=true ?
-			JMenuItem menuItem = (JMenuItem) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.MENU_ITEM && a instanceof JMenuItem menuItem) {
 			
 			Component parent = null;
 			if (menuItem.getParent() instanceof JPopupMenu) {
 				Component invoker = ((JPopupMenu) menuItem.getParent()).getInvoker();
-				if (invoker instanceof JMenu) {
-					parent = (JMenu) invoker;
-					result.setSize(((JMenu) invoker).getMenuComponentCount());
+				if (invoker instanceof JMenu menu) {
+					parent = menu;
+					result.setSize(menu.getMenuComponentCount());
 				} else {
 					parent = menuItem.getParent();
 					result.setSize(((JPopupMenu) menuItem.getParent()).getComponentCount());
@@ -697,10 +686,10 @@ public class AccessibilityUtil {
 	private static boolean isJavaFXWindow(Accessible a) {
 		Window w = null;
 		
-		if (a instanceof Window && Util.isFXWindow((Window) a)) {
-			w = (Window) a;
-		} else if (a instanceof Component) {
-			w = SwingUtilities.getWindowAncestor((Component) a);
+		if (a instanceof Window window && Util.isFXWindow(window)) {
+			w = window;
+		} else if (a instanceof Component component) {
+			w = SwingUtilities.getWindowAncestor(component);
 		}
 		
 		return w != null && Util.isFXWindow(w);
@@ -736,8 +725,7 @@ public class AccessibilityUtil {
 		Integer position = null;
 		Integer size = null;
 		
-		if (ctx.getAccessibleRole() == AccessibleRole.PAGE_TAB_LIST && a instanceof JTabbedPane) {
-			JTabbedPane tabPane = (JTabbedPane) a;
+		if (ctx.getAccessibleRole() == AccessibleRole.PAGE_TAB_LIST && a instanceof JTabbedPane tabPane) {
 			
 			position = tabPane.getSelectedIndex() + 1;
 			size = tabPane.getTabCount();
@@ -775,8 +763,8 @@ public class AccessibilityUtil {
 
 	private static JOptionPane findOptionPane(Container contentPane) {
 		for (Component c : contentPane.getComponents()) {
-			if (c instanceof JOptionPane) {
-				return (JOptionPane) c;
+			if (c instanceof JOptionPane pane) {
+				return pane;
 			}
 		}
 		return null;
@@ -806,8 +794,8 @@ public class AccessibilityUtil {
 		
 		if (ctx.getAccessibleRelationSet().contains(AccessibleRelation.LABELED_BY)) {
 			Object[] target = ctx.getAccessibleRelationSet().get(AccessibleRelation.LABELED_BY).getTarget();
-			if (target != null && target.length > 0 && target[0] instanceof Accessible) {
-				String description = ((Accessible) target[0]).getAccessibleContext().getAccessibleName();
+			if (target != null && target.length > 0 && target[0] instanceof Accessible accessible) {
+				String description = accessible.getAccessibleContext().getAccessibleName();
 				if (StringUtils.isNotBlank(description)) {
 					return description;
 				}

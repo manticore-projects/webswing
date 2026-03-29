@@ -34,6 +34,6 @@ public class CombinedConst extends ImmutableDrawConstantHolder<int[]> {
 
 	@Override
 	public boolean equals(Object o) {
-		return o == this || o instanceof CombinedConst && Arrays.equals(value, ((CombinedConst) o).value);
+		return o == this || o instanceof CombinedConst cc && Arrays.equals(value, cc.value);
 	}
 }

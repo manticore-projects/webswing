@@ -1,11 +1,13 @@
 package org.webswing.model.appframe.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgIn;
 
 public class JavaObjectRefMsgIn implements MsgIn {
-	private static final long serialVersionUID = -1260785304443300962L;
+    @Serial
+    private static final long serialVersionUID = -1260785304443300962L;
 	private String id;
 	private List<String> methods;
 

@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.in;
 
+import java.io.Serial;
 import java.util.UUID;
 
 import org.webswing.model.MsgIn;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class GetInstanceCountsStatsWarningsMsgIn implements SyncMsg, MsgIn {
 
-	private static final long serialVersionUID = -3249000552957246009L;
+    @Serial
+    private static final long serialVersionUID = -3249000552957246009L;
 
 	private String path;
 	private String correlationId = UUID.randomUUID().toString();

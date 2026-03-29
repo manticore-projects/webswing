@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class WindowFocusMsgIn implements MsgIn {
-	
-	private static final long serialVersionUID = 5306185208935013049L;
+
+    @Serial
+    private static final long serialVersionUID = 5306185208935013049L;
 	
 	private String windowId;
 	private String htmlPanelId;

@@ -2,9 +2,12 @@ package org.webswing.model.browser.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class ServerToBrowserFrameMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8775701114901949469L;
+    @Serial
+    private static final long serialVersionUID = -8775701114901949469L;
 	
 	private byte[] appFrameMsgOut;
 	

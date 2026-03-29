@@ -1,6 +1,7 @@
 package org.webswing.toolkit.extra;
 
 import java.io.File;
+import java.io.Serial;
 
 
 public class IsolatedRootFile extends File {
@@ -9,6 +10,7 @@ public class IsolatedRootFile extends File {
         super(pathname);
     }
 
+    @Serial
     private static final long serialVersionUID = -2583310076262643707L;
 
     

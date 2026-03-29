@@ -34,6 +34,6 @@ public class PointsConst extends ImmutableDrawConstantHolder<int[]> {
 
 	@Override
 	public boolean equals(Object o) {
-		return o == this || o instanceof PointsConst && Arrays.equals(value, ((PointsConst) o).value);
+		return o == this || o instanceof PointsConst pc && Arrays.equals(value, pc.value);
 	}
 }

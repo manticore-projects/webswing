@@ -1,5 +1,6 @@
 package org.webswing.model.appframe.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class JsEvalRequestMsgOut implements MsgOut, SyncMsg {
 
-	private static final long serialVersionUID = -1135676700302370879L;
+    @Serial
+    private static final long serialVersionUID = -1135676700302370879L;
 
 	public enum JsEvalRequestType {
 		eval, call, setMember, getMember, deleteMember, setSlot, getSlot;

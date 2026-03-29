@@ -1,5 +1,6 @@
 package org.webswing.toolkit.api;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -7,7 +8,8 @@ import java.io.Serializable;
  */
 public class WebswingApiException extends Exception implements Serializable {
 
-	private static final long serialVersionUID = 4690618533706576723L;
+    @Serial
+    private static final long serialVersionUID = 4690618533706576723L;
 
 	public WebswingApiException() {
 		super();

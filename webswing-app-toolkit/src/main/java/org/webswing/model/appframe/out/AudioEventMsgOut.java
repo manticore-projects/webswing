@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class AudioEventMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8172693669771579808L;
+    @Serial
+    private static final long serialVersionUID = -8172693669771579808L;
 
 	public enum AudioEventType {
 		play,

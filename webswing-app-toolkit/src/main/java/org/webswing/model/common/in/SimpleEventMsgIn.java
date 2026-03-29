@@ -3,9 +3,12 @@ package org.webswing.model.common.in;
 import org.webswing.model.CommonMsg;
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class SimpleEventMsgIn implements MsgIn, CommonMsg {
 
-	private static final long serialVersionUID = 5832849328825358575L;
+    @Serial
+    private static final long serialVersionUID = 5832849328825358575L;
 
 	public enum SimpleEventType implements CommonMsg {
 		unload,

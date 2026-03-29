@@ -649,17 +649,16 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
 	 * Copied from SunGraphics2D
 	 */
 	Shape intersectShapes(Shape lhs, Shape rhs) {
-		return lhs instanceof Rectangle && rhs instanceof Rectangle ?
-			((Rectangle) lhs).intersection((Rectangle) rhs) :
-			(lhs instanceof Rectangle2D ? intersectRectShape((Rectangle2D) lhs, rhs) : (rhs instanceof Rectangle2D ? intersectRectShape((Rectangle2D) rhs, lhs) : intersectByArea(lhs, rhs)));
+		return lhs instanceof Rectangle r && rhs instanceof Rectangle r1 ?
+			r.intersection(r1) :
+			(lhs instanceof Rectangle2D rd ? intersectRectShape(rd, rhs) : (rhs instanceof Rectangle2D rd ? intersectRectShape(rd, lhs) : intersectByArea(lhs, rhs)));
 	}
 
 	/**
 	 * Copied from SunGraphics2D
 	 */
 	Shape intersectRectShape(Rectangle2D lhs, Shape rhs) {
-		if (rhs instanceof Rectangle2D) {
-			Rectangle2D rhsRect = (Rectangle2D) rhs;
+		if (rhs instanceof Rectangle2D rhsRect) {
 			Rectangle2D result = new Rectangle2D.Double();
 
 			double x1 = Math.max(lhs.getMinX(), rhsRect.getMinX());
@@ -694,8 +693,8 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
 		Area var5 = new Area(lhs);
 
 		Area var6;
-		if (rhs instanceof Area) {
-			var6 = (Area) rhs;
+		if (rhs instanceof Area area) {
+			var6 = area;
 		} else {
 			var6 = new Area(rhs);
 		}
@@ -751,8 +750,8 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
 		if (paint.equals(getPaint()))
 			return;
 
-		if (paint instanceof Color)
-			currentColor = (Color) paint;
+		if (paint instanceof Color color)
+			currentColor = color;
 
 		currentPaint = paint;
 		writePaint(paint);

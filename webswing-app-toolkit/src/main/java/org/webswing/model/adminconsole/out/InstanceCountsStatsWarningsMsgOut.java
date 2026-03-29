@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,8 @@ import org.webswing.model.SyncMsg;
 
 public class InstanceCountsStatsWarningsMsgOut implements SyncMsg, MsgOut {
 
-	private static final long serialVersionUID = 8702716725981252496L;
+    @Serial
+    private static final long serialVersionUID = 8702716725981252496L;
 
 	private int runningCount;
 	private int connectedCount;

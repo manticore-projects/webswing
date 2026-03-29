@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class SearchVariablesMsgOut implements SyncMsg, MsgOut {
 
-	private static final long serialVersionUID = 2651350816255793897L;
+    @Serial
+    private static final long serialVersionUID = 2651350816255793897L;
 
 	private List<MapMsgOut> variables;
 	private String correlationId;

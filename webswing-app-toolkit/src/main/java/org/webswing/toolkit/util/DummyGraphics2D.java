@@ -348,8 +348,8 @@ public class DummyGraphics2D extends Graphics2D {
 		if (paint.equals(getPaint()))
 			return;
 
-		if (paint instanceof Color)
-			currentColor = (Color) paint;
+		if (paint instanceof Color color)
+			currentColor = color;
 
 		currentPaint = paint;
 	}

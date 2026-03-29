@@ -596,8 +596,8 @@ public class SwingProcessImpl implements SwingProcess {
 
 		Appender logAppender = createSessionLogAppender(config.getSessionLogAppenderParams(), pid);
 
-		if (logAppender instanceof RollingFileAppender) {
-			sessionLogDestination = new File(((RollingFileAppender) logAppender).getFileName()).getAbsolutePath();
+		if (logAppender instanceof RollingFileAppender appender) {
+			sessionLogDestination = new File(appender.getFileName()).getAbsolutePath();
 		}
 
 		log.addAppender(logAppender);

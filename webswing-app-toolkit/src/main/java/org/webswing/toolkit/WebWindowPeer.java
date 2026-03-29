@@ -36,7 +36,7 @@ abstract public class WebWindowPeer extends WebContainerPeer implements WindowPe
 			t.setFont(WebToolkit.defaultFont);
 		}
 		
-		if (t instanceof Dockable && ((Dockable) t).isAutoUndock()) {
+		if (t instanceof Dockable dockable && dockable.isAutoUndock()) {
 			setUndocked(true);
 		}
 	}
@@ -126,7 +126,7 @@ abstract public class WebWindowPeer extends WebContainerPeer implements WindowPe
 		if (x > (screen.width - VALIDATE_BOUNDS_THRESHOLD)) {
 			result.x = (screen.width - VALIDATE_BOUNDS_THRESHOLD);
 		}
-		if ((target instanceof Frame) && ((Frame) target).getExtendedState() == Frame.MAXIMIZED_BOTH) {
+		if ((target instanceof Frame frame) && frame.getExtendedState() == Frame.MAXIMIZED_BOTH) {
 			result.x = 0;
 			result.y = 0;
 		}
@@ -142,8 +142,7 @@ abstract public class WebWindowPeer extends WebContainerPeer implements WindowPe
 	public void setUndecoratedOverride(boolean undecorated) {
 		this.undecoratedOverride = undecorated;
 		
-		if (target instanceof Window) {
-			Window win = (Window) target;
+		if (target instanceof Window win) {
 			try {
 				replaceSurfaceData(win.getX(), win.getY(), win.getWidth(), win.getHeight());
 			} catch (InvalidPipeException e) {

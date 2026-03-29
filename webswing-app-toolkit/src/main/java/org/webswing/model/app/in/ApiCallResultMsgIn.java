@@ -3,9 +3,12 @@ package org.webswing.model.app.in;
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
 
+import java.io.Serial;
+
 public class ApiCallResultMsgIn implements MsgIn, SyncMsg {
-	
-	private static final long serialVersionUID = 4470097170102688942L;
+
+    @Serial
+    private static final long serialVersionUID = 4470097170102688942L;
 	
 	private String correlationId;
 	private String result;

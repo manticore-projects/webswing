@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class AdminConsoleFrameMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 3253892297375570414L;
+    @Serial
+    private static final long serialVersionUID = 3253892297375570414L;
 
 	private AdminConsoleHandshakeMsgIn handshake;
 	private RecordingRequestMsgIn recordingRequest;

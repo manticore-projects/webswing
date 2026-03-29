@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.common.service.security.RolePermissionResolver;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,8 +70,9 @@ public enum WebswingAction {
 	}
 
 	public static class DefaultRolePermissionResolver implements RolePermissionResolver {
-		
-		private static final long serialVersionUID = 6867717587467658245L;
+
+        @Serial
+        private static final long serialVersionUID = 6867717587467658245L;
 		
 		private static final Logger log = LoggerFactory.getLogger(DefaultRolePermissionResolver.class);
 

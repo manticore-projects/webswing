@@ -22,15 +22,14 @@ public class CompositeConst extends ImmutableDrawConstantHolder<Composite> {
 	@Override
 	public CompositeProto toMessage() {
 		CompositeProto.Builder model = CompositeProto.newBuilder();
-		if(value instanceof AlphaComposite) {
-			AlphaComposite avalue=(AlphaComposite) value;
+		if(value instanceof AlphaComposite avalue) {
 			model.setType(CompositeTypeProto.valueOf(avalue.getRule()));
 			if (avalue.getAlpha() != 1f) {
 				model.setAlpha(avalue.getAlpha());
 			}
-		}else if(value instanceof XorModeComposite){
+		}else if(value instanceof XorModeComposite composite){
 			model.setType(CompositeTypeProto.XOR_MODE);
-			model.setColor(ColorConst.toRGBA(((XorModeComposite) value).getXorColor()));
+			model.setColor(ColorConst.toRGBA(composite.getXorColor()));
 		}
 		return model.build();
 	}

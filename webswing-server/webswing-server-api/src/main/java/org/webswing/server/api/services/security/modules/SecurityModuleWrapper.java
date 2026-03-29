@@ -111,10 +111,10 @@ public class SecurityModuleWrapper implements WebswingSecurityModule {
 					}
 				});
 			} catch (Exception e1) {
-				if (e1 instanceof ServletException) {
-					throw (ServletException) e1;
-				} else if (e1 instanceof IOException) {
-					throw (IOException) e1;
+				if (e1 instanceof ServletException exception1) {
+					throw exception1;
+				} else if (e1 instanceof IOException exception) {
+					throw exception;
 				} else {
 					throw new IOException("Failed to get user. Unexpected exception", e1);
 				}

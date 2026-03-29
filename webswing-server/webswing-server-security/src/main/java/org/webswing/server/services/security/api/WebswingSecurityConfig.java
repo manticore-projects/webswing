@@ -66,11 +66,9 @@ public interface WebswingSecurityConfig extends Config {
 				String classPath = CommonUtil.generateClassPathString(config.getClassPath());
 				classPath = getContext().replaceVariables(classPath);
 				URL[] urls = ClasspathUtil.populateClassPath(classPath, home);
-				URLClassLoader customCL = new URLClassLoader(urls, cl);
-				try {
+				try (URLClassLoader customCL = new URLClassLoader(urls, cl)) {
 					return super.getMetadata(config, customCL, parent);
 				} finally {
-					customCL.close();
 					this.parent = null;
 				}
 			} else {
@@ -136,8 +134,8 @@ public interface WebswingSecurityConfig extends Config {
 		}
 
 		private boolean isRootPath() {
-			if (parent instanceof Config) {
-				Object path = ((Config) parent).asMap().get("path");
+			if (parent instanceof Config config) {
+				Object path = config.asMap().get("path");
 				if ("/".equals(path) || "".equals(path)) {
 					return true;
 				}

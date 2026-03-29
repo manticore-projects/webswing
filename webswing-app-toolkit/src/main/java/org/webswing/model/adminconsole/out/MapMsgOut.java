@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class MapMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 4557209800189414238L;
+    @Serial
+    private static final long serialVersionUID = 4557209800189414238L;
 
 	private String key;
 	private String value;

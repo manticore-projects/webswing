@@ -3,8 +3,11 @@ package org.webswing.model.appframe.in;
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
 
+import java.io.Serial;
+
 public class PixelsAreaResponseMsgIn implements MsgIn, SyncMsg {
-	private static final long serialVersionUID = 3478808080093729712L;
+    @Serial
+    private static final long serialVersionUID = 3478808080093729712L;
 	
 	private String correlationId;
 	private String pixels;

@@ -1,5 +1,6 @@
 package org.webswing.model.appframe.out;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,8 @@ import org.webswing.model.MsgOut;
 
 public class AppFrameMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 6019708608380425820L;
+    @Serial
+    private static final long serialVersionUID = 6019708608380425820L;
 	private StartApplicationMsgOut startApplication;
 	private LinkActionMsgOut linkAction;
 	private WindowMoveActionMsgOut moveAction;

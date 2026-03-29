@@ -204,8 +204,7 @@ public class WebPrintService implements PrintService {
 			MediaSize size = (MediaSize) attribs.get(MediaSize.class);
 			if (size == null) {
 				Media media = (Media) attribs.get(Media.class);
-				if ((media != null) && ((media instanceof MediaSizeName))) {
-					MediaSizeName mediaName = (MediaSizeName) media;
+				if ((media != null) && ((media instanceof MediaSizeName mediaName))) {
 					size = MediaSize.getMediaSizeForName(mediaName);
 				}
 			}

@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class LinkActionMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -1341111272614100725L;
+    @Serial
+    private static final long serialVersionUID = -1341111272614100725L;
 
 	public enum LinkActionType {
 		file, url, print, redirect;

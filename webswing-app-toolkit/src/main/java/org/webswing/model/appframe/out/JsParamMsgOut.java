@@ -1,11 +1,13 @@
 package org.webswing.model.appframe.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class JsParamMsgOut implements MsgOut {
-	private static final long serialVersionUID = 5967292655638399242L;
+    @Serial
+    private static final long serialVersionUID = 5967292655638399242L;
 
 	private String primitive;
 	private JSObjectMsgOut jsObject;

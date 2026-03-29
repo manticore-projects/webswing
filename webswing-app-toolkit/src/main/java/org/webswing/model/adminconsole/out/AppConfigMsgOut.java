@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class AppConfigMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -7226371902803856086L;
+    @Serial
+    private static final long serialVersionUID = -7226371902803856086L;
 
 	private byte[] appConfig;
 	private String sessionPoolId;

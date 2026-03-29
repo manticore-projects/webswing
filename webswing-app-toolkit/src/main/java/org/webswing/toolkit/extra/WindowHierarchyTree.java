@@ -64,7 +64,7 @@ public class WindowHierarchyTree {
 	protected void addWindow(Window window) {
 		if (!lookup.containsKey(window)) {
 			WindowHierarchyNode parentNode = lookup.get(window.getParent());
-			if((window instanceof Dialog) && ((Dialog) window).isModal()){
+			if((window instanceof Dialog dialog) && dialog.isModal()){
 				modalsStack.push(window);
 			}
 			if (window.getParent() == null || parentNode == null) {
@@ -122,7 +122,7 @@ public class WindowHierarchyTree {
 		WindowHierarchyNode node = lookup.get(window);
 		if (modalsStack.size()>0){
 			Window modalWindow = modalsStack.peek();
-			if(modalWindow instanceof Dialog && !((Dialog) modalWindow).getModalityType().equals(ModalityType.DOCUMENT_MODAL)) {
+			if(modalWindow instanceof Dialog dialog && !dialog.getModalityType().equals(ModalityType.DOCUMENT_MODAL)) {
 				return modalWindow;			
 			}
 		}

@@ -3,11 +3,14 @@ package org.webswing.toolkit.api.component;
 import javax.swing.JPanel;
 
 import org.webswing.toolkit.api.action.WebWindow;
+
+import java.io.Serial;
 import org.webswing.toolkit.api.action.WebWindowActionListener;
 
 public abstract class HtmlPanel extends JPanel implements WebWindow {
 
-	private static final long serialVersionUID = 1601744731001086393L;
+    @Serial
+    private static final long serialVersionUID = 1601744731001086393L;
 
 	@Override
 	public boolean isFocusTraversable() {

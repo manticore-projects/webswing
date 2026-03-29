@@ -785,8 +785,7 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
 			
 			CursorChangeEventMsgOut cursorChange = new CursorChangeEventMsgOut(webcursorName);
 			cursorChange.setWinId(winId);
-			if (webcursor instanceof WebCursor) {
-				WebCursor c = (WebCursor) webcursor;
+			if (webcursor instanceof WebCursor c) {
 				BufferedImage img = c.getImage();
 				cursorChange.setB64img(Services.getImageService().getPngImage(img));
 				cursorChange.setX(c.getHotSpot() != null ? c.getHotSpot().x : 0);

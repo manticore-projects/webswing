@@ -175,12 +175,11 @@ abstract public class WebComponentPeer implements ComponentPeer {
 			return true;
 		}
 
-		if ((target instanceof JFrame && ((JFrame) target).isUndecorated()) || (target instanceof JDialog && ((JDialog) target).isUndecorated())) {
+		if ((target instanceof JFrame frame && frame.isUndecorated()) || (target instanceof JDialog dialog && dialog.isUndecorated())) {
 			return true;
 		}
 
-		if (this instanceof WebWindowPeer) {
-			WebWindowPeer webPeer = (WebWindowPeer) this;
+		if (this instanceof WebWindowPeer webPeer) {
 			if (webPeer.getUndecoratedOverride() != null) {
 				return webPeer.getUndecoratedOverride();
 			}
@@ -322,8 +321,8 @@ abstract public class WebComponentPeer implements ComponentPeer {
 			}
 
 			if ((validPosition.x != this.oldX) || (validPosition.y != this.oldY) || (w != this.oldWidth) || (h != this.oldHeight)) {
-				if (oldWidth != 0 && oldHeight != 0 && target instanceof Window) {
-					Util.getWebToolkit().getWindowManager().requestRepaintAfterMove((Window) target, new Rectangle(oldX, oldY, oldWidth, oldHeight));
+				if (oldWidth != 0 && oldHeight != 0 && target instanceof Window window) {
+					Util.getWebToolkit().getWindowManager().requestRepaintAfterMove(window, new Rectangle(oldX, oldY, oldWidth, oldHeight));
 				}
 				this.oldX = validPosition.x;
 				this.oldY = validPosition.y;
@@ -500,8 +499,7 @@ abstract public class WebComponentPeer implements ComponentPeer {
 			notifyCursorUpdate(null, DndEventHandler.getCurrentDropTargetCursorName());
 		} else {
 			Point location = Util.getWebToolkit().getEventDispatcher().getLastMousePosition();
-			if (location != null && target instanceof Window ) {
-				Window window = (Window) target;
+			if (location != null && target instanceof Window window ) {
 				Window windowOnLocation = WindowManager.getInstance().getVisibleWindowOnPosition(location.x, location.y);
 				if(window==windowOnLocation || Util.isCompositingWM()){
 					if(WindowManager.getInstance().isBlockedByModality(window,false)) {

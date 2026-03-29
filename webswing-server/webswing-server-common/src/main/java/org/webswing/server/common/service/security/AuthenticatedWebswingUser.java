@@ -1,5 +1,6 @@
 package org.webswing.server.common.service.security;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ import org.webswing.toolkit.api.security.WebswingUser;
  */
 public abstract class AuthenticatedWebswingUser implements WebswingUser, Serializable {
 
-	private static final long serialVersionUID = -9025181162519446299L;
+    @Serial
+    private static final long serialVersionUID = -9025181162519446299L;
 
 	/**
 	 * Special role representing all authenticated users. 

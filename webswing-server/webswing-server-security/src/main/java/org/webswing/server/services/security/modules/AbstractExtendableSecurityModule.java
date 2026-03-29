@@ -97,8 +97,8 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 						Class<?> configClass = configConstructor.getParameterTypes()[0];
 						try {
 							Object instance = configConstructor.newInstance(getConfig().getValueAs(extensionName, configClass));
-							if (instance instanceof SecurityModuleExtension) {
-								extension = (SecurityModuleExtension<?>) instance;
+							if (instance instanceof SecurityModuleExtension<?> moduleExtension) {
+								extension = moduleExtension;
 							} else {
 								log.error("Constructed instance is not a SecurityModuleExtension: {}",
 										  sanitizeForLog(extensionClassName));
@@ -110,8 +110,8 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
 					if (extension == null && defaultConstructor != null) {
 						try {
 							Object instance = defaultConstructor.newInstance();
-							if (instance instanceof SecurityModuleExtension) {
-								extension = (SecurityModuleExtension<?>) instance;
+							if (instance instanceof SecurityModuleExtension<?> moduleExtension) {
+								extension = moduleExtension;
 							} else {
 								log.error("Constructed instance is not a SecurityModuleExtension: {}",
 										  sanitizeForLog(extensionClassName));

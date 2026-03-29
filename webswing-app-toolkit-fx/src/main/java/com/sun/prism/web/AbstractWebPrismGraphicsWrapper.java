@@ -325,8 +325,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTexture(Texture tex, float x, float y, float w, float h) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTexture(tex, x, y, w, h);
 	}
@@ -334,8 +334,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTexture(Texture tex, float dx1, float dy1, float dx2, float dy2, float sx1, float sy1, float sx2, float sy2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTexture(tex, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
 	}
@@ -343,8 +343,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTexture3SliceH(Texture tex, float dx1, float dy1, float dx2, float dy2, float sx1, float sy1, float sx2, float sy2, float dh1, float dh2, float sh1, float sh2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTexture3SliceH(tex, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, dh1, dh2, sh1, sh2);
 	}
@@ -352,8 +352,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTexture3SliceV(Texture tex, float dx1, float dy1, float dx2, float dy2, float sx1, float sy1, float sx2, float sy2, float dv1, float dv2, float sv1, float sv2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTexture3SliceV(tex, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, dv1, dv2, sv1, sv2);
 	}
@@ -361,8 +361,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTexture9Slice(Texture tex, float dx1, float dy1, float dx2, float dy2, float sx1, float sy1, float sx2, float sy2, float dh1, float dv1, float dh2, float dv2, float sh1, float sv1, float sh2, float sv2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTexture9Slice(tex, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, dh1, dv1, dh2, dv2, sh1, sv1, sh2, sv2);
 	}
@@ -370,8 +370,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTextureVO(Texture tex, float topopacity, float botopacity, float dx1, float dy1, float dx2, float dy2, float sx1, float sy1, float sx2, float sy2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTextureVO(tex, topopacity, botopacity, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
 	}
@@ -379,8 +379,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawTextureRaw(Texture tex, float dx1, float dy1, float dx2, float dy2, float tx1, float ty1, float tx2, float ty2) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawTextureRaw(tex, dx1, dy1, dx2, dy2, tx1, ty1, tx2, ty2);
 	}
@@ -388,8 +388,8 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 	@Override
 	public void drawMappedTextureRaw(Texture tex, float dx1, float dy1, float dx2, float dy2, float tx11, float ty11, float tx21, float ty21, float tx12, float ty12, float tx22, float ty22) {
 		addDirtyClipArea();
-		if (tex instanceof WebTextureWrapper) {
-			tex = ((WebTextureWrapper) tex).getOriginal();
+		if (tex instanceof WebTextureWrapper wrapper) {
+			tex = wrapper.getOriginal();
 		}
 		original.drawMappedTextureRaw(tex, dx1, dy1, dx2, dy2, tx11, ty11, tx21, ty21, tx12, ty12, tx22, ty22);
 	}
@@ -441,18 +441,18 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 
 	@Override
 	public boolean canReadBack() {
-		return original instanceof ReadbackGraphics && ((ReadbackGraphics) original).canReadBack();
+		return original instanceof ReadbackGraphics rg && rg.canReadBack();
 	}
 
 	@Override
 	public RTTexture readBack(Rectangle view) {
-		return original instanceof ReadbackGraphics ? ((ReadbackGraphics) original).readBack(view) : null;
+		return original instanceof ReadbackGraphics rg ? rg.readBack(view) : null;
 	}
 
 	@Override
 	public void releaseReadBackBuffer(RTTexture view) {
-		if (original instanceof ReadbackGraphics)
-			((ReadbackGraphics) original).releaseReadBackBuffer(view);
+		if (original instanceof ReadbackGraphics graphics)
+			graphics.releaseReadBackBuffer(view);
 	}
 
 	@Override

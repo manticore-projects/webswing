@@ -1,5 +1,6 @@
 package org.webswing.server.services.security.extension.api;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,8 @@ import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 
 public class WebswingUserDecorator extends AuthenticatedWebswingUser {
 
-	private static final long serialVersionUID = 5175691012719235120L;
+    @Serial
+    private static final long serialVersionUID = 5175691012719235120L;
 	
 	private final AuthenticatedWebswingUser user;
 	private List<String> permissions;

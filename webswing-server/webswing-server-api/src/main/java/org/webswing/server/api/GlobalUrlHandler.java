@@ -223,9 +223,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	private void handleException(Exception e, HttpServletRequest req, HttpServletResponse res) {
 		log.debug("Failed to process request. " + req.getPathInfo(), e);
 		try {
-			if (e instanceof WsException) {
+			if (e instanceof WsException wse) {
 				if (!res.isCommitted()) {
-					WsException wse = (WsException) e;
 					res.sendError(wse.getReponseCode(), wse.getLocalizedMessage());
 				}
 			} else {
@@ -244,9 +243,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	@Override
 	public void registerFirstChildUrlHandler(UrlHandler handler) {
 		super.registerFirstChildUrlHandler(handler);
-		if (handler instanceof AppPathHandler) {
+		if (handler instanceof AppPathHandler manager) {
 			synchronized (appPathHandlers) {
-				AppPathHandler manager = (AppPathHandler) handler;
 				appPathHandlers.put(manager.getPathMapping(), manager);
 			}
 		}
@@ -255,9 +253,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	@Override
 	public void registerChildUrlHandler(UrlHandler handler) {
 		super.registerChildUrlHandler(handler);
-		if (handler instanceof AppPathHandler) {
+		if (handler instanceof AppPathHandler manager) {
 			synchronized (appPathHandlers) {
-				AppPathHandler manager = (AppPathHandler) handler;
 				appPathHandlers.put(manager.getPathMapping(), manager);
 			}
 		}
@@ -266,9 +263,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	@Override
 	public void removeChildUrlHandler(UrlHandler handler) {
 		super.removeChildUrlHandler(handler);
-		if (handler instanceof AppPathHandler) {
+		if (handler instanceof AppPathHandler manager) {
 			synchronized (appPathHandlers) {
-				AppPathHandler manager = (AppPathHandler) handler;
 				appPathHandlers.remove(manager.getPathMapping(), manager);
 			}
 		}
@@ -307,8 +303,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	public PrimaryUrlHandler getAppPrimaryUrlHandler(String path) {
 		synchronized (appPathHandlers) {
 			AppPathHandler handler = appPathHandlers.get(path);
-			if (handler instanceof PrimaryUrlHandler) {
-				return (PrimaryUrlHandler) handler;
+			if (handler instanceof PrimaryUrlHandler urlHandler) {
+				return urlHandler;
 			}
 		}
 		return null;

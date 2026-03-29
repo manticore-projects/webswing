@@ -872,8 +872,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.WebImageProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.WebImageProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.WebImageProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2587,8 +2587,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.DrawInstructionProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.DrawInstructionProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.DrawInstructionProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -3481,8 +3481,8 @@ public final class Directdraw {
      */
     public java.lang.String getString() {
       java.lang.Object ref = string_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -3499,10 +3499,10 @@ public final class Directdraw {
     public com.google.protobuf.ByteString
         getStringBytes() {
       java.lang.Object ref = string_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         string_ = b;
         return b;
       } else {
@@ -4706,8 +4706,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.DrawConstantProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.DrawConstantProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.DrawConstantProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -5289,10 +5289,10 @@ public final class Directdraw {
       public com.google.protobuf.ByteString
           getStringBytes() {
         java.lang.Object ref = string_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           string_ = b;
           return b;
         } else {
@@ -7185,8 +7185,8 @@ public final class Directdraw {
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -7203,10 +7203,10 @@ public final class Directdraw {
     public com.google.protobuf.ByteString
         getNameBytes() {
       java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         name_ = b;
         return b;
       } else {
@@ -7242,8 +7242,8 @@ public final class Directdraw {
      */
     public java.lang.String getStyle() {
       java.lang.Object ref = style_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -7260,10 +7260,10 @@ public final class Directdraw {
     public com.google.protobuf.ByteString
         getStyleBytes() {
       java.lang.Object ref = style_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         style_ = b;
         return b;
       } else {
@@ -7593,8 +7593,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.FontFaceProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.FontFaceProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.FontFaceProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -7682,10 +7682,10 @@ public final class Directdraw {
       public com.google.protobuf.ByteString
           getNameBytes() {
         java.lang.Object ref = name_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           name_ = b;
           return b;
         } else {
@@ -7793,10 +7793,10 @@ public final class Directdraw {
       public com.google.protobuf.ByteString
           getStyleBytes() {
         java.lang.Object ref = style_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           style_ = b;
           return b;
         } else {
@@ -8273,8 +8273,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.ColorProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.ColorProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.ColorProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -8785,8 +8785,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.ImageProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.ImageProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.ImageProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -9574,8 +9574,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.TransformProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.TransformProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.TransformProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -10284,8 +10284,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.CombinedProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.CombinedProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.CombinedProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -10830,8 +10830,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.GlyphProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.GlyphProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.GlyphProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -11522,8 +11522,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.RectangleProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.RectangleProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.RectangleProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -12328,8 +12328,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.EllipseProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.EllipseProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.EllipseProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -13244,8 +13244,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.RoundRectangleProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.RoundRectangleProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.RoundRectangleProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -14389,8 +14389,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.ArcProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.ArcProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.ArcProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -15433,8 +15433,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.PathProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.PathProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.PathProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -16019,8 +16019,8 @@ public final class Directdraw {
      */
     public java.lang.String getFamily() {
       java.lang.Object ref = family_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -16037,10 +16037,10 @@ public final class Directdraw {
     public com.google.protobuf.ByteString
         getFamilyBytes() {
       java.lang.Object ref = family_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         family_ = b;
         return b;
       } else {
@@ -16488,8 +16488,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.FontProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.FontProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.FontProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -16578,10 +16578,10 @@ public final class Directdraw {
       public com.google.protobuf.ByteString
           getFamilyBytes() {
         java.lang.Object ref = family_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           family_ = b;
           return b;
         } else {
@@ -17790,8 +17790,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.StrokeProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.StrokeProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.StrokeProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -18924,8 +18924,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.LinearGradientProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.LinearGradientProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.LinearGradientProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -20197,8 +20197,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.RadialGradientProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.RadialGradientProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.RadialGradientProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -21082,8 +21082,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.PointsProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.PointsProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.PointsProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -21936,8 +21936,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.CompositeProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.CompositeProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.CompositeProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;
@@ -22639,8 +22639,8 @@ public final class Directdraw {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.webswing.directdraw.proto.Directdraw.TextureProto) {
-          return mergeFrom((org.webswing.directdraw.proto.Directdraw.TextureProto)other);
+        if (other instanceof org.webswing.directdraw.proto.Directdraw.TextureProto proto) {
+          return mergeFrom(proto);
         } else {
           super.mergeFrom(other);
           return this;

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -119,7 +118,7 @@ public class InteractiveServerLauncher {
 	}
 
 	private static void startRebuildWatch() {
-		Path basetmp = Paths.get(System.getProperty("user.dir"));
+		Path basetmp = Path.of(System.getProperty("user.dir"));
 		if (basetmp.resolve("webswing-api").toFile().isDirectory()) {
 			basetmp = basetmp.getParent();
 		}else if (basetmp.resolve("../webswing-api").toFile().isDirectory()) {

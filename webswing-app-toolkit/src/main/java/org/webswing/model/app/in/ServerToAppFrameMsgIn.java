@@ -1,5 +1,6 @@
 package org.webswing.model.app.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgIn;
@@ -9,7 +10,8 @@ import org.webswing.model.common.in.TimestampsMsgIn;
 
 public class ServerToAppFrameMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -7029550828562961792L;
+    @Serial
+    private static final long serialVersionUID = -7029550828562961792L;
 
 	private ThreadDumpRequestMsgIn threadDumpRequest;
 	private ApiEventMsgIn apiEvent;

@@ -115,18 +115,18 @@ public class DrawInstructionFactory {
 	}
 
 	protected DrawConstant<?> getPaintConstant(Paint p) {
-		if (p instanceof Color) {
-			return new ColorConst(ctx, (Color) p);
-		} else if (p instanceof TexturePaint) {
-			return new TextureConst(ctx, (TexturePaint) p);
-		}if (p instanceof GradientPaint) {
-			return new GradientConst(ctx, (GradientPaint) p);
+		if (p instanceof Color color) {
+			return new ColorConst(ctx, color);
+		} else if (p instanceof TexturePaint paint) {
+			return new TextureConst(ctx, paint);
+		}if (p instanceof GradientPaint paint2) {
+			return new GradientConst(ctx, paint2);
 		} else if(Boolean.getBoolean(DirectDraw.SERVER_SIDE_GRADIENTS)){
 			throw new UnsupportedOperationException();
-		}else if (p instanceof LinearGradientPaint) {
-			return new LinearGradientConst(ctx, (LinearGradientPaint) p);
-		} else if (p instanceof RadialGradientPaint) {
-			return new RadialGradientConst(ctx, (RadialGradientPaint) p);
+		}else if (p instanceof LinearGradientPaint paint1) {
+			return new LinearGradientConst(ctx, paint1);
+		} else if (p instanceof RadialGradientPaint paint) {
+			return new RadialGradientConst(ctx, paint);
 		} else
 		throw new UnsupportedOperationException();
 	}
@@ -143,14 +143,14 @@ public class DrawInstructionFactory {
 		if (s == null) {
 			return DrawConstant.nullConst;
 		}
-		if (s instanceof Rectangle2D) {
-			return new RectangleConst(ctx, (Rectangle2D) s);
-		} else if (s instanceof RoundRectangle2D) {
-			return new RoundRectangleConst(ctx, (RoundRectangle2D) s);
-		} else if (s instanceof Ellipse2D) {
-			return new EllipseConst(ctx, (Ellipse2D) s);
-		} else if (s instanceof Arc2D) {
-			return new ArcConst(ctx, (Arc2D) s);
+		if (s instanceof Rectangle2D rectangle2D1) {
+			return new RectangleConst(ctx, rectangle2D1);
+		} else if (s instanceof RoundRectangle2D rectangle2D) {
+			return new RoundRectangleConst(ctx, rectangle2D);
+		} else if (s instanceof Ellipse2D ellipse2D) {
+			return new EllipseConst(ctx, ellipse2D);
+		} else if (s instanceof Arc2D arc2D) {
+			return new ArcConst(ctx, arc2D);
 		} else {
 			return new PathConst(ctx, s);
 		}

@@ -71,8 +71,8 @@ public class DirectDrawUtils {
 	}
 
 	public static BufferedImage createBufferedImage(Image image, ImageObserver observer, Color bkg) {
-		if ((bkg == null) && ((image instanceof BufferedImage))) {
-			return (BufferedImage) image;
+		if ((bkg == null) && ((image instanceof BufferedImage bufferedImage))) {
+			return bufferedImage;
 		}
 		BufferedImage bufferedImage = new BufferedImage(image.getWidth(observer), image.getHeight(observer), bkg == null ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 
@@ -87,8 +87,8 @@ public class DirectDrawUtils {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static BufferedImage createBufferedImage(RenderedImage img) {
-		if (img instanceof BufferedImage) {
-			return (BufferedImage) img;
+		if (img instanceof BufferedImage image) {
+			return image;
 		}
 		ColorModel cm = img.getColorModel();
 		int width = img.getWidth();

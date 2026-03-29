@@ -1,10 +1,13 @@
 package org.webswing.server.services.security.api;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when user credentials are not valid or can not be verified. 
  */
 public class WebswingAuthenticationException extends Exception {
-	private static final long serialVersionUID = 5376492025474474131L;
+    @Serial
+    private static final long serialVersionUID = 5376492025474474131L;
 
 	public static final String INVALID_USER_OR_PASSWORD = "login.invalidUserPassword";
 	public static final String FAILED_TO_AUTHENTICATE = "login.failedToAuthenticate";

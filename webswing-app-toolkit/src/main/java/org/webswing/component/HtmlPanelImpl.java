@@ -1,6 +1,7 @@
 package org.webswing.component;
 
 import java.awt.Container;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import org.webswing.toolkit.api.component.HtmlPanel;
 
 public class HtmlPanelImpl extends HtmlPanel {
 
-	private static final long serialVersionUID = 3974466420979353544L;
+    @Serial
+    private static final long serialVersionUID = 3974466420979353544L;
 
 	private List<WebWindowActionListener> webActionListeners = new ArrayList<>();
 	

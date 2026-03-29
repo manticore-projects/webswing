@@ -2,8 +2,11 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class PlaybackInfoMsgOut implements MsgOut {
-	private static final long serialVersionUID = -2332725867134258277L;
+    @Serial
+    private static final long serialVersionUID = -2332725867134258277L;
 	private int current;
 	private int total;
 

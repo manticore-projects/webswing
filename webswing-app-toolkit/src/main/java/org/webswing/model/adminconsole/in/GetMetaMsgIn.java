@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.in;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,7 +9,8 @@ import org.webswing.model.SyncMsg;
 
 public class GetMetaMsgIn implements SyncMsg, MsgIn {
 
-	private static final long serialVersionUID = 518679934438603445L;
+    @Serial
+    private static final long serialVersionUID = 518679934438603445L;
 	
 	private String path;
 	private byte[] serverConfig;

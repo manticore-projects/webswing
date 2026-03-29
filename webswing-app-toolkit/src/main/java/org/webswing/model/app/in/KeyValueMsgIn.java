@@ -2,9 +2,12 @@ package org.webswing.model.app.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class KeyValueMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -6649653718258580250L;
+    @Serial
+    private static final long serialVersionUID = -6649653718258580250L;
 	
 	private String key;
 	private String value;

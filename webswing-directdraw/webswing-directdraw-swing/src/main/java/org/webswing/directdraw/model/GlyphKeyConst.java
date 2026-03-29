@@ -47,7 +47,7 @@ public class GlyphKeyConst extends DrawConstant<String> {
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof GlyphKeyConst && (this.key + this.c).equals(((GlyphKeyConst) o).getValue());
+		return o instanceof GlyphKeyConst gkc && (this.key + this.c).equals(gkc.getValue());
 	}
 
 	@Override

@@ -2,8 +2,11 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class FocusEventMsgOut implements MsgOut {
-	private static final long serialVersionUID = -8513536127927219011L;
+    @Serial
+    private static final long serialVersionUID = -8513536127927219011L;
 
 	public enum FocusEventType {
 		focusLost,

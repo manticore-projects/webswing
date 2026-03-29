@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class MetaMsgOut implements SyncMsg, MsgOut {
 
-	private static final long serialVersionUID = -7226371902803856086L;
+    @Serial
+    private static final long serialVersionUID = -7226371902803856086L;
 
 	private byte[] serverConfig;
 	private String serverError;

@@ -123,18 +123,13 @@ public class SessionRecordingPlayback {
 		if (headerLength == fis.read(headerBytes)) {
 			ByteArrayInputStream bis = new ByteArrayInputStream(headerBytes);
 			ObjectInput in = null;
-			try {
+			try (bis) {
 				in = new ObjectInputStream(bis);
 				Object o = in.readObject();
 				return o;
 			} catch (ClassNotFoundException e) {
 				throw new IOException("Class could not be deserialized");
 			} finally {
-				try {
-					bis.close();
-				} catch (IOException ex) {
-					// ignore close exception
-				}
 				try {
 					if (in != null) {
 						in.close();

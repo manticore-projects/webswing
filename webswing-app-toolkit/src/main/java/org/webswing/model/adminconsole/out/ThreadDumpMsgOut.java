@@ -3,9 +3,12 @@ package org.webswing.model.adminconsole.out;
 import org.webswing.model.MsgOut;
 import org.webswing.model.SyncMsg;
 
+import java.io.Serial;
+
 public class ThreadDumpMsgOut implements SyncMsg, MsgOut {
 
-	private static final long serialVersionUID = -4389200203211810885L;
+    @Serial
+    private static final long serialVersionUID = -4389200203211810885L;
 
 	private String instanceId;
 	private long timestamp;

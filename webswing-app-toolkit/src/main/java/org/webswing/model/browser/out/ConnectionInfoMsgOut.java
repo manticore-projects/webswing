@@ -2,9 +2,12 @@ package org.webswing.model.browser.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class ConnectionInfoMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -23686931923075716L;
+    @Serial
+    private static final long serialVersionUID = -23686931923075716L;
 
 	private String serverId;
 	private String sessionPoolId;

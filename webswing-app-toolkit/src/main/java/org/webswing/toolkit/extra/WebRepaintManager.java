@@ -107,17 +107,17 @@ public class WebRepaintManager extends RepaintManager {
 		synchronized (delegate) {
 			for (Container c : dirty.keySet()) {
 				Rectangle r = dirty.get(c);
-				if (c instanceof JComponent) {
-					Panel p = Util.findHwComponentParent((JComponent) c);
+				if (c instanceof JComponent component) {
+					Panel p = Util.findHwComponentParent(component);
 					if (p != null) {
 						for (Component chld : p.getComponents()) {
 							delegate.addDirtyRegion((JComponent) chld, 0, 0, chld.getWidth(), chld.getHeight());
 						}
 					} else {
-						delegate.addDirtyRegion((JComponent) c, r.x, r.y, r.width, r.height);
+						delegate.addDirtyRegion(component, r.x, r.y, r.width, r.height);
 					}
-				} else if (c instanceof Window) {
-					delegate.addDirtyRegion((Window) c, r.x, r.y, r.width, r.height);
+				} else if (c instanceof Window window) {
+					delegate.addDirtyRegion(window, r.x, r.y, r.width, r.height);
 				}
 			}
 			dirty.clear();

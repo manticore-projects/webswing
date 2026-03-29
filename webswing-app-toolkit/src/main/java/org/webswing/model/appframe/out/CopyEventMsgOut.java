@@ -1,12 +1,14 @@
 package org.webswing.model.appframe.out;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class CopyEventMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -5791089710920190332L;
+    @Serial
+    private static final long serialVersionUID = -5791089710920190332L;
 	private String text;
 	private String html;
 	private byte[] img;

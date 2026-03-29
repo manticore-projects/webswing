@@ -1,12 +1,14 @@
 package org.webswing.model.appframe.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgIn;
 
 public class AppFrameMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -7046154705244466351L;
+    @Serial
+    private static final long serialVersionUID = -7046154705244466351L;
 	private List<InputEventMsgIn> events;
 	private PasteEventMsgIn paste;
 	private CopyEventMsgIn copy;

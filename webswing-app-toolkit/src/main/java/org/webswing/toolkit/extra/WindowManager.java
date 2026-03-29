@@ -187,7 +187,7 @@ public class WindowManager {
 	}
 
 	protected boolean isModal(Window w) {
-		return (w instanceof Dialog) && ((Dialog) w).isModal();
+		return (w instanceof Dialog d) && d.isModal();
 	}
 
 	public void activateWindow(final Window w, final int x, final int y) {

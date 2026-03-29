@@ -277,8 +277,7 @@ public class WebImage extends Image {
 
 			List<DrawConstantProto> constProtos = new ArrayList<>();
 			for (DrawConstant<?> cons : instruction) {
-				if (cons instanceof CompositeDrawConstantHolder) {
-					CompositeDrawConstantHolder<?> composite = (CompositeDrawConstantHolder<?>) cons;
+				if (cons instanceof CompositeDrawConstantHolder<?> composite) {
 					composite.expandAndCacheConstants(constProtos, constantPool);
 				} else if (!(cons instanceof IntegerConst) && cons != DrawConstant.nullConst) {
 					int id = constantPool.addToCache(constProtos, cons);

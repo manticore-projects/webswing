@@ -318,8 +318,8 @@ public class WebPrintJob implements DocPrintJob {
             Attribute localAttribute = arrayOfAttribute[i];
             Class<?> localClass = localAttribute.getCategory();
             if (localClass == Media.class) {
-                if (((localAttribute instanceof MediaSizeName)) && (this.service.isAttributeValueSupported(localAttribute, null, null))) {
-                    this.mediaSize = MediaSize.getMediaSizeForName((MediaSizeName) localAttribute);
+                if (((localAttribute instanceof MediaSizeName name)) && (this.service.isAttributeValueSupported(localAttribute, null, null))) {
+                    this.mediaSize = MediaSize.getMediaSizeForName(name);
                 }
             } else if (localClass == OrientationRequested.class) {
                 this.orient = ((OrientationRequested) localAttribute);

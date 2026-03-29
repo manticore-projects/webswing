@@ -2,8 +2,11 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class PasteRequestMsgOut implements MsgOut {
-	private static final long serialVersionUID = -1153413346164509155L;
+    @Serial
+    private static final long serialVersionUID = -1153413346164509155L;
 	
 	private String title;
 	private String message;

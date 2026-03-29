@@ -6,12 +6,14 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.MouseDragGestureRecognizer;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 
 import sun.awt.dnd.SunDragSourceContextPeer;
 
 @SuppressWarnings("restriction")
 public class WebMouseDragGestureRecognizer extends MouseDragGestureRecognizer {
 
+    @Serial
     private static final long serialVersionUID = 2473988169935151977L;
     protected static int motionThreshold;
 

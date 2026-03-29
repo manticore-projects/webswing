@@ -73,9 +73,9 @@ public class ToolkitUtil {
 		
 		if (cType.equalsIgnoreCase("JFXPanel")) {
 			msg.setComponents(getNodeTree(c));
-		} else if (c instanceof Container) {
+		} else if (c instanceof Container container) {
 			synchronized (c.getTreeLock()) {
-				Component[] children = ((Container) c).getComponents();
+				Component[] children = container.getComponents();
 				if (children != null && children.length > 0) {
 					for (Component child : children) {
 						msg.addChildComponent(createComponentTreeMsg(child));

@@ -1,13 +1,15 @@
 package org.webswing.model.appframe.out;
 
 import java.awt.Point;
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgOut;
 
 public class WindowMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -523823816533325842L;
+    @Serial
+    private static final long serialVersionUID = -523823816533325842L;
 	
 	public enum WindowType {
 		basic,

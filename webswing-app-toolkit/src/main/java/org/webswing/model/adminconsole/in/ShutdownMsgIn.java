@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class ShutdownMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 1438814753331419308L;
+    @Serial
+    private static final long serialVersionUID = 1438814753331419308L;
 
 	private String path;
 	private String instanceId;

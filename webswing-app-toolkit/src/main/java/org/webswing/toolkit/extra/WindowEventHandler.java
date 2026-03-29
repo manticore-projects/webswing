@@ -51,8 +51,8 @@ public class WindowEventHandler {
 						// move to the middle of original size
 						moveWindow(w, (o.x + (o.width / 2)) - (r.width / 2), (o.y + (o.height / 2)) - (r.height / 2));
 					}
-					if (w instanceof JFrame) {
-						((JFrame) w).setExtendedState(JFrame.NORMAL);
+					if (w instanceof JFrame frame) {
+						frame.setExtendedState(JFrame.NORMAL);
 					}
 					previousSize.put(w, o);
 					lockedOnEvent = false;
@@ -64,8 +64,7 @@ public class WindowEventHandler {
 						Window w = (Window) e.getSource();
 						Rectangle o = w.getBounds();
 						
-						if (w instanceof JFrame) {
-							JFrame frame = (JFrame) w;
+						if (w instanceof JFrame frame) {
 							if (frame.getExtendedState() == JFrame.MAXIMIZED_BOTH) {
 								frame.setExtendedState(JFrame.NORMAL);
 								o = previousSize.get(w);
@@ -272,8 +271,8 @@ public class WindowEventHandler {
 	}
 
 	private void resizeAndOrMoveWindow(final Window w, Point location, int width, int height){
-		if (w instanceof JFrame) {
-			((JFrame) w).setExtendedState(JFrame.NORMAL);
+		if (w instanceof JFrame frame) {
+			frame.setExtendedState(JFrame.NORMAL);
 		}
 		final Dimension originalSize = w.getSize();
 		final Dimension newSize = new Dimension(width, height);

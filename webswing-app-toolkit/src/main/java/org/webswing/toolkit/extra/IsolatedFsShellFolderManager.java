@@ -132,8 +132,8 @@ public class IsolatedFsShellFolderManager extends DefaultShellFolderManager {
 			}
 		} catch (IOException e) {
 			System.err.println("Error while creating ShellFolder. " + e.getMessage());
-			if (e instanceof FileNotFoundException) {
-				throw (FileNotFoundException) e;
+			if (e instanceof FileNotFoundException exception) {
+				throw exception;
 			} else {
 				throw new FileNotFoundException("Error while creating ShellFolder. " + e.getMessage());
 			}

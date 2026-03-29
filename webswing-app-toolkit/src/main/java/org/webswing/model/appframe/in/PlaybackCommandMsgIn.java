@@ -2,8 +2,11 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class PlaybackCommandMsgIn implements MsgIn {
-	private static final long serialVersionUID = -5390735227809092937L;
+    @Serial
+    private static final long serialVersionUID = -5390735227809092937L;
 
 	public static enum PlaybackCommand {
 		reset, play, stop, step, step10, step100;

@@ -361,8 +361,7 @@ public class SwingClassloader extends URLClassLoader {
 				if (il != null) {
 					boolean dirtyFlag = false;
 					for (Instruction instruction : il.getInstructions()) {
-						if (instruction instanceof CPInstruction) {
-							CPInstruction i = (CPInstruction) instruction;
+						if (instruction instanceof CPInstruction i) {
 							if (indexReplacementMap.containsKey(i.getIndex())) {
 								InstructionHandle handle = ClassLoaderUtil.findInstructionHandle(il, i);
 								INVOKESTATIC replacedInstruction = new INVOKESTATIC(indexReplacementMap.get(i.getIndex()));
@@ -410,11 +409,9 @@ public class SwingClassloader extends URLClassLoader {
 			if (il != null) {
 				boolean dirtyFlag = false;
 				for (Instruction instruction : il.getInstructions()) {
-					if (instruction instanceof CPInstruction) {
-						CPInstruction i = (CPInstruction) instruction;
+					if (instruction instanceof CPInstruction i) {
 						Constant instConstant = cp.getConstant(i.getIndex());
-						if (instConstant instanceof ConstantClass) {
-							ConstantClass classConstant = (ConstantClass) instConstant;
+						if (instConstant instanceof ConstantClass classConstant) {
 							String referencedClassName = ((String) classConstant.getConstantValue(cp.getConstantPool())).replace("/", ".");
 							if (classReplacementMapping.containsKey(referencedClassName)) {
 								if (i instanceof INSTANCEOF || i instanceof CHECKCAST) {

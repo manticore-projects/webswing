@@ -1,5 +1,6 @@
 package org.webswing.server.services.security.modules.anonym;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -11,8 +12,9 @@ import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import com.google.common.collect.Lists;
 
 public class AnonymWebswingUser extends AuthenticatedWebswingUser {
-	
-	private static final long serialVersionUID = 1157215452456795382L;
+
+    @Serial
+    private static final long serialVersionUID = 1157215452456795382L;
 	
 	private String userId;
 	private List<String> roles = Lists.newArrayList(WebswingAction.AccessType.basic.name());

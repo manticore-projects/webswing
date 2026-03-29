@@ -29,8 +29,7 @@ public class DndEventHandler {
 	private static Cursor cursor = Cursor.getDefaultCursor();
 
 	public void processMouseEvent(Window w, AWTEvent e) {
-		if (e instanceof MouseEvent) {
-			MouseEvent me = (MouseEvent) e;
+		if (e instanceof MouseEvent me) {
 			int modifiers = (me.getModifiersEx() & (MouseEvent.CTRL_DOWN_MASK | MouseEvent.SHIFT_DOWN_MASK)) | MouseEvent.BUTTON1_DOWN_MASK;
 			int currentDropAction = WebDragSourceContextPeer.convertModifiersToDropAction(modifiers, sourceActions);
 			if(enteredComponent==w){
@@ -50,8 +49,8 @@ public class DndEventHandler {
 				String winId = Util.getPeerForTarget(w) == null ? null : Util.getPeerForTarget(w).getGuid();
 				Util.getWebToolkit().getPaintDispatcher().notifyCursorUpdate(cursor,null, winId);
 			}
-		} else if (e instanceof KeyEvent) {
-			if (e.getID() == KeyEvent.KEY_PRESSED && ((KeyEvent) e).getKeyCode() == KeyEvent.VK_ESCAPE) {
+		} else if (e instanceof KeyEvent event) {
+			if (e.getID() == KeyEvent.KEY_PRESSED && event.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				enteredComponent=null;
 				dragEnd(w, e, false, 0);
 			}
@@ -93,8 +92,8 @@ public class DndEventHandler {
 
 	private void dragEnd(Window w, AWTEvent e, boolean supported, int dropAction) {
 		if (!finished) {
-			if (e instanceof MouseEvent) {
-				MouseEvent me = ((MouseEvent) e);
+			if (e instanceof MouseEvent event) {
+				MouseEvent me = event;
 				if (w != null) {
 					if (supported && !dropped) {
 						dropTarget.setDragSource(dragSource);

@@ -2,8 +2,11 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class JSObjectMsgOut implements MsgOut {
-	private static final long serialVersionUID = -5961292110459877432L;
+    @Serial
+    private static final long serialVersionUID = -5961292110459877432L;
 	private String id;
 
 	public JSObjectMsgOut() {

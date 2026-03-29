@@ -1,5 +1,6 @@
 package org.webswing.server.services.security.modules.embeded;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +10,8 @@ import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 
 public class EmbededWebswingUser extends AuthenticatedWebswingUser {
 
-	private static final long serialVersionUID = 4579855803170690448L;
+    @Serial
+    private static final long serialVersionUID = 4579855803170690448L;
 	
 	String user;
 	String password;

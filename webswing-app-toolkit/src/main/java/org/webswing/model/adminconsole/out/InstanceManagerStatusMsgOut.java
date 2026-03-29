@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class InstanceManagerStatusMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8087696319719546037L;
+    @Serial
+    private static final long serialVersionUID = -8087696319719546037L;
 
 	private String status;
 	private String error;

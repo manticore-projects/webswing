@@ -364,8 +364,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
 
 	protected void dispatchEnterExitEvents(Window w, AWTEvent e) {
-		if (e instanceof MouseEvent && getLastEnteredWindow() != w) {
-			MouseEvent oe = (MouseEvent) e;
+		if (e instanceof MouseEvent oe && getLastEnteredWindow() != w) {
 			dispatchExitEvent(oe.getWhen(), oe.getModifiersEx() | oe.getModifiers(), oe.getX(), oe.getY(), oe.getXOnScreen(), oe.getYOnScreen());
 			if (w != null) {
 				MouseEvent enterEvent = new MouseEvent(w, MouseEvent.MOUSE_ENTERED, oe.getWhen(), oe.getModifiersEx() | oe.getModifiers(), oe.getX(), oe.getY(), oe.getXOnScreen(), oe.getYOnScreen(), oe.getClickCount(), oe.isPopupTrigger(), oe.getButton());

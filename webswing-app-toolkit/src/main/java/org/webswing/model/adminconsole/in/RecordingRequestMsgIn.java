@@ -2,8 +2,11 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class RecordingRequestMsgIn implements MsgIn {
-	private static final long serialVersionUID = -5866985862298757516L;
+    @Serial
+    private static final long serialVersionUID = -5866985862298757516L;
 
 	public enum RecordingRequestType {
 		startRecording,

@@ -1,7 +1,10 @@
 package org.webswing.server.model.exception;
 
+import java.io.Serial;
+
 public class WsException extends Exception {
-	private static final long serialVersionUID = -6339066097142624126L;
+    @Serial
+    private static final long serialVersionUID = -6339066097142624126L;
 	private int reponseCode = 500;
 
 	public WsException(String e) {

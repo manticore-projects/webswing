@@ -86,8 +86,7 @@ public class DirectDrawServicesAdapter {
 				String customFontConfigFile = System.getProperty("sun.awt.fontconfig");
 				if (customFontConfigFile != null && new File(customFontConfigFile).canRead()) {
 					File f = new File(customFontConfigFile);
-					Scanner s = new Scanner(f);
-					try {
+					try (Scanner s = new Scanner(f)) {
 						while (s.hasNextLine()) {
 							String line = s.nextLine();
 							if (line.startsWith("#@@")) {
@@ -98,8 +97,6 @@ public class DirectDrawServicesAdapter {
 							}
 
 						}
-					} finally {
-						s.close();
 					}
 				}
 			} catch (FileNotFoundException e) {

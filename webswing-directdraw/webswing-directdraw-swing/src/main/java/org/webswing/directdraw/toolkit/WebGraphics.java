@@ -75,8 +75,8 @@ public class WebGraphics extends AbstractVectorGraphics {
 	}
 
 	private BufferedImage toBufferedImage(RenderedImage image) {
-		if (image instanceof BufferedImage) {
-			return (BufferedImage) image;
+		if (image instanceof BufferedImage bufferedImage) {
+			return bufferedImage;
 		}
 		BufferedImage bufferedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = bufferedImage.createGraphics();
@@ -86,7 +86,7 @@ public class WebGraphics extends AbstractVectorGraphics {
 
 	protected boolean writeImage(Image image, AffineTransform transform, ImageObserver observer) {
 		if (image instanceof WebImage || image instanceof VolatileWebImageWrapper) {
-			WebImage wi = image instanceof WebImage ? (WebImage) image : ((VolatileWebImageWrapper) image).getWebImage();
+			WebImage wi = image instanceof WebImage wi1 ? wi1 : ((VolatileWebImageWrapper) image).getWebImage();
 			if (wi.isDirty()) {
 				thisImage.addInstruction(this, dif.drawWebImage(wi.extractReadOnlyWebImage(false), transform, null, null, getClip()));
 			}
@@ -117,7 +117,7 @@ public class WebGraphics extends AbstractVectorGraphics {
 			return true;
 		}
 		if (image instanceof WebImage || image instanceof VolatileWebImageWrapper) {
-			WebImage wi = image instanceof WebImage ? (WebImage) image : ((VolatileWebImageWrapper) image).getWebImage();
+			WebImage wi = image instanceof WebImage wi1 ? wi1 : ((VolatileWebImageWrapper) image).getWebImage();
 			if (wi.isDirty()) {
 				thisImage.addInstruction(this, dif.drawWebImage(wi.extractReadOnlyWebImage(false), transform, crop, bgcolor, getClip()));
 			}
@@ -130,8 +130,8 @@ public class WebGraphics extends AbstractVectorGraphics {
 	}
 
 	private ImageConvertResult toBufferedImage(Image image, ImageObserver observer) {
-		if (image instanceof BufferedImage) {
-			return new ImageConvertResult(true, (BufferedImage) image);
+		if (image instanceof BufferedImage bufferedImage) {
+			return new ImageConvertResult(true, bufferedImage);
 		}
 
 		boolean skip = loadedImgs.containsKey(image);
@@ -183,18 +183,17 @@ public class WebGraphics extends AbstractVectorGraphics {
 
 	@Override
 	public void writeStroke(Stroke stroke) {
-		if (stroke instanceof BasicStroke) {
-			thisImage.addInstruction(this, dif.setStroke((BasicStroke) stroke));
+		if (stroke instanceof BasicStroke basicStroke) {
+			thisImage.addInstruction(this, dif.setStroke(basicStroke));
 		}
 	}
 
 	@Override
 	protected void writeComposite(Composite composite) {
-		if (composite instanceof AlphaComposite) {
-			AlphaComposite ac = (AlphaComposite) composite;
+		if (composite instanceof AlphaComposite ac) {
 			thisImage.addInstruction(this, dif.setComposite(ac));
-		} else if (composite instanceof XorModeComposite) {
-			thisImage.addInstruction(this, dif.setXorMode(((XorModeComposite) composite).getXorColor()));
+		} else if (composite instanceof XorModeComposite modeComposite) {
+			thisImage.addInstruction(this, dif.setXorMode(modeComposite.getXorColor()));
 		}
 	}
 

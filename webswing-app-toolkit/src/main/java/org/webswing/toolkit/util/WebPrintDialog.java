@@ -16,6 +16,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +59,8 @@ import org.webswing.toolkit.WebPrintService;
 
 public class WebPrintDialog extends JDialog {
 
-	private static final long serialVersionUID = 7094056515358259815L;
+    @Serial
+    private static final long serialVersionUID = 7094056515358259815L;
 	private static ResourceBundle messages = ResourceBundle.getBundle("org.webswing.toolkit.util.WebPrintDialogResources");
 	private JButton cancel;
 	private JButton approve;
@@ -235,7 +237,8 @@ public class WebPrintDialog extends JDialog {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	class MediaPanel extends JPanel implements ItemListener {
-		private static final long serialVersionUID = 3809387570018736561L;
+        @Serial
+        private static final long serialVersionUID = 3809387570018736561L;
 		private MarginsPanel pnlMargins;
 		private JComboBox cbService;
 		private JComboBox cbOrientation;
@@ -336,8 +339,8 @@ public class WebPrintDialog extends JDialog {
 				Object mediaArrayObject = service.getSupportedAttributeValues(Media.class, docFlavor, asCurrent);
 				Media[] mediaArray;
 				Media media;
-				if ((mediaArrayObject instanceof Media[])) {
-					mediaArray = (Media[]) mediaArrayObject;
+				if ((mediaArrayObject instanceof Media[] media1s)) {
+					mediaArray = media1s;
 					for (int i = 0; i < mediaArray.length; i++) {
 						media = mediaArray[i];
 						if ((media instanceof MediaSizeName)) {
@@ -408,7 +411,8 @@ public class WebPrintDialog extends JDialog {
 
 	class MarginsPanel extends JPanel implements ActionListener, FocusListener {
 
-		private static final long serialVersionUID = 6865833608103747234L;
+        @Serial
+        private static final long serialVersionUID = 6865833608103747234L;
 		private final String strTitle = getMsg("border.margins");
 		private JFormattedTextField leftMargin, rightMargin, topMargin, bottomMargin;
 		private JLabel lblLeft, lblRight, lblTop, lblBottom;
@@ -454,8 +458,8 @@ public class WebPrintDialog extends JDialog {
 			format.setParseIntegerOnly(false);
 			format.setDecimalSeparatorAlwaysShown(true);
 			NumberFormatter nf = new NumberFormatter(format);
-			nf.setMinimum(new Float(0.0f));
-			nf.setMaximum(new Float(999.0f));
+			nf.setMinimum(Float.valueOf(0.0f));
+			nf.setMaximum(Float.valueOf(999.0f));
 			nf.setAllowsInvalid(true);
 			nf.setCommitsOnValidEdit(true);
 
@@ -639,8 +643,7 @@ public class WebPrintDialog extends JDialog {
 				if (media == null || !(media instanceof MediaSizeName)) {
 					media = (Media) service.getDefaultAttributeValue(Media.class);
 				}
-				if (media != null && (media instanceof MediaSizeName)) {
-					MediaSizeName msn = (MediaSizeName) media;
+				if (media != null && (media instanceof MediaSizeName msn)) {
 					mediaSize = MediaSize.getMediaSizeForName(msn);
 				}
 				if (mediaSize == null) {
@@ -652,8 +655,8 @@ public class WebPrintDialog extends JDialog {
 					tmpASet.add(media);
 
 					Object values = service.getSupportedAttributeValues(mpaCategory, docFlavor, tmpASet);
-					if (values instanceof MediaPrintableArea[] && ((MediaPrintableArea[]) values).length > 0) {
-						mpaMax = ((MediaPrintableArea[]) values)[0];
+					if (values instanceof MediaPrintableArea[] areas && areas.length > 0) {
+						mpaMax = areas[0];
 
 					}
 				}
@@ -702,8 +705,7 @@ public class WebPrintDialog extends JDialog {
 				if (media == null || !(media instanceof MediaSizeName)) {
 					media = (Media) service.getDefaultAttributeValue(Media.class);
 				}
-				if (media != null && (media instanceof MediaSizeName)) {
-					MediaSizeName msn = (MediaSizeName) media;
+				if (media != null && (media instanceof MediaSizeName msn)) {
 					mediaSize = MediaSize.getMediaSizeForName(msn);
 				}
 				if (mediaSize == null) {
@@ -715,11 +717,11 @@ public class WebPrintDialog extends JDialog {
 					tmpASet.add(media);
 
 					Object values = service.getSupportedAttributeValues(mpaCategory, docFlavor, tmpASet);
-					if (values instanceof MediaPrintableArea[] && ((MediaPrintableArea[]) values).length > 0) {
-						mpaMax = ((MediaPrintableArea[]) values)[0];
+					if (values instanceof MediaPrintableArea[] areas && areas.length > 0) {
+						mpaMax = areas[0];
 
-					} else if (values instanceof MediaPrintableArea) {
-						mpaMax = (MediaPrintableArea) values;
+					} else if (values instanceof MediaPrintableArea area) {
+						mpaMax = area;
 					}
 				}
 				if (mpaMax == null) {
@@ -846,10 +848,10 @@ public class WebPrintDialog extends JDialog {
 				rmVal = mediaSize.getX(units) - pax - paw;
 				bmVal = mediaSize.getY(units) - pay - pah;
 
-				lmObj = new Float(lmVal);
-				rmObj = new Float(rmVal);
-				tmObj = new Float(tmVal);
-				bmObj = new Float(bmVal);
+				lmObj = Float.valueOf(lmVal);
+				rmObj = Float.valueOf(rmVal);
+				tmObj = Float.valueOf(tmVal);
+				bmObj = Float.valueOf(bmVal);
 
 			/* Now we know the values to use, we need to assign them
 			 * to the fields appropriate for the orientation.
@@ -894,7 +896,8 @@ public class WebPrintDialog extends JDialog {
 	}
 
 	class PrintRangePanel extends JPanel implements ActionListener, FocusListener {
-		private static final long serialVersionUID = 2524487233256169427L;
+        @Serial
+        private static final long serialVersionUID = 2524487233256169427L;
 		private final String strTitle = getMsg("border.printrange");
 		private final PageRanges prAll = new PageRanges(1, Integer.MAX_VALUE);
 		private JRadioButton rbAll, rbPages;
@@ -939,8 +942,8 @@ public class WebPrintDialog extends JDialog {
 			format.setParseIntegerOnly(true);
 			format.setDecimalSeparatorAlwaysShown(false);
 			NumberFormatter nf = new NumberFormatter(format);
-			nf.setMinimum(new Integer(1));
-			nf.setMaximum(new Integer(Integer.MAX_VALUE));
+			nf.setMinimum(Integer.valueOf(1));
+			nf.setMaximum(Integer.valueOf(Integer.MAX_VALUE));
 			nf.setAllowsInvalid(true);
 			nf.setCommitsOnValidEdit(true);
 			tfRangeFrom = new JFormattedTextField(nf);
@@ -1038,12 +1041,12 @@ public class WebPrintDialog extends JDialog {
 
 			if (min < 1) {
 				min = 1;
-				tfRangeFrom.setValue(new Integer(1));
+				tfRangeFrom.setValue(Integer.valueOf(1));
 			}
 
 			if (max < min) {
 				max = min;
-				tfRangeTo.setValue(new Integer(min));
+				tfRangeTo.setValue(Integer.valueOf(min));
 			}
 
 			PageRanges pr = new PageRanges(min, max);
@@ -1082,8 +1085,8 @@ public class WebPrintDialog extends JDialog {
 				} else { // RANGE
 					rbPages.setSelected(true);
 				}
-				tfRangeFrom.setValue(new Integer(min));
-				tfRangeTo.setValue(new Integer(max));
+				tfRangeFrom.setValue(Integer.valueOf(min));
+				tfRangeTo.setValue(Integer.valueOf(max));
 				rbAll.setEnabled(prSupported);
 				rbPages.setEnabled(prSupported);
 				setupRangeWidgets();

@@ -91,7 +91,7 @@ public class ProtoMapper {
 	@SuppressWarnings("rawtypes")
 	private <T> T decodeMessage(Message protoMsg, Class<T> c) throws IOException {
 		try {
-			T result = c.newInstance();
+			T result = c.getDeclaredConstructor().newInstance();
 			Map<FieldDescriptor, Object> valueMap = protoMsg.getAllFields();
 			for (FieldDescriptor fd : valueMap.keySet()) {
 				Field field = c.getDeclaredField(fd.getName());

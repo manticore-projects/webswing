@@ -43,7 +43,7 @@ public class ImageConst extends ImmutableDrawConstantHolder<byte[]> {
 
 	@Override
 	public boolean equals(Object o) {
-		return o == this || o instanceof ImageConst && this.hash == ((ImageConst) o).hash;
+		return o == this || o instanceof ImageConst ic && this.hash == ic.hash;
 	}
 
 	@Override

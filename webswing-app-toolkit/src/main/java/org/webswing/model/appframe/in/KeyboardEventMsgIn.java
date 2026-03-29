@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class KeyboardEventMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -896095456169586882L;
+    @Serial
+    private static final long serialVersionUID = -896095456169586882L;
 
 	public enum KeyEventType {
 		keypress, keydown, keyup;

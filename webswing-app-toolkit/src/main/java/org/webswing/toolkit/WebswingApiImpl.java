@@ -160,8 +160,7 @@ public class WebswingApiImpl implements WebswingApi {
 	}
 
 	void processEvent(final Msg msg) {
-		if (msg instanceof ConnectionHandshakeMsgIn) {
-			final ConnectionHandshakeMsgIn event = (ConnectionHandshakeMsgIn) msg;
+		if (msg instanceof ConnectionHandshakeMsgIn event) {
 			WebswingUrlState state = parseState(event.getUrl());
 			if (this.state == null || !this.state.equals(state)) {
 				WebswingUrlState oldState = this.state;
@@ -180,8 +179,7 @@ public class WebswingApiImpl implements WebswingApi {
 					}
 				});
 			}
-		} else if (msg instanceof ApiEventMsgIn) {
-			final ApiEventMsgIn event = (ApiEventMsgIn) msg;
+		} else if (msg instanceof ApiEventMsgIn event) {
 			apiProcessor.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -211,19 +209,18 @@ public class WebswingApiImpl implements WebswingApi {
 					}
 				}
 			});
-		} else if (msg instanceof ActionEventMsgIn) {
-			ActionEventMsgIn action = (ActionEventMsgIn) msg;
+		} else if (msg instanceof ActionEventMsgIn action) {
 			if (action != null) {
 				apiProcessor.submit(() -> {
 					if (action.getWindowId() != null) {
 						Window w = Util.findWindowById(action.getWindowId());
 						HtmlPanel hp = Util.findHtmlPanelById(action.getWindowId());
 						
-						if (w != null && w instanceof WebWindow) {
+						if (w != null && w instanceof WebWindow window) {
 							if (action.getEventType() == ActionEventType.init) {
-								((WebWindow) w).handleWindowInitialized();
+								window.handleWindowInitialized();
 							} else {
-								((WebWindow) w).handleWebActionEvent(new WebActionEvent(action.getActionName(), action.getData(), action.getBinaryData()));
+								window.handleWebActionEvent(new WebActionEvent(action.getActionName(), action.getData(), action.getBinaryData()));
 							}
 						} else if (hp != null) {
 							if (action.getEventType() == ActionEventType.init) {
@@ -429,8 +426,8 @@ public class WebswingApiImpl implements WebswingApi {
 	@Override
 	public BrowserTransferable getBrowserClipboard() {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		if (clipboard instanceof WebClipboard) {
-			return ((WebClipboard) clipboard).getBrowserClipboard();
+		if (clipboard instanceof WebClipboard webClipboard) {
+			return webClipboard.getBrowserClipboard();
 		}
 		return null;
 	}

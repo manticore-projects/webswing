@@ -1,11 +1,13 @@
 package org.webswing.util;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 public class SessionRecordingHeader implements Serializable {
-	
-	private static final long serialVersionUID = 3683092380648813794L;
+
+    @Serial
+    private static final long serialVersionUID = 3683092380648813794L;
 	public static final int version = 1;
 
 	private Date startDate;

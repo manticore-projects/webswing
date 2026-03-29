@@ -495,8 +495,7 @@ public class WebEventDispatcher extends AbstractEventDispatcher {
 						}
 						break;
 					case maximize:
-						if (win instanceof Frame) {
-							Frame frame = (Frame) win;
+						if (win instanceof Frame frame) {
 							frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 						}
 						break;

@@ -32,10 +32,10 @@ public class DirectDrawServiceImpl implements DirectDrawService {
 
 	@Override
 	public Image extractWebImage(Image webImage) {
-		if (webImage instanceof WebImage) {
-			return ((WebImage) webImage).extractReadOnlyWebImage(true);
-		} else if (webImage instanceof VolatileWebImageWrapper) {
-			return ((VolatileWebImageWrapper) webImage).getWebImage().extractReadOnlyWebImage(true);
+		if (webImage instanceof WebImage image) {
+			return image.extractReadOnlyWebImage(true);
+		} else if (webImage instanceof VolatileWebImageWrapper wrapper) {
+			return wrapper.getWebImage().extractReadOnlyWebImage(true);
 		}
 
 		return null;
@@ -48,20 +48,20 @@ public class DirectDrawServiceImpl implements DirectDrawService {
 
 	@Override
 	public byte[] buildWebImage(Image webImage) {
-		if (webImage instanceof WebImage) {
-			return ((WebImage) webImage).toMessage(dd).toByteArray();
-		} else if (webImage instanceof VolatileWebImageWrapper) {
-			return ((VolatileWebImageWrapper) webImage).getWebImage().toMessage(dd).toByteArray();
+		if (webImage instanceof WebImage image) {
+			return image.toMessage(dd).toByteArray();
+		} else if (webImage instanceof VolatileWebImageWrapper wrapper) {
+			return wrapper.getWebImage().toMessage(dd).toByteArray();
 		}
 		return null;
 	}
 
 	@Override
 	public boolean isDirty(Image webImage) {
-		if (webImage instanceof WebImage) {
-			return ((WebImage) webImage).isDirty();
-		} else if (webImage instanceof VolatileWebImageWrapper) {
-			return ((VolatileWebImageWrapper) webImage).getWebImage().isDirty();
+		if (webImage instanceof WebImage image) {
+			return image.isDirty();
+		} else if (webImage instanceof VolatileWebImageWrapper wrapper) {
+			return wrapper.getWebImage().isDirty();
 		}
 		return false;
 	}
@@ -73,19 +73,19 @@ public class DirectDrawServiceImpl implements DirectDrawService {
 
 	@Override
 	public void resetImage(Image webImage) {
-		if (webImage instanceof WebImage) {
-			((WebImage) webImage).reset();
-		} else if (webImage instanceof VolatileWebImageWrapper) {
-			((VolatileWebImageWrapper) webImage).getWebImage().reset();
+		if (webImage instanceof WebImage image) {
+			image.reset();
+		} else if (webImage instanceof VolatileWebImageWrapper wrapper) {
+			wrapper.getWebImage().reset();
 		}
 	}
 
 	@Override
 	public void resetImageBeforeRepaint(Image webImage) {
-		if (webImage instanceof WebImage) {
-			((WebImage) webImage).resetBeforeRepaint();
-		} else if (webImage instanceof VolatileWebImageWrapper) {
-			((VolatileWebImageWrapper) webImage).getWebImage().resetBeforeRepaint();
+		if (webImage instanceof WebImage image) {
+			image.resetBeforeRepaint();
+		} else if (webImage instanceof VolatileWebImageWrapper wrapper) {
+			wrapper.getWebImage().resetBeforeRepaint();
 		}
 	}
 }

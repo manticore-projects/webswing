@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.in;
 
+import java.io.Serial;
 import java.util.UUID;
 
 import org.webswing.model.MsgIn;
@@ -7,7 +8,8 @@ import org.webswing.model.SyncMsg;
 
 public class GetThreadDumpMsgIn implements SyncMsg, MsgIn {
 
-	private static final long serialVersionUID = -4725610602464860114L;
+    @Serial
+    private static final long serialVersionUID = -4725610602464860114L;
 
 	private String path;
 	private String instanceId;

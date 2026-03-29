@@ -115,8 +115,7 @@ public class WebClipboard extends Clipboard {
 					if (fileList != null) {
 						ArrayList<String> files = new ArrayList<String>();
 						for (Object o : fileList) {
-							if (o instanceof File) {
-								File f = (File) o;
+							if (o instanceof File f) {
 								if (Boolean.getBoolean(Constants.SWING_START_SYS_PROP_ALLOW_DOWNLOAD)) {
 									if (f.exists() && f.canRead() && !f.isDirectory()) {
 										files.add(f.getAbsolutePath());

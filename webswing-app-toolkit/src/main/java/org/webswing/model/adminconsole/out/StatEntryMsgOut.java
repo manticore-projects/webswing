@@ -1,5 +1,6 @@
 package org.webswing.model.adminconsole.out;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,8 @@ import org.webswing.model.MsgOut;
 
 public class StatEntryMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 1961576836793924844L;
+    @Serial
+    private static final long serialVersionUID = 1961576836793924844L;
 
 	private String metric;
 	private List<MetricMsgOut> stats = new ArrayList<>();

@@ -1,9 +1,6 @@
 package org.webswing.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
@@ -38,7 +35,8 @@ import com.google.inject.Module;
 public class WebswingServlet extends HttpServlet {
 	private static final Logger log = LoggerFactory.getLogger(StartupService.class);
 
-	private static final long serialVersionUID = 1962501775857788874L;
+    @Serial
+    private static final long serialVersionUID = 1962501775857788874L;
 
 	private StartupService startup;
 	private GlobalUrlHandler handler;

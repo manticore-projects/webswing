@@ -2,9 +2,12 @@ package org.webswing.model.app.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class JvmStatsMsgOut implements MsgOut {
-	
-	private static final long serialVersionUID = 4505813670370834105L;
+
+    @Serial
+    private static final long serialVersionUID = 4505813670370834105L;
 	
 	private double heapSize;
 	private double heapSizeUsed;

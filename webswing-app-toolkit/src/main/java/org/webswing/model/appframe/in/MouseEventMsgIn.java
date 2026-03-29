@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class MouseEventMsgIn implements MsgIn {
-	
-	private static final long serialVersionUID = 8411036255812103478L;
+
+    @Serial
+    private static final long serialVersionUID = 8411036255812103478L;
 
 	public enum MouseEventType {
 		mousemove,

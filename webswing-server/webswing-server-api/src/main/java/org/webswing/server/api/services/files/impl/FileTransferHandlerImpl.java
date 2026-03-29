@@ -202,7 +202,7 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 			if (maxsize > 0 && filePart.getSize() > maxsize) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write(String.format("File '%s' is too large. (Max. file size is %.1fMB)", escapeJson(filename), maxMB));
+				resp.getWriter().write("File '%s' is too large. (Max. file size is %.1fMB)".formatted(escapeJson(filename), maxMB));
 			} else {
 				String fileId = createHashedUploadFileId(filename, filePart.getSize() + "");
 				try (InputStream filecontent = filePart.getInputStream()) {

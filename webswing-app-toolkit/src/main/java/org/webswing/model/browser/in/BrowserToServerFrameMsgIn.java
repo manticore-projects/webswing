@@ -1,5 +1,6 @@
 package org.webswing.model.browser.in;
 
+import java.io.Serial;
 import java.util.List;
 
 import org.webswing.model.MsgIn;
@@ -10,7 +11,8 @@ import org.webswing.model.common.in.TimestampsMsgIn;
 
 public class BrowserToServerFrameMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -4224151320404291717L;
+    @Serial
+    private static final long serialVersionUID = -4224151320404291717L;
 
 	private ConnectionHandshakeMsgIn handshake;
 	private List<TimestampsMsgIn> timestamps;

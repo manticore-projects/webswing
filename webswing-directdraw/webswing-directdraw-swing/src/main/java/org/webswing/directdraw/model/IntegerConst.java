@@ -30,6 +30,6 @@ public class IntegerConst extends DrawConstant<Integer> {
 	@Override
 	public boolean equals(Object o) {
 		return o == this ||
-			o instanceof IntegerConst && getId() == ((IntegerConst) o).getId();
+			o instanceof IntegerConst ic && getId() == ic.getId();
 	}
 }

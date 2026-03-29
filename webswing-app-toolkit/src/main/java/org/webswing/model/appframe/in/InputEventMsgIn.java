@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class InputEventMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -6578454357790442182L;
+    @Serial
+    private static final long serialVersionUID = -6578454357790442182L;
 	private KeyboardEventMsgIn key;
 	private MouseEventMsgIn mouse;
 	private WindowFocusMsgIn focus;

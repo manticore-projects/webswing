@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class RequestThreadDumpMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 3181698522228498301L;
+    @Serial
+    private static final long serialVersionUID = 3181698522228498301L;
 
 	private String path;
 	private String instanceId;

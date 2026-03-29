@@ -1,5 +1,6 @@
 package org.webswing.model.app.out;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,8 @@ public class ApiCallMsgOut implements MsgOut, SyncMsg {
 		HasRole, IsPermitted
 	}
 
-	private static final long serialVersionUID = 4470097170102688942L;
+    @Serial
+    private static final long serialVersionUID = 4470097170102688942L;
 	
 	private String correlationId = UUID.randomUUID().toString();
 	private ApiMethod method;

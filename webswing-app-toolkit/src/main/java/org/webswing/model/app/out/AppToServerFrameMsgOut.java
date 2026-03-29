@@ -2,9 +2,12 @@ package org.webswing.model.app.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class AppToServerFrameMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -7029550828562961792L;
+    @Serial
+    private static final long serialVersionUID = -7029550828562961792L;
 	
 	private AppHandshakeMsgOut handshake;
 	private ThreadDumpMsgOut threadDump;

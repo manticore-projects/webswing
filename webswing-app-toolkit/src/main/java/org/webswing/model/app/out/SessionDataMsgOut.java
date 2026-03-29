@@ -4,9 +4,12 @@ import org.webswing.model.MsgOut;
 import org.webswing.model.common.in.MirroringStatusEnum;
 import org.webswing.model.common.in.RecordingStatusEnum;
 
+import java.io.Serial;
+
 public class SessionDataMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = 4505813670370834105L;
+    @Serial
+    private static final long serialVersionUID = 4505813670370834105L;
 
 	private boolean applet;
 	private boolean sessionLoggingEnabled;

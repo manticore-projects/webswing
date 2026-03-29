@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class WindowMoveActionMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -8935899924614304993L;
+    @Serial
+    private static final long serialVersionUID = -8935899924614304993L;
 	private int sx;
 	private int sy;
 	private int dx;

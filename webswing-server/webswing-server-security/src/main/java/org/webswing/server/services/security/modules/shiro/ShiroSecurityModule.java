@@ -146,8 +146,8 @@ public class ShiroSecurityModule extends AbstractUserPasswordSecurityModule<Shir
             Set<String> authorizedRoles = new HashSet<>();
 
             // NEW DYNAMIC LOGIC: Querying realms directly for assigned roles
-            if (currentMgr instanceof RealmSecurityManager) {
-                for (Realm realm : ((RealmSecurityManager) currentMgr).getRealms()) {
+            if (currentMgr instanceof RealmSecurityManager manager) {
+                for (Realm realm : manager.getRealms()) {
                     if (realm instanceof AuthorizingRealm) {
                         try {
                             AuthorizationInfo info = (AuthorizationInfo) getAuthorizationInfoMethod.invoke(realm, principals);

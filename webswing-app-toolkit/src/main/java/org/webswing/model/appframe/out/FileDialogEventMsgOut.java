@@ -5,11 +5,14 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.webswing.model.MsgOut;
+
+import java.io.Serial;
 import org.webswing.toolkit.api.file.WebswingFileChooserUtil;
 
 public class FileDialogEventMsgOut implements MsgOut {
 
-	private static final long serialVersionUID = -7470385173647106699L;
+    @Serial
+    private static final long serialVersionUID = -7470385173647106699L;
 
 	public enum FileDialogEventType {
 		AutoUpload,
@@ -49,8 +52,7 @@ public class FileDialogEventMsgOut implements MsgOut {
 
 	public void addFilter(FileFilter filterArr[]) {
 		for (FileFilter ff : filterArr) {
-			if (ff instanceof FileNameExtensionFilter) {
-				FileNameExtensionFilter fe = (FileNameExtensionFilter) ff;
+			if (ff instanceof FileNameExtensionFilter fe) {
 				for (String s : fe.getExtensions()) {
 					filter += "." + s + ", ";
 				}

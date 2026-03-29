@@ -2,9 +2,12 @@ package org.webswing.model.appframe.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class CursorChangeEventMsgOut implements MsgOut {
-	
-	private static final long serialVersionUID = -5374921187295359488L;
+
+    @Serial
+    private static final long serialVersionUID = -5374921187295359488L;
 	
 	public static final String DEFAULT_CURSOR = "default";
 	public static final String HAND_CURSOR = "pointer";

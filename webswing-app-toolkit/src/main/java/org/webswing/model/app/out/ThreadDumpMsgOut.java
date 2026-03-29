@@ -2,9 +2,12 @@ package org.webswing.model.app.out;
 
 import org.webswing.model.MsgOut;
 
+import java.io.Serial;
+
 public class ThreadDumpMsgOut implements MsgOut {
-	
-	private static final long serialVersionUID = -2047166209199097463L;
+
+    @Serial
+    private static final long serialVersionUID = -2047166209199097463L;
 	
 	private long timestamp;
 	private String dumpId;

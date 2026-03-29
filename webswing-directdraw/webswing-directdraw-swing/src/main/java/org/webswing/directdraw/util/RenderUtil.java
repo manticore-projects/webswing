@@ -208,8 +208,8 @@ public class RenderUtil {
 		Composite composite = getValue(0, di, Composite.class);
 		if (composite instanceof AlphaComposite) {
 			currentg.setComposite(composite);
-		} else if (composite instanceof XorModeComposite) {
-			currentg.setXORMode(((XorModeComposite) composite).getXorColor());
+		} else if (composite instanceof XorModeComposite modeComposite) {
+			currentg.setXORMode(modeComposite.getXorColor());
 		}
 	}
 

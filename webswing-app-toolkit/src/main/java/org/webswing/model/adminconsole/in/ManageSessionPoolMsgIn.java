@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class ManageSessionPoolMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 8611183615441516104L;
+    @Serial
+    private static final long serialVersionUID = 8611183615441516104L;
 
 	public enum PowerRequestType {
 		DRAIN_MODE,

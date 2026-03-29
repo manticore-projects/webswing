@@ -5,12 +5,14 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serial;
 
 import org.webswing.toolkit.util.Util;
 
 public class WebCursor extends Cursor {
 
-	private static final long serialVersionUID = -7369225579337480240L;
+    @Serial
+    private static final long serialVersionUID = -7369225579337480240L;
 	private Image image;
 	private Point hotSpot;
 
@@ -21,8 +23,8 @@ public class WebCursor extends Cursor {
 	}
 
 	public BufferedImage getImage() {
-		if (image instanceof BufferedImage) {
-			return (BufferedImage) image;
+		if (image instanceof BufferedImage bufferedImage) {
+			return bufferedImage;
 		} else {
 			Util.waitForImage(image);
 			BufferedImage bimg = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);

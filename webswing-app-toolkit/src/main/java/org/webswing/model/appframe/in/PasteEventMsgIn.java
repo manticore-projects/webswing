@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class PasteEventMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -2857821597134135941L;
+    @Serial
+    private static final long serialVersionUID = -2857821597134135941L;
 	private boolean special;
 	private String text;
 	private String html;

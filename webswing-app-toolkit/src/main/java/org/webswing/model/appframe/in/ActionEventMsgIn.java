@@ -2,9 +2,12 @@ package org.webswing.model.appframe.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class ActionEventMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = -6048866464362966579L;
+    @Serial
+    private static final long serialVersionUID = -6048866464362966579L;
 
 	public enum ActionEventType {
 		init,

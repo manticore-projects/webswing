@@ -63,8 +63,7 @@ public class WebKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
 			@Override
 			public void run() {
 				Component o = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-				if (o instanceof JTextComponent) {
-					JTextComponent tc = (JTextComponent) o;
+				if (o instanceof JTextComponent tc) {
 					tc.removeCaretListener(caretListener);
 					tc.addCaretListener(caretListener);
 				}
@@ -84,8 +83,7 @@ public class WebKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {
 			Rectangle b = o.getBounds();
 			msg.setW(b.width);
 			msg.setH(b.height);
-			if (o instanceof JTextComponent) {
-				JTextComponent tc = (JTextComponent) o;
+			if (o instanceof JTextComponent tc) {
 				if (tc.isEditable() && tc.getWidth() > 0 && tc.getHeight() > 0) {
 					if(optimizeCaret && tc.getCaret().getBlinkRate()!=0){
 						tc.getCaret().setBlinkRate(0);

@@ -147,10 +147,10 @@ public class WebToolkit11 extends WebToolkit {
 	}
 
 	public static boolean requestFocus(Object target, Component paramComponent, boolean temporary, boolean focusedWindowChangeAllowed, long time, FocusEvent.Cause paramCause) {
-		if (target instanceof Window) {
-			return Util.getWebToolkit().getWindowManager().activateWindow((Window) target, paramComponent, 0, 0, temporary, focusedWindowChangeAllowed, FocusEventCause.getValue(paramCause));
-		} else if (target instanceof Panel){
-			return Util.getWebToolkit().getWindowManager().deliverFocus((Panel)target, paramComponent, temporary, FocusEventCause.getValue(paramCause));
+		if (target instanceof Window window) {
+			return Util.getWebToolkit().getWindowManager().activateWindow(window, paramComponent, 0, 0, temporary, focusedWindowChangeAllowed, FocusEventCause.getValue(paramCause));
+		} else if (target instanceof Panel panel){
+			return Util.getWebToolkit().getWindowManager().deliverFocus(panel, paramComponent, temporary, FocusEventCause.getValue(paramCause));
 		} else {
 			return false;
 		}

@@ -3,8 +3,11 @@ package org.webswing.model.appframe.out;
 import org.webswing.model.MsgOut;
 import org.webswing.model.SyncMsg;
 
+import java.io.Serial;
+
 public class PixelsAreaRequestMsgOut implements MsgOut, SyncMsg {
-	private static final long serialVersionUID = -7414037919462952330L;
+    @Serial
+    private static final long serialVersionUID = -7414037919462952330L;
 	
 	private String correlationId;
 	private int x;

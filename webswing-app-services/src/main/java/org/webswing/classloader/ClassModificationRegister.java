@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -69,7 +70,7 @@ public class ClassModificationRegister {
 			return new File(blacklistFileName);
 		}else {
 			String tempDir = System.getProperty(Constants.TEMP_DIR_PATH);
-			String applicationName = URLEncoder.encode(System.getProperty(Constants.SWING_START_SYS_PROP_APP_ID));
+			String applicationName = URLEncoder.encode(System.getProperty(Constants.SWING_START_SYS_PROP_APP_ID), StandardCharsets.UTF_8);
 			return new File(URI.create(tempDir + applicationName + ".unmodified_classes"));
 		}
 	}

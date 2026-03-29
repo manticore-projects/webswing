@@ -2,9 +2,12 @@ package org.webswing.model.adminconsole.in;
 
 import org.webswing.model.MsgIn;
 
+import java.io.Serial;
+
 public class StopAppMsgIn implements MsgIn {
 
-	private static final long serialVersionUID = 4359795607415450588L;
+    @Serial
+    private static final long serialVersionUID = 4359795607415450588L;
 	
 	private String path;
 

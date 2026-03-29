@@ -3,8 +3,11 @@ package org.webswing.model.appframe.in;
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
 
+import java.io.Serial;
+
 public class JsResultMsgIn implements MsgIn, SyncMsg {
-	private static final long serialVersionUID = 8331062247770059042L;
+    @Serial
+    private static final long serialVersionUID = 8331062247770059042L;
 
 	private String correlationId;
 	private String error;
