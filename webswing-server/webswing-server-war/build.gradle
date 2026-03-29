@@ -21,8 +21,8 @@ dependencies {
     // Used directly in this module (not transitive via implementation scope)
     implementation "com.google.inject:guice:${guiceVersion}"
     implementation 'com.google.inject.extensions:guice-multibindings:4.2.3'
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "tools.jackson.core:jackson-core:${jacksonVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
 }
 

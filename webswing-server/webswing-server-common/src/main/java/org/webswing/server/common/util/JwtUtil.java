@@ -3,7 +3,6 @@ package org.webswing.server.common.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
@@ -37,8 +35,8 @@ import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.WebswingLoginSessionTokenClaim;
 import org.webswing.server.common.service.security.WebswingTokenClaim;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -73,7 +71,7 @@ public class JwtUtil {
 	private static final boolean useEncryption = Boolean.parseBoolean(System.getProperty(Constants.jWT_SERIALIZATION_USE_ENCRYPTION, Constants.JWT_SERIALIZATION_USE_ENCRYPTION_DEFAULT));
 
 	private static final ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_JWT, ProtoMapper.PROTO_PACKAGE_JWT);
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final JsonMapper mapper = new JsonMapper();
 
 	private static SecretKey secretKey;
 
@@ -252,7 +250,7 @@ public class JwtUtil {
 		} else {
 			try {
 				serialized = mapper.writeValueAsBytes(webswingClaim);
-			} catch (JsonProcessingException e) {
+			} catch (JacksonException e) {
 				log.error("Failed to serialize user map!", e);
 			}
 		}
@@ -281,7 +279,7 @@ public class JwtUtil {
 		} else {
 			try {
 				serialized = mapper.writeValueAsBytes(loginSessionClaim);
-			} catch (JsonProcessingException e) {
+			} catch (JacksonException e) {
 				log.error("Failed to serialize user map!", e);
 			}
 		}
@@ -401,9 +399,9 @@ public class JwtUtil {
 		} else {
 			try {
 				return mapper.readValue(serialized, WebswingTokenClaim.class);
-			} catch (IOException e) {
+			} catch (JacksonException e) {
 				log.error("Failed to deserialize user map!", e);
-				throw e;
+				throw new IOException("Failed to deserialize user map", e);
 			}
 		}
 	}
@@ -439,9 +437,9 @@ public class JwtUtil {
 		} else {
 			try {
 				return mapper.readValue(serialized, WebswingLoginSessionTokenClaim.class);
-			} catch (IOException e) {
+			} catch (JacksonException e) {
 				log.error("Failed to deserialize user map!", e);
-				throw e;
+				throw new IOException("Failed to deserialize user map", e);
 			}
 		}
 	}

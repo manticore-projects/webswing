@@ -2,9 +2,7 @@ package org.webswing.services.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -19,12 +17,12 @@ import org.webswing.model.appframe.out.JsParamMsgOut;
 import org.webswing.model.appframe.out.JsResultMsgOut;
 import org.webswing.toolkit.jslink.WebJSObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import netscape.javascript.JSException;
 
 public class JsLinkServiceImpl implements JsLinkService {
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final JsonMapper mapper = new JsonMapper();
 	private static final Class<?>[] supportedPrimitives = { Number.class, String.class, Boolean.class, Byte.class, Character.class, Number[].class, String[].class, Boolean[].class, Byte[].class, Character[].class, int[].class, byte[].class, short[].class, char[].class, int[].class, long[].class, float[].class, double[].class, byte[].class };
 
 	private static JsLinkServiceImpl impl;
@@ -52,18 +50,16 @@ public class JsLinkServiceImpl implements JsLinkService {
 				WebJSObject jsobj = (WebJSObject) arg;
 				result.setJsObject(new JSObjectMsgOut(jsobj.getThisId().getId()));
 			} else if (arg instanceof Iterable<?> && includeArrays) {
-				List<JsParamMsgOut> array = new ArrayList<JsParamMsgOut>();
-				for (Iterator<?> i = ((Iterable<?>) arg).iterator(); i.hasNext();) {
-					Object o = i.next();
-					array.add(generateParam(o, false));
-				}
+				List<JsParamMsgOut> array = new ArrayList<>();
+                for (Object o : (Iterable<?>) arg) {
+                    array.add(generateParam(o, false));
+                }
 				result.setArray(array);
 			} else if (arg.getClass().isArray() && includeArrays) {
 				List<JsParamMsgOut> array = new ArrayList<JsParamMsgOut>();
-				for (Iterator<?> i = Arrays.asList((Object[]) arg).iterator(); i.hasNext();) {
-					Object o = i.next();
-					array.add(generateParam(o, false));
-				}
+                for (Object o : (Object[]) arg) {
+                    array.add(generateParam(o, false));
+                }
 				result.setArray(array);
 			} else {
 				JavaObjectRefMsgOut ref = toJavaObjectRef(arg);
@@ -84,7 +80,7 @@ public class JsLinkServiceImpl implements JsLinkService {
 			} else if (value.getJavaObject() != null) {
 				Object obj = WebJSObject.getJavaReference(value.getJavaObject().getId());
 				if (obj == null) {
-					throw new JSException("Reffered Java object not found. Make sure you keep a reference to Java objects sent to Javascript to prevent from being garbage collected.");
+					throw new JSException("Referred Java object not found. Make sure you keep a reference to Java objects sent to Javascript to prevent from being garbage collected.");
 				}
 				return obj;
 			} else if (value.getArray() != null) {
@@ -136,8 +132,8 @@ public class JsLinkServiceImpl implements JsLinkService {
 	}
 
 	private static boolean isPrimitive(Object arg) {
-		Class<? extends Object> argClass = arg.getClass();
-		for (Class<? extends Object> c : supportedPrimitives) {
+		Class<?> argClass = arg.getClass();
+		for (Class<?> c : supportedPrimitives) {
 			if (c.isAssignableFrom(argClass)) {
 				return true;
 			}

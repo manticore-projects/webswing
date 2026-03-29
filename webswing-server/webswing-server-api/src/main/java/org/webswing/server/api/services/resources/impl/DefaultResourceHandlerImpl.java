@@ -2,7 +2,7 @@ package org.webswing.server.api.services.resources.impl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.model.exception.WsException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 
@@ -71,7 +71,7 @@ public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 		public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 			Manifest manifest = getManifest(handler);
 
-			ObjectMapper mapper = new ObjectMapper();
+			JsonMapper mapper = new JsonMapper();
 			String manifestJson = mapper.writeValueAsString(manifest);
 
 			resp.setContentType("application/json");
@@ -111,7 +111,7 @@ public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 			ManifestIcons icon = new ManifestIcons();
 			icon.setSrc(handler.getFullPathMapping() + "/rest/appicon");
 			icon.setSizes("256x256");// this is just a hardcoded value, not real size
-			manifest.setIcons(Arrays.asList(icon));
+			manifest.setIcons(List.of(icon));
 			manifest.setStartUrl(handler.getFullPathMapping());
 			manifest.setScope(handler.getFullPathMapping());
 			manifest.setBackgroundColor(color);

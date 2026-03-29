@@ -13,6 +13,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
@@ -25,25 +26,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Iterators;
 
 public class ServerUtil {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ServerUtil.class);
-	
+
 	private static final DateFormat EXPIRES_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.US);
-	
+
 	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String BEARER_TYPE = "Bearer";
-	
-	private static ObjectMapper mapper = new ObjectMapper();
+
+	private static final JsonMapper mapper = new JsonMapper();
 
 	static {
 		EXPIRES_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
-	
+
 	public static String getClientIp(HttpServletRequest r) {
 		String result = null;
 		result = r.getHeader("X-Forwarded-For");
@@ -52,7 +53,7 @@ public class ServerUtil {
 		}
 		return result;
 	}
-	
+
 	public static String getClientOs(String userAgent) {
 		if (userAgent == null) {
 			return "Unknown";
@@ -87,7 +88,7 @@ public class ServerUtil {
 		}
 
 		if (adminUrl.startsWith("http")) {
-			return ServerUtil.domainFromUrl(adminUrl).equals(ServerUtil.domainFromUrl(url));
+			return Objects.equals(ServerUtil.domainFromUrl(adminUrl), ServerUtil.domainFromUrl(url));
 		}
 
 		// adminUrl is relative, consider it same origin
@@ -95,32 +96,44 @@ public class ServerUtil {
 	}
 
 	public static String getClientBrowser(String userAgent) {
-		String browser = "Unknown";
 		if (userAgent == null) {
-			return browser;
+			return "Unknown";
 		}
-		String user = userAgent.toLowerCase();
-		if (user.contains("safari") && user.contains("version")) {
-			browser = (userAgent.substring(userAgent.indexOf("Safari")).split(" ")[0]).split("/")[0] + "-" + (userAgent.substring(userAgent.indexOf("Version")).split(" ")[0]).split("/")[1];
-		} else if (user.contains("opr") || user.contains("opera")) {
-			if (user.contains("opera"))
-				browser = (userAgent.substring(userAgent.indexOf("Opera")).split(" ")[0]).split("/")[0] + "-" + (userAgent.substring(userAgent.indexOf("Version")).split(" ")[0]).split("/")[1];
-			else if (user.contains("opr"))
-				browser = ((userAgent.substring(userAgent.indexOf("OPR")).split(" ")[0]).replace("/", "-")).replace("OPR", "Opera");
-		} else if (user.contains("chrome")) {
-			browser = (userAgent.substring(userAgent.indexOf("Chrome")).split(" ")[0]).replace("/", "-");
-		} else if (user.contains("firefox")) {
-			browser = (userAgent.substring(userAgent.indexOf("Firefox")).split(" ")[0]).replace("/", "-");
+		String ua = userAgent.toLowerCase();
+
+		// Order matters: check more specific UA tokens before generic ones,
+		// since Chromium-based browsers all include "chrome" in the UA string.
+
+		if (ua.contains("edg/")) {
+			// Chromium-based Edge (not legacy "Edge/")
+			return extractBrowserVersion(userAgent, "Edg");
+		} else if (ua.contains("opr/") || ua.contains("opera")) {
+			// Opera (modern OPR/ or legacy Opera/)
+			String token = ua.contains("opr/") ? "OPR" : "Opera";
+			return extractBrowserVersion(userAgent, token).replace("OPR", "Opera");
+		} else if (ua.contains("samsungbrowser/")) {
+			return extractBrowserVersion(userAgent, "SamsungBrowser");
+		} else if (ua.contains("firefox/")) {
+			return extractBrowserVersion(userAgent, "Firefox");
+		} else if (ua.contains("chrome/")) {
+			// Must come after Edge, Opera, Samsung — they all contain "chrome"
+			return extractBrowserVersion(userAgent, "Chrome");
+		} else if (ua.contains("safari/") && ua.contains("version/")) {
+			// Safari (real Safari, not Chrome pretending)
+			return extractBrowserVersion(userAgent, "Version").replace("Version", "Safari");
 		}
-		if (user.contains("msie")) {
-			String substring = userAgent.substring(userAgent.indexOf("MSIE")).split(";")[0];
-			browser = substring.split(" ")[0].replace("MSIE", "IE") + "-" + substring.split(" ")[1];
-		} else if (user.contains("trident/7.0")) {
-			browser = "IE - 11";
-		} else {
-			browser = user;
+
+		return "Unknown";
+	}
+
+	private static String extractBrowserVersion(String userAgent, String token) {
+		int idx = userAgent.indexOf(token);
+		if (idx < 0) {
+			return token;
 		}
-		return browser;
+		// Grab "Token/1.2.3" and replace "/" with "-"
+		String fragment = userAgent.substring(idx).split(" ")[0];
+		return fragment.replace("/", "-");
 	}
 
 	public static URL getFileResource(String resource, File folder) {
@@ -168,7 +181,7 @@ public class ServerUtil {
 		}
 		return false;
 	}
-	
+
 	public static String getContextPath(ServletContext ctx) {
 		String contextPath = ctx.getContextPath();
 		String contextPathExplicit = System.getProperty(Constants.REVERSE_PROXY_CONTEXT_PATH);
@@ -180,7 +193,7 @@ public class ServerUtil {
 			return "";
 		}
 	}
-	
+
 	public static void sendHttpRedirect(HttpServletRequest req, HttpServletResponse resp, String relativeUrl) throws IOException {
 		String proto = req.getHeader("X-Forwarded-Proto");
 		String host = req.getHeader("X-Forwarded-Host");
@@ -198,11 +211,11 @@ public class ServerUtil {
 			resp.sendRedirect(relativeUrl);
 		}
 	}
-	
+
 	public static String normalizeForFileName(String text) {
 		return text.replaceAll("\\W+", "_");
 	}
-	
+
 	/**
 	 * Extract the bearer token from a header.
 	 *
@@ -216,7 +229,7 @@ public class ServerUtil {
 		}
 		return extractBearerToken(Iterators.forEnumeration(headers));
 	}
-	
+
 	public static String extractBearerToken(Map<String, List<String>> map) {
 		if (map == null) {
 			return null;
@@ -224,16 +237,16 @@ public class ServerUtil {
 		if (!map.containsKey(Constants.HTTP_ATTR_TOKEN)) {
 			return null;
 		}
-		
+
 		List<String> paramValues = map.get(Constants.HTTP_ATTR_TOKEN);
-		
+
 		if (paramValues == null || paramValues.isEmpty()) {
 			return null;
 		}
-		
-		return paramValues.get(0);
+
+		return paramValues.getFirst();
 	}
-	
+
 	private static String extractBearerToken(Iterator<String> headers) {
 		while (headers.hasNext()) { // typically there is only one (most servers enforce that)
 			String value = headers.next();
@@ -248,85 +261,86 @@ public class ServerUtil {
 		}
 		return null;
 	}
-	
+
 	public static String parseTokenFromCookie(HttpServletRequest req, String cookieName) {
 		if (req.getCookies() == null) {
 			return null;
 		}
-		
+
 		String proxypath = System.getProperty(Constants.REVERSE_PROXY_CONTEXT_PATH, "").replaceAll("[^A-Za-z0-9]", "_");
 		cookieName += proxypath;
-		
+
 		String token_cookie = null;
-		
+
 		for (Cookie cookie : req.getCookies()) {
 			if (cookieName.equals(cookie.getName())) {
 				token_cookie = cookie.getValue();
 				break;
 			}
 		}
-		
+
 		return token_cookie;
 	}
-	
+
 	public static void setTokenCookie(HttpServletResponse resp, String cookieName, String token) {
 		setTokenCookie(resp, cookieName, token, false);
 	}
-	
+
 	public static void setTokenCookie(HttpServletResponse resp, String cookieName, String token, boolean clear) {
 		setCookie(resp, cookieName, token, null, clear);
 	}
-	
+
 	public static void setCookie(HttpServletResponse resp, String cookieName, String value, String path, boolean clear) {
 		String proxypath = System.getProperty(Constants.REVERSE_PROXY_CONTEXT_PATH, "").replaceAll("[^A-Za-z0-9]", "_");
 		boolean serverIsHttpsOnly = Boolean.getBoolean(Constants.HTTPS_ONLY);
-		
-		StringBuffer cookieHeader = new StringBuffer();
-		cookieHeader.append(cookieName + proxypath);
+
+		StringBuilder cookieHeader = new StringBuilder();
+		cookieHeader.append(cookieName).append(proxypath);
 		cookieHeader.append("=");
 		cookieHeader.append(value);
-		
+
 		if (clear) {
-			cookieHeader.append("; Expires=" + EXPIRES_FORMAT.format(new Date(0)));
+			cookieHeader.append("; Expires=").append(EXPIRES_FORMAT.format(new Date(0)));
 		}
 		if (path == null) {
 			cookieHeader.append("; Path=/");
 		} else {
-			cookieHeader.append("; Path=" + path);
+			cookieHeader.append("; Path=").append(path);
 		}
 		cookieHeader.append("; HttpOnly");
-		
+
 		if (serverIsHttpsOnly) {
 			cookieHeader.append("; Secure");
-			cookieHeader.append("; SameSite=" + System.getProperty(Constants.COOKIE_SAMESITE, "NONE").toUpperCase());
+			cookieHeader.append("; SameSite=").append(System.getProperty(Constants.COOKIE_SAMESITE, "NONE")
+                                                            .toUpperCase());
 		}
-		
+
 		resp.addHeader("Set-Cookie", cookieHeader.toString());
 	}
-	
+
 	public static void writeLoginSessionToken(HttpServletResponse resp, String serializedLoginSessionClaim) {
 		String loginSessionToken = JwtUtil.createLoginSessionToken(serializedLoginSessionClaim);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_LOGIN_SESSION_TOKEN, loginSessionToken);
 	}
-	
+
 	public static void writeTokens(HttpServletResponse resp, String serializedWebswingClaim, boolean cookieOnly) {
 		String refreshToken = JwtUtil.createRefreshToken(serializedWebswingClaim);
 		String transferToken = JwtUtil.createTransferToken(serializedWebswingClaim);
 		String adminConsoleLoginToken = JwtUtil.createAdminConsoleLoginToken(serializedWebswingClaim);
-		
+
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_REFRESH_TOKEN, refreshToken);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_TRANSFER_TOKEN, transferToken);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_LOGIN_TOKEN, adminConsoleLoginToken);
-		
+
 		if (!cookieOnly) {
 			String accessToken = JwtUtil.createAccessToken(serializedWebswingClaim);
-			
+
 			ObjectNode result = mapper.createObjectNode();
 			result.put("accessToken", accessToken);
-			
+
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
-			
+
 			try {
 				resp.getWriter().write(result.toString());
 			} catch (IOException e) {
@@ -334,17 +348,17 @@ public class ServerUtil {
 			}
 		}
 	}
-	
+
 	public static void clearLoginTokenFromCookies(HttpServletResponse resp) {
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_LOGIN_SESSION_TOKEN, "expired", true);
 	}
-	
+
 	public static void clearTokensFromCookies(HttpServletResponse resp) {
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_REFRESH_TOKEN, "expired", true);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_TRANSFER_TOKEN, "expired", true);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_LOGIN_TOKEN, "expired", true);
 	}
-	
+
 	public static void clearAdminConsoleCookie(HttpServletResponse resp) {
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_REFRESH_TOKEN, "expired", true);
 		ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_DOWNLOAD_TOKEN, "expired", true);

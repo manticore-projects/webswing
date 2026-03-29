@@ -8,5 +8,5 @@ dependencies {
     implementation 'com.github.spullara.mustache.java:compiler:0.9.11'
     implementation 'org.apache.shiro:shiro-core:1.+'
     implementation "com.google.guava:guava:${guavaVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
 }

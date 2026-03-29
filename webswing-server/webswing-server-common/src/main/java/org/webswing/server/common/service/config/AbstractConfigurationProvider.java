@@ -23,6 +23,8 @@ import org.webswing.server.model.exception.WsException;
 import org.webswing.server.model.exception.WsInitException;
 import org.webswing.util.NamedThreadFactory;
 
+import tools.jackson.core.JacksonException;
+
 public abstract class AbstractConfigurationProvider<T> implements ConfigurationProvider<T> {
 	private static final Logger log = LoggerFactory.getLogger(AbstractConfigurationProvider.class);
 
@@ -52,12 +54,12 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
 		this();
 		this.updateHandler = updateHandler;
 	}
-	
+
 	@Override
 	public abstract T toConfig(String path, Map<String, Object> configuration) throws Exception;
-	
+
 	public abstract Map<String, Object> createDefaultConfiguration(String path);
-	
+
 	protected Map<String, Object> initConfiguration(Map<String, Object> config) {
 		return config;
 	}
@@ -72,14 +74,14 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
 	public Map<String, Object> getConfiguration(String path) {
 		return cloneJsonObject((Map<String, Object>) configuration.get(path));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected Map<String, Object> cloneJsonObject(Map<String, Object> obj) {
-		if (obj != null && obj instanceof Map) {
+		if (obj != null) {
 			try {
 				String serialized = WebswingObjectMapper.get().writeValueAsString(obj);
 				return WebswingObjectMapper.get().readValue(serialized, Map.class);
-			} catch (IOException e) {
+			} catch (JacksonException e) {
 				log.error("Failed to clone configuration object", e);
 			}
 		}
@@ -104,7 +106,7 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
 			throw new Exception("Failed to save Webswing configuration :", e);
 		}
 	}
-	
+
 	protected void saveConfiguration(Map<String, Object> configuration) throws Exception {
 		try {
 			synchronized (this) {
@@ -184,11 +186,7 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
 
 	private boolean isConfigFileModified(File config, long lastModified) {
 		long currentLastModified = config.lastModified();
-		if (currentLastModified != lastModified) {
-			return true;
-		} else {
-			return false;
-		}
+        return currentLastModified != lastModified;
 	}
 
 	protected File getConfigFile() throws WsInitException {
@@ -233,9 +231,9 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
 			try {
 				//delete
 				updateHandler.notifyConfigDeleted(path);
-				log.error("Deleted app configuration '" + path + "'.");
+                log.error("Deleted app configuration '{}'.", path);
 			} catch (Exception e) {
-				log.error("Failed to delete app configuration'" + path + "'.", e);
+                log.error("Failed to delete app configuration'{}'.", path, e);
 			}
 		}
 	}

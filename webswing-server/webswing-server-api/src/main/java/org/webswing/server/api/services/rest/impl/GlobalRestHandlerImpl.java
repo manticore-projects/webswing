@@ -16,13 +16,13 @@ import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 public class GlobalRestHandlerImpl extends AbstractGlobalRestHandler {
 
 	private final GlobalUrlHandler handler;
-	
+
 	public GlobalRestHandlerImpl(GlobalUrlHandler parent) {
 		super(parent);
 		this.handler = parent;
@@ -32,27 +32,27 @@ public class GlobalRestHandlerImpl extends AbstractGlobalRestHandler {
 	protected String getPath() {
 		return "rest";
 	}
-	
+
 	@Override
 	public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
 		handleCorsHeaders(req, res);
-		
+
 		String path = getPathInfo(req);
-		
+
 		switch (path) {
 			case "/apps": {
 				try {
 					List<ApplicationInfoMsg> apps = getApps();
-					
-					ObjectMapper mapper = new ObjectMapper();
+
+					JsonMapper mapper = new JsonMapper();
 					String appsJson = mapper.writeValueAsString(apps);
-					
+
 					res.setContentType("application/json");
 					res.setCharacterEncoding("UTF-8");
-					
+
 					sendContent(res, appsJson);
 					return true;
-				} catch (JsonProcessingException e) {
+				} catch (JacksonException e) {
 					throw new WsException(e);
 				}
 			}
@@ -80,24 +80,24 @@ public class GlobalRestHandlerImpl extends AbstractGlobalRestHandler {
 				return true;
 			}
 		}
-		
+
 		return super.serve(req, res);
 	}
-	
+
 	@Override
 	protected boolean isOriginAllowed(String header) {
 		if (super.isOriginAllowed(header)) {
 			return true;
 		}
-		
+
 		String url = VariableSubstitutor.basic().replace(handler.getConfig().getAdminConsoleUrl());
 		if (StringUtils.isNotBlank(url) && url.toLowerCase().startsWith("http") && ServerUtil.domainFromUrl(url).equals(header)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	protected List<ApplicationInfoMsg> getApps() throws WsException {
 		handler.checkPermission(WebswingAction.rest_getApps);

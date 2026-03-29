@@ -2,6 +2,7 @@ package org.webswing.server.api.services.swinginstance.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,19 +56,20 @@ import org.webswing.server.common.util.ProtoMapper;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.collect.Lists;
 
 public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
-	private static final long serialVersionUID = -4640770499863974871L;
+	@Serial
+    private static final long serialVersionUID = -4640770499863974871L;
 
 	private static final Logger log = LoggerFactory.getLogger(ConnectedSwingInstance.class);
-	
-	private ProtoMapper appFrameInProtoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT);
-	private ProtoMapper appFrameOutProtoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT, ProtoMapper.PROTO_PACKAGE_APPFRAME_IN);
-	
+
+	private final ProtoMapper appFrameInProtoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT);
+	private final ProtoMapper appFrameOutProtoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT, ProtoMapper.PROTO_PACKAGE_APPFRAME_IN);
+
 	private final String instanceId;
 	private final String ownerId;
 	private final String urlContext;
@@ -80,7 +82,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
 	private MirroringStatusEnum mirroringStatus = MirroringStatusEnum.NOT_MIRRORING;
 	private Runnable doAfterMirroringAccepted;
-	
+
 	private ServerSessionPoolConnector poolConnector;
 
 	private SecuredPathConfig config;
@@ -90,14 +92,14 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 	private WebSocketUserInfo lastConnection = null;
 
 	private Date endedAt = null; // finished instances only
-	
+
 	private List<String> warningHistoryLog;
 	private Map<Long, ThreadDumpMsgOut> threadDumps = new ConcurrentHashMap<>();
 	private SessionDataMsgOut sessionData;
 	private ProcessStatusEnum processStatus;
-	
+
 	private List<ServerToAppFrameMsgIn> startupMsgQueue = Collections.synchronizedList(new ArrayList<>());
-	
+
 	public SwingInstanceImpl(PrimaryWebSocketConnection websocket, ConnectionHandshakeMsgIn h, SwingInstanceInfo instanceInfo, ServerSessionPoolConnector serverSessionPoolConnector) throws WsException {
 		this.poolConnector = serverSessionPoolConnector;
 		this.config = instanceInfo.getConfig();
@@ -106,21 +108,21 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		this.urlContext = instanceInfo.getUrlContext();
 		this.pathMapping = instanceInfo.getPathMapping();
 		this.appName = instanceInfo.getConfig().getName();
-		
+
 		VariableSubstitutor handlerSubs = VariableSubstitutor.forSwingApp(config);
 		this.goodbyeUrl = handlerSubs.replace(config.getGoodbyeUrl());
 
 		connectPrimaryWebSession(websocket);
-		
+
 		logStatValue(StatisticsLogger.WEBSOCKET_CONNECTED, 1);
 	}
-	
+
 	@Override
 	public void connectApplication(ApplicationWebSocketConnection appConnection, boolean reconnect) {
 		this.appConnection = appConnection;
 		appConnection.instanceConnected(this);
 		sendConnectionInfo();
-		
+
 		if (reconnect && webConnection != null) {
 			synchronized (webConnection) {
 				// FIXME is this ok ?
@@ -128,18 +130,16 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				sendDirectMessageToBrowser(webConnection, SimpleEventMsgOut.continueOldSession.buildMsgOut());
 			}
 		}
-		
-		log.info("Application websocket connected to instance. ["+this.instanceId+"]");
-		
+
+        log.info("Application websocket connected to instance. [{}]", this.instanceId);
+
 		if (!startupMsgQueue.isEmpty()) {
-			log.info("Dispatching " + startupMsgQueue.size() + " queued messages.");
-			startupMsgQueue.stream().forEach(qm -> {
-				sendMessageToApp(qm);
-			});
+            log.info("Dispatching {} queued messages.", startupMsgQueue.size());
+			startupMsgQueue.forEach(this::sendMessageToApp);
 			startupMsgQueue.clear();
 		}
 	}
-	
+
 	@Override
 	public void connectBrowser(PrimaryWebSocketConnection r, ConnectionHandshakeMsgIn h) {
 		if (h.isMirrored()) {
@@ -147,7 +147,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			// Direct mirror connection is not allowed!
 			return;
 		}
-		
+
 		if (r.uuid() != null && r.uuid().equals(getConnectionId())) {
 			// ignore, this is handled in BrowserWebSocketConnectionImpl
 		} else {
@@ -160,14 +160,14 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			}
 		}
 	}
-	
+
 	@Override
 	public void browserDisconnected(String connectionId) {
 		if (getConnectionId() != null && getConnectionId().equals(connectionId)) {
 			disconnectPrimaryWebSession("Browser disconnected.");
 		}
 	}
-	
+
 	@Override
 	public void applicationDisconnected(String reason) {
 		this.appConnection = null;
@@ -192,7 +192,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (resource == null) {
 			return false;
 		}
-		
+
 		if (this.webConnection != null && config.isAllowStealSession()) {
 			// steal session
 			synchronized (this.webConnection) {
@@ -201,17 +201,17 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				poolConnector.notifyUserDisconnected(this); // call this once webConnection is already null
 			}
 		}
-			
+
 		if (this.webConnection == null) {
 			this.webConnection = resource;
 			logStatValue(StatisticsLogger.WEBSOCKET_CONNECTED, 1);
 			notifyUserConnected();
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private void disconnectPrimaryWebSession(String reason) {
 		if (this.webConnection != null) {
 			synchronized (webConnection) {
@@ -231,7 +231,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (mirror == null) {
 			return;
 		}
-		
+
 		if (this.mirroredWebConnection != null) {
 			synchronized (this.mirroredWebConnection) {
 				sendDirectMessageToBrowser(this.mirroredWebConnection, SimpleEventMsgOut.sessionStolenNotification.buildMsgOut());
@@ -249,7 +249,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		disconnectMirroredWebSession(null, disconnect);
 		stopMirroring(this.mirroredWebConnection);
 	}
-	
+
 	@Override
 	public void disconnectMirroredWebSession(String sessionId, boolean disconnect) {
 		if (this.mirroredWebConnection != null) {
@@ -286,48 +286,48 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		}
 		this.mirroringStatus = mirroringStatus;
 	}
-	
+
 	@Override
 	public void handleAppMessage(AppToServerFrameMsgOut msgOut) {
 		if (msgOut.getApiCall() != null) {
 			ApiCallMsgOut query = msgOut.getApiCall();
 			AbstractWebswingUser currentUser = webConnection != null ? webConnection.getUser() : null;
-			
+
 			ServerToAppFrameMsgIn appMsg = new ServerToAppFrameMsgIn();
 			ApiCallResultMsgIn resultMsg = new ApiCallResultMsgIn();
 			resultMsg.setCorrelationId(query.getCorrelationId());
-			
+
 			switch (query.getMethod()) {
 				case HasRole:
 					if (currentUser != null) {
-						resultMsg.setResult(currentUser.hasRole((String) query.getArgs().get(0)) + "");
+						resultMsg.setResult(currentUser.hasRole((String) query.getArgs().getFirst()) + "");
 					}
 					break;
 				case IsPermitted:
 					if (currentUser != null) {
-						resultMsg.setResult(currentUser.isPermitted((String) query.getArgs().get(0)) + "");
+						resultMsg.setResult(currentUser.isPermitted((String) query.getArgs().getFirst()) + "");
 					}
 					break;
 				default:
 					break;
 			}
-			
+
 			appMsg.setApiCallResult(resultMsg);
 			sendMessageToApp(appMsg);
 		}
-		
+
 		if (msgOut.getJvmStats() != null) {
 			JvmStatsMsgOut s = msgOut.getJvmStats();
 
 			if (isStatisticsLoggingEnabled()) {
 				double cpuUsage = s.getCpuUsage();
-				
+
 				logStatValue(StatisticsLogger.MEMORY_ALLOCATED_METRIC, s.getHeapSize());
 				logStatValue(StatisticsLogger.MEMORY_USED_METRIC, s.getHeapSizeUsed());
 				logStatValue(StatisticsLogger.CPU_UTIL_METRIC, cpuUsage);
 				logStatValue(StatisticsLogger.EDT_BLOCKED_SEC_METRIC, s.getEdtPingSeconds());
 			}
-			
+
 			if (getConfig().isMonitorEdtEnabled()) {
 				if (s.getEdtPingSeconds() > Math.max(2, getConfig().getLoadingAnimationDelay())) {
 					sendMessageToBrowser(SimpleEventMsgOut.applicationBusy.buildMsgOut());
@@ -340,7 +340,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			ExitMsgOut e = msgOut.getExit();
 			poolConnector.kill(getInstanceId(), e.getWaitForExit());
 		}
-		
+
 		if (msgOut.getThreadDump() != null) {
 			ThreadDumpMsgOut e = msgOut.getThreadDump();
 			threadDumps.put(e.getTimestamp(), e);
@@ -351,28 +351,28 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
 			setMirroringStatus(sessionData.getMirroringStatus());
 		}
-		
+
 		if (msgOut.getAppFrameMsgOut() != null) {
 			// resend app frame
 			ServerToBrowserFrameMsgOut frameOut = new ServerToBrowserFrameMsgOut();
 			frameOut.setAppFrameMsgOut(msgOut.getAppFrameMsgOut());
-			
+
 			sendMessageToBrowser(frameOut);
 		}
 	}
-	
+
 	@Override
 	public void handleBrowserMessage(BrowserToServerFrameMsgIn msgIn) {
 		if (msgIn.getTimestamps() != null) {
 			msgIn.getTimestamps().forEach(this::processTimestampMessage);
 		}
-		
+
 		ServerToAppFrameMsgIn frameIn = new ServerToAppFrameMsgIn();
 		frameIn.setAppFrameMsgIn(msgIn.getAppFrameMsgIn());
 		frameIn.setHandshake(msgIn.getHandshake());
 		frameIn.setEvents(msgIn.getEvents());
 		frameIn.setTimestamps(msgIn.getTimestamps());
-		
+
 		if (msgIn.getEvents() != null) {
 			msgIn.getEvents().forEach(m -> {
 				if (m.getType().equals(SimpleEventMsgIn.SimpleEventType.unload)) {
@@ -380,10 +380,10 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				}
 			});
 		}
-		
+
 		sendMessageToApp(frameIn);
 	}
-	
+
 	@Override
 	public void handleBrowserMirrorMessage(byte[] frame) {
 		if (mirroredWebConnection != null) {
@@ -396,7 +396,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			log.warn("Mirror not connected [" + getInstanceId() + "]!");
 		}
 	}
-	
+
 	private void closeBrowserConnections() {
 		if (webConnection != null) {
 			synchronized (webConnection) {
@@ -408,11 +408,11 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				mirroredWebConnection.disconnect("Application disconnected!");
 			}
 		}
-		
+
 		disconnectPrimaryWebSession("Application closed.");
 		disconnectMirroredWebSession(false);
 	}
-	
+
 	/**
 	 * No session recording, no copying to mirrored connection.
 	 */
@@ -428,19 +428,19 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 	private boolean sendMessageToBrowser(AppFrameMsgOut frame) {
 		return sendMessageToBrowser(encodeFrameMessage(frame));
 	}
-	
+
 	private ServerToBrowserFrameMsgOut encodeFrameMessage(AppFrameMsgOut frame) {
 		ServerToBrowserFrameMsgOut msgOut = new ServerToBrowserFrameMsgOut();
-		
+
 		try {
 			msgOut.setAppFrameMsgOut(appFrameOutProtoMapper.encodeProto(frame));
 		} catch (IOException e) {
-			log.error("Error encoding proto frame to browser, session [" + webConnection.uuid() + "]!", e);
+            log.error("Error encoding proto frame to browser, session [{}]!", webConnection.uuid(), e);
 		}
-		
+
 		return msgOut;
 	}
-	
+
 	public boolean sendMessageToBrowser(ServerToBrowserFrameMsgOut msgOut) {
 		if (webConnection != null) {
 			synchronized (webConnection) {
@@ -458,7 +458,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -466,21 +466,21 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (!isRunning()) {
 			return false;
 		}
-		
+
 		if (appConnection == null) {
 			startupMsgQueue.add(msgIn);
 			return true;
 		}
-		
+
 		if (!appConnection.isConnected()) {
 			return false;
 		}
-		
+
 		appConnection.sendMessage(msgIn);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean sendMessageToApp(AppFrameMsgIn msgIn) {
 		try {
@@ -497,7 +497,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (!isStatisticsLoggingEnabled()) {
 			return;
 		}
-		
+
 		if (StringUtils.isNotEmpty(h.getSendTimestamp())) {
 			long currentTime = System.currentTimeMillis();
 			long sendTime = Long.parseLong(h.getSendTimestamp());
@@ -564,7 +564,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
 		sendMessageToApp(msgIn);
 	}
-	
+
 	private void logStatValue(String name, Number value) {
 		if (!isStatisticsLoggingEnabled()) {
 			return;
@@ -582,7 +582,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		}
 		warningHistoryLog = current;
 	}
-	
+
 	@Override
 	public org.webswing.model.adminconsole.out.ThreadDumpMsgOut getThreadDump(String timestamp) {
 		try {
@@ -601,13 +601,13 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (dataStore == null) {
 			return null;
 		}
-		
+
 		try (InputStream is = dataStore.readData(WebswingDataStoreType.threadDump.name(), dumpId)) {
 			return IOUtils.toString(is);
 		} catch (Exception e) {
-			log.error("Failed to read thread dump [" + dumpId + "]!", e);
+            log.error("Failed to read thread dump [{}]!", dumpId, e);
 		}
-		
+
 		return null;
 	}
 
@@ -621,7 +621,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 	@Override
 	public void close() {
 		notifyExiting();
-		
+
 		if (config.isAutoLogout()) {
 			sendMessageToBrowser(SimpleEventMsgOut.shutDownAutoLogoutNotification.buildMsgOut());
 		} else {
@@ -637,29 +637,29 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 				sendMessageToBrowser(SimpleEventMsgOut.shutDownNotification.buildMsgOut());
 			}
 		}
-		
+
 		if (appConnection != null) {
 			appConnection.disconnect("Closing instance.");
 		}
 	}
-		
+
 	private void notifyExiting() {
 		endedAt = new Date();
 		poolConnector.removeConnectedSwingInstance(this, false);
 		logWarningHistory();
 	}
-	
+
 	@Override
 	public void notifyUserConnected() {
 		sendUserApiEventMsg(ApiEventType.UserConnected, webConnection);
 		poolConnector.notifyUserConnected(this);
-		
+
 		if (webConnection != null) {
 			synchronized (webConnection) {
 				// this should be always true
 				webConnection.instanceConnected(this);
 			}
-			
+
 			sendConnectionInfo();
 		}
 	}
@@ -668,10 +668,10 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		if (webConnection == null || appConnection == null) {
 			return;
 		}
-		
+
 		ServerToBrowserFrameMsgOut msgOut = new ServerToBrowserFrameMsgOut();
 		msgOut.setConnectionInfo(new ConnectionInfoMsgOut(System.getProperty(Constants.WEBSWING_SERVER_ID), appConnection.getSessionPoolId(), config.isAutoLogout()));
-		
+
 		synchronized (webConnection) {
 			if (webConnection.isConnected()) {
 				webConnection.sendMessage(msgOut);
@@ -699,12 +699,12 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 			byte[] args = null;
 			if (connectedUser.getUserAttributes() != null) {
 				try {
-					args = new ObjectMapper().writeValueAsBytes(connectedUser.getUserAttributes());
-				} catch (JsonProcessingException e) {
+					args = new JsonMapper().writeValueAsBytes(connectedUser.getUserAttributes());
+				} catch (JacksonException e) {
 					log.error("Could not serialize user attributes!", e);
 				}
 			}
-			
+
 			event = new ApiEventMsgIn(type, connectedUser.getUserId(), args);
 		} else {
 			event = new ApiEventMsgIn(type, null, null);
@@ -713,7 +713,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		frame.setApiEvent(event);
 		sendMessageToApp(frame);
 	}
-	
+
 	private void sendUserApiEventMsg(ApiEventType type, MirrorWebSocketConnection r) {
 		ApiEventMsgIn event;
 		if (r != null) {
@@ -768,28 +768,28 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		} else {
 			session.setWarningHistory(warningHistoryLog);
 		}
-		
+
 		session.setStatus(getInstanceStatus());
 
 		return session;
 	}
-	
+
 	private StatusEnum getInstanceStatus() {
 		if (processStatus == null) {
 			return StatusEnum.NOT_STARTED;
 		}
-		
+
 		if (processStatus == ProcessStatusEnum.RUNNING) {
 			if (isRunning()) {
 				return StatusEnum.RUNNING;
 			}
 			return StatusEnum.EXITING;
 		}
-		
+
 		if (processStatus == ProcessStatusEnum.FORCE_KILLED) {
 			return StatusEnum.FORCE_KILLED;
 		}
-		
+
 		return StatusEnum.FINISHED;
 	}
 
@@ -801,7 +801,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public boolean isStatisticsLoggingEnabled() {
 		if (sessionData != null) {
@@ -809,12 +809,12 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void toggleStatisticsLogging(boolean enabled) {
 		sendSimpleEvent(enabled ? SimpleEventType.enableStatisticsLogging : SimpleEventType.disableStatisticsLogging);
 	}
-	
+
 	public String getPathMapping() {
 		return pathMapping;
 	}
@@ -823,15 +823,15 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 	public String getAppName() {
 		return appName;
 	}
-	
+
 	@Override
 	public void updateProcessStatus(ProcessStatusEnum processStatus) {
 		this.processStatus = processStatus;
 	}
-	
+
 	@Override
 	public void setConnectionId(String connectionId) {
 		// not implemented, connectionId is defined by actual websocket connection
 	}
-	
+
 }

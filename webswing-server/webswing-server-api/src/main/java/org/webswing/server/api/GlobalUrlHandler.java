@@ -44,9 +44,9 @@ import org.webswing.server.model.exception.WsException;
 import org.webswing.server.services.security.api.BuiltInModules;
 import org.webswing.server.services.security.api.WebswingSecurityConfig;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -63,7 +63,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	private final SessionPoolHolderService sessionPoolHolderService;
 
 	private ServletContext servletContext;
-	private ObjectMapper mapper = new ObjectMapper();
+	private JsonMapper mapper = new JsonMapper();
 
 	private Map<String, AppPathHandler> appPathHandlers = new LinkedHashMap<String, AppPathHandler>();
 
@@ -72,7 +72,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 		public void onConfigChanged(ConfigurationChangeEvent<SecuredPathConfig> e) {
 			if ("/".equals(e.getPath())) {
 				initConfiguration();
-				
+
 				appPathHandlers.values().forEach(AppPathHandler::initDataStore);
 			} else {
 				AppPathHandler manager = appPathHandlers.get(e.getPath());
@@ -82,7 +82,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 					manager.initConfiguration();
 				}
 			}
-			
+
 			sessionPoolHolderService.sendServerInfoUpdate();
 		}
 
@@ -96,15 +96,15 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 					uninstallApplication(manager);
 				}
 			}
-			
+
 			sessionPoolHolderService.sendServerInfoUpdate();
 		}
 	};
 
 	@Inject
-	public GlobalUrlHandler(ConfigurationService<SecuredPathConfig> config, AppPathHandlerFactory appPathHandlerFactory, ResourceHandlerFactory resourceFactory, 
-			SecurityModuleFactory securityFactory, LoginHandlerFactory loginFactory, ServletContext servletContext,
-			RestHandlerFactory restHandlerFactory, SessionPoolHolderService sessionPoolHolderService) {
+	public GlobalUrlHandler(ConfigurationService<SecuredPathConfig> config, AppPathHandlerFactory appPathHandlerFactory, ResourceHandlerFactory resourceFactory,
+							SecurityModuleFactory securityFactory, LoginHandlerFactory loginFactory, ServletContext servletContext,
+							RestHandlerFactory restHandlerFactory, SessionPoolHolderService sessionPoolHolderService) {
 		super(null, securityFactory, config);
 		this.configService = config;
 		this.appPathHandlerFactory = appPathHandlerFactory;
@@ -148,7 +148,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 		}
 		return true;
 	}
-	
+
 	private void setSecurityHeaders(HttpServletRequest req, HttpServletResponse res) {
 		res.addHeader("Server", SERVERNAME);
 		if (!Boolean.getBoolean(Constants.DISABLE_HTTP_SECURITY_HEADERS)) {
@@ -174,18 +174,18 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 		}
 		return secConfig;
 	}
-	
+
 	@Override
 	public WebswingDataStoreConfig getDataStoreConfig() {
 		WebswingDataStoreConfig dataStoreConfig = super.getDataStoreConfig();
-		
+
 		if (BuiltInDataStoreModules.INHERITED.name().equals(dataStoreConfig.getModule())) {
 			log.info("Master dataStore module INHERITED is not valid. Falling back to default module FILESYSTEM.");
 			SecuredPathConfig newconfig = getConfig();
 			newconfig.getDataStore().put("module", BuiltInDataStoreModules.FILESYSTEM.name());
 			dataStoreConfig = newconfig.getValueAs("dataStore", WebswingDataStoreConfig.class);
 		}
-		
+
 		return dataStoreConfig;
 	}
 
@@ -289,7 +289,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 		}
 		return super.getWebResource(resource);
 	}
-	
+
 	public List<AppPathHandler> getApplications() {
 		ArrayList<AppPathHandler> result = new ArrayList<>();
 		synchronized (appPathHandlers) {
@@ -297,13 +297,13 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 		}
 		return result;
 	}
-	
+
 	public AppPathHandler getAppHandler(String path) {
 		synchronized (appPathHandlers) {
 			return appPathHandlers.get(path);
 		}
 	}
-	
+
 	public PrimaryUrlHandler getAppPrimaryUrlHandler(String path) {
 		synchronized (appPathHandlers) {
 			AppPathHandler handler = appPathHandlers.get(path);
@@ -384,31 +384,31 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 			log.error("Unable to Create App '" + path + "'. Application already exits.");
 		}
 	}
-	
+
 	public void issueAdminConsoleAccessToken(HttpServletRequest req, HttpServletResponse res) {
 		String loginToken = ServerUtil.parseTokenFromCookie(req, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_LOGIN_TOKEN);
 		if (StringUtils.isBlank(loginToken)) {
 			res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
-		
+
 		String accessId = UUID.randomUUID().toString();
-		
+
 		String servletPrefix = ServerApiUtil.getContextPath(getServletContext());
-		
+
 		if (sessionPoolHolderService.issueAdminConsoleAccessToken(accessId, loginToken, servletPrefix)) {
 			ObjectNode result = mapper.createObjectNode();
 			result.put("accessId", accessId);
-			
+
 			res.setContentType("application/json");
 			res.setCharacterEncoding("UTF-8");
-			
+
 			try {
 				res.getWriter().write(result.toString());
 			} catch (IOException e) {
 				log.error("Could not write accessId to response!", e);
 			}
-			
+
 			res.setStatus(HttpServletResponse.SC_OK);
 		} else {
 			res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

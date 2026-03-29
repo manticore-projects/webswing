@@ -8,7 +8,7 @@ dependencies {
     }
 
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
     implementation "org.apache.commons:commons-collections4:${commonsCollections4Version}"

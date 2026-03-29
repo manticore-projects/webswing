@@ -14,8 +14,8 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import org.webswing.Constants;
 import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.model.SwingConfig;
+import tools.jackson.core.JacksonException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class VariableSubstitutor {
 
@@ -57,7 +57,7 @@ public class VariableSubstitutor {
 			try {
 				Map<String, Object> map = WebswingObjectMapper.get().readValue(customArgs, Map.class);
 				flatten(Constants.SESSION_CUSTOMARGS_SUBSTITUTE, map.entrySet().stream()).forEach(e -> result.put(e.getKey(), String.valueOf(e.getValue())));
-			} catch (JsonProcessingException e) {
+			} catch (JacksonException ignore) {
 				//ignore
 			}
 		}

@@ -50,8 +50,8 @@ import org.webswing.server.common.service.swingprocess.ProcessStartupParams;
 import org.webswing.server.common.util.WebswingObjectMapper;
 import org.webswing.server.model.exception.WsException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
+import tools.jackson.core.JacksonException;
 
 public abstract class ServerSessionPoolConnector {
 	
@@ -300,7 +300,7 @@ public abstract class ServerSessionPoolConnector {
 		try {
 			String serialized = WebswingObjectMapper.get().writeValueAsString(dataStoreConfig);
 			configString = new String(Base64.getEncoder().encode(serialized.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-		} catch (JsonProcessingException e) {
+		} catch (JacksonException e) {
 			log.error("Error while serializing dataStore configuration!", e);
 		}
 		return configString;

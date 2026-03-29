@@ -22,20 +22,20 @@ import org.webswing.sessionpool.api.service.swingprocess.ProcessExitListener;
 import org.webswing.sessionpool.api.service.swingprocess.SwingProcess;
 import org.webswing.sessionpool.api.service.swingprocess.SwingProcessService;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Holds process related functionality.
  */
 public class LocalSessionPool {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(LocalSessionPool.class);
-	
-	private ServerSessionPoolConnector connector;
-	private SwingProcessService processService;
-	private ConfigurationService<SwingConfig> configService;
-	
+
+	private final ServerSessionPoolConnector connector;
+	private final SwingProcessService processService;
+	private final ConfigurationService<SwingConfig> configService;
+
 	public LocalSessionPool(ServerSessionPoolConnector connector, SwingProcessService processService, ConfigurationService<SwingConfig> configService) {
 		this.connector = connector;
 		this.processService = processService;
@@ -45,14 +45,14 @@ public class LocalSessionPool {
 	public void createProcess(String userId, Map<String, String> userAttributes, String userIp, String userLocale, String userTimeZone, String customArgs, ProcessStartupParams startupParams) throws WsException {
 		SwingConfig config = getSwingConfig(startupParams.getPathMapping());
 		VariableSubstitutor subs = VariableSubstitutor.forSwingInstance(config, userId, userAttributes, startupParams.getInstanceId(), userIp, userLocale, userTimeZone, customArgs);
-		
+
 		try {
 			startupParams.setAppConfig(config);
 			startupParams.setFileResolver(getConfigContext(startupParams.getPathMapping(), config, subs)::resolveFile);
 			startupParams.setSubs(subs);
 			startupParams.setAppConnectionSecret(System.getProperty(Constants.WEBSWING_CONNECTION_SECRET));
 			startupParams.setWebsocketUrl(getWebsocketUrl(startupParams.getPathMapping()));
-			
+
 			SwingProcess process = processService.startProcess(startupParams);
 			process.setProcessExitListener(new ProcessExitListener() {
 				@Override
@@ -62,11 +62,11 @@ public class LocalSessionPool {
 			});
 			// no need to set applicationExitListener in non-cluster version, because the server gets the ExitMsgOut notification
 			// applicationExitListener is useful in case of multiple cluster servers to notify the other servers immediately that the application is exiting
-			
+
 			if (process.isRunning()) {
 				registerProcessStatus(startupParams.getInstanceId(), process);
 			}
-			
+
 			process.setProcessStatusListener(() -> {
 				registerProcessStatus(startupParams.getInstanceId(), process);
 			});
@@ -75,25 +75,25 @@ public class LocalSessionPool {
 			throw new WsException("Failed to create App instance.", e);
 		}
 	}
-	
+
 	private void registerProcessStatus(String instanceId, SwingProcess process) {
 		ConnectedSwingInstance csi = connector.getConnectedInstanceByInstanceId(instanceId);
-		
+
 		if (csi == null) {
 			return;
 		}
-		
+
 		ProcessStatusEnum processStatus = ProcessStatusEnum.FINISHED;
-		
+
 		if (process.isRunning()) {
 			processStatus = ProcessStatusEnum.RUNNING;
 		} else if (process.isForceKilled()) {
 			processStatus = ProcessStatusEnum.FORCE_KILLED;
 		}
-		
+
 		csi.updateProcessStatus(processStatus);
 	}
-	
+
 	private String getWebsocketUrl(String pathMapping) {
 		String url = System.getProperty(Constants.SERVER_WEBSOCKET_URL);
 		if (url.endsWith("/")) {
@@ -105,26 +105,26 @@ public class LocalSessionPool {
 	private SwingConfig getSwingConfig(String path) {
 		return configService.getConfiguration(path);
 	}
-	
+
 	private void closeProcess(String path, String instanceId) {
 		try {
 			connector.instanceClosed(path, instanceId);
 		} catch (Throwable e) {
 			log.error("Unexpected error while closing instance", e);
 		}
-		
+
 		processService.closeProcess(instanceId);
 	}
 
 	public byte[] getAppConfig(String path) throws Exception {
 		MetaObject config = configService.describeConfiguration(path, null, getConfigContext(path));
-		ObjectMapper mapper = new ObjectMapper();
+		JsonMapper mapper = new JsonMapper();
 		return mapper.writeValueAsBytes(config);
 	}
 
 	@SuppressWarnings("unchecked")
 	public byte[] getAppMeta(String path, byte[] configBytes) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
+		JsonMapper mapper = new JsonMapper();
 		Map<String, Object> meta = mapper.readValue(configBytes, new TypeReference<Map<String, Object>>() {});
 		if (meta != null && meta.get("data") != null) {
 			MetaObject config = configService.describeConfiguration(path, (Map<String, Object>) meta.get("data"), getConfigContext(path));
@@ -136,7 +136,7 @@ public class LocalSessionPool {
 
 	@SuppressWarnings("unchecked")
 	public void saveConfig(String path, byte[] configBytes) throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
+		JsonMapper mapper = new JsonMapper();
 		Map<String, Object> config = mapper.readValue(configBytes, new TypeReference<Map<String, Object>>() {});
 		if (config != null && config.get("data") != null) {
 			configService.setConfiguration(path, (Map<String, Object>) config.get("data"));
@@ -144,16 +144,16 @@ public class LocalSessionPool {
 			throw new IllegalArgumentException("Could not find config data!");
 		}
 	}
-	
+
 	private ConfigContext getConfigContext(String path) {
 		SwingConfig config = getSwingConfig(path);
 		if (config == null) {
 			return null;
 		}
-		
+
 		return getConfigContext(path, config, getDefaultVariableSubstitutor(config, null));
 	}
-	
+
 	private ConfigContext getConfigContext(String path, SwingConfig config, VariableSubstitutor subs) {
 		return new ConfigContext() {
 			@Override
@@ -161,7 +161,7 @@ public class LocalSessionPool {
 				String home = subs.replace(config.getHomeDir());
 				return CommonUtil.resolveFile(name, home, subs);
 			}
-			
+
 			@Override
 			public String replaceVariables(String string) {
 				return subs.replace(string);
@@ -184,11 +184,11 @@ public class LocalSessionPool {
 	public Map<String, String> searchVariables(String path, String user, String search) {
 		return getDefaultVariableSubstitutor(getSwingConfig(path), user).searchVariables(search);
 	}
-	
+
 	public List<String> getPaths() {
 		return configService.getPaths();
 	}
-	
+
 	private VariableSubstitutor getDefaultVariableSubstitutor(SwingConfig config, String user) {
 		String userName = user == null ? "<webswing user>" : user;
 		return VariableSubstitutor.forSwingInstance(config, userName, null, "<webswing client Id>", "<webswing client IP address>", "<webswing client locale>", "<webswing client timezone>", "<webswing custom args>");

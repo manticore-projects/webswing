@@ -13,7 +13,7 @@ dependencies {
     implementation "org.glassfish.tyrus:tyrus-client:${tyrusVersion}"
     implementation "org.glassfish.tyrus:tyrus-container-jdk-client:${tyrusVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "commons-codec:commons-codec:${commonsCodecVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"

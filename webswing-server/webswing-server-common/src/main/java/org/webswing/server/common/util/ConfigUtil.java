@@ -4,7 +4,6 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -58,7 +57,8 @@ public class ConfigUtil {
 					String s = (String) args[0];
 					Class c = (Class) args[1];
 					Object o = config.get(s);
-					Map<String, Object> subConfig = (Map<String, Object>) (o != null && o instanceof HashMap ? o : new HashMap());
+					Map<String, Object> subConfig = (Map<String, Object>) (o instanceof HashMap
+                                                                           ? o : new HashMap());
 					return instantiateConfig(subConfig, c, context);
 				}
 				if (method.getName().equals("asMap") && method.getParameterTypes().length == 0) {
@@ -112,16 +112,20 @@ public class ConfigUtil {
 									return null;
 								}
 							} else {
-								log.error("Invalid configuration. Type of " + clazz.getName() + "." + pd.getName() + " is not " + method.getReturnType());
+                                log.error(
+                                        "Invalid configuration. Type of {}.{} is not {}",
+                                        clazz.getName(),
+                                        pd.getName(),
+                                        method.getReturnType()
+                                );
 								return null;
 							}
 						} else {
 							//value is null, check if default value is defined
 							Class<?> returnType = method.getReturnType();
 							Object generated = getDefaultGeneratedValue(method, clazz, proxy);
-							if (generated != null && ClassUtils.isAssignable(generated.getClass(), returnType)) {
-								return (T) generated;
-							}
+							if (generated != null && ClassUtils.isAssignable(generated.getClass(), returnType))
+                                return generated;
 							if (ClassUtils.isAssignable(returnType, String.class)) {
 								String defaultStringValue = getDefaultStringValue(method);
 								config.put(pd.getName(), defaultStringValue);
@@ -157,7 +161,7 @@ public class ConfigUtil {
 							if (ClassUtils.isAssignable(returnType, Object.class)) {
 								ConfigFieldDefaultValueObject defaultObject = isDefaultObjectValue(method);
 								if (defaultObject != null) {
-									Object newInstance = null;
+									Object newInstance;
 									if (Void.class.equals(defaultObject.value())) {
 										newInstance = returnType.newInstance();
 									} else {
@@ -185,7 +189,7 @@ public class ConfigUtil {
 				Object value = m.invoke(null, currentConfig);
 				return value;
 			} catch (Exception e) {
-				log.error("Default Value Generator method '" + methodName + "' is not valid.", e);
+                log.error("Default Value Generator method '{}' is not valid.", methodName, e);
 			}
 		}
 		return null;
@@ -223,7 +227,7 @@ public class ConfigUtil {
 	private static Class<?> getGenericClass(Type genericType, int index) {
 		if (genericType instanceof ParameterizedType) {
 			Type[] generics = ((ParameterizedType) genericType).getActualTypeArguments();
-			if (generics != null && generics[index] instanceof Class) {
+			if (generics[index] instanceof Class) {
 				return (Class<?>) generics[index];
 			}
 		}
@@ -262,9 +266,9 @@ public class ConfigUtil {
 			throw new IllegalArgumentException("Could not convert number [" + number + "] of type [" + number.getClass().getName() + "] to unknown target class [" + targetClass.getName() + "]");
 		}
 	}
-	
-	public static Map<String, Object> fixPaths(File config, Map<String, Object> json) throws IOException {
-		Map<String, Object> result = new LinkedHashMap<String, Object>();
+
+	public static Map<String, Object> fixPaths(File config, Map<String, Object> json) {
+		Map<String, Object> result = new LinkedHashMap<>();
 		boolean changed = false;
 		for (String key : json.keySet()) {
 			String path = CommonUtil.toPath(key).toLowerCase();
@@ -277,13 +281,13 @@ public class ConfigUtil {
 		if (changed) {
 			try {
 				WebswingObjectMapper.get().writerWithDefaultPrettyPrinter().writeValue(config, result);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				log.error("Failed save fixed paths in configuration file. ", e);
 			}
 		}
 		return result;
 	}
-	
+
 	private static void raiseOverflowException(Number number, Class targetClass) {
 		throw new IllegalArgumentException("Could not convert number [" + number + "] of type [" + number.getClass().getName() + "] to target class [" + targetClass.getName() + "]: overflow");
 	}

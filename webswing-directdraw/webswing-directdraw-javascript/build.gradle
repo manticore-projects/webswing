@@ -4,8 +4,8 @@ dependencies {
     implementation project(':webswing-directdraw:webswing-directdraw-swing')
     testImplementation project(':webswing-app-services')
     testImplementation project(':webswing-app-toolkit')
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
-    testImplementation 'commons-io:commons-io:2.16.1'
+    testImplementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
+    testImplementation "commons-io:commons-io:${commonsIoVersion}"
     testImplementation "commons-codec:commons-codec:${commonsCodecVersion}"
     testImplementation "com.google.protobuf:protobuf-java:${protobufVersion}"
 }

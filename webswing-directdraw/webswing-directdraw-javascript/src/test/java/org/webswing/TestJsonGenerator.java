@@ -1,7 +1,7 @@
 package org.webswing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.toolkit.VolatileWebImageWrapper;
@@ -16,11 +16,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class TestJsonGenerator {
 	static DirectDraw dd = new DirectDraw(new FastDirectDrawServicesAdapter());
@@ -75,8 +75,8 @@ public class TestJsonGenerator {
 				success = (Boolean) m.invoke(null, g, j);
 				if (success) {
 					test.originalImg.add(encodeImage((BufferedImage) i));
-					test.originalRenderTime += (System.currentTimeMillis() - start);
-					test.originalRenderSize += getPngImage((BufferedImage) i).length;
+					test.originalRenderTime += (int) (System.currentTimeMillis() - start);
+					test.originalRenderSize += Objects.requireNonNull(getPngImage((BufferedImage) i)).length;
 					g.dispose();
 
 					// webimage
@@ -87,7 +87,7 @@ public class TestJsonGenerator {
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					((WebImage) wi).extractReadOnlyWebImage(true).toMessage(dd).writeTo(baos);
 					test.protoImg.add(encodeBytes(baos.toByteArray()));
-					test.protoRenderTime += (System.currentTimeMillis() - start);
+					test.protoRenderTime += (int) (System.currentTimeMillis() - start);
 					test.protoRenderSize += baos.size();
 					g2.dispose();
 				}
@@ -105,7 +105,7 @@ public class TestJsonGenerator {
 		return web ? dd.createImage(width, height) : new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final JsonMapper mapper = new JsonMapper();
 
 	public static String encodeImage(BufferedImage window) {
 		return Base64.encodeBase64String(getPngImage(window));

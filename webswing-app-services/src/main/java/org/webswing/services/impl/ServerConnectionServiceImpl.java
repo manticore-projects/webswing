@@ -25,8 +25,8 @@ import org.webswing.util.AppLogger;
 import org.webswing.util.ClassLoaderUtil;
 import org.webswing.util.ProtoMapper;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @author Viktor_Meszaros This class is needed to achieve classpath isolation for swing application, all functionality dependent on external libs is implemented here.
@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ServerConnectionServiceImpl implements ServerConnectionService, ServerConnection.MessageListener {
 
 	private static ServerConnectionServiceImpl impl;
-	
+
 	private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT, ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ClassLoaderUtil.getServiceClassLoader());
 
 	private ServerConnection connection;
@@ -56,7 +56,7 @@ public class ServerConnectionServiceImpl implements ServerConnectionService, Ser
 
 	public void initialize() {
 		initConnection(false);
-		
+
 		Util.getWebToolkit().addStartupListener(() -> {
 			if (!startupMsgQueue.isEmpty()) {
 				AppLogger.info("Dispatching " + startupMsgQueue.size() + " queued messages.");
@@ -77,12 +77,12 @@ public class ServerConnectionServiceImpl implements ServerConnectionService, Ser
 			ServerConnectionServiceImpl.this.disconnect(Constants.APP_WEBSOCKET_CLOSE_REASON_SHUTDOWN);
 		}));
 	}
-	
+
 	private void initConnection(boolean reconnect) {
 		try {
 			serverUrl += "?instanceId=" + System.getProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID)
-							+ "&sessionPoolId=" + System.getProperty(Constants.SWING_START_SYS_PROP_SESSION_POOL_ID)
-							+ "&reconnect=" + reconnect;
+						 + "&sessionPoolId=" + System.getProperty(Constants.SWING_START_SYS_PROP_SESSION_POOL_ID)
+						 + "&reconnect=" + reconnect;
 			connection.initialize(serverUrl, this);
 			closed.set(false);
 		} catch (Exception e) {
@@ -164,7 +164,7 @@ public class ServerConnectionServiceImpl implements ServerConnectionService, Ser
 			startupMsgQueue.add(new QueuedMsg(msgIn));
 			return;
 		}
-		
+
 		AppFrameMsgIn frame = null;
 		if (msgIn.getAppFrameMsgIn() != null) {
 			try {
@@ -173,25 +173,29 @@ public class ServerConnectionServiceImpl implements ServerConnectionService, Ser
 				AppLogger.error("Could not encode proto!", e);
 			}
 		}
-		
+
 		// first handle sync messages
 		if ((msgIn.getApiCallResult() != null && msgIn.getApiCallResult().getCorrelationId() != null)
-				|| (frame != null && frame.getJsResponse() != null && frame.getJsResponse().getCorrelationId() != null)
-				|| (frame != null && frame.getPixelsResponse() != null && frame.getPixelsResponse().getCorrelationId() != null)) {
+			|| (frame != null && frame.getJsResponse() != null && frame.getJsResponse().getCorrelationId() != null)
+			|| (frame != null && frame.getPixelsResponse() != null && frame.getPixelsResponse().getCorrelationId() != null)) {
 			connection.handleSyncMessageResult(msgIn, frame);
 			return;
 		}
-		
+
 		// handle other messages in event dispatcher
 		Util.getWebToolkit().getEventDispatcher().onMessage(msgIn, frame);
 	}
-	
+
 	@Override
 	public Map<String, Serializable> deserializeUserAttributes(byte[] data) throws IOException {
 		if (data == null) {
 			return null;
 		}
-		return new ObjectMapper().readValue(data, new TypeReference<Map<String, Serializable>>() {});
+		try {
+			return new JsonMapper().readValue(data, new TypeReference<Map<String, Serializable>>() {});
+		} catch (tools.jackson.core.JacksonException e) {
+			throw new IOException("Failed to deserialize user attributes", e);
+		}
 	}
 
 	private static class QueuedMsg {
@@ -203,5 +207,5 @@ public class ServerConnectionServiceImpl implements ServerConnectionService, Ser
 		}
 
 	}
-	
+
 }

@@ -34,6 +34,8 @@ import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheResolver;
+import tools.jackson.databind.ObjectMapper;
+
 
 /**
  * <p>
@@ -471,7 +473,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
 	/**
 	 * @return JSON serializer.
 	 */
-	public static WebswingObjectMapper getMapper() {
+	public static ObjectMapper getMapper() {
 		return WebswingObjectMapper.get();
 	}
 

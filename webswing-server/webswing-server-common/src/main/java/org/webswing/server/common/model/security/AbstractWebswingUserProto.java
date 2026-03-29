@@ -9,49 +9,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.service.security.AbstractWebswingUser;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 public class AbstractWebswingUserProto implements Serializable {
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractWebswingUserProto.class);
-	
+
 	private static final long serialVersionUID = -5468963503312366844L;
-	
+
 	private String securedPath;
-	
+
 	private String userId;
 	private List<String> roles;
 	private List<String> permissions;
 	private List<WebswingAction> webswingActionPermissions;
 	private List<MapProto> userAttributes;
-	
+
 	public AbstractWebswingUserProto() {
 	}
-	
+
 	public AbstractWebswingUserProto(String securedPath, AbstractWebswingUser user) {
 		super();
 		this.securedPath = securedPath;
 		this.userId = user.getUserId();
 		this.roles = user.getRoles();
-		
+
 		if (user.getUserAttributes() != null) {
-			ObjectMapper mapper = new ObjectMapper();
-			
+			JsonMapper mapper = new JsonMapper();
+
 			this.userAttributes = new ArrayList<>();
 			for (Entry<String, Serializable> entry : user.getUserAttributes().entrySet()) {
 				try {
 					userAttributes.add(new MapProto(entry.getKey(), mapper.writeValueAsBytes(entry.getValue())));
-				} catch (JsonProcessingException e) {
+				} catch (JacksonException e) {
 					log.error("Could not serialize user attribute [" + entry.getKey() + "]!", e);
 				}
 			}
 		}
-		
+
 		if (user.getPermissions() != null) {
 			this.webswingActionPermissions = new ArrayList<>();
 			this.permissions = new ArrayList<>();
-			
+
 			for (String permission : user.getPermissions()) {
 				try {
 					WebswingAction wa = WebswingAction.valueOf(permission);
@@ -111,5 +111,5 @@ public class AbstractWebswingUserProto implements Serializable {
 	public void setWebswingActionPermissions(List<WebswingAction> webswingActionPermissions) {
 		this.webswingActionPermissions = webswingActionPermissions;
 	}
-	
+
 }
