@@ -98,18 +98,16 @@ loadTranslations().then(
             });
         }
 
-        function formatUsername(user) {
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        function formatUsername(user: string): string {
+            const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (emailRegex.test(user)) {
                 user = user.substring(0, user.indexOf('@'));
             }
 
-            // Split on common separators (dot, underscore, hyphen)
-            // but only if they're not the first or last character
             return user
                 .split(/[._\-]/)
-                .filter(part => part.length > 0)
-                .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+                .filter((part: string) => part.length > 0)
+                .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
                 .join(' ');
         }
 
