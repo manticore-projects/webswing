@@ -66,12 +66,18 @@ distributions {
             filesMatching('**/*.sh') {
                 mode = 0755
             }
+
+//            from(rootProject.layout.buildDirectory.dir('reports')) {
+//                include 'bom.json'
+//                rename 'bom.json', 'sbom.cdx.json'
+//                into '/'
+//            }
         }
     }
 }
 
 distZip {
-    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
+    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties' /*, ':cyclonedxBom'*/
     destinationDirectory = layout.buildDirectory.dir('dist')
 }
 

@@ -1,6 +1,7 @@
 apply plugin: 'webswing.protobuf-conventions'
 
 dependencies {
+    implementation "org.bitbucket.b_c:jose4j:${jose4jVersion}"
     api(project(':webswing-app-toolkit')) {
         exclude group: 'rt-win-shell', module: 'rt-win-shell'
         exclude group: 'org.webswing', module: 'modpatch-jdk-jsobject'
@@ -19,9 +20,6 @@ dependencies {
     implementation 'com.manticore-projects.tools:fpng-java:+'
     implementation 'com.manticore-projects.tools:fpnge-java:+'
 
-    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
-    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 }
 
 createRegenerateProtoTask('src/main/protobuf', 'src/main/java')

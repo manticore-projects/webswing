@@ -1,7 +1,6 @@
 package org.webswing.server.api.base;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -336,13 +335,13 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
       return;
     }
 
-    Jws<Claims> claims = JwtUtil.parseRefreshTokenClaims(refreshToken);
+    Map<String, Object> claims = JwtUtil.parseRefreshTokenClaims(refreshToken);
     if (claims == null) {
       res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
-    String webswingClaim = claims.getBody().get(Constants.JWT_CLAIM_WEBSWING, String.class);
+    String webswingClaim = (String) claims.get(Constants.JWT_CLAIM_WEBSWING);
 
     if (StringUtils.isBlank(webswingClaim)) {
       res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

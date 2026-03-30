@@ -3,8 +3,6 @@ package org.webswing.server.api.services.sessionpool.impl;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -427,12 +425,12 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
       return atcMsg;
     }
 
-    Jws<Claims> claims = JwtUtil.parseAdminConsoleLoginTokenClaims(acLoginToken);
+    Map<String, Object> claims = JwtUtil.parseAdminConsoleLoginTokenClaims(acLoginToken);
     if (claims == null) {
       return atcMsg;
     }
 
-    String webswingClaim = claims.getBody().get(Constants.JWT_CLAIM_WEBSWING, String.class);
+    String webswingClaim = (String) claims.get(Constants.JWT_CLAIM_WEBSWING);
 
     if (StringUtils.isBlank(webswingClaim)) {
       return atcMsg;

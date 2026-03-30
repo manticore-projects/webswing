@@ -1,7 +1,5 @@
 package org.webswing.server.common.service.security.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +79,7 @@ public class WebswingSecuritySubject {
     }
 
     try {
-      Jws<Claims> claims = null;
+      Map<String, Object> claims = null;
       if (subjectType == SubjectType.transfer) {
         claims = JwtUtil.parseTransferTokenClaims(token); // read and validate
       } else {
@@ -93,7 +91,7 @@ public class WebswingSecuritySubject {
         return result;
       }
 
-      String webswingClaim = claims.getBody().get(Constants.JWT_CLAIM_WEBSWING, String.class);
+      String webswingClaim = (String) claims.get(Constants.JWT_CLAIM_WEBSWING);
 
       if (StringUtils.isBlank(webswingClaim)) {
         log.error("Empty webswing claim in token [{}]!", token);
@@ -131,13 +129,13 @@ public class WebswingSecuritySubject {
         return;
       }
 
-      Jws<Claims> claims = JwtUtil.parseLoginSessionTokenClaims(loginSessionToken);
+      Map<String, Object> claims = JwtUtil.parseLoginSessionTokenClaims(loginSessionToken);
       if (claims == null) {
         return;
       }
 
       String loginSessionClaim =
-          claims.getBody().get(Constants.JWT_CLAIM_WEBSWING_LOGIN_SESSION, String.class);
+          (String) claims.get(Constants.JWT_CLAIM_WEBSWING_LOGIN_SESSION);
 
       if (StringUtils.isBlank(loginSessionClaim)) {
         return;

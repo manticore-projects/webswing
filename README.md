@@ -12,10 +12,6 @@
 [![Build](https://img.shields.io/badge/Build-Gradle%20%7C%20Maven-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
 [![GitHub](https://img.shields.io/github/stars/manticore-projects/webswing?style=for-the-badge&logo=github)](https://github.com/manticore-projects/webswing)
 
-[![Known Vulnerabilities](https://snyk.io/test/github/manticore-projects/webswing/badge.svg?style=flat-square)](https://snyk.io/test/github/manticore-projects/webswing)
-[![Semgrep](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml/badge.svg)](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml)
-[![Semgrep](https://img.shields.io/badge/semgrep-scanning-green?style=flat-square&logo=semgrep)](https://semgrep.dev)
-
 <br/>
 
 *Run any Java Swing application inside a modern web browser — pure HTML5, zero plugins, zero client-side installation.*
@@ -75,13 +71,29 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 - **Node.js 24 LTS** — migrated from Node 10; Webpack 5, TypeScript 5, Dart Sass
 - **Gradle build system** — fast, incremental builds
 - **All dependencies updated** — Jetty12, Jackson3, Guava, Log4j2, SLF4J 2.0, Apache Commons, Protocol Buffers, LZ4, and more
-- Active monitoring via [SNYK](https://app.snyk.io) and [Semgrep](https://semgrep.dev/)
 
 ### Performance
 
 - **SSE/AVX-optimized PNG encoding** via [fpng-java](https://manticore-projects.com/FPNG-Java/index.html) — hardware-accelerated image compression in the DirectDraw rendering pipeline
 - **Browser-side font rendering** — text is rendered as font names + coordinates instead of server-side glyph bitmaps, reducing WebSocket bandwidth by up to 80%
 - **GZIP/Brotli pre-compression** for all static assets (reducing the JS size from 5 MB to less than 1 MB), GZIP compression for all content (JSON)
+
+### Security
+
+This fork implements defence-in-depth for deployment at regulated financial institutions.
+
+[![Known Vulnerabilities](https://snyk.io/test/github/manticore-projects/webswing/badge.svg?style=flat-square)](https://snyk.io/test/github/manticore-projects/webswing)
+[![Semgrep](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml/badge.svg)](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml)
+[![Semgrep](https://img.shields.io/badge/semgrep-scanning-green?style=flat-square&logo=semgrep)](https://semgrep.dev)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e6e58b5d5e65456bb206098319baf1f2)](https://app.codacy.com/gh/manticore-projects/webswing/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
+**Continuous monitoring** via Snyk (dependency CVEs), Semgrep (SAST/OWASP Top 10), SpotBugs (bytecode analysis), and Codacy (code quality). CycloneDX SBOM generated with every release.
+
+**Proactive hardening** against entire vulnerability classes — not just known CVEs: deserialization allowlists (CWE-502), SSRF scheme validation (CWE-918), XSS content-type enforcement (CWE-79), Zip Slip / path traversal protection (CWE-22), log injection sanitisation (CWE-117), AES-CBC→AES-GCM migration, and HMAC-signed file identifiers.
+
+**Runtime** — non-root Docker container on Eclipse Temurin JRE 21 (Ubuntu Noble), multi-stage build excluding source and build tools from the image.
+
+**Compliance alignment** — tooling and controls support evidence gathering for DORA, SOC 2, ISO 27001, CBN IT Standards, NIST SSDF, and PCI DSS v4.0. SBOM output satisfies supply chain transparency requirements under NIST SP 800-218 and the EU Cyber Resilience Act.
 
 ---
 
