@@ -1,0 +1,7 @@
+---
+type: specs.openrewrite.org/v1beta/style
+name: org.openrewrite.java.Autoformat
+style:
+  - org.openrewrite.java.style.ImportLayoutStyle:
+      classCountToUseStarImport: 999
+      nameCountToUseStarImport: 999
