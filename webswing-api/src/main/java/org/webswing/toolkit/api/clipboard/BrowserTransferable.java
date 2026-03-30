@@ -5,9 +5,9 @@ import java.awt.datatransfer.Transferable;
 
 public interface BrowserTransferable extends Transferable {
 
-	Image getImage();
+  Image getImage();
 
-	String getText();
+  String getText();
 
-	String getHtml();
+  String getHtml();
 }

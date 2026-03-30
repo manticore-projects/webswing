@@ -3,26 +3,25 @@ package org.webswing.server.common.datastore;
 import org.webswing.server.common.datastore.impl.FileSystemDataStoreModule;
 
 public enum BuiltInDataStoreModules {
-	INHERITED(null),
-	FILESYSTEM(FileSystemDataStoreModule.class.getName());
+  INHERITED(null), FILESYSTEM(FileSystemDataStoreModule.class.getName());
 
-	private String type;
+  private String type;
 
-	private BuiltInDataStoreModules(String type) {
-		this.type = type;
-	}
+  private BuiltInDataStoreModules(String type) {
+    this.type = type;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public static String getDataStoreModuleClassName(String module) {
-		try {
-			BuiltInDataStoreModules builtInModule = BuiltInDataStoreModules.valueOf(module);
-			return builtInModule.getType();
-		} catch (Exception e) {
-			return module;
-		}
-	}
+  public static String getDataStoreModuleClassName(String module) {
+    try {
+      BuiltInDataStoreModules builtInModule = BuiltInDataStoreModules.valueOf(module);
+      return builtInModule.getType();
+    } catch (Exception e) {
+      return module;
+    }
+  }
 
 }

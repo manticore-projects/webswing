@@ -7,26 +7,26 @@ import java.io.Serial;
 
 public class ApiCallResultMsgIn implements MsgIn, SyncMsg {
 
-    @Serial
-    private static final long serialVersionUID = 4470097170102688942L;
-	
-	private String correlationId;
-	private String result;
+  @Serial
+  private static final long serialVersionUID = 4470097170102688942L;
 
-	public String getResult() {
-		return result;
-	}
+  private String correlationId;
+  private String result;
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+  public String getResult() {
+    return result;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public void setResult(String result) {
+    this.result = result;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
+
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
 }

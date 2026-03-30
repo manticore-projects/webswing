@@ -17,21 +17,22 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultSecurityModuleFactoryImpl implements SecurityModuleFactory {
 
-	public DefaultSecurityModuleFactoryImpl() {
-	}
+  public DefaultSecurityModuleFactoryImpl() {}
 
-	public WebswingSecurityModule create(SecurityContext context, WebswingSecurityConfig config) {
-		if (BuiltInModules.getSecurityModuleClassName(config.getModule()) != null) {
-			return new SecurityModuleWrapper(context, config);
-		} else {
-			return null;
-		}
-	}
+  public WebswingSecurityModule create(SecurityContext context, WebswingSecurityConfig config) {
+    if (BuiltInModules.getSecurityModuleClassName(config.getModule()) != null) {
+      return new SecurityModuleWrapper(context, config);
+    } else {
+      return null;
+    }
+  }
 
-	public WebswingSecurityModule createNoAccess(String msgKey, SecurityContext context, WebswingSecurityConfig config) {
-		Map<String, Object> map = config != null ? config.getConfig() : null;
-		WebswingSecurityModuleConfig c = ConfigUtil.instantiateConfig(map, WebswingSecurityModuleConfig.class, context);
-		return new NoAccessSecurityModule(msgKey, c);
-	}
+  public WebswingSecurityModule createNoAccess(String msgKey, SecurityContext context,
+      WebswingSecurityConfig config) {
+    Map<String, Object> map = config != null ? config.getConfig() : null;
+    WebswingSecurityModuleConfig c =
+        ConfigUtil.instantiateConfig(map, WebswingSecurityModuleConfig.class, context);
+    return new NoAccessSecurityModule(msgKey, c);
+  }
 
 }

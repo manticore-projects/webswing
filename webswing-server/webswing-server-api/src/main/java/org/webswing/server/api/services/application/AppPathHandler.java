@@ -11,21 +11,21 @@ import org.webswing.server.api.services.swinginstance.SwingInstanceInfo;
 import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
 
 public interface AppPathHandler extends SecuredPathHandler, UrlHandler, DataStoreHandler {
-	
-	ApplicationInfoMsg getApplicationInfoMsg();
 
-	void connectView(ConnectionHandshakeMsgIn handshake, PrimaryWebSocketConnection r);
+  ApplicationInfoMsg getApplicationInfoMsg();
 
-	boolean isUserAuthorized();
-	
-	File resolveFile(String name);
+  void connectView(ConnectionHandshakeMsgIn handshake, PrimaryWebSocketConnection r);
 
-	void disable();
-	
-	byte[] getIconAsBytes();
+  boolean isUserAuthorized();
 
-	void initDataStore();
+  File resolveFile(String name);
 
-	SwingInstanceInfo createSwingInstanceInfo();
-	
+  void disable();
+
+  byte[] getIconAsBytes();
+
+  void initDataStore();
+
+  SwingInstanceInfo createSwingInstanceInfo();
+
 }

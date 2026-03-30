@@ -11,36 +11,36 @@ import org.webswing.server.model.exception.WsException;
 
 public interface UrlHandler {
 
-	void init();
+  void init();
 
-	void destroy();
+  void destroy();
 
-	boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException;
+  boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException;
 
-	void registerFirstChildUrlHandler(UrlHandler handler);
+  void registerFirstChildUrlHandler(UrlHandler handler);
 
-	void registerChildUrlHandler(UrlHandler handler);
+  void registerChildUrlHandler(UrlHandler handler);
 
-	void removeChildUrlHandler(UrlHandler Handler);
+  void removeChildUrlHandler(UrlHandler Handler);
 
-	ServletContext getServletContext();
+  ServletContext getServletContext();
 
-	long getLastModified(HttpServletRequest req);
+  long getLastModified(HttpServletRequest req);
 
-	String getPathMapping();
+  String getPathMapping();
 
-	String getFullPathMapping();
+  String getFullPathMapping();
 
-	String getSecuredPath();
+  String getSecuredPath();
 
-	UrlHandler getRootHandler();
+  UrlHandler getRootHandler();
 
-	AbstractWebswingUser getUser();
+  AbstractWebswingUser getUser();
 
-	void checkPermission(WebswingAction action) throws WsException;
+  void checkPermission(WebswingAction action) throws WsException;
 
-	void checkMasterPermission(WebswingAction action) throws WsException;
+  void checkMasterPermission(WebswingAction action) throws WsException;
 
-	SecuredPathHandler getSecurityProvider();
+  SecuredPathHandler getSecurityProvider();
 
 }

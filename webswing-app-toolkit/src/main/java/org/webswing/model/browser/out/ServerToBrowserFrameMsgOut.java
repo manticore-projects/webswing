@@ -6,27 +6,27 @@ import java.io.Serial;
 
 public class ServerToBrowserFrameMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -8775701114901949469L;
-	
-	private byte[] appFrameMsgOut;
-	
-	private ConnectionInfoMsgOut connectionInfo;
+  @Serial
+  private static final long serialVersionUID = -8775701114901949469L;
 
-	public byte[] getAppFrameMsgOut() {
-		return appFrameMsgOut;
-	}
+  private byte[] appFrameMsgOut;
 
-	public void setAppFrameMsgOut(byte[] appFrameMsgOut) {
-		this.appFrameMsgOut = appFrameMsgOut;
-	}
+  private ConnectionInfoMsgOut connectionInfo;
 
-	public ConnectionInfoMsgOut getConnectionInfo() {
-		return connectionInfo;
-	}
+  public byte[] getAppFrameMsgOut() {
+    return appFrameMsgOut;
+  }
 
-	public void setConnectionInfo(ConnectionInfoMsgOut connectionInfo) {
-		this.connectionInfo = connectionInfo;
-	}
+  public void setAppFrameMsgOut(byte[] appFrameMsgOut) {
+    this.appFrameMsgOut = appFrameMsgOut;
+  }
+
+  public ConnectionInfoMsgOut getConnectionInfo() {
+    return connectionInfo;
+  }
+
+  public void setConnectionInfo(ConnectionInfoMsgOut connectionInfo) {
+    this.connectionInfo = connectionInfo;
+  }
 
 }

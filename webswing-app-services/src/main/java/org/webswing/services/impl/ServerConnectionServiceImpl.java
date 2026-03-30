@@ -29,183 +29,189 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
- * @author Viktor_Meszaros This class is needed to achieve classpath isolation for swing application, all functionality dependent on external libs is implemented here.
+ * @author Viktor_Meszaros This class is needed to achieve classpath isolation for swing
+ *         application, all functionality dependent on external libs is implemented here.
  */
-public class ServerConnectionServiceImpl implements ServerConnectionService, ServerConnection.MessageListener {
+public class ServerConnectionServiceImpl
+    implements ServerConnectionService, ServerConnection.MessageListener {
 
-	private static ServerConnectionServiceImpl impl;
+  private static ServerConnectionServiceImpl impl;
 
-	private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT, ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ClassLoaderUtil.getServiceClassLoader());
+  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT,
+      ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ClassLoaderUtil.getServiceClassLoader());
 
-	private ServerConnection connection;
-	private AtomicBoolean closed = new AtomicBoolean(false);
-	private List<QueuedMsg> startupMsgQueue = Collections.synchronizedList(new ArrayList<>());
-	private String serverUrl = System.getProperty(Constants.SWING_START_SYS_PROP_WEBSOCKET_URL, "");
+  private ServerConnection connection;
+  private AtomicBoolean closed = new AtomicBoolean(false);
+  private List<QueuedMsg> startupMsgQueue = Collections.synchronizedList(new ArrayList<>());
+  private String serverUrl = System.getProperty(Constants.SWING_START_SYS_PROP_WEBSOCKET_URL, "");
 
-	public static ServerConnectionServiceImpl getInstance() {
-		if (impl == null) {
-			impl = new ServerConnectionServiceImpl();
-		}
-		return impl;
-	}
+  public static ServerConnectionServiceImpl getInstance() {
+    if (impl == null) {
+      impl = new ServerConnectionServiceImpl();
+    }
+    return impl;
+  }
 
-	public ServerConnectionServiceImpl() {
-		connection = new AppWebsocketConnectionImpl();
-		AccessibilityUtil.registerAccessibilityListeners();
-	}
+  public ServerConnectionServiceImpl() {
+    connection = new AppWebsocketConnectionImpl();
+    AccessibilityUtil.registerAccessibilityListeners();
+  }
 
-	public void initialize() {
-		initConnection(false);
+  public void initialize() {
+    initConnection(false);
 
-		Util.getWebToolkit().addStartupListener(() -> {
-			if (!startupMsgQueue.isEmpty()) {
-				AppLogger.info("Dispatching " + startupMsgQueue.size() + " queued messages.");
-				startupMsgQueue.stream().forEach(qm -> {
-					onMessage(qm.msg);
-				});
-				startupMsgQueue.clear();
-			}
-		});
+    Util.getWebToolkit().addStartupListener(() -> {
+      if (!startupMsgQueue.isEmpty()) {
+        AppLogger.info("Dispatching " + startupMsgQueue.size() + " queued messages.");
+        startupMsgQueue.stream().forEach(qm -> {
+          onMessage(qm.msg);
+        });
+        startupMsgQueue.clear();
+      }
+    });
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			try {
-				// stop recording
-				Util.getWebToolkit().stopRecording();
-			} catch (Exception sre) {
-				sre.printStackTrace();
-			}
-			ServerConnectionServiceImpl.this.disconnect(Constants.APP_WEBSOCKET_CLOSE_REASON_SHUTDOWN);
-		}));
-	}
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      try {
+        // stop recording
+        Util.getWebToolkit().stopRecording();
+      } catch (Exception sre) {
+        sre.printStackTrace();
+      }
+      ServerConnectionServiceImpl.this.disconnect(Constants.APP_WEBSOCKET_CLOSE_REASON_SHUTDOWN);
+    }));
+  }
 
-	private void initConnection(boolean reconnect) {
-		try {
-			serverUrl += "?instanceId=" + System.getProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID)
-						 + "&sessionPoolId=" + System.getProperty(Constants.SWING_START_SYS_PROP_SESSION_POOL_ID)
-						 + "&reconnect=" + reconnect;
-			connection.initialize(serverUrl, this);
-			closed.set(false);
-		} catch (Exception e) {
-			AppLogger.error("Exiting application because it could not connect to server", e);
-			System.exit(1);
-		}
-	}
+  private void initConnection(boolean reconnect) {
+    try {
+      serverUrl += "?instanceId=" + System.getProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID)
+          + "&sessionPoolId=" + System.getProperty(Constants.SWING_START_SYS_PROP_SESSION_POOL_ID)
+          + "&reconnect=" + reconnect;
+      connection.initialize(serverUrl, this);
+      closed.set(false);
+    } catch (Exception e) {
+      AppLogger.error("Exiting application because it could not connect to server", e);
+      System.exit(1);
+    }
+  }
 
-	@Override
-	public void reconnect(String reconnectUrl) {
-		disconnect(Constants.APP_WEBSOCKET_CLOSE_REASON_RECONNECT);
-		serverUrl = reconnectUrl;
-		initConnection(true);
-	}
+  @Override
+  public void reconnect(String reconnectUrl) {
+    disconnect(Constants.APP_WEBSOCKET_CLOSE_REASON_RECONNECT);
+    serverUrl = reconnectUrl;
+    initConnection(true);
+  }
 
-	private void disconnect(String reason) {
-		try {
-			connection.close(reason);
-		} catch (Exception e) {
-			AppLogger.info("Disconnecting from Server failed.", e.getMessage());
-		} finally {
-			closed.set(true);
-		}
-	}
+  private void disconnect(String reason) {
+    try {
+      connection.close(reason);
+    } catch (Exception e) {
+      AppLogger.info("Disconnecting from Server failed.", e.getMessage());
+    } finally {
+      closed.set(true);
+    }
+  }
 
-	@Override
-	public void sendObject(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame) {
-		if (!closed.get()) {
-			try {
-				if (frame != null) {
-					try {
-						msgOut.setAppFrameMsgOut(protoMapper.encodeProto(frame));
-					} catch (IOException e) {
-						AppLogger.error("Could not encode proto!", e);
-					}
-				}
-				connection.sendMessage(msgOut);
-			} catch (Exception e) {
-				AppLogger.error("ServerConnectionService.sendJsonObject", e);
-			}
-		}
-	}
+  @Override
+  public void sendObject(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame) {
+    if (!closed.get()) {
+      try {
+        if (frame != null) {
+          try {
+            msgOut.setAppFrameMsgOut(protoMapper.encodeProto(frame));
+          } catch (IOException e) {
+            AppLogger.error("Could not encode proto!", e);
+          }
+        }
+        connection.sendMessage(msgOut);
+      } catch (Exception e) {
+        AppLogger.error("ServerConnectionService.sendJsonObject", e);
+      }
+    }
+  }
 
-	@Override
-	public SyncObjectResponse sendObjectSync(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame, String correlationId) throws Exception {
-		if (!closed.get()) {
-			try {
-				if (frame != null) {
-					try {
-						msgOut.setAppFrameMsgOut(protoMapper.encodeProto(frame));
-					} catch (IOException e) {
-						AppLogger.error("Could not encode proto!", e);
-						throw e;
-					}
-				}
-				return connection.sendMessageSync(msgOut, correlationId);
-			} catch (Exception e) {
-				AppLogger.error("ServerConnectionService.sendJsonObject", e);
-				throw e;
-			}
-		} else {
-			throw new Exception("Failed to send request. Servie was disconnected.");
-		}
-	}
+  @Override
+  public SyncObjectResponse sendObjectSync(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame,
+      String correlationId) throws Exception {
+    if (!closed.get()) {
+      try {
+        if (frame != null) {
+          try {
+            msgOut.setAppFrameMsgOut(protoMapper.encodeProto(frame));
+          } catch (IOException e) {
+            AppLogger.error("Could not encode proto!", e);
+            throw e;
+          }
+        }
+        return connection.sendMessageSync(msgOut, correlationId);
+      } catch (Exception e) {
+        AppLogger.error("ServerConnectionService.sendJsonObject", e);
+        throw e;
+      }
+    } else {
+      throw new Exception("Failed to send request. Servie was disconnected.");
+    }
+  }
 
-	@Override
-	public AccessibilityMsgOut getAccessibilityInfo() {
-		return AccessibilityUtil.getAccessibilityInfo();
-	}
+  @Override
+  public AccessibilityMsgOut getAccessibilityInfo() {
+    return AccessibilityUtil.getAccessibilityInfo();
+  }
 
-	@Override
-	public AccessibilityMsgOut getAccessibilityInfo(Component c, int x, int y) {
-		return AccessibilityUtil.getAccessibilityInfo(c, x, y);
-	}
+  @Override
+  public AccessibilityMsgOut getAccessibilityInfo(Component c, int x, int y) {
+    return AccessibilityUtil.getAccessibilityInfo(c, x, y);
+  }
 
-	@Override
-	public void onMessage(ServerToAppFrameMsgIn msgIn) {
-		if (Util.getWebToolkit().getEventDispatcher() == null) {
-			startupMsgQueue.add(new QueuedMsg(msgIn));
-			return;
-		}
+  @Override
+  public void onMessage(ServerToAppFrameMsgIn msgIn) {
+    if (Util.getWebToolkit().getEventDispatcher() == null) {
+      startupMsgQueue.add(new QueuedMsg(msgIn));
+      return;
+    }
 
-		AppFrameMsgIn frame = null;
-		if (msgIn.getAppFrameMsgIn() != null) {
-			try {
-				frame = protoMapper.decodeProto(msgIn.getAppFrameMsgIn(), AppFrameMsgIn.class);
-			} catch (IOException e) {
-				AppLogger.error("Could not encode proto!", e);
-			}
-		}
+    AppFrameMsgIn frame = null;
+    if (msgIn.getAppFrameMsgIn() != null) {
+      try {
+        frame = protoMapper.decodeProto(msgIn.getAppFrameMsgIn(), AppFrameMsgIn.class);
+      } catch (IOException e) {
+        AppLogger.error("Could not encode proto!", e);
+      }
+    }
 
-		// first handle sync messages
-		if ((msgIn.getApiCallResult() != null && msgIn.getApiCallResult().getCorrelationId() != null)
-			|| (frame != null && frame.getJsResponse() != null && frame.getJsResponse().getCorrelationId() != null)
-			|| (frame != null && frame.getPixelsResponse() != null && frame.getPixelsResponse().getCorrelationId() != null)) {
-			connection.handleSyncMessageResult(msgIn, frame);
-			return;
-		}
+    // first handle sync messages
+    if ((msgIn.getApiCallResult() != null && msgIn.getApiCallResult().getCorrelationId() != null)
+        || (frame != null && frame.getJsResponse() != null
+            && frame.getJsResponse().getCorrelationId() != null)
+        || (frame != null && frame.getPixelsResponse() != null
+            && frame.getPixelsResponse().getCorrelationId() != null)) {
+      connection.handleSyncMessageResult(msgIn, frame);
+      return;
+    }
 
-		// handle other messages in event dispatcher
-		Util.getWebToolkit().getEventDispatcher().onMessage(msgIn, frame);
-	}
+    // handle other messages in event dispatcher
+    Util.getWebToolkit().getEventDispatcher().onMessage(msgIn, frame);
+  }
 
-	@Override
-	public Map<String, Serializable> deserializeUserAttributes(byte[] data) throws IOException {
-		if (data == null) {
-			return null;
-		}
-		try {
-			return new JsonMapper().readValue(data, new TypeReference<Map<String, Serializable>>() {});
-		} catch (tools.jackson.core.JacksonException e) {
-			throw new IOException("Failed to deserialize user attributes", e);
-		}
-	}
+  @Override
+  public Map<String, Serializable> deserializeUserAttributes(byte[] data) throws IOException {
+    if (data == null) {
+      return null;
+    }
+    try {
+      return new JsonMapper().readValue(data, new TypeReference<Map<String, Serializable>>() {});
+    } catch (tools.jackson.core.JacksonException e) {
+      throw new IOException("Failed to deserialize user attributes", e);
+    }
+  }
 
-	private static class QueuedMsg {
-		private ServerToAppFrameMsgIn msg;
+  private static class QueuedMsg {
+    private ServerToAppFrameMsgIn msg;
 
-		public QueuedMsg(ServerToAppFrameMsgIn msg) {
-			super();
-			this.msg = msg;
-		}
+    public QueuedMsg(ServerToAppFrameMsgIn msg) {
+      super();
+      this.msg = msg;
+    }
 
-	}
+  }
 
 }

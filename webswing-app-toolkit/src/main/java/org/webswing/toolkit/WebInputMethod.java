@@ -9,60 +9,49 @@ import java.util.Locale;
 @SuppressWarnings("restriction")
 public class WebInputMethod extends sun.awt.im.InputMethodAdapter implements InputMethod {
 
-    public void activate() {
-    }
+  public void activate() {}
 
-    public void deactivate(boolean isTemporary) {
-    }
+  public void deactivate(boolean isTemporary) {}
 
-    public void dispatchEvent(AWTEvent event) {
-    }
+  public void dispatchEvent(AWTEvent event) {}
 
-    public void dispose() {
-    }
+  public void dispose() {}
 
-    public void endComposition() {
-    }
+  public void endComposition() {}
 
-    public Object getControlObject() {
-        return null;
-    }
+  public Object getControlObject() {
+    return null;
+  }
 
-    public Locale getLocale() {
-        return Locale.getDefault();
-    }
+  public Locale getLocale() {
+    return Locale.getDefault();
+  }
 
-    public void hideWindows() {
-    }
+  public void hideWindows() {}
 
-    public boolean isCompositionEnabled() {
-        return false;
-    }
+  public boolean isCompositionEnabled() {
+    return false;
+  }
 
-    public void removeNotify() {
-    }
+  public void removeNotify() {}
 
-    public void setCharacterSubsets(Subset[] subsets) {
-    }
+  public void setCharacterSubsets(Subset[] subsets) {}
 
-    public void setCompositionEnabled(boolean enable) {
-    }
+  public void setCompositionEnabled(boolean enable) {}
 
-    public void setInputMethodContext(InputMethodContext context) {
-    }
+  public void setInputMethodContext(InputMethodContext context) {}
 
-    public boolean setLocale(Locale locale) {
-        return false;
-    }
+  public boolean setLocale(Locale locale) {
+    return false;
+  }
 
-    @Override
-    public void disableInputMethod() {
-    }
+  @Override
+  public void disableInputMethod() {}
 
-    @Override
-    public String getNativeInputMethodInfo() {
-        return "getNativeInputMethodInfo";
-    }
+  @Override
+  public String getNativeInputMethodInfo() {
+    return "getNativeInputMethodInfo";
+  }
 
 
 

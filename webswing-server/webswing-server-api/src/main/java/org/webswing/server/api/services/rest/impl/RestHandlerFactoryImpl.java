@@ -11,14 +11,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class RestHandlerFactoryImpl implements RestHandlerFactory {
 
-	@Override
-	public AbstractGlobalRestHandler createGlobalRestHandler(GlobalUrlHandler parent) {
-		return new GlobalRestHandlerImpl(parent);
-	}
+  @Override
+  public AbstractGlobalRestHandler createGlobalRestHandler(GlobalUrlHandler parent) {
+    return new GlobalRestHandlerImpl(parent);
+  }
 
-	@Override
-	public AbstractAppRestHandler createAppRestHandler(PrimaryUrlHandler parent, GlobalUrlHandler global) {
-		return new AppRestHandlerImpl(parent, global);
-	}
+  @Override
+  public AbstractAppRestHandler createAppRestHandler(PrimaryUrlHandler parent,
+      GlobalUrlHandler global) {
+    return new AppRestHandlerImpl(parent, global);
+  }
 
 }

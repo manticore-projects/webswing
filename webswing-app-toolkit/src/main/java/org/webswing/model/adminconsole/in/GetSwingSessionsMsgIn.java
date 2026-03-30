@@ -8,34 +8,33 @@ import org.webswing.model.SyncMsg;
 
 public class GetSwingSessionsMsgIn implements SyncMsg, MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 1693834115245508470L;
+  @Serial
+  private static final long serialVersionUID = 1693834115245508470L;
 
-	private String path;
-	private String correlationId = UUID.randomUUID().toString();
+  private String path;
+  private String correlationId = UUID.randomUUID().toString();
 
-	public GetSwingSessionsMsgIn() {
-	}
-	
-	public GetSwingSessionsMsgIn(String path) {
-		super();
-		this.path = path;
-	}
+  public GetSwingSessionsMsgIn() {}
 
-	public String getPath() {
-		return path;
-	}
+  public GetSwingSessionsMsgIn(String path) {
+    super();
+    this.path = path;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
-	
+  public String getCorrelationId() {
+    return correlationId;
+  }
+
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
+
 }

@@ -8,14 +8,14 @@ import org.webswing.server.model.exception.WsException;
 
 public abstract class AbstractAppRestHandler extends AbstractUrlHandler implements UrlHandler {
 
-	public AbstractAppRestHandler(UrlHandler parent) {
-		super(parent);
-	}
+  public AbstractAppRestHandler(UrlHandler parent) {
+    super(parent);
+  }
 
-	protected abstract String getVersion() throws WsException;
-	
-	protected abstract File getAppIcon() throws WsException;
-	
-	protected abstract void ping() throws WsException;
+  protected abstract String getVersion() throws WsException;
+
+  protected abstract File getAppIcon() throws WsException;
+
+  protected abstract void ping() throws WsException;
 
 }

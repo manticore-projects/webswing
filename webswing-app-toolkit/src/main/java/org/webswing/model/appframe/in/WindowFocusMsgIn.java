@@ -6,26 +6,26 @@ import java.io.Serial;
 
 public class WindowFocusMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 5306185208935013049L;
-	
-	private String windowId;
-	private String htmlPanelId;
-	
-	public String getWindowId() {
-		return windowId;
-	}
+  @Serial
+  private static final long serialVersionUID = 5306185208935013049L;
 
-	public void setWindowId(String windowId) {
-		this.windowId = windowId;
-	}
+  private String windowId;
+  private String htmlPanelId;
 
-	public String getHtmlPanelId() {
-		return htmlPanelId;
-	}
-	
-	public void setHtmlPanelId(String htmlPanelId) {
-		this.htmlPanelId = htmlPanelId;
-	}
-	
+  public String getWindowId() {
+    return windowId;
+  }
+
+  public void setWindowId(String windowId) {
+    this.windowId = windowId;
+  }
+
+  public String getHtmlPanelId() {
+    return htmlPanelId;
+  }
+
+  public void setHtmlPanelId(String htmlPanelId) {
+    this.htmlPanelId = htmlPanelId;
+  }
+
 }

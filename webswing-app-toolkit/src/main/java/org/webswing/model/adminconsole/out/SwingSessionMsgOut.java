@@ -10,225 +10,221 @@ import org.webswing.model.common.in.RecordingStatusEnum;
 
 public class SwingSessionMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -562205063402702649L;
+  @Serial
+  private static final long serialVersionUID = -562205063402702649L;
 
-	public enum StatusEnum {
-		NOT_STARTED, 
-		EXITING,
-		RUNNING,
-		FORCE_KILLED,
-		FINISHED
-    }
-	
-	private StatusEnum status;
-	private String instanceId;
-	private String user;
-	private String userIp;
-	private String userOs;
-	private String userBrowser;
-	private String application;
-	private String applicationPath;
-	private long startedAt;
-	private long endedAt;
-	private boolean connected;
-	private boolean applet;
-	private long disconnectedSince;
-	private RecordingStatusEnum recordingStatus;
-	private MirroringStatusEnum mirroringStatus;
-	private String recordingFile;
-	private boolean loggingEnabled;
-	private boolean statisticsLoggingEnabled;
-	
-	private List<String> warnings = new ArrayList<>();
-	private List<String> warningHistory = new ArrayList<>();
-	private List<ThreadDumpMsgOut> threadDumps = new ArrayList<>();
-	
-	private List<MetricMsgOut> metrics = new ArrayList<>();
-	private List<StatEntryMsgOut> stats = new ArrayList<>();
+  public enum StatusEnum {
+    NOT_STARTED, EXITING, RUNNING, FORCE_KILLED, FINISHED
+  }
 
-	public StatusEnum getStatus() {
-		return status;
-	}
+  private StatusEnum status;
+  private String instanceId;
+  private String user;
+  private String userIp;
+  private String userOs;
+  private String userBrowser;
+  private String application;
+  private String applicationPath;
+  private long startedAt;
+  private long endedAt;
+  private boolean connected;
+  private boolean applet;
+  private long disconnectedSince;
+  private RecordingStatusEnum recordingStatus;
+  private MirroringStatusEnum mirroringStatus;
+  private String recordingFile;
+  private boolean loggingEnabled;
+  private boolean statisticsLoggingEnabled;
 
-	public void setStatus(StatusEnum status) {
-		this.status = status;
-	}
+  private List<String> warnings = new ArrayList<>();
+  private List<String> warningHistory = new ArrayList<>();
+  private List<ThreadDumpMsgOut> threadDumps = new ArrayList<>();
 
-	public String getInstanceId() {
-		return instanceId;
-	}
+  private List<MetricMsgOut> metrics = new ArrayList<>();
+  private List<StatEntryMsgOut> stats = new ArrayList<>();
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
+  public StatusEnum getStatus() {
+    return status;
+  }
 
-	public String getUser() {
-		return user;
-	}
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+  public String getInstanceId() {
+    return instanceId;
+  }
 
-	public String getUserIp() {
-		return userIp;
-	}
+  public void setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
+  }
 
-	public void setUserIp(String userIp) {
-		this.userIp = userIp;
-	}
+  public String getUser() {
+    return user;
+  }
 
-	public String getUserOs() {
-		return userOs;
-	}
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-	public void setUserOs(String userOs) {
-		this.userOs = userOs;
-	}
+  public String getUserIp() {
+    return userIp;
+  }
 
-	public String getUserBrowser() {
-		return userBrowser;
-	}
+  public void setUserIp(String userIp) {
+    this.userIp = userIp;
+  }
 
-	public void setUserBrowser(String userBrowser) {
-		this.userBrowser = userBrowser;
-	}
+  public String getUserOs() {
+    return userOs;
+  }
 
-	public String getApplication() {
-		return application;
-	}
+  public void setUserOs(String userOs) {
+    this.userOs = userOs;
+  }
 
-	public void setApplication(String application) {
-		this.application = application;
-	}
+  public String getUserBrowser() {
+    return userBrowser;
+  }
 
-	public String getApplicationPath() {
-		return applicationPath;
-	}
+  public void setUserBrowser(String userBrowser) {
+    this.userBrowser = userBrowser;
+  }
 
-	public void setApplicationPath(String applicationPath) {
-		this.applicationPath = applicationPath;
-	}
+  public String getApplication() {
+    return application;
+  }
 
-	public long getStartedAt() {
-		return startedAt;
-	}
+  public void setApplication(String application) {
+    this.application = application;
+  }
 
-	public void setStartedAt(long startedAt) {
-		this.startedAt = startedAt;
-	}
+  public String getApplicationPath() {
+    return applicationPath;
+  }
 
-	public long getEndedAt() {
-		return endedAt;
-	}
+  public void setApplicationPath(String applicationPath) {
+    this.applicationPath = applicationPath;
+  }
 
-	public void setEndedAt(long endedAt) {
-		this.endedAt = endedAt;
-	}
+  public long getStartedAt() {
+    return startedAt;
+  }
 
-	public boolean isConnected() {
-		return connected;
-	}
+  public void setStartedAt(long startedAt) {
+    this.startedAt = startedAt;
+  }
 
-	public void setConnected(boolean connected) {
-		this.connected = connected;
-	}
+  public long getEndedAt() {
+    return endedAt;
+  }
 
-	public boolean isApplet() {
-		return applet;
-	}
+  public void setEndedAt(long endedAt) {
+    this.endedAt = endedAt;
+  }
 
-	public void setApplet(boolean applet) {
-		this.applet = applet;
-	}
+  public boolean isConnected() {
+    return connected;
+  }
 
-	public long getDisconnectedSince() {
-		return disconnectedSince;
-	}
+  public void setConnected(boolean connected) {
+    this.connected = connected;
+  }
 
-	public void setDisconnectedSince(long disconnectedSince) {
-		this.disconnectedSince = disconnectedSince;
-	}
+  public boolean isApplet() {
+    return applet;
+  }
 
-	public RecordingStatusEnum getRecordingStatus() {
-		return recordingStatus;
-	}
+  public void setApplet(boolean applet) {
+    this.applet = applet;
+  }
 
-	public void setRecordingStatus(RecordingStatusEnum recordingStatus) {
-		this.recordingStatus = recordingStatus;
-	}
+  public long getDisconnectedSince() {
+    return disconnectedSince;
+  }
 
-	public String getRecordingFile() {
-		return recordingFile;
-	}
+  public void setDisconnectedSince(long disconnectedSince) {
+    this.disconnectedSince = disconnectedSince;
+  }
 
-	public void setRecordingFile(String recordingFile) {
-		this.recordingFile = recordingFile;
-	}
+  public RecordingStatusEnum getRecordingStatus() {
+    return recordingStatus;
+  }
 
-	public MirroringStatusEnum getMirroringStatus() {
-		return mirroringStatus;
-	}
+  public void setRecordingStatus(RecordingStatusEnum recordingStatus) {
+    this.recordingStatus = recordingStatus;
+  }
 
-	public void setMirroringStatus(MirroringStatusEnum mirroringStatus) {
-		this.mirroringStatus = mirroringStatus;
-	}
+  public String getRecordingFile() {
+    return recordingFile;
+  }
 
-	public boolean isLoggingEnabled() {
-		return loggingEnabled;
-	}
+  public void setRecordingFile(String recordingFile) {
+    this.recordingFile = recordingFile;
+  }
 
-	public void setLoggingEnabled(boolean loggingEnabled) {
-		this.loggingEnabled = loggingEnabled;
-	}
+  public MirroringStatusEnum getMirroringStatus() {
+    return mirroringStatus;
+  }
 
-	public List<String> getWarnings() {
-		return warnings;
-	}
+  public void setMirroringStatus(MirroringStatusEnum mirroringStatus) {
+    this.mirroringStatus = mirroringStatus;
+  }
 
-	public void setWarnings(List<String> warnings) {
-		this.warnings = warnings;
-	}
+  public boolean isLoggingEnabled() {
+    return loggingEnabled;
+  }
 
-	public List<String> getWarningHistory() {
-		return warningHistory;
-	}
+  public void setLoggingEnabled(boolean loggingEnabled) {
+    this.loggingEnabled = loggingEnabled;
+  }
 
-	public void setWarningHistory(List<String> warningHistory) {
-		this.warningHistory = warningHistory;
-	}
+  public List<String> getWarnings() {
+    return warnings;
+  }
 
-	public List<ThreadDumpMsgOut> getThreadDumps() {
-		return threadDumps;
-	}
+  public void setWarnings(List<String> warnings) {
+    this.warnings = warnings;
+  }
 
-	public void setThreadDumps(List<ThreadDumpMsgOut> threadDumps) {
-		this.threadDumps = threadDumps;
-	}
+  public List<String> getWarningHistory() {
+    return warningHistory;
+  }
 
-	public List<MetricMsgOut> getMetrics() {
-		return metrics;
-	}
+  public void setWarningHistory(List<String> warningHistory) {
+    this.warningHistory = warningHistory;
+  }
 
-	public void setMetrics(List<MetricMsgOut> metrics) {
-		this.metrics = metrics;
-	}
+  public List<ThreadDumpMsgOut> getThreadDumps() {
+    return threadDumps;
+  }
 
-	public boolean isStatisticsLoggingEnabled() {
-		return statisticsLoggingEnabled;
-	}
+  public void setThreadDumps(List<ThreadDumpMsgOut> threadDumps) {
+    this.threadDumps = threadDumps;
+  }
 
-	public void setStatisticsLoggingEnabled(boolean statisticsLoggingEnabled) {
-		this.statisticsLoggingEnabled = statisticsLoggingEnabled;
-	}
+  public List<MetricMsgOut> getMetrics() {
+    return metrics;
+  }
 
-	public List<StatEntryMsgOut> getStats() {
-		return stats;
-	}
+  public void setMetrics(List<MetricMsgOut> metrics) {
+    this.metrics = metrics;
+  }
 
-	public void setStats(List<StatEntryMsgOut> stats) {
-		this.stats = stats;
-	}
-	
+  public boolean isStatisticsLoggingEnabled() {
+    return statisticsLoggingEnabled;
+  }
+
+  public void setStatisticsLoggingEnabled(boolean statisticsLoggingEnabled) {
+    this.statisticsLoggingEnabled = statisticsLoggingEnabled;
+  }
+
+  public List<StatEntryMsgOut> getStats() {
+    return stats;
+  }
+
+  public void setStats(List<StatEntryMsgOut> stats) {
+    this.stats = stats;
+  }
+
 }

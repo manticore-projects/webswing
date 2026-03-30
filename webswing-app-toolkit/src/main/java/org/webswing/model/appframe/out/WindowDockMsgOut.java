@@ -6,20 +6,19 @@ import java.io.Serial;
 
 public class WindowDockMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -5473405345399477117L;
+  @Serial
+  private static final long serialVersionUID = -5473405345399477117L;
 
-	private String windowId;
-	
-	public WindowDockMsgOut() {
-	}
+  private String windowId;
 
-	public String getWindowId() {
-		return windowId;
-	}
+  public WindowDockMsgOut() {}
 
-	public void setWindowId(String windowId) {
-		this.windowId = windowId;
-	}
+  public String getWindowId() {
+    return windowId;
+  }
+
+  public void setWindowId(String windowId) {
+    this.windowId = windowId;
+  }
 
 }

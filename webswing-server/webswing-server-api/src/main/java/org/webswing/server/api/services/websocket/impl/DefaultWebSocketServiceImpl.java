@@ -15,39 +15,36 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultWebSocketServiceImpl implements WebswingService, WebSocketService {
-	private static final Logger log = LoggerFactory.getLogger(DefaultWebSocketServiceImpl.class);
-	
-	private Map<String, AppPathHandler> handlerMap = Collections.synchronizedMap(new HashMap<>());
+  private static final Logger log = LoggerFactory.getLogger(DefaultWebSocketServiceImpl.class);
 
-	public DefaultWebSocketServiceImpl() {
-	}
+  private Map<String, AppPathHandler> handlerMap = Collections.synchronizedMap(new HashMap<>());
 
-	public void start() throws WsInitException {
-	}
+  public DefaultWebSocketServiceImpl() {}
 
-	public void stop() {
-	}
+  public void start() throws WsInitException {}
 
-	@Override
-	public void registerPathHandler(String path, AppPathHandler appPathHandler) {
-		handlerMap.put(path, appPathHandler);
-	}
-	
-	@Override
-	public void unregisterPathHandler(String path) {
-		handlerMap.remove(path);
-	}
-	
-	@Override
-	public AppPathHandler getAppPathHandler(String path) {
-		AppPathHandler appPathHandler = handlerMap.get(path);
-		
-		if (appPathHandler == null) {
-			log.error("No AppPathHandler found for path [" + path + "]!");
-			return null;
-		}
-		
-		return appPathHandler;
-	}
-	
+  public void stop() {}
+
+  @Override
+  public void registerPathHandler(String path, AppPathHandler appPathHandler) {
+    handlerMap.put(path, appPathHandler);
+  }
+
+  @Override
+  public void unregisterPathHandler(String path) {
+    handlerMap.remove(path);
+  }
+
+  @Override
+  public AppPathHandler getAppPathHandler(String path) {
+    AppPathHandler appPathHandler = handlerMap.get(path);
+
+    if (appPathHandler == null) {
+      log.error("No AppPathHandler found for path [" + path + "]!");
+      return null;
+    }
+
+    return appPathHandler;
+  }
+
 }

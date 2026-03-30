@@ -6,34 +6,34 @@ import java.io.Serial;
 
 public class ThreadDumpMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -2047166209199097463L;
-	
-	private long timestamp;
-	private String dumpId;
-	private String reason;
+  @Serial
+  private static final long serialVersionUID = -2047166209199097463L;
 
-	public long getTimestamp() {
-		return timestamp;
-	}
+  private long timestamp;
+  private String dumpId;
+  private String reason;
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
+  public long getTimestamp() {
+    return timestamp;
+  }
 
-	public String getDumpId() {
-		return dumpId;
-	}
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
 
-	public void setDumpId(String dumpId) {
-		this.dumpId = dumpId;
-	}
+  public String getDumpId() {
+    return dumpId;
+  }
 
-	public String getReason() {
-		return reason;
-	}
+  public void setDumpId(String dumpId) {
+    this.dumpId = dumpId;
+  }
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
+  }
 }

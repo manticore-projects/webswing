@@ -7,9 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.TYPE })
+@Target(value = {ElementType.TYPE})
 @Inherited
 @SuppressWarnings("rawtypes")
 public @interface ConfigType {
-	Class<? extends MetadataGenerator> metadataGenerator() default MetadataGenerator.class;
+  Class<? extends MetadataGenerator> metadataGenerator() default MetadataGenerator.class;
 }

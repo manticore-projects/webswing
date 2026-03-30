@@ -6,24 +6,23 @@ import java.io.Serial;
 
 public class RemoveAppMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 4359795607415450588L;
-	
-	private String path;
+  @Serial
+  private static final long serialVersionUID = 4359795607415450588L;
 
-	public RemoveAppMsgIn() {
-	}
-	
-	public RemoveAppMsgIn(String path) {
-		this.path = path;
-	}
+  private String path;
 
-	public String getPath() {
-		return path;
-	}
+  public RemoveAppMsgIn() {}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+  public RemoveAppMsgIn(String path) {
+    this.path = path;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
 }

@@ -34,111 +34,121 @@ import org.webswing.server.common.util.ProtoMapper;
 
 import com.google.inject.Inject;
 
-@ServerEndpoint(value = "/async/adminconsole", configurator = AdminConsoleWebSocketConfigurator.class)
-public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnection implements AdminConsoleWebSocketConnection {
-	
-	private static final Logger log = LoggerFactory.getLogger(AdminConsoleWebSocketConnectionImpl.class);
+@ServerEndpoint(value = "/async/adminconsole",
+    configurator = AdminConsoleWebSocketConfigurator.class)
+public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnection
+    implements AdminConsoleWebSocketConnection {
 
-	private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_ADMIN_CONSOLE_FRAME);
+  private static final Logger log =
+      LoggerFactory.getLogger(AdminConsoleWebSocketConnectionImpl.class);
 
-	private final SessionPoolHolderService sessionPoolHolderService;
-	
-	private boolean secured;
+  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_ADMIN_CONSOLE_FRAME);
 
-	@Inject
-	public AdminConsoleWebSocketConnectionImpl(SessionPoolHolderService sessionPoolHolderService) {
-		this.sessionPoolHolderService = sessionPoolHolderService;
-	}
+  private final SessionPoolHolderService sessionPoolHolderService;
 
-	@OnOpen
-	public void onOpen(Session session, EndpointConfig config) {
-		super.onOpen(session, config);
-		
-		if (!sessionPoolHolderService.registerAdminConsole(this)) {
-			disconnect(CloseCodes.CANNOT_ACCEPT, "An admin console is already connected!");
-			return;
-		}
-	}
-	
-	@OnMessage
-	public void onMessage(Session session, byte[] bytes, boolean last) {
-		try {
-			Pair<Msg, Integer> frameWithLength = super.getCompleteMessage(bytes, last);
-			if (frameWithLength == null) {
-				// incomplete
-				return;
-			}
-			
-			AdminConsoleFrameMsgIn msgIn = (AdminConsoleFrameMsgIn) frameWithLength.getKey();
-			
-			if (msgIn.getHandshake() != null) {
-				AdminConsoleHandshakeMsgIn handshake = msgIn.getHandshake();
-				secured = validateHandshakeToken(handshake.getSecretMessage());
-			}
+  private boolean secured;
 
-			if (!secured) {
-				// we must get handshake first, otherwise we disconnect
-				disconnect(CloseCodes.CANNOT_ACCEPT, "Connection not secured!");
-				return;
-			} else {
-				sessionPoolHolderService.handleAdminConsoleMessage(msgIn, this);
-			}
-		} catch (IOException e) {
-			log.error("Could not decode proto message from admin console, session id [" + session.getId() + "]!", e);
-		}
-	}
+  @Inject
+  public AdminConsoleWebSocketConnectionImpl(SessionPoolHolderService sessionPoolHolderService) {
+    this.sessionPoolHolderService = sessionPoolHolderService;
+  }
 
-	@OnMessage
-	public void onPong(Session session, PongMessage pongMessage) {
-		super.onPong(session, pongMessage, log);
-	}
-	
-	@OnClose
-	public void onClose(Session session, CloseReason closeReason) {
-		if (session != null) {
-			log.info("Websocket closed to admin console, session [" + session.getId() + "]" 
-					+ (closeReason != null ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason [" + closeReason.getReasonPhrase() + "]!" : ""));
-		}
-		
-		sessionPoolHolderService.unregisterAdminConsole(this);
-		
-	}
-	
-	@OnError
-	public void onError(Session session, Throwable t) {
-		log.error("Websocket error from admin console connection, session [" + (session==null?null:session.getId()) + "]"+ t.getMessage());
-		log.debug(t.getMessage(), t);
-	}
+  @OnOpen
+  public void onOpen(Session session, EndpointConfig config) {
+    super.onOpen(session, config);
 
-	@Override
-	public void sendMessage(AdminConsoleFrameMsgOut msgOut) {
-		try {
-			super.sendMessage(protoMapper.encodeProto(msgOut));
-		} catch (IOException e) {
-			log.error("Failed to send msg to admin console, session [" + (session==null?null:session.getId()) + "]!"+ e.getMessage());
-			log.debug(e.getMessage(),e);
-		}
-	}
-	
-	@Override
-	public boolean isConnected() {
-		return session != null && session.isOpen();
-	}
+    if (!sessionPoolHolderService.registerAdminConsole(this)) {
+      disconnect(CloseCodes.CANNOT_ACCEPT, "An admin console is already connected!");
+      return;
+    }
+  }
 
-	@Override
-	protected Msg decodeIncomingMessage(byte[] bytes) throws IOException {
-		return protoMapper.decodeProto(bytes, AdminConsoleFrameMsgIn.class);
-	}
-	
-	private void disconnect(CloseCode closeCode, String reason) {
-		if (session != null && session.isOpen()) {
-			try {
-				session.close(new CloseReason(closeCode, reason));
-			} catch (IOException e) {
-				log.error("Failed to disconnect admin console connection session [" + session.getId() + "]!"+ e.getMessage());
-				log.debug(e.getMessage(),e);
-			}
-		}
-	}
-	
+  @OnMessage
+  public void onMessage(Session session, byte[] bytes, boolean last) {
+    try {
+      Pair<Msg, Integer> frameWithLength = super.getCompleteMessage(bytes, last);
+      if (frameWithLength == null) {
+        // incomplete
+        return;
+      }
+
+      AdminConsoleFrameMsgIn msgIn = (AdminConsoleFrameMsgIn) frameWithLength.getKey();
+
+      if (msgIn.getHandshake() != null) {
+        AdminConsoleHandshakeMsgIn handshake = msgIn.getHandshake();
+        secured = validateHandshakeToken(handshake.getSecretMessage());
+      }
+
+      if (!secured) {
+        // we must get handshake first, otherwise we disconnect
+        disconnect(CloseCodes.CANNOT_ACCEPT, "Connection not secured!");
+        return;
+      } else {
+        sessionPoolHolderService.handleAdminConsoleMessage(msgIn, this);
+      }
+    } catch (IOException e) {
+      log.error("Could not decode proto message from admin console, session id [" + session.getId()
+          + "]!", e);
+    }
+  }
+
+  @OnMessage
+  public void onPong(Session session, PongMessage pongMessage) {
+    super.onPong(session, pongMessage, log);
+  }
+
+  @OnClose
+  public void onClose(Session session, CloseReason closeReason) {
+    if (session != null) {
+      log.info("Websocket closed to admin console, session [" + session.getId() + "]"
+          + (closeReason != null
+              ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
+                  + closeReason.getReasonPhrase() + "]!"
+              : ""));
+    }
+
+    sessionPoolHolderService.unregisterAdminConsole(this);
+
+  }
+
+  @OnError
+  public void onError(Session session, Throwable t) {
+    log.error("Websocket error from admin console connection, session ["
+        + (session == null ? null : session.getId()) + "]" + t.getMessage());
+    log.debug(t.getMessage(), t);
+  }
+
+  @Override
+  public void sendMessage(AdminConsoleFrameMsgOut msgOut) {
+    try {
+      super.sendMessage(protoMapper.encodeProto(msgOut));
+    } catch (IOException e) {
+      log.error("Failed to send msg to admin console, session ["
+          + (session == null ? null : session.getId()) + "]!" + e.getMessage());
+      log.debug(e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public boolean isConnected() {
+    return session != null && session.isOpen();
+  }
+
+  @Override
+  protected Msg decodeIncomingMessage(byte[] bytes) throws IOException {
+    return protoMapper.decodeProto(bytes, AdminConsoleFrameMsgIn.class);
+  }
+
+  private void disconnect(CloseCode closeCode, String reason) {
+    if (session != null && session.isOpen()) {
+      try {
+        session.close(new CloseReason(closeCode, reason));
+      } catch (IOException e) {
+        log.error("Failed to disconnect admin console connection session [" + session.getId() + "]!"
+            + e.getMessage());
+        log.debug(e.getMessage(), e);
+      }
+    }
+  }
+
 }

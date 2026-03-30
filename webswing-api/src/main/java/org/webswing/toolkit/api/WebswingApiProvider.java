@@ -1,8 +1,8 @@
 package org.webswing.toolkit.api;
 
 /**
- * Implemented by Webswing's WebToolkit  
+ * Implemented by Webswing's WebToolkit
  */
 public interface WebswingApiProvider {
-	WebswingApi getApi();
+  WebswingApi getApi();
 }

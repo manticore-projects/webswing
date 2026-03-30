@@ -6,24 +6,23 @@ import java.io.Serial;
 
 public class CreateAppMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 4359795607415450588L;
-	
-	private String path;
+  @Serial
+  private static final long serialVersionUID = 4359795607415450588L;
 
-	public CreateAppMsgIn() {
-	}
-	
-	public CreateAppMsgIn(String path) {
-		this.path = path;
-	}
+  private String path;
 
-	public String getPath() {
-		return path;
-	}
+  public CreateAppMsgIn() {}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+  public CreateAppMsgIn(String path) {
+    this.path = path;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
 }

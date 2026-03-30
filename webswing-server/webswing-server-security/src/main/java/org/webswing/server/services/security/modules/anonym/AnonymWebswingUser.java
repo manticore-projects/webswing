@@ -13,43 +13,43 @@ import com.google.common.collect.Lists;
 
 public class AnonymWebswingUser extends AuthenticatedWebswingUser {
 
-    @Serial
-    private static final long serialVersionUID = 1157215452456795382L;
-	
-	private String userId;
-	private List<String> roles = Lists.newArrayList(WebswingAction.AccessType.basic.name());
+  @Serial
+  private static final long serialVersionUID = 1157215452456795382L;
 
-	public AnonymWebswingUser(String userIdParam) {
-		this.userId = userIdParam;
-	}
+  private String userId;
+  private List<String> roles = Lists.newArrayList(WebswingAction.AccessType.basic.name());
 
-	@Override
-	public String getUserId() {
-		return userId;
-	}
+  public AnonymWebswingUser(String userIdParam) {
+    this.userId = userIdParam;
+  }
 
-	@Override
-	public List<String> getUserRoles() {
-		return roles;
-	}
-	
-	@Override
-	public Map<String, Serializable> getUserAttributes() {
-		return Collections.emptyMap();
-	}
-	
-	@Override
-	public Map<String, Serializable> getUserSessionAttributes() {
-		return Collections.emptyMap();
-	}
+  @Override
+  public String getUserId() {
+    return userId;
+  }
 
-	@Override
-	public boolean hasRole(String role) {
-		return WebswingAction.AccessType.basic.name().equals(role);
-	}
+  @Override
+  public List<String> getUserRoles() {
+    return roles;
+  }
 
-	public boolean isAuthenticated() {
-		return true;
-	}
-	
+  @Override
+  public Map<String, Serializable> getUserAttributes() {
+    return Collections.emptyMap();
+  }
+
+  @Override
+  public Map<String, Serializable> getUserSessionAttributes() {
+    return Collections.emptyMap();
+  }
+
+  @Override
+  public boolean hasRole(String role) {
+    return WebswingAction.AccessType.basic.name().equals(role);
+  }
+
+  public boolean isAuthenticated() {
+    return true;
+  }
+
 };

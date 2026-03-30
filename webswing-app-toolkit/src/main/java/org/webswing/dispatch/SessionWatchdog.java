@@ -4,13 +4,13 @@ import org.webswing.toolkit.api.lifecycle.ShutdownReason;
 
 public interface SessionWatchdog {
 
-	void resetInactivityTimers();
+  void resetInactivityTimers();
 
-	void scheduleShutdown(ShutdownReason admin);
+  void scheduleShutdown(ShutdownReason admin);
 
-	void requestThreadDump();
+  void requestThreadDump();
 
-	boolean isTerminated();
+  boolean isTerminated();
 
-	void notifyExit();
+  void notifyExit();
 }

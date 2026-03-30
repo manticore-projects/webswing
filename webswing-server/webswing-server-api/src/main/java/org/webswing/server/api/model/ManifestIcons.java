@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 
-public class ManifestIcons   {
-  
-  private  String src;
-  private  String type = "image/png";
-  private  String sizes;
+public class ManifestIcons {
+
+  private String src;
+  private String type = "image/png";
+  private String sizes;
 
   /**
    **/
@@ -21,11 +21,12 @@ public class ManifestIcons   {
     return this;
   }
 
-  
+
   @JsonProperty("src")
   public String getSrc() {
     return src;
   }
+
   public void setSrc(String src) {
     this.src = src;
   }
@@ -37,11 +38,12 @@ public class ManifestIcons   {
     return this;
   }
 
-  
+
   @JsonProperty("type")
   public String getType() {
     return type;
   }
+
   public void setType(String type) {
     this.type = type;
   }
@@ -53,11 +55,12 @@ public class ManifestIcons   {
     return this;
   }
 
-  
+
   @JsonProperty("sizes")
   public String getSizes() {
     return sizes;
   }
+
   public void setSizes(String sizes) {
     this.sizes = sizes;
   }
@@ -72,9 +75,9 @@ public class ManifestIcons   {
       return false;
     }
     ManifestIcons manifestIcons = (ManifestIcons) o;
-    return Objects.equals(this.src, manifestIcons.src) &&
-        Objects.equals(this.type, manifestIcons.type) &&
-        Objects.equals(this.sizes, manifestIcons.sizes);
+    return Objects.equals(this.src, manifestIcons.src)
+        && Objects.equals(this.type, manifestIcons.type)
+        && Objects.equals(this.sizes, manifestIcons.sizes);
   }
 
   @Override
@@ -86,7 +89,7 @@ public class ManifestIcons   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ManifestIcons {\n");
-    
+
     sb.append("    src: ").append(toIndentedString(src)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    sizes: ").append(toIndentedString(sizes)).append("\n");
@@ -95,8 +98,7 @@ public class ManifestIcons   {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(java.lang.Object o) {
     if (o == null) {

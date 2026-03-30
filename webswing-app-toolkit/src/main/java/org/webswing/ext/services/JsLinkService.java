@@ -11,14 +11,14 @@ import netscape.javascript.JSException;
 
 public interface JsLinkService {
 
-	public JsParamMsgOut generateParam(Object arg) throws Exception;
+  public JsParamMsgOut generateParam(Object arg) throws Exception;
 
-	public JsResultMsgOut generateJavaResult(String correlationId, Object result) throws Exception;
+  public JsResultMsgOut generateJavaResult(String correlationId, Object result) throws Exception;
 
-	public JsResultMsgOut generateJavaErrorResult(String correlationId, Throwable result);
+  public JsResultMsgOut generateJavaErrorResult(String correlationId, Throwable result);
 
-	public Object parseValue(JsParamMsgIn value) throws JSException;
+  public Object parseValue(JsParamMsgIn value) throws JSException;
 
-	public Object[] getCompatibleParams(JavaEvalRequestMsgIn javaReq, Method m) throws Exception;
+  public Object[] getCompatibleParams(JavaEvalRequestMsgIn javaReq, Method m) throws Exception;
 
 }

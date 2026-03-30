@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface WebswingSecurityModuleProvider {
 
-	List<String> getSecurityModuleClassNames();
+  List<String> getSecurityModuleClassNames();
 }

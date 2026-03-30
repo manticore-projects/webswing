@@ -6,24 +6,23 @@ import java.io.Serial;
 
 public class StopAppMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 4359795607415450588L;
-	
-	private String path;
+  @Serial
+  private static final long serialVersionUID = 4359795607415450588L;
 
-	public StopAppMsgIn() {
-	}
-	
-	public StopAppMsgIn(String path) {
-		this.path = path;
-	}
+  private String path;
 
-	public String getPath() {
-		return path;
-	}
+  public StopAppMsgIn() {}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+  public StopAppMsgIn(String path) {
+    this.path = path;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
 }

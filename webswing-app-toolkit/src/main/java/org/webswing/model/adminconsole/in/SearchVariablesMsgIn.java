@@ -8,73 +8,73 @@ import org.webswing.model.SyncMsg;
 
 public class SearchVariablesMsgIn implements SyncMsg, MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = -51242809130068878L;
+  @Serial
+  private static final long serialVersionUID = -51242809130068878L;
 
-	private String path;
-	private String type;
-	private String search;
-	private String user;
-	private String sessionPoolId;
-	private String correlationId = UUID.randomUUID().toString();
+  private String path;
+  private String type;
+  private String search;
+  private String user;
+  private String sessionPoolId;
+  private String correlationId = UUID.randomUUID().toString();
 
-	public SearchVariablesMsgIn() {
-	}
-	
-	public SearchVariablesMsgIn(String path, String type, String search, String user, String sessionPoolId) {
-		this.path = path;
-		this.type = type;
-		this.search = search;
-		this.user = user;
-		this.sessionPoolId = sessionPoolId;
-	}
+  public SearchVariablesMsgIn() {}
 
-	public String getPath() {
-		return path;
-	}
+  public SearchVariablesMsgIn(String path, String type, String search, String user,
+      String sessionPoolId) {
+    this.path = path;
+    this.type = type;
+    this.search = search;
+    this.user = user;
+    this.sessionPoolId = sessionPoolId;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getSearch() {
-		return search;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setSearch(String search) {
-		this.search = search;
-	}
+  public String getSearch() {
+    return search;
+  }
 
-	public String getUser() {
-		return user;
-	}
+  public void setSearch(String search) {
+    this.search = search;
+  }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+  public String getUser() {
+    return user;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
 
-	public String getSessionPoolId() {
-		return sessionPoolId;
-	}
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
-	public void setSessionPoolId(String sessionPoolId) {
-		this.sessionPoolId = sessionPoolId;
-	}
+  public String getSessionPoolId() {
+    return sessionPoolId;
+  }
+
+  public void setSessionPoolId(String sessionPoolId) {
+    this.sessionPoolId = sessionPoolId;
+  }
 
 }

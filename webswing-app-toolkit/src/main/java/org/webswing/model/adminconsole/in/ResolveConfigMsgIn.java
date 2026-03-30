@@ -8,74 +8,74 @@ import org.webswing.model.SyncMsg;
 
 public class ResolveConfigMsgIn implements SyncMsg, MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = -51242809130068878L;
+  @Serial
+  private static final long serialVersionUID = -51242809130068878L;
 
-	private String path;
-	private String type;
-	private String resolve;
-	private String user;
-	private String sessionPoolId;
-	private String correlationId = UUID.randomUUID().toString();
+  private String path;
+  private String type;
+  private String resolve;
+  private String user;
+  private String sessionPoolId;
+  private String correlationId = UUID.randomUUID().toString();
 
-	public ResolveConfigMsgIn() {
-	}
-	
-	public ResolveConfigMsgIn(String path, String type, String resolve, String user, String sessionPoolId) {
-		super();
-		this.path = path;
-		this.type = type;
-		this.resolve = resolve;
-		this.user = user;
-		this.sessionPoolId = sessionPoolId;
-	}
+  public ResolveConfigMsgIn() {}
 
-	public String getPath() {
-		return path;
-	}
+  public ResolveConfigMsgIn(String path, String type, String resolve, String user,
+      String sessionPoolId) {
+    super();
+    this.path = path;
+    this.type = type;
+    this.resolve = resolve;
+    this.user = user;
+    this.sessionPoolId = sessionPoolId;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getResolve() {
-		return resolve;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setResolve(String resolve) {
-		this.resolve = resolve;
-	}
+  public String getResolve() {
+    return resolve;
+  }
 
-	public String getUser() {
-		return user;
-	}
+  public void setResolve(String resolve) {
+    this.resolve = resolve;
+  }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+  public String getUser() {
+    return user;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
 
-	public String getSessionPoolId() {
-		return sessionPoolId;
-	}
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
-	public void setSessionPoolId(String sessionPoolId) {
-		this.sessionPoolId = sessionPoolId;
-	}
-	
+  public String getSessionPoolId() {
+    return sessionPoolId;
+  }
+
+  public void setSessionPoolId(String sessionPoolId) {
+    this.sessionPoolId = sessionPoolId;
+  }
+
 }

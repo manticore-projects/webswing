@@ -12,20 +12,22 @@ import org.webswing.server.services.security.modules.AbstractSecurityModule;
 
 public class NoAccessSecurityModule extends AbstractSecurityModule<WebswingSecurityModuleConfig> {
 
-	private String msg = WebswingAuthenticationException.NO_ACCESS;
+  private String msg = WebswingAuthenticationException.NO_ACCESS;
 
-	public NoAccessSecurityModule(String msgKey, WebswingSecurityModuleConfig config) {
-		super(config);
-		this.msg = msgKey == null ? this.msg : msgKey;
-	}
+  public NoAccessSecurityModule(String msgKey, WebswingSecurityModuleConfig config) {
+    super(config);
+    this.msg = msgKey == null ? this.msg : msgKey;
+  }
 
-	@Override
-	protected AuthenticatedWebswingUser authenticate(HttpServletRequest request) throws WebswingAuthenticationException {
-		throw new WebswingAuthenticationException("${" + msg + "}");
-	}
+  @Override
+  protected AuthenticatedWebswingUser authenticate(HttpServletRequest request)
+      throws WebswingAuthenticationException {
+    throw new WebswingAuthenticationException("${" + msg + "}");
+  }
 
-	@Override
-	protected void serveLoginPartial(HttpServletRequest request, HttpServletResponse response, WebswingAuthenticationException exception) throws IOException {
-		sendPartialHtml(request, response, "errorPartial.html", exception);
-	}
+  @Override
+  protected void serveLoginPartial(HttpServletRequest request, HttpServletResponse response,
+      WebswingAuthenticationException exception) throws IOException {
+    sendPartialHtml(request, response, "errorPartial.html", exception);
+  }
 }

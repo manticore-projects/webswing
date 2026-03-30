@@ -4,6 +4,6 @@ import org.webswing.server.api.GlobalUrlHandler;
 
 public interface AppPathHandlerFactory {
 
-	AppPathHandler createAppPathHandler(GlobalUrlHandler parent, String path);
-	
+  AppPathHandler createAppPathHandler(GlobalUrlHandler parent, String path);
+
 }

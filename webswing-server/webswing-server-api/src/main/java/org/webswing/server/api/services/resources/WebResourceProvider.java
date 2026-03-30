@@ -4,6 +4,6 @@ import java.net.URL;
 
 public interface WebResourceProvider {
 
-	public abstract URL getWebResource(String resource);
-	
+  public abstract URL getWebResource(String resource);
+
 }

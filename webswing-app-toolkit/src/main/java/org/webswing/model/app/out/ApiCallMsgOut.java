@@ -8,40 +8,40 @@ import org.webswing.model.MsgOut;
 import org.webswing.model.SyncMsg;
 
 public class ApiCallMsgOut implements MsgOut, SyncMsg {
-	
-	public enum ApiMethod {
-		HasRole, IsPermitted
-	}
 
-    @Serial
-    private static final long serialVersionUID = 4470097170102688942L;
-	
-	private String correlationId = UUID.randomUUID().toString();
-	private ApiMethod method;
-	private List<String> args;
+  public enum ApiMethod {
+    HasRole, IsPermitted
+  }
 
-	public ApiMethod getMethod() {
-		return method;
-	}
+  @Serial
+  private static final long serialVersionUID = 4470097170102688942L;
 
-	public void setMethod(ApiMethod method) {
-		this.method = method;
-	}
+  private String correlationId = UUID.randomUUID().toString();
+  private ApiMethod method;
+  private List<String> args;
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public ApiMethod getMethod() {
+    return method;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public void setMethod(ApiMethod method) {
+    this.method = method;
+  }
 
-	public List<String> getArgs() {
-		return args;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
 
-	public void setArgs(List<String> args) {
-		this.args = args;
-	}
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
+
+  public List<String> getArgs() {
+    return args;
+  }
+
+  public void setArgs(List<String> args) {
+    this.args = args;
+  }
 
 }

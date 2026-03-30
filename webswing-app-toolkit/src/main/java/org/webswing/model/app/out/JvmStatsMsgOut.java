@@ -6,43 +6,43 @@ import java.io.Serial;
 
 public class JvmStatsMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 4505813670370834105L;
-	
-	private double heapSize;
-	private double heapSizeUsed;
-	private double cpuUsage;
-	private int edtPingSeconds;
+  @Serial
+  private static final long serialVersionUID = 4505813670370834105L;
 
-	public double getHeapSize() {
-		return heapSize;
-	}
+  private double heapSize;
+  private double heapSizeUsed;
+  private double cpuUsage;
+  private int edtPingSeconds;
 
-	public void setHeapSize(double heapSize) {
-		this.heapSize = heapSize;
-	}
+  public double getHeapSize() {
+    return heapSize;
+  }
 
-	public double getHeapSizeUsed() {
-		return heapSizeUsed;
-	}
+  public void setHeapSize(double heapSize) {
+    this.heapSize = heapSize;
+  }
 
-	public void setHeapSizeUsed(double heapSizeUsed) {
-		this.heapSizeUsed = heapSizeUsed;
-	}
+  public double getHeapSizeUsed() {
+    return heapSizeUsed;
+  }
 
-	public double getCpuUsage() {
-		return cpuUsage;
-	}
+  public void setHeapSizeUsed(double heapSizeUsed) {
+    this.heapSizeUsed = heapSizeUsed;
+  }
 
-	public void setCpuUsage(double cpuUsage) {
-		this.cpuUsage = cpuUsage;
-	}
+  public double getCpuUsage() {
+    return cpuUsage;
+  }
 
-	public void setEdtPingSeconds(int edtPingSeconds) {
-		this.edtPingSeconds = edtPingSeconds;
-	}
+  public void setCpuUsage(double cpuUsage) {
+    this.cpuUsage = cpuUsage;
+  }
 
-	public int getEdtPingSeconds() {
-		return edtPingSeconds;
-	}
+  public void setEdtPingSeconds(int edtPingSeconds) {
+    this.edtPingSeconds = edtPingSeconds;
+  }
+
+  public int getEdtPingSeconds() {
+    return edtPingSeconds;
+  }
 }

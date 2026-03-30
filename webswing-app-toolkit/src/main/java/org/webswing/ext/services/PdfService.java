@@ -10,6 +10,7 @@ import javax.print.attribute.PrintRequestAttributeSet;
 
 public interface PdfService {
 
-    void printToPDF(OutputStream out, Pageable pageable, Printable printable, PrintRequestAttributeSet attribs) throws PrinterException, IOException;
-    
+  void printToPDF(OutputStream out, Pageable pageable, Printable printable,
+      PrintRequestAttributeSet attribs) throws PrinterException, IOException;
+
 }

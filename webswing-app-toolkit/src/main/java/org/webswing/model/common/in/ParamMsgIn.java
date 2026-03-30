@@ -7,26 +7,26 @@ import java.io.Serial;
 
 public class ParamMsgIn implements MsgIn, CommonMsg {
 
-    @Serial
-    private static final long serialVersionUID = 3451224547948314923L;
+  @Serial
+  private static final long serialVersionUID = 3451224547948314923L;
 
-	private String name;
-	private String value;
+  private String name;
+  private String value;
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
 }

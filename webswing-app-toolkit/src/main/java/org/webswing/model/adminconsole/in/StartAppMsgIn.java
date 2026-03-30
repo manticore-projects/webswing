@@ -6,24 +6,23 @@ import java.io.Serial;
 
 public class StartAppMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 4359795607415450588L;
-	
-	private String path;
+  @Serial
+  private static final long serialVersionUID = 4359795607415450588L;
 
-	public StartAppMsgIn() {
-	}
-	
-	public StartAppMsgIn(String path) {
-		this.path = path;
-	}
+  private String path;
 
-	public String getPath() {
-		return path;
-	}
+  public StartAppMsgIn() {}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+  public StartAppMsgIn(String path) {
+    this.path = path;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
 }

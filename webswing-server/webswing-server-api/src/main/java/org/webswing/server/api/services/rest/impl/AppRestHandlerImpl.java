@@ -17,95 +17,96 @@ import org.webswing.util.GitRepositoryState;
 
 public class AppRestHandlerImpl extends AbstractAppRestHandler {
 
-	private static final String default_version = "unresolved";
-	
-	private final PrimaryUrlHandler parent;
-	private final GlobalUrlHandler global;
-	
-	public AppRestHandlerImpl(PrimaryUrlHandler parent, GlobalUrlHandler global) {
-		super(parent);
-		this.parent = parent;
-		this.global = global;
-	}
+  private static final String default_version = "unresolved";
 
-	@Override
-	protected String getPath() {
-		return "rest";
-	}
+  private final PrimaryUrlHandler parent;
+  private final GlobalUrlHandler global;
 
-	@Override
-	public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
-		handleCorsHeaders(req, res);
-		
-		String path = getPathInfo(req);
-		
-		switch (path) {
-			case "/version": {
-				sendContent(res, getVersion());
-				return true;
-			}
-			case "/appicon": {
-				res.setHeader("Cache-Control", "public, max-age=120");
-				res.setContentType("image/png");
-				sendFile(res, getAppIcon());
-				return true;
-			}
-			case "/ping": {
-				res.setStatus(HttpServletResponse.SC_OK);
-				return true;
-			}
-			case "/refreshToken": {
-				if ("OPTIONS".equals(req.getMethod())) {
-					// cors preflight, don't refresh token
-					return true;
-				}
-				
-				parent.refreshToken(req, res);
-				return true;
-			}
-		}
-		
-		return super.serve(req, res);
-	}
-	
-	@Override
-	protected String getVersion() throws WsException {
-		String describe = GitRepositoryState.getInstance().getDescribe();
-		if (describe == null) {
-			return default_version;
-		}
-		return describe;
-	}
-	
-	@Override
-	protected File getAppIcon() throws WsException {
-		File icon = parent.resolveFile(parent.getConfig().getIcon());
-		if (icon == null) {
-			try {
-				icon = new File(AppRestHandlerImpl.class.getClassLoader().getResource("images/java.png").toURI());
-			} catch (URISyntaxException e) {
-				// ignore
-			}
-		}
-		return icon;
-	}
+  public AppRestHandlerImpl(PrimaryUrlHandler parent, GlobalUrlHandler global) {
+    super(parent);
+    this.parent = parent;
+    this.global = global;
+  }
 
-	@Override
-	protected void ping() throws WsException {
-	}
-	
-	@Override
-	protected boolean isOriginAllowed(String header) {
-		if (super.isOriginAllowed(header)) {
-			return true;
-		}
-		
-		String url = VariableSubstitutor.basic().replace(global.getConfig().getAdminConsoleUrl());
-		if (StringUtils.isNotBlank(url) && url.toLowerCase().startsWith("http") && ServerUtil.domainFromUrl(url).equals(header)) {
-			return true;
-		}
-		
-		return false;
-	}
-	
+  @Override
+  protected String getPath() {
+    return "rest";
+  }
+
+  @Override
+  public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
+    handleCorsHeaders(req, res);
+
+    String path = getPathInfo(req);
+
+    switch (path) {
+      case "/version": {
+        sendContent(res, getVersion());
+        return true;
+      }
+      case "/appicon": {
+        res.setHeader("Cache-Control", "public, max-age=120");
+        res.setContentType("image/png");
+        sendFile(res, getAppIcon());
+        return true;
+      }
+      case "/ping": {
+        res.setStatus(HttpServletResponse.SC_OK);
+        return true;
+      }
+      case "/refreshToken": {
+        if ("OPTIONS".equals(req.getMethod())) {
+          // cors preflight, don't refresh token
+          return true;
+        }
+
+        parent.refreshToken(req, res);
+        return true;
+      }
+    }
+
+    return super.serve(req, res);
+  }
+
+  @Override
+  protected String getVersion() throws WsException {
+    String describe = GitRepositoryState.getInstance().getDescribe();
+    if (describe == null) {
+      return default_version;
+    }
+    return describe;
+  }
+
+  @Override
+  protected File getAppIcon() throws WsException {
+    File icon = parent.resolveFile(parent.getConfig().getIcon());
+    if (icon == null) {
+      try {
+        icon = new File(
+            AppRestHandlerImpl.class.getClassLoader().getResource("images/java.png").toURI());
+      } catch (URISyntaxException e) {
+        // ignore
+      }
+    }
+    return icon;
+  }
+
+  @Override
+  protected void ping() throws WsException {}
+
+  @Override
+  protected boolean isOriginAllowed(String header) {
+    if (super.isOriginAllowed(header)) {
+      return true;
+    }
+
+    String url = VariableSubstitutor.basic().replace(global.getConfig().getAdminConsoleUrl());
+    if (StringUtils.isNotBlank(url) && url.toLowerCase().startsWith("http")
+        && ServerUtil.domainFromUrl(url).equals(header)) {
+      return true;
+    }
+
+    return false;
+  }
+
 }

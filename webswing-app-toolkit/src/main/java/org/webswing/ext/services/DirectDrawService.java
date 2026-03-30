@@ -6,19 +6,20 @@ import java.awt.image.VolatileImage;
 
 public interface DirectDrawService {
 
-	Image createImage(int width, int height);
+  Image createImage(int width, int height);
 
-	Image extractWebImage(Image webImage);
+  Image extractWebImage(Image webImage);
 
-	byte[] buildWebImage(Image webImage);
+  byte[] buildWebImage(Image webImage);
 
-	void resetCache();
+  void resetCache();
 
-	boolean isDirty(Image windowDecorationImage);
+  boolean isDirty(Image windowDecorationImage);
 
-	VolatileImage createVolatileImage(int width, int height, ImageCapabilities caps, int transparency);
+  VolatileImage createVolatileImage(int width, int height, ImageCapabilities caps,
+      int transparency);
 
-	void resetImage(Image webImage);
+  void resetImage(Image webImage);
 
-	void resetImageBeforeRepaint(Image webImage);
+  void resetImageBeforeRepaint(Image webImage);
 }

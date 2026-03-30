@@ -4,6 +4,6 @@ import java.util.Set;
 
 public interface WebSocketUrlLoader {
 
-	Set<String> reload();
-	
+  Set<String> reload();
+
 }

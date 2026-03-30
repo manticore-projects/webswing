@@ -9,21 +9,23 @@ import org.webswing.model.appframe.out.AccessibilityMsgOut;
 
 public interface WindowDecoratorTheme {
 
-    public static final String DECORATION_THEME_IMPL_PROP = "org.webswing.window.theme.impl";
+  public static final String DECORATION_THEME_IMPL_PROP = "org.webswing.window.theme.impl";
 
-    public static final String DECORATION_THEME_IMPL_DEFAULT = "org.webswing.theme.DefaultWindowDecoratorTheme";
+  public static final String DECORATION_THEME_IMPL_DEFAULT =
+      "org.webswing.theme.DefaultWindowDecoratorTheme";
 
-    Insets getInsets();
+  Insets getInsets();
 
-    void paintWindowDecoration(Graphics g, Object window, int w, int h);
+  void paintWindowDecoration(Graphics g, Object window, int w, int h);
 
-    WindowActionType getAction(Window w, Point e);
-    
-    /**
-     * Returns AccessibilityMsg for a decoration button if mousePointer is over it, otherwise null.
-     */
-    default AccessibilityMsgOut getAccessible(Window window, WindowActionType action, Point mousePointer) {
-    	return null;
-    }
+  WindowActionType getAction(Window w, Point e);
+
+  /**
+   * Returns AccessibilityMsg for a decoration button if mousePointer is over it, otherwise null.
+   */
+  default AccessibilityMsgOut getAccessible(Window window, WindowActionType action,
+      Point mousePointer) {
+    return null;
+  }
 
 }

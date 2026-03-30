@@ -11,45 +11,42 @@ import org.webswing.toolkit.util.Util;
 
 abstract public class WebFramePeer extends WebWindowPeer implements FramePeer {
 
-	private int state;
+  private int state;
 
-	public WebFramePeer(Frame t) {
-		super(t);
-		state = t.getExtendedState();
-	}
+  public WebFramePeer(Frame t) {
+    super(t);
+    state = t.getExtendedState();
+  }
 
-	public void setMenuBar(MenuBar paramMenuBar) {
-	}
+  public void setMenuBar(MenuBar paramMenuBar) {}
 
-	public void setState(int paramInt) {
-		state = paramInt;
-		if (state == Frame.MAXIMIZED_BOTH) {
-			Util.getWebToolkit().getPaintDispatcher().notifyWindowMaximized((JFrame) target);
-		}
-	}
+  public void setState(int paramInt) {
+    state = paramInt;
+    if (state == Frame.MAXIMIZED_BOTH) {
+      Util.getWebToolkit().getPaintDispatcher().notifyWindowMaximized((JFrame) target);
+    }
+  }
 
-	public int getState() {
-		return state;
-	}
+  public int getState() {
+    return state;
+  }
 
-	public void setMaximizedBounds(Rectangle paramRectangle) {
-	}
+  public void setMaximizedBounds(Rectangle paramRectangle) {}
 
-	public void setBoundsPrivate(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
-	}
+  public void setBoundsPrivate(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {}
 
-	public Rectangle getBoundsPrivate() {
-		return null;
-	}
+  public Rectangle getBoundsPrivate() {
+    return null;
+  }
 
-	public void emulateActivation(boolean b) {
+  public void emulateActivation(boolean b) {
 
-	}
+  }
 
-	@Override
-	public void show() {
-		super.show();
-		setState(state);//maximize if necessary
-	}
+  @Override
+  public void show() {
+    super.show();
+    setState(state);// maximize if necessary
+  }
 
 }

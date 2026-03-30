@@ -5,8 +5,8 @@ import org.webswing.server.api.base.PrimaryUrlHandler;
 
 public interface RestHandlerFactory {
 
-	AbstractGlobalRestHandler createGlobalRestHandler(GlobalUrlHandler parent);
-	
-	AbstractAppRestHandler createAppRestHandler(PrimaryUrlHandler parent, GlobalUrlHandler global);
-	
+  AbstractGlobalRestHandler createGlobalRestHandler(GlobalUrlHandler parent);
+
+  AbstractAppRestHandler createAppRestHandler(PrimaryUrlHandler parent, GlobalUrlHandler global);
+
 }

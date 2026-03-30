@@ -8,9 +8,9 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultStatisticsLoggerServiceImpl implements StatisticsLoggerService {
-	
-	public StatisticsLogger createLogger() {
-		return new DefaultStatisticsLogger();
-	}
-	
+
+  public StatisticsLogger createLogger() {
+    return new DefaultStatisticsLogger();
+  }
+
 }

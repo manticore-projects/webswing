@@ -7,10 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Inherited
 public @interface ConfigFieldVariables {
 
-	VariableSetName value() default VariableSetName.Basic;
+  VariableSetName value() default VariableSetName.Basic;
 
 }

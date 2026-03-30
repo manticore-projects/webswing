@@ -7,24 +7,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Inherited
 public @interface ConfigFieldEditorType {
-	public enum EditorType {
-		String,
-		Number,
-		Boolean,
-		Object,
-		StringList,
-		StringMap,
-		ObjectList,
-		ObjectListAsTable,
-		ObjectMap,
-		Generic;
-	}
+  public enum EditorType {
+    String, Number, Boolean, Object, StringList, StringMap, ObjectList, ObjectListAsTable, ObjectMap, Generic;
+  }
 
-	EditorType editor() default EditorType.Object;
+  EditorType editor() default EditorType.Object;
 
-	String className() default "";
+  String className() default "";
 
 }

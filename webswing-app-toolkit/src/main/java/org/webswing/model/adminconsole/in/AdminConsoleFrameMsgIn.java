@@ -6,187 +6,188 @@ import java.io.Serial;
 
 public class AdminConsoleFrameMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 3253892297375570414L;
+  @Serial
+  private static final long serialVersionUID = 3253892297375570414L;
 
-	private AdminConsoleHandshakeMsgIn handshake;
-	private RecordingRequestMsgIn recordingRequest;
-	private ManageSessionPoolMsgIn manageSessionPool;
-	private ShutdownMsgIn shutdown;
-	private RequestThreadDumpMsgIn requestThreadDump;
-	private GetThreadDumpMsgIn getThreadDump;
-	private GetInstanceCountsStatsWarningsMsgIn getInstanceCountsStatsWarnings;
-	private GetSwingSessionsMsgIn getSwingSessions;
-	private GetServerInfoMsgIn getServerInfo;
-	private ToggleStatisticsLoggingMsgIn toggleStatisticsLogging;
-	private GetConfigMsgIn getConfig;
-	private GetMetaMsgIn getMeta;
-	private ResolveConfigMsgIn resolveConfig;
-	private SaveConfigMsgIn saveConfig;
-	private SearchVariablesMsgIn searchVariables;
-	private StartAppMsgIn startApp;
-	private StopAppMsgIn stopApp;
-	private CreateAppMsgIn createApp;
-	private RemoveAppMsgIn removeApp;
-	private MirrorFrameMsgIn mirrorFrame;
-	
-	public AdminConsoleHandshakeMsgIn getHandshake() {
-		return handshake;
-	}
+  private AdminConsoleHandshakeMsgIn handshake;
+  private RecordingRequestMsgIn recordingRequest;
+  private ManageSessionPoolMsgIn manageSessionPool;
+  private ShutdownMsgIn shutdown;
+  private RequestThreadDumpMsgIn requestThreadDump;
+  private GetThreadDumpMsgIn getThreadDump;
+  private GetInstanceCountsStatsWarningsMsgIn getInstanceCountsStatsWarnings;
+  private GetSwingSessionsMsgIn getSwingSessions;
+  private GetServerInfoMsgIn getServerInfo;
+  private ToggleStatisticsLoggingMsgIn toggleStatisticsLogging;
+  private GetConfigMsgIn getConfig;
+  private GetMetaMsgIn getMeta;
+  private ResolveConfigMsgIn resolveConfig;
+  private SaveConfigMsgIn saveConfig;
+  private SearchVariablesMsgIn searchVariables;
+  private StartAppMsgIn startApp;
+  private StopAppMsgIn stopApp;
+  private CreateAppMsgIn createApp;
+  private RemoveAppMsgIn removeApp;
+  private MirrorFrameMsgIn mirrorFrame;
 
-	public void setHandshake(AdminConsoleHandshakeMsgIn handshake) {
-		this.handshake = handshake;
-	}
+  public AdminConsoleHandshakeMsgIn getHandshake() {
+    return handshake;
+  }
 
-	public RecordingRequestMsgIn getRecordingRequest() {
-		return recordingRequest;
-	}
+  public void setHandshake(AdminConsoleHandshakeMsgIn handshake) {
+    this.handshake = handshake;
+  }
 
-	public void setRecordingRequest(RecordingRequestMsgIn recordingRequest) {
-		this.recordingRequest = recordingRequest;
-	}
+  public RecordingRequestMsgIn getRecordingRequest() {
+    return recordingRequest;
+  }
 
-	public ShutdownMsgIn getShutdown() {
-		return shutdown;
-	}
+  public void setRecordingRequest(RecordingRequestMsgIn recordingRequest) {
+    this.recordingRequest = recordingRequest;
+  }
 
-	public void setShutdown(ShutdownMsgIn shutdown) {
-		this.shutdown = shutdown;
-	}
+  public ShutdownMsgIn getShutdown() {
+    return shutdown;
+  }
 
-	public RequestThreadDumpMsgIn getRequestThreadDump() {
-		return requestThreadDump;
-	}
+  public void setShutdown(ShutdownMsgIn shutdown) {
+    this.shutdown = shutdown;
+  }
 
-	public void setRequestThreadDump(RequestThreadDumpMsgIn requestThreadDump) {
-		this.requestThreadDump = requestThreadDump;
-	}
+  public RequestThreadDumpMsgIn getRequestThreadDump() {
+    return requestThreadDump;
+  }
 
-	public GetThreadDumpMsgIn getGetThreadDump() {
-		return getThreadDump;
-	}
+  public void setRequestThreadDump(RequestThreadDumpMsgIn requestThreadDump) {
+    this.requestThreadDump = requestThreadDump;
+  }
 
-	public void setGetThreadDump(GetThreadDumpMsgIn getThreadDump) {
-		this.getThreadDump = getThreadDump;
-	}
+  public GetThreadDumpMsgIn getGetThreadDump() {
+    return getThreadDump;
+  }
 
-	public GetInstanceCountsStatsWarningsMsgIn getGetInstanceCountsStatsWarnings() {
-		return getInstanceCountsStatsWarnings;
-	}
+  public void setGetThreadDump(GetThreadDumpMsgIn getThreadDump) {
+    this.getThreadDump = getThreadDump;
+  }
 
-	public void setGetInstanceCountsStatsWarnings(GetInstanceCountsStatsWarningsMsgIn getInstanceCountsStatsWarnings) {
-		this.getInstanceCountsStatsWarnings = getInstanceCountsStatsWarnings;
-	}
+  public GetInstanceCountsStatsWarningsMsgIn getGetInstanceCountsStatsWarnings() {
+    return getInstanceCountsStatsWarnings;
+  }
 
-	public GetSwingSessionsMsgIn getGetSwingSessions() {
-		return getSwingSessions;
-	}
+  public void setGetInstanceCountsStatsWarnings(
+      GetInstanceCountsStatsWarningsMsgIn getInstanceCountsStatsWarnings) {
+    this.getInstanceCountsStatsWarnings = getInstanceCountsStatsWarnings;
+  }
 
-	public void setGetSwingSessions(GetSwingSessionsMsgIn getSwingSessions) {
-		this.getSwingSessions = getSwingSessions;
-	}
+  public GetSwingSessionsMsgIn getGetSwingSessions() {
+    return getSwingSessions;
+  }
 
-	public GetServerInfoMsgIn getGetServerInfo() {
-		return getServerInfo;
-	}
+  public void setGetSwingSessions(GetSwingSessionsMsgIn getSwingSessions) {
+    this.getSwingSessions = getSwingSessions;
+  }
 
-	public void setGetServerInfo(GetServerInfoMsgIn getServerInfo) {
-		this.getServerInfo = getServerInfo;
-	}
+  public GetServerInfoMsgIn getGetServerInfo() {
+    return getServerInfo;
+  }
 
-	public ToggleStatisticsLoggingMsgIn getToggleStatisticsLogging() {
-		return toggleStatisticsLogging;
-	}
+  public void setGetServerInfo(GetServerInfoMsgIn getServerInfo) {
+    this.getServerInfo = getServerInfo;
+  }
 
-	public void setToggleStatisticsLogging(ToggleStatisticsLoggingMsgIn toggleStatisticsLogging) {
-		this.toggleStatisticsLogging = toggleStatisticsLogging;
-	}
+  public ToggleStatisticsLoggingMsgIn getToggleStatisticsLogging() {
+    return toggleStatisticsLogging;
+  }
 
-	public GetConfigMsgIn getGetConfig() {
-		return getConfig;
-	}
+  public void setToggleStatisticsLogging(ToggleStatisticsLoggingMsgIn toggleStatisticsLogging) {
+    this.toggleStatisticsLogging = toggleStatisticsLogging;
+  }
 
-	public void setGetConfig(GetConfigMsgIn getConfig) {
-		this.getConfig = getConfig;
-	}
+  public GetConfigMsgIn getGetConfig() {
+    return getConfig;
+  }
 
-	public GetMetaMsgIn getGetMeta() {
-		return getMeta;
-	}
+  public void setGetConfig(GetConfigMsgIn getConfig) {
+    this.getConfig = getConfig;
+  }
 
-	public void setGetMeta(GetMetaMsgIn getMeta) {
-		this.getMeta = getMeta;
-	}
+  public GetMetaMsgIn getGetMeta() {
+    return getMeta;
+  }
 
-	public ResolveConfigMsgIn getResolveConfig() {
-		return resolveConfig;
-	}
+  public void setGetMeta(GetMetaMsgIn getMeta) {
+    this.getMeta = getMeta;
+  }
 
-	public void setResolveConfig(ResolveConfigMsgIn resolveConfig) {
-		this.resolveConfig = resolveConfig;
-	}
+  public ResolveConfigMsgIn getResolveConfig() {
+    return resolveConfig;
+  }
 
-	public SaveConfigMsgIn getSaveConfig() {
-		return saveConfig;
-	}
+  public void setResolveConfig(ResolveConfigMsgIn resolveConfig) {
+    this.resolveConfig = resolveConfig;
+  }
 
-	public void setSaveConfig(SaveConfigMsgIn saveConfig) {
-		this.saveConfig = saveConfig;
-	}
+  public SaveConfigMsgIn getSaveConfig() {
+    return saveConfig;
+  }
 
-	public SearchVariablesMsgIn getSearchVariables() {
-		return searchVariables;
-	}
+  public void setSaveConfig(SaveConfigMsgIn saveConfig) {
+    this.saveConfig = saveConfig;
+  }
 
-	public void setSearchVariables(SearchVariablesMsgIn searchVariables) {
-		this.searchVariables = searchVariables;
-	}
+  public SearchVariablesMsgIn getSearchVariables() {
+    return searchVariables;
+  }
 
-	public StartAppMsgIn getStartApp() {
-		return startApp;
-	}
+  public void setSearchVariables(SearchVariablesMsgIn searchVariables) {
+    this.searchVariables = searchVariables;
+  }
 
-	public void setStartApp(StartAppMsgIn startApp) {
-		this.startApp = startApp;
-	}
+  public StartAppMsgIn getStartApp() {
+    return startApp;
+  }
 
-	public StopAppMsgIn getStopApp() {
-		return stopApp;
-	}
+  public void setStartApp(StartAppMsgIn startApp) {
+    this.startApp = startApp;
+  }
 
-	public void setStopApp(StopAppMsgIn stopApp) {
-		this.stopApp = stopApp;
-	}
+  public StopAppMsgIn getStopApp() {
+    return stopApp;
+  }
 
-	public CreateAppMsgIn getCreateApp() {
-		return createApp;
-	}
+  public void setStopApp(StopAppMsgIn stopApp) {
+    this.stopApp = stopApp;
+  }
 
-	public void setCreateApp(CreateAppMsgIn createApp) {
-		this.createApp = createApp;
-	}
+  public CreateAppMsgIn getCreateApp() {
+    return createApp;
+  }
 
-	public RemoveAppMsgIn getRemoveApp() {
-		return removeApp;
-	}
+  public void setCreateApp(CreateAppMsgIn createApp) {
+    this.createApp = createApp;
+  }
 
-	public void setRemoveApp(RemoveAppMsgIn removeApp) {
-		this.removeApp = removeApp;
-	}
+  public RemoveAppMsgIn getRemoveApp() {
+    return removeApp;
+  }
 
-	public MirrorFrameMsgIn getMirrorFrame() {
-		return mirrorFrame;
-	}
+  public void setRemoveApp(RemoveAppMsgIn removeApp) {
+    this.removeApp = removeApp;
+  }
 
-	public void setMirrorFrame(MirrorFrameMsgIn mirrorFrame) {
-		this.mirrorFrame = mirrorFrame;
-	}
+  public MirrorFrameMsgIn getMirrorFrame() {
+    return mirrorFrame;
+  }
 
-	public ManageSessionPoolMsgIn getManageSessionPool() {
-		return manageSessionPool;
-	}
+  public void setMirrorFrame(MirrorFrameMsgIn mirrorFrame) {
+    this.mirrorFrame = mirrorFrame;
+  }
 
-	public void setManageSessionPool(ManageSessionPoolMsgIn manageSessionPool) {
-		this.manageSessionPool = manageSessionPool;
-	}
+  public ManageSessionPoolMsgIn getManageSessionPool() {
+    return manageSessionPool;
+  }
+
+  public void setManageSessionPool(ManageSessionPoolMsgIn manageSessionPool) {
+    this.manageSessionPool = manageSessionPool;
+  }
 }

@@ -4,6 +4,6 @@ import org.webswing.server.common.datastore.WebswingDataStoreModule;
 
 public interface DataStoreHandler {
 
-	WebswingDataStoreModule getDataStore();
-	
+  WebswingDataStoreModule getDataStore();
+
 }

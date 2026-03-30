@@ -9,24 +9,24 @@ import java.util.Locale;
 
 public class WebInputMethodDescriptor implements InputMethodDescriptor {
 
-    public InputMethod createInputMethod() throws Exception {
-        return new WebInputMethod();
-    }
+  public InputMethod createInputMethod() throws Exception {
+    return new WebInputMethod();
+  }
 
-    public Locale[] getAvailableLocales() throws AWTException {
-        return Locale.getAvailableLocales();
-    }
+  public Locale[] getAvailableLocales() throws AWTException {
+    return Locale.getAvailableLocales();
+  }
 
-    public String getInputMethodDisplayName(Locale inputLocale, Locale displayLanguage) {
-        return "input method display name";
-    }
+  public String getInputMethodDisplayName(Locale inputLocale, Locale displayLanguage) {
+    return "input method display name";
+  }
 
-    public Image getInputMethodIcon(Locale inputLocale) {
-        return null;
-    }
+  public Image getInputMethodIcon(Locale inputLocale) {
+    return null;
+  }
 
-    public boolean hasDynamicLocaleList() {
-        return false;
-    }
+  public boolean hasDynamicLocaleList() {
+    return false;
+  }
 
 }

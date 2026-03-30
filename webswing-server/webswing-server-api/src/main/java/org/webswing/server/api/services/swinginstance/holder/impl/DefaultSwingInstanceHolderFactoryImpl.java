@@ -9,12 +9,11 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultSwingInstanceHolderFactoryImpl implements SwingInstanceHolderFactory {
 
-	@Inject
-	public DefaultSwingInstanceHolderFactoryImpl() {
-	}
+  @Inject
+  public DefaultSwingInstanceHolderFactoryImpl() {}
 
-	@Override
-	public SwingInstanceHolder createInstanceHolder() {
-		return new DefaultSwingInstanceHolderImpl();
-	}
+  @Override
+  public SwingInstanceHolder createInstanceHolder() {
+    return new DefaultSwingInstanceHolderImpl();
+  }
 }

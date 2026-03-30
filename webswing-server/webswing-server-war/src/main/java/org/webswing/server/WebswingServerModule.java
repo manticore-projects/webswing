@@ -45,41 +45,44 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 
 public class WebswingServerModule extends AbstractModule {
-	private static final Logger log = LoggerFactory.getLogger(WebswingServerModule.class);
+  private static final Logger log = LoggerFactory.getLogger(WebswingServerModule.class);
 
-	private final Class<? extends StartupService> startupServiceClass = DefaultStartupServiceImpl.class;
-	
-	@Override
-	protected void configure() {
-		bind(Initializer.class).to(DefaultInitializer.class).asEagerSingleton();
-		bind(ExtensionClassLoader.class).asEagerSingleton();
-		bind(GlobalUrlHandler.class);
+  private final Class<? extends StartupService> startupServiceClass =
+      DefaultStartupServiceImpl.class;
 
-		Multibinder<WebswingService> serviceBinder = Multibinder.newSetBinder(binder(), WebswingService.class);
+  @Override
+  protected void configure() {
+    bind(Initializer.class).to(DefaultInitializer.class).asEagerSingleton();
+    bind(ExtensionClassLoader.class).asEagerSingleton();
+    bind(GlobalUrlHandler.class);
 
-		bind(StartupService.class).to(startupServiceClass);
-		serviceBinder.addBinding().to(DefaultWebSocketServiceImpl.class);
-		serviceBinder.addBinding().to(DefaultConfigurationServiceImpl.class);
-		serviceBinder.addBinding().to(SessionPoolHolderServiceImpl.class);
+    Multibinder<WebswingService> serviceBinder =
+        Multibinder.newSetBinder(binder(), WebswingService.class);
 
-		bind(WebSocketService.class).to(DefaultWebSocketServiceImpl.class);
-		bind(new TypeLiteral<ConfigurationService<SecuredPathConfig>>() {}).to(DefaultConfigurationServiceImpl.class);
-		bind(FileTransferHandlerFactory.class).to(FileTransferHandlerFactoryImpl.class);
-		bind(ResourceHandlerFactory.class).to(DefaultResourceHandlerFactoryImpl.class);
-		bind(AppPathHandlerFactory.class).to(AppPathHandlerFactoryImpl.class);
-		bind(SessionPoolHolderService.class).to(SessionPoolHolderServiceImpl.class);
-		bind(SwingInstanceHolderFactory.class).to(DefaultSwingInstanceHolderFactoryImpl.class);
-		bind(SwingInstanceFactory.class).to(SwingInstanceFactoryImpl.class);
-		bind(StatisticsLoggerService.class).to(DefaultStatisticsLoggerServiceImpl.class);
-		bind(RestHandlerFactory.class).to(RestHandlerFactoryImpl.class);
+    bind(StartupService.class).to(startupServiceClass);
+    serviceBinder.addBinding().to(DefaultWebSocketServiceImpl.class);
+    serviceBinder.addBinding().to(DefaultConfigurationServiceImpl.class);
+    serviceBinder.addBinding().to(SessionPoolHolderServiceImpl.class);
 
-		bind(SecurityManagerService.class).to(SecurityManagerServiceImpl.class);
-		bind(SecurityModuleFactory.class).to(DefaultSecurityModuleFactoryImpl.class);
-		bind(LoginHandlerFactory.class).to(LoginHandlerFactoryImpl.class);
-		
-		requestStaticInjection(BrowserWebSocketConfigurator.class);
-		requestStaticInjection(ApplicationWebSocketConfigurator.class);
-		requestStaticInjection(AdminConsoleWebSocketConfigurator.class);
-	}
+    bind(WebSocketService.class).to(DefaultWebSocketServiceImpl.class);
+    bind(new TypeLiteral<ConfigurationService<SecuredPathConfig>>() {})
+        .to(DefaultConfigurationServiceImpl.class);
+    bind(FileTransferHandlerFactory.class).to(FileTransferHandlerFactoryImpl.class);
+    bind(ResourceHandlerFactory.class).to(DefaultResourceHandlerFactoryImpl.class);
+    bind(AppPathHandlerFactory.class).to(AppPathHandlerFactoryImpl.class);
+    bind(SessionPoolHolderService.class).to(SessionPoolHolderServiceImpl.class);
+    bind(SwingInstanceHolderFactory.class).to(DefaultSwingInstanceHolderFactoryImpl.class);
+    bind(SwingInstanceFactory.class).to(SwingInstanceFactoryImpl.class);
+    bind(StatisticsLoggerService.class).to(DefaultStatisticsLoggerServiceImpl.class);
+    bind(RestHandlerFactory.class).to(RestHandlerFactoryImpl.class);
+
+    bind(SecurityManagerService.class).to(SecurityManagerServiceImpl.class);
+    bind(SecurityModuleFactory.class).to(DefaultSecurityModuleFactoryImpl.class);
+    bind(LoginHandlerFactory.class).to(LoginHandlerFactoryImpl.class);
+
+    requestStaticInjection(BrowserWebSocketConfigurator.class);
+    requestStaticInjection(ApplicationWebSocketConfigurator.class);
+    requestStaticInjection(AdminConsoleWebSocketConfigurator.class);
+  }
 
 }

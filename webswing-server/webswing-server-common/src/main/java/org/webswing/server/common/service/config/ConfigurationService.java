@@ -9,18 +9,19 @@ import org.webswing.server.model.exception.WsException;
 
 public interface ConfigurationService<T> {
 
-	T getConfiguration(String path);
-	
-	List<String> getPaths();
+  T getConfiguration(String path);
 
-	void setConfiguration(String path, Map<String, Object> config) throws Exception;
+  List<String> getPaths();
 
-	void removeConfiguration(String path) throws Exception;
+  void setConfiguration(String path, Map<String, Object> config) throws Exception;
 
-	void registerChangeListener(ConfigurationChangeListener<T> changeListener);
+  void removeConfiguration(String path) throws Exception;
 
-	void removeChangeListener(ConfigurationChangeListener<T> listener);
+  void registerChangeListener(ConfigurationChangeListener<T> changeListener);
 
-	MetaObject describeConfiguration(String string, Map<String, Object> json, ConfigContext ctx) throws WsException;
+  void removeChangeListener(ConfigurationChangeListener<T> listener);
+
+  MetaObject describeConfiguration(String string, Map<String, Object> json, ConfigContext ctx)
+      throws WsException;
 
 }

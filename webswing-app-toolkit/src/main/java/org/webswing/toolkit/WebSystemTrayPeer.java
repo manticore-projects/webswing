@@ -5,9 +5,9 @@ import java.awt.peer.SystemTrayPeer;
 
 public class WebSystemTrayPeer implements SystemTrayPeer {
 
-	@Override
-	public Dimension getTrayIconSize() {
-		return new Dimension(1, 1);
-	}
+  @Override
+  public Dimension getTrayIconSize() {
+    return new Dimension(1, 1);
+  }
 
 }

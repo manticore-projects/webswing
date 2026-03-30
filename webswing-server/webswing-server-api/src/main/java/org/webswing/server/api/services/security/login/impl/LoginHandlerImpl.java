@@ -17,45 +17,46 @@ import org.webswing.server.model.exception.WsException;
 
 public class LoginHandlerImpl extends AbstractUrlHandler implements LoginHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(LoginHandlerImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(LoginHandlerImpl.class);
 
-	public LoginHandlerImpl(UrlHandler parent) {
-		super(parent);
-	}
+  public LoginHandlerImpl(UrlHandler parent) {
+    super(parent);
+  }
 
-	@Override
-	protected String getPath() {
-		return "login";
-	}
+  @Override
+  protected String getPath() {
+    return "login";
+  }
 
-	@Override
-	public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
-		handleCorsHeaders(req, res);
-		try {
-			if ("OPTIONS".equals(req.getMethod())) {
-				return true;//cors preflight, don't forward to security module
-			}
-			WebswingSecuritySubject.get().initLoginSession(req);
-			login(req, res);
-			return true;
-		} catch (Exception e) {
-			log.error("Failed to process login request. " + getFullPathMapping(), e);
-			throw new WsException("Failed to login", e);
-		}
-	}
+  @Override
+  public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
+    handleCorsHeaders(req, res);
+    try {
+      if ("OPTIONS".equals(req.getMethod())) {
+        return true;// cors preflight, don't forward to security module
+      }
+      WebswingSecuritySubject.get().initLoginSession(req);
+      login(req, res);
+      return true;
+    } catch (Exception e) {
+      log.error("Failed to process login request. " + getFullPathMapping(), e);
+      throw new WsException("Failed to login", e);
+    }
+  }
 
-	protected void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		AbstractWebswingUser user = getUser();
-		String path = getPathInfo(req);
-		if (user != null && !path.equals("/")) {
-			getSecurityProvider().get().doServeAuthenticated(user, path, req, resp);
-		} else {
-			try {
-				getSecurityProvider().get().doLogin(req, resp, getSecuredPath());
-			} catch (Exception ux) {
-				log.error("Unexpected authentication error.", ux);
-			}
-		}
-	}
+  protected void login(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    AbstractWebswingUser user = getUser();
+    String path = getPathInfo(req);
+    if (user != null && !path.equals("/")) {
+      getSecurityProvider().get().doServeAuthenticated(user, path, req, resp);
+    } else {
+      try {
+        getSecurityProvider().get().doLogin(req, resp, getSecuredPath());
+      } catch (Exception ux) {
+        log.error("Unexpected authentication error.", ux);
+      }
+    }
+  }
 
 }

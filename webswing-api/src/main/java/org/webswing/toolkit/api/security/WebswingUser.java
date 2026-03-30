@@ -4,18 +4,18 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Representation of user logged-in to Webswing through web interface. 
+ * Representation of user logged-in to Webswing through web interface.
  */
 public interface WebswingUser {
 
-	/**
-	 * @return Unique user id
-	 */
-	String getUserId();
+  /**
+   * @return Unique user id
+   */
+  String getUserId();
 
-	/**
-	 * @return map of user attributes specific to configured security module implementation. 
-	 */
-	Map<String, Serializable> getUserAttributes();
+  /**
+   * @return map of user attributes specific to configured security module implementation.
+   */
+  Map<String, Serializable> getUserAttributes();
 
 }

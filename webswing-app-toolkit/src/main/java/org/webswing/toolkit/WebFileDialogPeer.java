@@ -13,79 +13,77 @@ import javax.swing.filechooser.FileFilter;
 
 abstract public class WebFileDialogPeer extends WebWindowPeer implements FileDialogPeer {
 
-	private FileDialog dialog;
+  private FileDialog dialog;
 
-	@SuppressWarnings("deprecation") private JFileChooser fc = new JFileChooser() {
-		private static final long serialVersionUID = 1L;
+  @SuppressWarnings("deprecation")
+  private JFileChooser fc = new JFileChooser() {
+    private static final long serialVersionUID = 1L;
 
-		public void approveSelection() {
-			super.approveSelection();
-			dialog.setFile(fc.getSelectedFile().getName());
-			dialog.setDirectory(fc.getCurrentDirectory().getPath()+File.separator);
-			dialog.hide();
-		}
+    public void approveSelection() {
+      super.approveSelection();
+      dialog.setFile(fc.getSelectedFile().getName());
+      dialog.setDirectory(fc.getCurrentDirectory().getPath() + File.separator);
+      dialog.hide();
+    }
 
-		public void cancelSelection() {
-			super.cancelSelection();
-			dialog.setFile(null);
-			dialog.hide();
-		}
-	};
+    public void cancelSelection() {
+      super.cancelSelection();
+      dialog.setFile(null);
+      dialog.hide();
+    }
+  };
 
-	public WebFileDialogPeer(FileDialog paramFileDialog) {
-		super(new JDialog());
-		dialog = paramFileDialog;
-		setFile(dialog.getFile());
-		fc.setMultiSelectionEnabled(false);
-	}
+  public WebFileDialogPeer(FileDialog paramFileDialog) {
+    super(new JDialog());
+    dialog = paramFileDialog;
+    setFile(dialog.getFile());
+    fc.setMultiSelectionEnabled(false);
+  }
 
-	@Override
-	public void blockWindows(List<Window> windows) {
-	}
+  @Override
+  public void blockWindows(List<Window> windows) {}
 
-	@Override
-	public void setDirectory(String dir) {
-	}
+  @Override
+  public void setDirectory(String dir) {}
 
-	@Override
-	public void setFile(String file) {
-		if (file != null) {
-			fc.setSelectedFile(new File(file));
-		}
-	}
+  @Override
+  public void setFile(String file) {
+    if (file != null) {
+      fc.setSelectedFile(new File(file));
+    }
+  }
 
-	@Override
-	public void setFilenameFilter(final FilenameFilter filter) {
-		FileFilter ffilter = new FileFilter() {
+  @Override
+  public void setFilenameFilter(final FilenameFilter filter) {
+    FileFilter ffilter = new FileFilter() {
 
-			@Override
-			public String getDescription() {
-				return "filter";
-			}
+      @Override
+      public String getDescription() {
+        return "filter";
+      }
 
-			@Override
-			public boolean accept(File f) {
-				return filter.accept(f.getParentFile(), f.getName());
-			}
-		};
-		fc.setFileFilter(ffilter);
-	}
+      @Override
+      public boolean accept(File f) {
+        return filter.accept(f.getParentFile(), f.getName());
+      }
+    };
+    fc.setFileFilter(ffilter);
+  }
 
-	@Override
-	public void show() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if (dialog.getMode() == FileDialog.LOAD) {
-					fc.showOpenDialog(dialog.getOwner());
-				} else {
-					fc.showSaveDialog(dialog.getOwner());
-				}
-			}
-		}).start();
+  @Override
+  public void show() {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        if (dialog.getMode() == FileDialog.LOAD) {
+          fc.showOpenDialog(dialog.getOwner());
+        } else {
+          fc.showSaveDialog(dialog.getOwner());
+        }
+      }
+    }).start();
 
-	}
+  }
 
-	public void hide() {
-	}
+  public void hide() {}
 }

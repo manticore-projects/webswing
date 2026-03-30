@@ -5,13 +5,13 @@ import org.webswing.server.services.security.api.WebswingSecurityModule;
 
 public interface SecuredPathHandler {
 
-	WebswingSecurityModule get();
+  WebswingSecurityModule get();
 
-	SecuredPathConfig getConfig();
+  SecuredPathConfig getConfig();
 
-	void initConfiguration();
+  void initConfiguration();
 
-	String getPathMapping();
+  String getPathMapping();
 
-	boolean isEnabled();
+  boolean isEnabled();
 }

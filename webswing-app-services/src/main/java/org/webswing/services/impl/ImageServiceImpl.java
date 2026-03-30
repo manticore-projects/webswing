@@ -19,66 +19,69 @@ import com.manticore.tools.FPNGE;
 
 public class ImageServiceImpl implements ImageService {
 
-	private static ImageServiceImpl impl;
-	private WindowDecoratorTheme windowDecorationTheme;
+  private static ImageServiceImpl impl;
+  private WindowDecoratorTheme windowDecorationTheme;
 
-	// find out if to use AVX or SSE encoder
-	private static final boolean HAS_AVX2;
-	static {
-		FPNGEncoder.ENCODER.fpng_init();
-		HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
+  // find out if to use AVX or SSE encoder
+  private static final boolean HAS_AVX2;
+  static {
+    FPNGEncoder.ENCODER.fpng_init();
+    HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
 
-		AppLogger.info( HAS_AVX2 ? "Can use the AVX2 PNG encoder." : "Will use the SSE PNG encoder.");
-	}
+    AppLogger.info(HAS_AVX2 ? "Can use the AVX2 PNG encoder." : "Will use the SSE PNG encoder.");
+  }
 
-	public static ImageServiceImpl getInstance() {
-		if (impl == null) {
-			impl = new ImageServiceImpl();
-		}
-		return impl;
-	}
+  public static ImageServiceImpl getInstance() {
+    if (impl == null) {
+      impl = new ImageServiceImpl();
+    }
+    return impl;
+  }
 
-	public ImageServiceImpl() {
-		try {
-			ClassLoader currentContextClassLoader = Thread.currentThread().getContextClassLoader();
-			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-			IIORegistry.getDefaultInstance().registerApplicationClasspathSpis();
-			Thread.currentThread().setContextClassLoader(currentContextClassLoader);
-		} catch (Exception e) {
-			AppLogger.warn("ImageService:Library for fast image encoding not found. Download the library from http://objectplanet.com/pngencoder/");
-		}
-	}
+  public ImageServiceImpl() {
+    try {
+      ClassLoader currentContextClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+      IIORegistry.getDefaultInstance().registerApplicationClasspathSpis();
+      Thread.currentThread().setContextClassLoader(currentContextClassLoader);
+    } catch (Exception e) {
+      AppLogger.warn(
+          "ImageService:Library for fast image encoding not found. Download the library from http://objectplanet.com/pngencoder/");
+    }
+  }
 
-	public byte[] getPngImage(BufferedImage image) {
-		byte[] result = HAS_AVX2
-			? FPNGE.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2)
-			: FPNGEncoder.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
-		return result;
-	}
+  public byte[] getPngImage(BufferedImage image) {
+    byte[] result = HAS_AVX2 ? FPNGE.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2)
+        : FPNGEncoder.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
+    return result;
+  }
 
-	public WindowDecoratorTheme getWindowDecorationTheme() {
-		if (windowDecorationTheme == null) {
-			this.windowDecorationTheme = Util.instantiateClass(WindowDecoratorTheme.class, WindowDecoratorTheme.DECORATION_THEME_IMPL_PROP, WindowDecoratorTheme.DECORATION_THEME_IMPL_DEFAULT, ImageServiceImpl.class.getClassLoader());
-			if (windowDecorationTheme == null) {
-				System.exit(1);
-			}
-		}
-		return windowDecorationTheme;
-	}
+  public WindowDecoratorTheme getWindowDecorationTheme() {
+    if (windowDecorationTheme == null) {
+      this.windowDecorationTheme = Util.instantiateClass(WindowDecoratorTheme.class,
+          WindowDecoratorTheme.DECORATION_THEME_IMPL_PROP,
+          WindowDecoratorTheme.DECORATION_THEME_IMPL_DEFAULT,
+          ImageServiceImpl.class.getClassLoader());
+      if (windowDecorationTheme == null) {
+        System.exit(1);
+      }
+    }
+    return windowDecorationTheme;
+  }
 
-	@Override
-	public Image readFromDataUrl(String dataUrl) {
-		String encodingPrefix = "base64,";
-		int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
-		byte[] imageData = Base64.decodeBase64(dataUrl.substring(contentStartIndex));
+  @Override
+  public Image readFromDataUrl(String dataUrl) {
+    String encodingPrefix = "base64,";
+    int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
+    byte[] imageData = Base64.decodeBase64(dataUrl.substring(contentStartIndex));
 
-		// create BufferedImage from byteArray
-		BufferedImage inputImage = null;
-		try {
-			inputImage = ImageIO.read(new ByteArrayInputStream(imageData));
-		} catch (IOException e) {
-			AppLogger.error("ImageService: reading image from dataUrl failed", e);
-		}
-		return inputImage;
-	}
+    // create BufferedImage from byteArray
+    BufferedImage inputImage = null;
+    try {
+      inputImage = ImageIO.read(new ByteArrayInputStream(imageData));
+    } catch (IOException e) {
+      AppLogger.error("ImageService: reading image from dataUrl failed", e);
+    }
+    return inputImage;
+  }
 }

@@ -2,38 +2,38 @@ package org.webswing.toolkit.api.action;
 
 public class WebActionEvent {
 
-	private String actionName;
-	private String data;
-	private byte[] binaryData;
-	
-	public WebActionEvent(String actionName, String data, byte[] binaryData) {
-		this.actionName = actionName;
-		this.data = data;
-		this.binaryData = binaryData;
-	}
+  private String actionName;
+  private String data;
+  private byte[] binaryData;
 
-	public String getActionName() {
-		return actionName;
-	}
+  public WebActionEvent(String actionName, String data, byte[] binaryData) {
+    this.actionName = actionName;
+    this.data = data;
+    this.binaryData = binaryData;
+  }
 
-	public void setActionName(String actionName) {
-		this.actionName = actionName;
-	}
+  public String getActionName() {
+    return actionName;
+  }
 
-	public String getData() {
-		return data;
-	}
+  public void setActionName(String actionName) {
+    this.actionName = actionName;
+  }
 
-	public void setData(String data) {
-		this.data = data;
-	}
+  public String getData() {
+    return data;
+  }
 
-	public byte[] getBinaryData() {
-		return binaryData;
-	}
+  public void setData(String data) {
+    this.data = data;
+  }
 
-	public void setBinaryData(byte[] binaryData) {
-		this.binaryData = binaryData;
-	}
-	
+  public byte[] getBinaryData() {
+    return binaryData;
+  }
+
+  public void setBinaryData(byte[] binaryData) {
+    this.binaryData = binaryData;
+  }
+
 }

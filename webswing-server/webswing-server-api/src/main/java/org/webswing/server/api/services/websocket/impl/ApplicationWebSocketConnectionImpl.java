@@ -36,143 +36,163 @@ import org.webswing.server.common.util.ProtoMapper;
 
 import com.google.inject.Inject;
 
-@ServerEndpoint(value = "/{appPath}/async/app-bin", configurator = ApplicationWebSocketConfigurator.class)
-public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnection implements ApplicationWebSocketConnection {
-	
-	private static final Logger log = LoggerFactory.getLogger(ApplicationWebSocketConnectionImpl.class);
+@ServerEndpoint(value = "/{appPath}/async/app-bin",
+    configurator = ApplicationWebSocketConfigurator.class)
+public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnection
+    implements ApplicationWebSocketConnection {
 
-	private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_SERVER_APP_FRAME);
-	private final SessionPoolHolderService sessionPoolHolderService;
+  private static final Logger log =
+      LoggerFactory.getLogger(ApplicationWebSocketConnectionImpl.class);
 
-	private String instanceId;
-	private String sessionPoolId;
-	
-	private ConnectedSwingInstance instance;
-	private boolean secured;
+  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_SERVER_APP_FRAME);
+  private final SessionPoolHolderService sessionPoolHolderService;
 
-	@Inject
-	public ApplicationWebSocketConnectionImpl(SessionPoolHolderService sessionPoolHolderService) {
-		this.sessionPoolHolderService = sessionPoolHolderService;
-	}
+  private String instanceId;
+  private String sessionPoolId;
 
-	@OnOpen
-	public void onOpen(Session session, EndpointConfig config, @PathParam("appPath") String appPath) {
-		super.onOpen(session, config);
-		
-		this.instanceId = (String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_INSTANCE_ID);
-		this.sessionPoolId = (String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_SESSION_POOL_ID);
-		boolean reconnect = Boolean.parseBoolean((String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_RECONNECT));
-		
-		if (!sessionPoolHolderService.connectApplication(this, reconnect)) {
-			log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId [" + sessionPoolId + "]. Waiting for reconnect from browser.");
-		}else{
-			log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId [" + sessionPoolId + "].");
-		}
-	}
-	
-	@OnMessage
-	public void onMessage(Session session, byte[] bytes, boolean last) {
-		try {
-			Pair<Msg, Integer> frameWithLength = super.getCompleteMessage(bytes, last);
-			if (frameWithLength == null) {
-				// incomplete
-				return;
-			}
-			
-			AppToServerFrameMsgOut msgOut = (AppToServerFrameMsgOut) frameWithLength.getKey();
-		
-			if (msgOut.getHandshake() != null) {
-				AppHandshakeMsgOut handshake = msgOut.getHandshake();
-				secured = validateHandshakeToken(handshake.getSecretMessage());
-			} else if (!secured) {
-				// we must get handshake first, otherwise we disconnect
-				disconnect(CloseCodes.CANNOT_ACCEPT, "Connection not secured!");
-				return;
-			} else {
-				if (instance == null) {
-					// this should not happen, since we disconnect if we cannot get a connected instance in onOpen
-					log.warn("Could not handle message from application, instance not initialized for instanceId [" + instanceId + "]!");
-					return;
-				}
-				
-				instance.handleAppMessage(msgOut);
-			}
-		} catch (IOException e) {
-			log.error("Could not decode proto message from app [" + instanceId + "]!", e);
-		}
-	}
-	
-	@OnMessage
-	public void onPong(Session session, PongMessage pongMessage) {
-		super.onPong(session, pongMessage, log);
-	}
-	
-	@OnClose
-	public void onClose(Session session, CloseReason closeReason) {
-		if (session != null) {
-			log.info("Websocket closed to app, instance [" + instanceId + "]" 
-					+ (closeReason != null ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason [" + closeReason.getReasonPhrase() + "]!" : ""));
-		}
-		if (instance != null) {
-			instance.applicationDisconnected(closeReason.getReasonPhrase());
-		}
-	}
-	
-	@OnError
-	public void onError(Session session, Throwable t) {
-		log.error("Websocket error from app connection, session [" + (session==null?null:session.getId()) + "], instanceId ["+instanceId+"], sessionPool ["+sessionPoolId+"] "+ t.getMessage());
-		log.debug(t.getMessage(), t);
-	}
+  private ConnectedSwingInstance instance;
+  private boolean secured;
 
-	@Override
-	public void sendMessage(ServerToAppFrameMsgIn msgIn) {
-		sendMessage(msgIn, true);
-	}
-	
-	@Override
-	public void sendMessage(ServerToAppFrameMsgIn msgIn, boolean logStats) {
-		try {
-			super.sendMessage(protoMapper.encodeProto(msgIn));
-		} catch (IOException e) {
-			log.error("Failed to send msg to application, session [" + (session==null?null:session.getId()) + "], instanceId ["+instanceId+"], sessionPool ["+sessionPoolId+"] "+ e.getMessage());
-			log.debug(e.getMessage(), e);
-		}
-	}
-	
-	@Override
-	protected Msg decodeIncomingMessage(byte[] bytes) throws IOException {
-		return protoMapper.decodeProto(bytes, AppToServerFrameMsgOut.class);
-	}
-	
-	@Override
-	public void instanceConnected(ConnectedSwingInstance instance) {
-		this.instance = instance;
-	}
-	
-	private void disconnect(CloseCode closeCode, String reason) {
-		if (session != null && session.isOpen()) {
-			try {
-				session.close(new CloseReason(closeCode, reason));
-			} catch (IOException e) {
-				log.error("Failed to disconnect application connection, session [" + session.getId() + "], instanceId ["+instanceId+"], sessionPool ["+sessionPoolId+"] "+ e.getMessage());
-				log.debug(e.getMessage(),e);
-			}
-		}
-	}
-	
-	@Override
-	public void disconnect(String reason) {
-		disconnect(CloseCodes.NORMAL_CLOSURE, reason);
-	}
-	
-	@Override
-	public String getInstanceId() {
-		return instanceId;
-	}
-	
-	@Override
-	public String getSessionPoolId() {
-		return sessionPoolId;
-	}
-	
+  @Inject
+  public ApplicationWebSocketConnectionImpl(SessionPoolHolderService sessionPoolHolderService) {
+    this.sessionPoolHolderService = sessionPoolHolderService;
+  }
+
+  @OnOpen
+  public void onOpen(Session session, EndpointConfig config, @PathParam("appPath") String appPath) {
+    super.onOpen(session, config);
+
+    this.instanceId =
+        (String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_INSTANCE_ID);
+    this.sessionPoolId = (String) config.getUserProperties()
+        .get(ApplicationWebSocketConfigurator.ATTR_SESSION_POOL_ID);
+    boolean reconnect = Boolean.parseBoolean(
+        (String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_RECONNECT));
+
+    if (!sessionPoolHolderService.connectApplication(this, reconnect)) {
+      log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId ["
+          + sessionPoolId + "]. Waiting for reconnect from browser.");
+    } else {
+      log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId ["
+          + sessionPoolId + "].");
+    }
+  }
+
+  @OnMessage
+  public void onMessage(Session session, byte[] bytes, boolean last) {
+    try {
+      Pair<Msg, Integer> frameWithLength = super.getCompleteMessage(bytes, last);
+      if (frameWithLength == null) {
+        // incomplete
+        return;
+      }
+
+      AppToServerFrameMsgOut msgOut = (AppToServerFrameMsgOut) frameWithLength.getKey();
+
+      if (msgOut.getHandshake() != null) {
+        AppHandshakeMsgOut handshake = msgOut.getHandshake();
+        secured = validateHandshakeToken(handshake.getSecretMessage());
+      } else if (!secured) {
+        // we must get handshake first, otherwise we disconnect
+        disconnect(CloseCodes.CANNOT_ACCEPT, "Connection not secured!");
+        return;
+      } else {
+        if (instance == null) {
+          // this should not happen, since we disconnect if we cannot get a connected instance in
+          // onOpen
+          log.warn(
+              "Could not handle message from application, instance not initialized for instanceId ["
+                  + instanceId + "]!");
+          return;
+        }
+
+        instance.handleAppMessage(msgOut);
+      }
+    } catch (IOException e) {
+      log.error("Could not decode proto message from app [" + instanceId + "]!", e);
+    }
+  }
+
+  @OnMessage
+  public void onPong(Session session, PongMessage pongMessage) {
+    super.onPong(session, pongMessage, log);
+  }
+
+  @OnClose
+  public void onClose(Session session, CloseReason closeReason) {
+    if (session != null) {
+      log.info("Websocket closed to app, instance [" + instanceId + "]"
+          + (closeReason != null
+              ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
+                  + closeReason.getReasonPhrase() + "]!"
+              : ""));
+    }
+    if (instance != null) {
+      instance.applicationDisconnected(closeReason.getReasonPhrase());
+    }
+  }
+
+  @OnError
+  public void onError(Session session, Throwable t) {
+    log.error("Websocket error from app connection, session ["
+        + (session == null ? null : session.getId()) + "], instanceId [" + instanceId
+        + "], sessionPool [" + sessionPoolId + "] " + t.getMessage());
+    log.debug(t.getMessage(), t);
+  }
+
+  @Override
+  public void sendMessage(ServerToAppFrameMsgIn msgIn) {
+    sendMessage(msgIn, true);
+  }
+
+  @Override
+  public void sendMessage(ServerToAppFrameMsgIn msgIn, boolean logStats) {
+    try {
+      super.sendMessage(protoMapper.encodeProto(msgIn));
+    } catch (IOException e) {
+      log.error("Failed to send msg to application, session ["
+          + (session == null ? null : session.getId()) + "], instanceId [" + instanceId
+          + "], sessionPool [" + sessionPoolId + "] " + e.getMessage());
+      log.debug(e.getMessage(), e);
+    }
+  }
+
+  @Override
+  protected Msg decodeIncomingMessage(byte[] bytes) throws IOException {
+    return protoMapper.decodeProto(bytes, AppToServerFrameMsgOut.class);
+  }
+
+  @Override
+  public void instanceConnected(ConnectedSwingInstance instance) {
+    this.instance = instance;
+  }
+
+  private void disconnect(CloseCode closeCode, String reason) {
+    if (session != null && session.isOpen()) {
+      try {
+        session.close(new CloseReason(closeCode, reason));
+      } catch (IOException e) {
+        log.error("Failed to disconnect application connection, session [" + session.getId()
+            + "], instanceId [" + instanceId + "], sessionPool [" + sessionPoolId + "] "
+            + e.getMessage());
+        log.debug(e.getMessage(), e);
+      }
+    }
+  }
+
+  @Override
+  public void disconnect(String reason) {
+    disconnect(CloseCodes.NORMAL_CLOSURE, reason);
+  }
+
+  @Override
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  @Override
+  public String getSessionPoolId() {
+    return sessionPoolId;
+  }
+
 }

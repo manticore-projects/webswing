@@ -12,20 +12,20 @@ import java.util.List;
 /**
  * Created by vikto on 06-Feb-17.
  */
-@ConfigFieldOrder({ "username", })
+@ConfigFieldOrder({"username",})
 public interface EmbededUserEntry extends Config {
 
-	@ConfigField(label = "Username")
-	@ConfigFieldVariables
-	String getUsername();
+  @ConfigField(label = "Username")
+  @ConfigFieldVariables
+  String getUsername();
 
-	@ConfigField(label = "Password")
-	@ConfigFieldVariables
-	String getPassword();
+  @ConfigField(label = "Password")
+  @ConfigFieldVariables
+  String getPassword();
 
-	@ConfigField(label = "Roles")
-	@ConfigFieldDefaultValueObject(ArrayList.class)
-	@ConfigFieldVariables
-	List<String> getRoles();
+  @ConfigField(label = "Roles")
+  @ConfigFieldDefaultValueObject(ArrayList.class)
+  @ConfigFieldVariables
+  List<String> getRoles();
 
 }

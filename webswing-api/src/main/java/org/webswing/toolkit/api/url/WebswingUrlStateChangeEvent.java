@@ -5,19 +5,19 @@ package org.webswing.toolkit.api.url;
  */
 public interface WebswingUrlStateChangeEvent {
 
-	/**
-	 * @return the new url in full form
-	 */
-	String getFullUrl();
+  /**
+   * @return the new url in full form
+   */
+  String getFullUrl();
 
-	/**
-	 * @return URL state parsed from the hash fragmet part of URL
-	 */
-	WebswingUrlState getState();
+  /**
+   * @return URL state parsed from the hash fragmet part of URL
+   */
+  WebswingUrlState getState();
 
 
-	/**
-	 * @return Previous Url state
-	 */
-	WebswingUrlState getOldState();
+  /**
+   * @return Previous Url state
+   */
+  WebswingUrlState getOldState();
 }

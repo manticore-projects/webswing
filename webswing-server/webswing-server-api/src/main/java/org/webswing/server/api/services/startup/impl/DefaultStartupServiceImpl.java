@@ -14,31 +14,31 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultStartupServiceImpl implements StartupService {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultStartupServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultStartupServiceImpl.class);
 
-	Set<WebswingService> services;
+  Set<WebswingService> services;
 
-	@Inject
-	public DefaultStartupServiceImpl(Set<WebswingService> services) {
-		this.services = services;
-	}
+  @Inject
+  public DefaultStartupServiceImpl(Set<WebswingService> services) {
+    this.services = services;
+  }
 
-	public void start() throws WsInitException {
-		try {
-			for (WebswingService service : services) {
-				log.info("Starting service {}", service.getClass().getSimpleName());
-				service.start();
-			}
-		} catch (WsInitException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new WsInitException("Failed to start Webswing. " + e.getMessage(), e);
-		}
-	}
+  public void start() throws WsInitException {
+    try {
+      for (WebswingService service : services) {
+        log.info("Starting service {}", service.getClass().getSimpleName());
+        service.start();
+      }
+    } catch (WsInitException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new WsInitException("Failed to start Webswing. " + e.getMessage(), e);
+    }
+  }
 
-	public void stop() {
-		for (WebswingService service : services) {
-			service.stop();
-		}
-	}
+  public void stop() {
+    for (WebswingService service : services) {
+      service.stop();
+    }
+  }
 }

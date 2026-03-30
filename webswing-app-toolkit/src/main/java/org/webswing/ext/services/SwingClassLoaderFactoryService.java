@@ -4,6 +4,6 @@ import java.net.URL;
 
 public interface SwingClassLoaderFactoryService {
 
-    ClassLoader createSwingClassLoader(URL[] toArray, ClassLoader parent);
+  ClassLoader createSwingClassLoader(URL[] toArray, ClassLoader parent);
 
 }

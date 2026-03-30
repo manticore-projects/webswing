@@ -5,14 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class WebswingLoginSessionTokenClaim {
 
-	private Map<String, Object> attributes = new ConcurrentHashMap<>();
+  private Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-	public Map<String, Object> getAttributes() {
-		return attributes;
-	}
+  public Map<String, Object> getAttributes() {
+    return attributes;
+  }
 
-	public void setAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
-	}
+  public void setAttributes(Map<String, Object> attributes) {
+    this.attributes = attributes;
+  }
 
 }

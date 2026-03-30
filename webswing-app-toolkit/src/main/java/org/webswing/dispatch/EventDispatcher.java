@@ -10,26 +10,27 @@ import org.webswing.model.appframe.in.AppFrameMsgIn;
 import org.webswing.toolkit.WebDragSourceContextPeer;
 
 public interface EventDispatcher {
-	
-	void dispatchEvent(final AppFrameMsgIn msg);
 
-	void dispatchEventInSwing(final Component c, final AWTEvent e);
+  void dispatchEvent(final AppFrameMsgIn msg);
 
-	Point getLastMousePosition();
+  void dispatchEventInSwing(final Component c, final AWTEvent e);
 
-	boolean isDndInProgress();
+  Point getLastMousePosition();
 
-	void dragStart(WebDragSourceContextPeer peer, Transferable transferable, int actions, long[] formats);
+  boolean isDndInProgress();
 
-	boolean isJavaFXdragStarted();
+  void dragStart(WebDragSourceContextPeer peer, Transferable transferable, int actions,
+      long[] formats);
 
-	void setJavaFXdragStarted(boolean b);
+  boolean isJavaFXdragStarted();
 
-	void onMessage(ServerToAppFrameMsgIn msg, AppFrameMsgIn frame);
+  void setJavaFXdragStarted(boolean b);
 
-	long getLastEventTimestamp(boolean userEventOnly);
+  void onMessage(ServerToAppFrameMsgIn msg, AppFrameMsgIn frame);
 
-	void resetLastEventTimestamp();
-	
-	void resetLastMessageTimestamp();
+  long getLastEventTimestamp(boolean userEventOnly);
+
+  void resetLastEventTimestamp();
+
+  void resetLastMessageTimestamp();
 }

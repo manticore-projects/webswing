@@ -7,11 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Inherited
 @SuppressWarnings("rawtypes")
 public @interface ConfigFieldPresets {
 
-	String[] value() default {};
-	Class<? extends Enum> enumClass() default Enum.class;
+  String[] value() default {};
+
+  Class<? extends Enum> enumClass() default Enum.class;
 }

@@ -7,9 +7,9 @@ import org.webswing.common.WindowDecoratorTheme;
 
 public interface ImageService {
 
-	byte[] getPngImage(BufferedImage image);
+  byte[] getPngImage(BufferedImage image);
 
-	WindowDecoratorTheme getWindowDecorationTheme();
+  WindowDecoratorTheme getWindowDecorationTheme();
 
-	Image readFromDataUrl(String img);
+  Image readFromDataUrl(String img);
 }

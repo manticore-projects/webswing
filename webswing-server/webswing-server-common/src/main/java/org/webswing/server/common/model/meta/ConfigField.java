@@ -7,13 +7,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Inherited
 public @interface ConfigField {
 
-	ConfigGroup tab() default ConfigGroup.General;
+  ConfigGroup tab() default ConfigGroup.General;
 
-	String label() default "";
+  String label() default "";
 
-	String description() default "";
+  String description() default "";
 }

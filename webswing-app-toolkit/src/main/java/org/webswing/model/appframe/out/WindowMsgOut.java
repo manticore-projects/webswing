@@ -8,212 +8,199 @@ import org.webswing.model.MsgOut;
 
 public class WindowMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -523823816533325842L;
-	
-	public enum WindowType {
-		basic,
-		html,
-		internal,
-		internalHtml,
-		internalWrapper;
-	}
-	
-	public enum WindowClassType {
-		other,
-		Window,
-		JWindow,
-		Dialog,
-		JDialog,
-		Frame,
-		JFrame;
-	}
-	
-	public enum DockMode {
-		none,
-		dockable,
-		autoUndock
-	}
+  @Serial
+  private static final long serialVersionUID = -523823816533325842L;
 
-	public enum DockState {
-		docked,
-		undocked
-	}
-	
-	private String id;
-	private List<WindowPartialContentMsgOut> content;
-	private byte[] directDraw;
-	private String title;
-	private String name;
-	private Integer posX;
-	private Integer posY;
-	private Integer width;
-	private Integer height;
-	private WindowType type = WindowType.basic;
-	private boolean modalBlocked;
-	private String ownerId;
-	private Integer state;
-	private List<WindowMsgOut> internalWindows;
-	private DockMode dockMode = DockMode.none;
-	private DockState dockState = DockState.docked;
-	private WindowClassType classType = WindowClassType.other;
+  public enum WindowType {
+    basic, html, internal, internalHtml, internalWrapper;
+  }
 
-	public WindowMsgOut() {
-	}
-	
-	public WindowMsgOut(String id, String name, Point location, Integer width, Integer height, WindowType type, boolean modalBlocked, String ownerId) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.posX = location.x;
-		this.posY = location.y;
-		this.width = width;
-		this.height = height;
-		this.type = type;
-		this.modalBlocked = modalBlocked;
-		this.ownerId = ownerId;
-	}
-	
-	public void setBounds(Integer posX, Integer posY, Integer width, Integer height) {
-		this.posX = posX;
-		this.posY = posY;
-		this.width = width;
-		this.height = height;
-	}
+  public enum WindowClassType {
+    other, Window, JWindow, Dialog, JDialog, Frame, JFrame;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public enum DockMode {
+    none, dockable, autoUndock
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public enum DockState {
+    docked, undocked
+  }
 
-	public List<WindowPartialContentMsgOut> getContent() {
-		return content;
-	}
+  private String id;
+  private List<WindowPartialContentMsgOut> content;
+  private byte[] directDraw;
+  private String title;
+  private String name;
+  private Integer posX;
+  private Integer posY;
+  private Integer width;
+  private Integer height;
+  private WindowType type = WindowType.basic;
+  private boolean modalBlocked;
+  private String ownerId;
+  private Integer state;
+  private List<WindowMsgOut> internalWindows;
+  private DockMode dockMode = DockMode.none;
+  private DockState dockState = DockState.docked;
+  private WindowClassType classType = WindowClassType.other;
 
-	public void setContent(List<WindowPartialContentMsgOut> content) {
-		this.content = content;
-	}
+  public WindowMsgOut() {}
 
-	public byte[] getDirectDraw() {
-		return directDraw;
-	}
+  public WindowMsgOut(String id, String name, Point location, Integer width, Integer height,
+      WindowType type, boolean modalBlocked, String ownerId) {
+    super();
+    this.id = id;
+    this.name = name;
+    this.posX = location.x;
+    this.posY = location.y;
+    this.width = width;
+    this.height = height;
+    this.type = type;
+    this.modalBlocked = modalBlocked;
+    this.ownerId = ownerId;
+  }
 
-	public void setDirectDraw(byte[] directDraw) {
-		this.directDraw = directDraw;
-	}
+  public void setBounds(Integer posX, Integer posY, Integer width, Integer height) {
+    this.posX = posX;
+    this.posY = posY;
+    this.width = width;
+    this.height = height;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public List<WindowPartialContentMsgOut> getContent() {
+    return content;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setContent(List<WindowPartialContentMsgOut> content) {
+    this.content = content;
+  }
 
-	public Integer getPosX() {
-		return posX;
-	}
+  public byte[] getDirectDraw() {
+    return directDraw;
+  }
 
-	public void setPosX(Integer posX) {
-		this.posX = posX;
-	}
+  public void setDirectDraw(byte[] directDraw) {
+    this.directDraw = directDraw;
+  }
 
-	public Integer getPosY() {
-		return posY;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setPosY(Integer posY) {
-		this.posY = posY;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public Integer getWidth() {
-		return width;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public Integer getHeight() {
-		return height;
-	}
+  public Integer getPosX() {
+    return posX;
+  }
 
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
+  public void setPosX(Integer posX) {
+    this.posX = posX;
+  }
 
-	public boolean isModalBlocked() {
-		return modalBlocked;
-	}
+  public Integer getPosY() {
+    return posY;
+  }
 
-	public void setModalBlocked(boolean modalBlocked) {
-		this.modalBlocked = modalBlocked;
-	}
+  public void setPosY(Integer posY) {
+    this.posY = posY;
+  }
 
-	public String getOwnerId() {
-		return ownerId;
-	}
+  public Integer getWidth() {
+    return width;
+  }
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
+  public void setWidth(Integer width) {
+    this.width = width;
+  }
 
-	public Integer getState() {
-		return state;
-	}
+  public Integer getHeight() {
+    return height;
+  }
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+  public void setHeight(Integer height) {
+    this.height = height;
+  }
 
-	public WindowType getType() {
-		return type;
-	}
+  public boolean isModalBlocked() {
+    return modalBlocked;
+  }
 
-	public void setType(WindowType type) {
-		this.type = type;
-	}
+  public void setModalBlocked(boolean modalBlocked) {
+    this.modalBlocked = modalBlocked;
+  }
 
-	public List<WindowMsgOut> getInternalWindows() {
-		return internalWindows;
-	}
+  public String getOwnerId() {
+    return ownerId;
+  }
 
-	public void setInternalWindows(List<WindowMsgOut> internalWindows) {
-		this.internalWindows = internalWindows;
-	}
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
 
-	public DockMode getDockMode() {
-		return dockMode;
-	}
+  public Integer getState() {
+    return state;
+  }
 
-	public void setDockMode(DockMode dockMode) {
-		this.dockMode = dockMode;
-	}
+  public void setState(Integer state) {
+    this.state = state;
+  }
 
-	public WindowClassType getClassType() {
-		return classType;
-	}
+  public WindowType getType() {
+    return type;
+  }
 
-	public void setClassType(WindowClassType classType) {
-		this.classType = classType;
-	}
+  public void setType(WindowType type) {
+    this.type = type;
+  }
 
-	public DockState getDockState() {
-		return dockState;
-	}
+  public List<WindowMsgOut> getInternalWindows() {
+    return internalWindows;
+  }
 
-	public void setDockState(DockState dockState) {
-		this.dockState = dockState;
-	}
+  public void setInternalWindows(List<WindowMsgOut> internalWindows) {
+    this.internalWindows = internalWindows;
+  }
+
+  public DockMode getDockMode() {
+    return dockMode;
+  }
+
+  public void setDockMode(DockMode dockMode) {
+    this.dockMode = dockMode;
+  }
+
+  public WindowClassType getClassType() {
+    return classType;
+  }
+
+  public void setClassType(WindowClassType classType) {
+    this.classType = classType;
+  }
+
+  public DockState getDockState() {
+    return dockState;
+  }
+
+  public void setDockState(DockState dockState) {
+    this.dockState = dockState;
+  }
 }

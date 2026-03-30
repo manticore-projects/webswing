@@ -4,8 +4,8 @@ import org.webswing.server.api.base.UrlHandler;
 
 public interface LoginHandlerFactory {
 
-	LoginHandler createLoginHandler(UrlHandler parent);
+  LoginHandler createLoginHandler(UrlHandler parent);
 
-	LogoutHandler createLogoutHandler(UrlHandler parent);
+  LogoutHandler createLogoutHandler(UrlHandler parent);
 
 }

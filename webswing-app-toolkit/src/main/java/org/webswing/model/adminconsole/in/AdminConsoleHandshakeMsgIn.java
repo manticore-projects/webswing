@@ -6,17 +6,17 @@ import java.io.Serial;
 
 public class AdminConsoleHandshakeMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 7531089764777425520L;
-	
-	private String secretMessage;
+  @Serial
+  private static final long serialVersionUID = 7531089764777425520L;
 
-	public String getSecretMessage() {
-		return secretMessage;
-	}
+  private String secretMessage;
 
-	public void setSecretMessage(String secretMessage) {
-		this.secretMessage = secretMessage;
-	}
-	
+  public String getSecretMessage() {
+    return secretMessage;
+  }
+
+  public void setSecretMessage(String secretMessage) {
+    this.secretMessage = secretMessage;
+  }
+
 }

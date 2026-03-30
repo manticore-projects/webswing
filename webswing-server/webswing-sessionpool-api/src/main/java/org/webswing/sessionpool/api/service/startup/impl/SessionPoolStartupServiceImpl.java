@@ -14,31 +14,31 @@ import com.google.inject.Singleton;
 @Singleton
 public class SessionPoolStartupServiceImpl implements SessionPoolStartupService {
 
-	private static final Logger log = LoggerFactory.getLogger(SessionPoolStartupServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(SessionPoolStartupServiceImpl.class);
 
-	Set<SessionPoolService> services;
+  Set<SessionPoolService> services;
 
-	@Inject
-	public SessionPoolStartupServiceImpl(Set<SessionPoolService> services) {
-		this.services = services;
-	}
+  @Inject
+  public SessionPoolStartupServiceImpl(Set<SessionPoolService> services) {
+    this.services = services;
+  }
 
-	public void start() throws WsInitException {
-		try {
-			for (SessionPoolService service : services) {
-				log.info("Starting session pool service {}", service.getClass().getSimpleName());
-				service.start();
-			}
-		} catch (WsInitException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new WsInitException("Failed to start Webswing Session Pool. " + e.getMessage(), e);
-		}
-	}
+  public void start() throws WsInitException {
+    try {
+      for (SessionPoolService service : services) {
+        log.info("Starting session pool service {}", service.getClass().getSimpleName());
+        service.start();
+      }
+    } catch (WsInitException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new WsInitException("Failed to start Webswing Session Pool. " + e.getMessage(), e);
+    }
+  }
 
-	public void stop() {
-		for (SessionPoolService service : services) {
-			service.stop();
-		}
-	}
+  public void stop() {
+    for (SessionPoolService service : services) {
+      service.stop();
+    }
+  }
 }

@@ -12,18 +12,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class LoginHandlerFactoryImpl implements LoginHandlerFactory {
 
-	private final WebSocketService webSockets;
+  private final WebSocketService webSockets;
 
-	@Inject
-	public LoginHandlerFactoryImpl(WebSocketService webSockets) {
-		this.webSockets = webSockets;
-	}
+  @Inject
+  public LoginHandlerFactoryImpl(WebSocketService webSockets) {
+    this.webSockets = webSockets;
+  }
 
-	public LoginHandler createLoginHandler(UrlHandler parent) {
-		return new LoginHandlerImpl(parent);
-	}
+  public LoginHandler createLoginHandler(UrlHandler parent) {
+    return new LoginHandlerImpl(parent);
+  }
 
-	public LogoutHandler createLogoutHandler(UrlHandler parent) {
-		return new LogoutHandlerImpl(webSockets, parent);
-	}
+  public LogoutHandler createLogoutHandler(UrlHandler parent) {
+    return new LogoutHandlerImpl(webSockets, parent);
+  }
 }

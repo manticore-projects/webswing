@@ -15,63 +15,63 @@ import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
 import org.webswing.server.common.model.SecuredPathConfig;
 
 public interface ConnectedSwingInstance extends RemoteSwingInstance {
-	
-	SecuredPathConfig getConfig();
-	
-	String getUserId();
-	
-	String getConnectionId();
-	
-	void connectBrowser(PrimaryWebSocketConnection r, ConnectionHandshakeMsgIn h);
-	
-	void connectApplication(ApplicationWebSocketConnection r, boolean reconnect);
-	
-	void connectMirroredWebSession(MirrorWebSocketConnection resource);
-	
-	void browserDisconnected(String connectionId);
-	
-	void disconnectMirroredWebSession(boolean disconnect); 
-	
-	void disconnectMirroredWebSession(String sessionId, boolean disconnect); 
-	
-	void applicationDisconnected(String reason);
-	
-	void handleAppMessage(AppToServerFrameMsgOut msgOut);
-	
-	void handleBrowserMessage(BrowserToServerFrameMsgIn msgIn);
-	
-	void handleBrowserMirrorMessage(byte[] frame);
-	
-	boolean sendMessageToBrowser(ServerToBrowserFrameMsgOut msgOut);
 
-	boolean sendMessageToApp(ServerToAppFrameMsgIn msgIn);
-	
-	boolean sendMessageToApp(AppFrameMsgIn msgIn);
-	
-	void notifyUserConnected();
-	
-	void close();
+  SecuredPathConfig getConfig();
 
-	SwingSessionMsgOut toSwingSession();
+  String getUserId();
 
-	boolean isStatisticsLoggingEnabled();
+  String getConnectionId();
 
-	void logWarningHistory();
+  void connectBrowser(PrimaryWebSocketConnection r, ConnectionHandshakeMsgIn h);
 
-	void startRecording();
+  void connectApplication(ApplicationWebSocketConnection r, boolean reconnect);
 
-	void stopRecording();
-	
-	ThreadDumpMsgOut getThreadDump(String timestamp);
-	
-	void toggleStatisticsLogging(boolean enabled);
-	
-	boolean isRunning();
+  void connectMirroredWebSession(MirrorWebSocketConnection resource);
 
-	String getPathMapping();
+  void browserDisconnected(String connectionId);
 
-	String getAppName();
+  void disconnectMirroredWebSession(boolean disconnect);
 
-	void updateProcessStatus(ProcessStatusEnum processStatus);
-	
+  void disconnectMirroredWebSession(String sessionId, boolean disconnect);
+
+  void applicationDisconnected(String reason);
+
+  void handleAppMessage(AppToServerFrameMsgOut msgOut);
+
+  void handleBrowserMessage(BrowserToServerFrameMsgIn msgIn);
+
+  void handleBrowserMirrorMessage(byte[] frame);
+
+  boolean sendMessageToBrowser(ServerToBrowserFrameMsgOut msgOut);
+
+  boolean sendMessageToApp(ServerToAppFrameMsgIn msgIn);
+
+  boolean sendMessageToApp(AppFrameMsgIn msgIn);
+
+  void notifyUserConnected();
+
+  void close();
+
+  SwingSessionMsgOut toSwingSession();
+
+  boolean isStatisticsLoggingEnabled();
+
+  void logWarningHistory();
+
+  void startRecording();
+
+  void stopRecording();
+
+  ThreadDumpMsgOut getThreadDump(String timestamp);
+
+  void toggleStatisticsLogging(boolean enabled);
+
+  boolean isRunning();
+
+  String getPathMapping();
+
+  String getAppName();
+
+  void updateProcessStatus(ProcessStatusEnum processStatus);
+
 }

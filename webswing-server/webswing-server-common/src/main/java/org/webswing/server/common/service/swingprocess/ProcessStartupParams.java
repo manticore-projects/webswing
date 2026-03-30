@@ -9,216 +9,215 @@ import org.webswing.server.common.util.VariableSubstitutor;
 
 public class ProcessStartupParams {
 
-	private String websocketUrl;
-	private String instanceId;
-	private String pathMapping;
-	private String appName;
-	private int debugPort;
-	private boolean recordingFlagged;
-	private boolean askForRecordingNeeded;
-	private boolean askForMirroringNeeded;
-	private SwingConfig appConfig;
-	private VariableSubstitutor subs;
-	private Function<String, File> fileResolver;
-	private Integer screenWidth;
-	private Integer screenHeight;
-	private Map<String, String> params;
-	private String documentBase;
-	private String handshakeUrl;
-	private boolean directDrawSupported;
-	private boolean accessiblityEnabled;
-	private boolean touchModeEnabled;
-	private boolean dockingSupported;
-	private String dataStoreConfig;
-	private String userId;
-	
-	private String appConnectionSecret;
+  private String websocketUrl;
+  private String instanceId;
+  private String pathMapping;
+  private String appName;
+  private int debugPort;
+  private boolean recordingFlagged;
+  private boolean askForRecordingNeeded;
+  private boolean askForMirroringNeeded;
+  private SwingConfig appConfig;
+  private VariableSubstitutor subs;
+  private Function<String, File> fileResolver;
+  private Integer screenWidth;
+  private Integer screenHeight;
+  private Map<String, String> params;
+  private String documentBase;
+  private String handshakeUrl;
+  private boolean directDrawSupported;
+  private boolean accessiblityEnabled;
+  private boolean touchModeEnabled;
+  private boolean dockingSupported;
+  private String dataStoreConfig;
+  private String userId;
 
-	public ProcessStartupParams() {
-	}
-	
-	public String getWebsocketUrl() {
-		return websocketUrl;
-	}
+  private String appConnectionSecret;
 
-	public void setWebsocketUrl(String websocketUrl) {
-		this.websocketUrl = websocketUrl;
-	}
+  public ProcessStartupParams() {}
 
-	public String getInstanceId() {
-		return instanceId;
-	}
+  public String getWebsocketUrl() {
+    return websocketUrl;
+  }
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
+  public void setWebsocketUrl(String websocketUrl) {
+    this.websocketUrl = websocketUrl;
+  }
 
-	public String getPathMapping() {
-		return pathMapping;
-	}
+  public String getInstanceId() {
+    return instanceId;
+  }
 
-	public void setPathMapping(String pathMapping) {
-		this.pathMapping = pathMapping;
-	}
+  public void setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
+  }
 
-	public String getAppName() {
-		return appName;
-	}
+  public String getPathMapping() {
+    return pathMapping;
+  }
 
-	public void setAppName(String appName) {
-		this.appName = appName;
-	}
+  public void setPathMapping(String pathMapping) {
+    this.pathMapping = pathMapping;
+  }
 
-	public int getDebugPort() {
-		return debugPort;
-	}
+  public String getAppName() {
+    return appName;
+  }
 
-	public void setDebugPort(int debugPort) {
-		this.debugPort = debugPort;
-	}
+  public void setAppName(String appName) {
+    this.appName = appName;
+  }
 
-	public SwingConfig getAppConfig() {
-		return appConfig;
-	}
+  public int getDebugPort() {
+    return debugPort;
+  }
 
-	public void setAppConfig(SwingConfig appConfig) {
-		this.appConfig = appConfig;
-	}
+  public void setDebugPort(int debugPort) {
+    this.debugPort = debugPort;
+  }
 
-	public VariableSubstitutor getSubs() {
-		return subs;
-	}
+  public SwingConfig getAppConfig() {
+    return appConfig;
+  }
 
-	public void setSubs(VariableSubstitutor subs) {
-		this.subs = subs;
-	}
+  public void setAppConfig(SwingConfig appConfig) {
+    this.appConfig = appConfig;
+  }
 
-	public Function<String, File> getFileResolver() {
-		return fileResolver;
-	}
+  public VariableSubstitutor getSubs() {
+    return subs;
+  }
 
-	public void setFileResolver(Function<String, File> fileResolver) {
-		this.fileResolver = fileResolver;
-	}
+  public void setSubs(VariableSubstitutor subs) {
+    this.subs = subs;
+  }
 
-	public Integer getScreenWidth() {
-		return screenWidth;
-	}
+  public Function<String, File> getFileResolver() {
+    return fileResolver;
+  }
 
-	public void setScreenWidth(Integer screenWidth) {
-		this.screenWidth = screenWidth;
-	}
+  public void setFileResolver(Function<String, File> fileResolver) {
+    this.fileResolver = fileResolver;
+  }
 
-	public Integer getScreenHeight() {
-		return screenHeight;
-	}
+  public Integer getScreenWidth() {
+    return screenWidth;
+  }
 
-	public void setScreenHeight(Integer screenHeight) {
-		this.screenHeight = screenHeight;
-	}
+  public void setScreenWidth(Integer screenWidth) {
+    this.screenWidth = screenWidth;
+  }
 
-	public Map<String, String> getParams() {
-		return params;
-	}
+  public Integer getScreenHeight() {
+    return screenHeight;
+  }
 
-	public void setParams(Map<String, String> params) {
-		this.params = params;
-	}
+  public void setScreenHeight(Integer screenHeight) {
+    this.screenHeight = screenHeight;
+  }
 
-	public String getDocumentBase() {
-		return documentBase;
-	}
+  public Map<String, String> getParams() {
+    return params;
+  }
 
-	public void setDocumentBase(String documentBase) {
-		this.documentBase = documentBase;
-	}
+  public void setParams(Map<String, String> params) {
+    this.params = params;
+  }
 
-	public String getHandshakeUrl() {
-		return handshakeUrl;
-	}
+  public String getDocumentBase() {
+    return documentBase;
+  }
 
-	public void setHandshakeUrl(String handshakeUrl) {
-		this.handshakeUrl = handshakeUrl;
-	}
+  public void setDocumentBase(String documentBase) {
+    this.documentBase = documentBase;
+  }
 
-	public boolean isDirectDrawSupported() {
-		return directDrawSupported;
-	}
+  public String getHandshakeUrl() {
+    return handshakeUrl;
+  }
 
-	public void setDirectDrawSupported(boolean directDrawSupported) {
-		this.directDrawSupported = directDrawSupported;
-	}
+  public void setHandshakeUrl(String handshakeUrl) {
+    this.handshakeUrl = handshakeUrl;
+  }
 
-	public boolean isAccessiblityEnabled() {
-		return accessiblityEnabled;
-	}
+  public boolean isDirectDrawSupported() {
+    return directDrawSupported;
+  }
 
-	public void setAccessiblityEnabled(boolean accessiblityEnabled) {
-		this.accessiblityEnabled = accessiblityEnabled;
-	}
+  public void setDirectDrawSupported(boolean directDrawSupported) {
+    this.directDrawSupported = directDrawSupported;
+  }
 
-	public boolean isTouchModeEnabled() {
-		return touchModeEnabled;
-	}
+  public boolean isAccessiblityEnabled() {
+    return accessiblityEnabled;
+  }
 
-	public void setTouchModeEnabled(boolean touchModeEnabled) {
-		this.touchModeEnabled = touchModeEnabled;
-	}
+  public void setAccessiblityEnabled(boolean accessiblityEnabled) {
+    this.accessiblityEnabled = accessiblityEnabled;
+  }
 
-	public boolean isDockingSupported() {
-		return dockingSupported;
-	}
+  public boolean isTouchModeEnabled() {
+    return touchModeEnabled;
+  }
 
-	public void setDockingSupported(boolean dockingSupported) {
-		this.dockingSupported = dockingSupported;
-	}
+  public void setTouchModeEnabled(boolean touchModeEnabled) {
+    this.touchModeEnabled = touchModeEnabled;
+  }
 
-	public String getAppConnectionSecret() {
-		return appConnectionSecret;
-	}
+  public boolean isDockingSupported() {
+    return dockingSupported;
+  }
 
-	public void setAppConnectionSecret(String appConnectionSecret) {
-		this.appConnectionSecret = appConnectionSecret;
-	}
+  public void setDockingSupported(boolean dockingSupported) {
+    this.dockingSupported = dockingSupported;
+  }
 
-	public boolean isRecordingFlagged() {
-		return recordingFlagged;
-	}
+  public String getAppConnectionSecret() {
+    return appConnectionSecret;
+  }
 
-	public void setRecordingFlagged(boolean recordingFlagged) {
-		this.recordingFlagged = recordingFlagged;
-	}
+  public void setAppConnectionSecret(String appConnectionSecret) {
+    this.appConnectionSecret = appConnectionSecret;
+  }
 
-	public boolean isAskForRecordingNeeded() {
-		return askForRecordingNeeded;
-	}
+  public boolean isRecordingFlagged() {
+    return recordingFlagged;
+  }
 
-	public void setAskForRecordingNeeded(boolean askForRecordingNeeded) {
-		this.askForRecordingNeeded = askForRecordingNeeded;
-	}
+  public void setRecordingFlagged(boolean recordingFlagged) {
+    this.recordingFlagged = recordingFlagged;
+  }
 
-	public boolean isAskForMirroringNeeded() {
-		return askForMirroringNeeded;
-	}
+  public boolean isAskForRecordingNeeded() {
+    return askForRecordingNeeded;
+  }
 
-	public void setAskForMirroringNeeded(boolean askForMirroringNeeded) {
-		this.askForMirroringNeeded = askForMirroringNeeded;
-	}
+  public void setAskForRecordingNeeded(boolean askForRecordingNeeded) {
+    this.askForRecordingNeeded = askForRecordingNeeded;
+  }
 
-	public String getDataStoreConfig() {
-		return dataStoreConfig;
-	}
+  public boolean isAskForMirroringNeeded() {
+    return askForMirroringNeeded;
+  }
 
-	public void setDataStoreConfig(String dataStoreConfig) {
-		this.dataStoreConfig = dataStoreConfig;
-	}
+  public void setAskForMirroringNeeded(boolean askForMirroringNeeded) {
+    this.askForMirroringNeeded = askForMirroringNeeded;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public String getDataStoreConfig() {
+    return dataStoreConfig;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public void setDataStoreConfig(String dataStoreConfig) {
+    this.dataStoreConfig = dataStoreConfig;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
 }

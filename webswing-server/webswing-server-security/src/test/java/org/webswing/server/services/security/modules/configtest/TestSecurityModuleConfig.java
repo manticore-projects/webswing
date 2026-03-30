@@ -5,6 +5,6 @@ import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
 
 public interface TestSecurityModuleConfig extends WebswingSecurityModuleConfig {
 
-	@ConfigField(label = "Test Configuration")
-	ExampleForm getExampleForm();
+  @ConfigField(label = "Test Configuration")
+  ExampleForm getExampleForm();
 }

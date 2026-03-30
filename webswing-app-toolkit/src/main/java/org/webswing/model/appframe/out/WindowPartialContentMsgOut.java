@@ -6,62 +6,62 @@ import java.io.Serial;
 
 public class WindowPartialContentMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 5963096092200874758L;
-	private Integer positionX;
-	private Integer positionY;
-	private Integer width;
-	private Integer height;
-	private byte[] base64Content;
+  @Serial
+  private static final long serialVersionUID = 5963096092200874758L;
+  private Integer positionX;
+  private Integer positionY;
+  private Integer width;
+  private Integer height;
+  private byte[] base64Content;
 
-	public WindowPartialContentMsgOut() {
-	}
-	
-	public WindowPartialContentMsgOut(Integer positionX, Integer positionY, Integer width, Integer height) {
-		this.positionX = positionX;
-		this.positionY = positionY;
-		this.width = width;
-		this.height = height;
-	}
-	
-	public Integer getPositionX() {
-		return positionX;
-	}
+  public WindowPartialContentMsgOut() {}
 
-	public void setPositionX(Integer positionX) {
-		this.positionX = positionX;
-	}
+  public WindowPartialContentMsgOut(Integer positionX, Integer positionY, Integer width,
+      Integer height) {
+    this.positionX = positionX;
+    this.positionY = positionY;
+    this.width = width;
+    this.height = height;
+  }
 
-	public Integer getPositionY() {
-		return positionY;
-	}
+  public Integer getPositionX() {
+    return positionX;
+  }
 
-	public void setPositionY(Integer positionY) {
-		this.positionY = positionY;
-	}
+  public void setPositionX(Integer positionX) {
+    this.positionX = positionX;
+  }
 
-	public Integer getWidth() {
-		return width;
-	}
+  public Integer getPositionY() {
+    return positionY;
+  }
 
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
+  public void setPositionY(Integer positionY) {
+    this.positionY = positionY;
+  }
 
-	public Integer getHeight() {
-		return height;
-	}
+  public Integer getWidth() {
+    return width;
+  }
 
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
+  public void setWidth(Integer width) {
+    this.width = width;
+  }
 
-	public byte[] getBase64Content() {
-		return base64Content;
-	}
+  public Integer getHeight() {
+    return height;
+  }
 
-	public void setBase64Content(byte[] base64Content) {
-		this.base64Content = base64Content;
-	}
+  public void setHeight(Integer height) {
+    this.height = height;
+  }
+
+  public byte[] getBase64Content() {
+    return base64Content;
+  }
+
+  public void setBase64Content(byte[] base64Content) {
+    this.base64Content = base64Content;
+  }
 
 }

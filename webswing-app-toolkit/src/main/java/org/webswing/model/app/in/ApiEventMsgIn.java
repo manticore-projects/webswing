@@ -5,52 +5,48 @@ import org.webswing.model.MsgIn;
 import java.io.Serial;
 
 public class ApiEventMsgIn implements MsgIn {
-    @Serial
-    private static final long serialVersionUID = -6912899913199681417L;
+  @Serial
+  private static final long serialVersionUID = -6912899913199681417L;
 
-	public enum ApiEventType {
-		UserConnected,
-		UserDisconnected,
-		MirrorViewConnected,
-		MirrorViewDisconnected
-	}
+  public enum ApiEventType {
+    UserConnected, UserDisconnected, MirrorViewConnected, MirrorViewDisconnected
+  }
 
-	private String userId;
-	private ApiEventType event;
-	private byte[] args;
+  private String userId;
+  private ApiEventType event;
+  private byte[] args;
 
-	public ApiEventMsgIn() {
-	}
-	
-	public ApiEventMsgIn(ApiEventType event, String userId, byte[] args) {
-		super();
-		this.userId = userId;
-		this.event = event;
-		this.args = args;
-	}
+  public ApiEventMsgIn() {}
 
-	public String getUserId() {
-		return userId;
-	}
+  public ApiEventMsgIn(ApiEventType event, String userId, byte[] args) {
+    super();
+    this.userId = userId;
+    this.event = event;
+    this.args = args;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public ApiEventType getEvent() {
-		return event;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public void setEvent(ApiEventType event) {
-		this.event = event;
-	}
+  public ApiEventType getEvent() {
+    return event;
+  }
 
-	public byte[] getArgs() {
-		return args;
-	}
+  public void setEvent(ApiEventType event) {
+    this.event = event;
+  }
 
-	public void setArgs(byte[] args) {
-		this.args = args;
-	}
+  public byte[] getArgs() {
+    return args;
+  }
+
+  public void setArgs(byte[] args) {
+    this.args = args;
+  }
 
 }

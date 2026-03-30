@@ -4,17 +4,17 @@ import org.webswing.directdraw.DirectDraw;
 
 public class StringConst extends ImmutableDrawConstantHolder<String> {
 
-	public StringConst(DirectDraw context, String value) {
-		super(context, value);
-	}
+  public StringConst(DirectDraw context, String value) {
+    super(context, value);
+  }
 
-	@Override
-	public String getFieldName() {
-		return "string";
-	}
+  @Override
+  public String getFieldName() {
+    return "string";
+  }
 
-	@Override
-	public String toMessage() {
-		return getValue();
-	}
+  @Override
+  public String toMessage() {
+    return getValue();
+  }
 }

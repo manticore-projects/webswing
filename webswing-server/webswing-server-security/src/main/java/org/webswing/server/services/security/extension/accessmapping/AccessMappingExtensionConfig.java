@@ -11,9 +11,10 @@ import java.util.List;
 
 public interface AccessMappingExtensionConfig extends SecurityModuleExtensionConfig {
 
-	@ConfigField(label = "Webswing Access Mapping", description = "Overrides the default Roles to Access Type mapping.")
-	@ConfigFieldEditorType(editor = EditorType.ObjectListAsTable)
-	@ConfigFieldDefaultValueObject(ArrayList.class)
-	List<AccessTypeMapping> getAccessMapping();
+  @ConfigField(label = "Webswing Access Mapping",
+      description = "Overrides the default Roles to Access Type mapping.")
+  @ConfigFieldEditorType(editor = EditorType.ObjectListAsTable)
+  @ConfigFieldDefaultValueObject(ArrayList.class)
+  List<AccessTypeMapping> getAccessMapping();
 
 }

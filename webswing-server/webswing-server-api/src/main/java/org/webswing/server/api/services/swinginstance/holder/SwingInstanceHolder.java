@@ -6,23 +6,23 @@ import org.webswing.server.api.services.swinginstance.ConnectedSwingInstance;
 
 public interface SwingInstanceHolder {
 
-	ConnectedSwingInstance findInstanceByOwnerId(String ownerId);
+  ConnectedSwingInstance findInstanceByOwnerId(String ownerId);
 
-	ConnectedSwingInstance findInstanceByInstanceId(String instanceId);
-	
-	ConnectedSwingInstance findClosedInstanceByInstanceId(String instanceId);
+  ConnectedSwingInstance findInstanceByInstanceId(String instanceId);
 
-	List<ConnectedSwingInstance> getAllInstances();
+  ConnectedSwingInstance findClosedInstanceByInstanceId(String instanceId);
 
-	List<ConnectedSwingInstance> getAllClosedInstances();
+  List<ConnectedSwingInstance> getAllInstances();
 
-	void add(ConnectedSwingInstance swingInstance);
+  List<ConnectedSwingInstance> getAllClosedInstances();
 
-	void remove(ConnectedSwingInstance swingInstance, boolean force);
-	
-	int getRunningInstacesCount();
-	
-	int getConnectedInstancesCount();
-	
-	int getClosedInstacesCount();
+  void add(ConnectedSwingInstance swingInstance);
+
+  void remove(ConnectedSwingInstance swingInstance, boolean force);
+
+  int getRunningInstacesCount();
+
+  int getConnectedInstancesCount();
+
+  int getClosedInstacesCount();
 }

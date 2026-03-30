@@ -9,46 +9,46 @@ import java.util.List;
 import java.util.Map;
 
 public class ShiroWebswingUser extends AuthenticatedWebswingUser {
-    @Serial
-    private static final long serialVersionUID = -2997239323873658547L;
-        
-	String user;
-	String password;
-	List<String> roles;
+  @Serial
+  private static final long serialVersionUID = -2997239323873658547L;
 
-	public ShiroWebswingUser(String user, String password, List<String> roles) {
-		super();
-		this.user = user;
-		this.password = password;
-		this.roles = roles;
-	}
+  String user;
+  String password;
+  List<String> roles;
 
-	@Override
-	public String getUserId() {
-		return user;
-	}
+  public ShiroWebswingUser(String user, String password, List<String> roles) {
+    super();
+    this.user = user;
+    this.password = password;
+    this.roles = roles;
+  }
 
-	@Override
-	public List<String> getUserRoles() {
-		return roles;
-	}
-	
-	@Override
-	public Map<String, Serializable> getUserAttributes() {
-		return Collections.emptyMap();
-	}
+  @Override
+  public String getUserId() {
+    return user;
+  }
 
-	@Override
-	public Map<String, Serializable> getUserSessionAttributes() {
-		return Collections.emptyMap();
-	}
-	
-	@Override
-	public boolean hasRole(String role) {
-		return roles.contains(role);
-	}
+  @Override
+  public List<String> getUserRoles() {
+    return roles;
+  }
 
-	public String getPassword() {
-		return password;
-	}
+  @Override
+  public Map<String, Serializable> getUserAttributes() {
+    return Collections.emptyMap();
+  }
+
+  @Override
+  public Map<String, Serializable> getUserSessionAttributes() {
+    return Collections.emptyMap();
+  }
+
+  @Override
+  public boolean hasRole(String role) {
+    return roles.contains(role);
+  }
+
+  public String getPassword() {
+    return password;
+  }
 }

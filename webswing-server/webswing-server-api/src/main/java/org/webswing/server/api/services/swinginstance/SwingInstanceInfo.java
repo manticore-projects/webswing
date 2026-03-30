@@ -5,75 +5,76 @@ import org.webswing.server.common.model.SecuredPathConfig;
 
 public class SwingInstanceInfo {
 
-	private SecuredPathConfig config;
-	private String sessionPoolId;
-	private String ownerId;
-	private String instanceId;
-	private String urlContext;
-	private String pathMapping;
-	private WebswingDataStoreConfig dataStoreConfig;
-	
-	public SwingInstanceInfo(String urlContext, String pathMapping, SecuredPathConfig config, WebswingDataStoreConfig dataStoreConfig) {
-		this.urlContext = urlContext;
-		this.pathMapping = pathMapping;
-		this.config = config;
-		this.dataStoreConfig = dataStoreConfig;
-	}
+  private SecuredPathConfig config;
+  private String sessionPoolId;
+  private String ownerId;
+  private String instanceId;
+  private String urlContext;
+  private String pathMapping;
+  private WebswingDataStoreConfig dataStoreConfig;
 
-	public SecuredPathConfig getConfig() {
-		return config;
-	}
+  public SwingInstanceInfo(String urlContext, String pathMapping, SecuredPathConfig config,
+      WebswingDataStoreConfig dataStoreConfig) {
+    this.urlContext = urlContext;
+    this.pathMapping = pathMapping;
+    this.config = config;
+    this.dataStoreConfig = dataStoreConfig;
+  }
 
-	public void setConfig(SecuredPathConfig config) {
-		this.config = config;
-	}
+  public SecuredPathConfig getConfig() {
+    return config;
+  }
 
-	public String getSessionPoolId() {
-		return sessionPoolId;
-	}
+  public void setConfig(SecuredPathConfig config) {
+    this.config = config;
+  }
 
-	public void setSessionPoolId(String sessionPoolId) {
-		this.sessionPoolId = sessionPoolId;
-	}
+  public String getSessionPoolId() {
+    return sessionPoolId;
+  }
 
-	public String getOwnerId() {
-		return ownerId;
-	}
+  public void setSessionPoolId(String sessionPoolId) {
+    this.sessionPoolId = sessionPoolId;
+  }
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
+  public String getOwnerId() {
+    return ownerId;
+  }
 
-	public String getInstanceId() {
-		return instanceId;
-	}
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
+  public String getInstanceId() {
+    return instanceId;
+  }
 
-	public String getUrlContext() {
-		return urlContext;
-	}
+  public void setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
+  }
 
-	public void setUrlContext(String urlContext) {
-		this.urlContext = urlContext;
-	}
+  public String getUrlContext() {
+    return urlContext;
+  }
 
-	public String getPathMapping() {
-		return pathMapping;
-	}
+  public void setUrlContext(String urlContext) {
+    this.urlContext = urlContext;
+  }
 
-	public void setPathMapping(String pathMapping) {
-		this.pathMapping = pathMapping;
-	}
+  public String getPathMapping() {
+    return pathMapping;
+  }
 
-	public WebswingDataStoreConfig getDataStoreConfig() {
-		return dataStoreConfig;
-	}
+  public void setPathMapping(String pathMapping) {
+    this.pathMapping = pathMapping;
+  }
 
-	public void setDataStoreConfig(WebswingDataStoreConfig dataStoreConfig) {
-		this.dataStoreConfig = dataStoreConfig;
-	}
-	
+  public WebswingDataStoreConfig getDataStoreConfig() {
+    return dataStoreConfig;
+  }
+
+  public void setDataStoreConfig(WebswingDataStoreConfig dataStoreConfig) {
+    this.dataStoreConfig = dataStoreConfig;
+  }
+
 }

@@ -4,16 +4,16 @@ import org.webswing.server.api.base.UrlHandler;
 
 public interface WebSocketMessageListener {
 
-	void onReady(WebSocketConnection c);
+  void onReady(WebSocketConnection c);
 
-	void onMessage(WebSocketConnection connection, Object message);
+  void onMessage(WebSocketConnection connection, Object message);
 
-	void onDisconnect(WebSocketConnection connection);
+  void onDisconnect(WebSocketConnection connection);
 
-	void onTimeout(WebSocketConnection connection);
+  void onTimeout(WebSocketConnection connection);
 
-	UrlHandler getOwner();
+  UrlHandler getOwner();
 
-	boolean isReady();
+  boolean isReady();
 
 }

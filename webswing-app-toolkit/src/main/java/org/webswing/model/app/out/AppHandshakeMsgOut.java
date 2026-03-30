@@ -6,17 +6,17 @@ import java.io.Serial;
 
 public class AppHandshakeMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 8346698410554059038L;
-	
-	private String secretMessage;
+  @Serial
+  private static final long serialVersionUID = 8346698410554059038L;
 
-	public String getSecretMessage() {
-		return secretMessage;
-	}
+  private String secretMessage;
 
-	public void setSecretMessage(String secretMessage) {
-		this.secretMessage = secretMessage;
-	}
+  public String getSecretMessage() {
+    return secretMessage;
+  }
+
+  public void setSecretMessage(String secretMessage) {
+    this.secretMessage = secretMessage;
+  }
 
 }

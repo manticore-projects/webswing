@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class FileTransferHandlerFactoryImpl implements FileTransferHandlerFactory {
 
-	public FileTransferHandler create(AppPathHandler manager) {
-		return new FileTransferHandlerImpl(manager);
-	}
+  public FileTransferHandler create(AppPathHandler manager) {
+    return new FileTransferHandlerImpl(manager);
+  }
 }

@@ -6,61 +6,59 @@ import java.io.Serial;
 
 public class ActionEventMsgIn implements MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = -6048866464362966579L;
+  @Serial
+  private static final long serialVersionUID = -6048866464362966579L;
 
-	public enum ActionEventType {
-		init,
-		user
-	}
-	
-	public ActionEventMsgIn() {
-	}
+  public enum ActionEventType {
+    init, user
+  }
 
-	private String windowId;
-	private String actionName;
-	private String data;
-	private byte[] binaryData;
-	private ActionEventType eventType;
+  public ActionEventMsgIn() {}
 
-	public String getActionName() {
-		return actionName;
-	}
+  private String windowId;
+  private String actionName;
+  private String data;
+  private byte[] binaryData;
+  private ActionEventType eventType;
 
-	public void setActionName(String actionName) {
-		this.actionName = actionName;
-	}
+  public String getActionName() {
+    return actionName;
+  }
 
-	public String getData() {
-		return data;
-	}
+  public void setActionName(String actionName) {
+    this.actionName = actionName;
+  }
 
-	public void setData(String data) {
-		this.data = data;
-	}
-	
-	public byte[] getBinaryData() {
-		return binaryData;
-	}
-	
-	public void setBinaryData(byte[] binaryData) {
-		this.binaryData = binaryData;
-	}
+  public String getData() {
+    return data;
+  }
 
-	public String getWindowId() {
-		return windowId;
-	}
+  public void setData(String data) {
+    this.data = data;
+  }
 
-	public void setWindowId(String windowId) {
-		this.windowId = windowId;
-	}
+  public byte[] getBinaryData() {
+    return binaryData;
+  }
 
-	public ActionEventType getEventType() {
-		return eventType;
-	}
+  public void setBinaryData(byte[] binaryData) {
+    this.binaryData = binaryData;
+  }
 
-	public void setEventType(ActionEventType eventType) {
-		this.eventType = eventType;
-	}
+  public String getWindowId() {
+    return windowId;
+  }
+
+  public void setWindowId(String windowId) {
+    this.windowId = windowId;
+  }
+
+  public ActionEventType getEventType() {
+    return eventType;
+  }
+
+  public void setEventType(ActionEventType eventType) {
+    this.eventType = eventType;
+  }
 
 }

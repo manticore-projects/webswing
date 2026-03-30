@@ -5,24 +5,23 @@ import org.webswing.model.appframe.in.AppFrameMsgIn;
 
 public class SyncObjectResponse {
 
-	private ServerToAppFrameMsgIn msgIn;
-	private AppFrameMsgIn frame;
+  private ServerToAppFrameMsgIn msgIn;
+  private AppFrameMsgIn frame;
 
-	public SyncObjectResponse() {
-	}
-	
-	public SyncObjectResponse(ServerToAppFrameMsgIn msgIn, AppFrameMsgIn frame) {
-		super();
-		this.msgIn = msgIn;
-		this.frame = frame;
-	}
+  public SyncObjectResponse() {}
 
-	public ServerToAppFrameMsgIn getMsgIn() {
-		return msgIn;
-	}
+  public SyncObjectResponse(ServerToAppFrameMsgIn msgIn, AppFrameMsgIn frame) {
+    super();
+    this.msgIn = msgIn;
+    this.frame = frame;
+  }
 
-	public AppFrameMsgIn getFrame() {
-		return frame;
-	}
+  public ServerToAppFrameMsgIn getMsgIn() {
+    return msgIn;
+  }
+
+  public AppFrameMsgIn getFrame() {
+    return frame;
+  }
 
 }

@@ -19,32 +19,35 @@ import com.google.inject.Singleton;
 @Singleton
 public class AppPathHandlerFactoryImpl implements AppPathHandlerFactory {
 
-	private final WebSocketService websocket;
-	private final FileTransferHandlerFactory fileFactory;
-	private final LoginHandlerFactory loginFactory;
-	private final ResourceHandlerFactory resourceFactory;
-	private final RestHandlerFactory restHandlerFactory;
-	private final SecurityModuleFactory securityModuleFactory;
-	private final ConfigurationService<SecuredPathConfig> configService;
-	private final SessionPoolHolderService sessionPoolHolderService;
+  private final WebSocketService websocket;
+  private final FileTransferHandlerFactory fileFactory;
+  private final LoginHandlerFactory loginFactory;
+  private final ResourceHandlerFactory resourceFactory;
+  private final RestHandlerFactory restHandlerFactory;
+  private final SecurityModuleFactory securityModuleFactory;
+  private final ConfigurationService<SecuredPathConfig> configService;
+  private final SessionPoolHolderService sessionPoolHolderService;
 
-	@Inject
-	public AppPathHandlerFactoryImpl(WebSocketService websocket, FileTransferHandlerFactory fileFactory,
-			LoginHandlerFactory loginFactory, ResourceHandlerFactory resourceFactory, SecurityModuleFactory securityModuleFactory, ConfigurationService<SecuredPathConfig> configService, 
-			SessionPoolHolderService sessionPoolHolderService, RestHandlerFactory restHandlerFactory) {
-		this.websocket = websocket;
-		this.fileFactory = fileFactory;
-		this.loginFactory = loginFactory;
-		this.resourceFactory = resourceFactory;
-		this.securityModuleFactory = securityModuleFactory;
-		this.configService = configService;
-		this.sessionPoolHolderService = sessionPoolHolderService;
-		this.restHandlerFactory = restHandlerFactory;
-	}
+  @Inject
+  public AppPathHandlerFactoryImpl(WebSocketService websocket,
+      FileTransferHandlerFactory fileFactory, LoginHandlerFactory loginFactory,
+      ResourceHandlerFactory resourceFactory, SecurityModuleFactory securityModuleFactory,
+      ConfigurationService<SecuredPathConfig> configService,
+      SessionPoolHolderService sessionPoolHolderService, RestHandlerFactory restHandlerFactory) {
+    this.websocket = websocket;
+    this.fileFactory = fileFactory;
+    this.loginFactory = loginFactory;
+    this.resourceFactory = resourceFactory;
+    this.securityModuleFactory = securityModuleFactory;
+    this.configService = configService;
+    this.sessionPoolHolderService = sessionPoolHolderService;
+    this.restHandlerFactory = restHandlerFactory;
+  }
 
-	public AppPathHandler createAppPathHandler(GlobalUrlHandler parent, String path) {
-		return new AppPathHandlerImpl(parent, path, websocket, fileFactory, loginFactory, resourceFactory, securityModuleFactory, configService,
-				sessionPoolHolderService, restHandlerFactory);
-	}
+  public AppPathHandler createAppPathHandler(GlobalUrlHandler parent, String path) {
+    return new AppPathHandlerImpl(parent, path, websocket, fileFactory, loginFactory,
+        resourceFactory, securityModuleFactory, configService, sessionPoolHolderService,
+        restHandlerFactory);
+  }
 
 }

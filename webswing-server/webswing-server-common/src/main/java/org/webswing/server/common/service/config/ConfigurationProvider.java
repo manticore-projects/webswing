@@ -9,22 +9,24 @@ import org.webswing.server.model.exception.WsException;
 
 public interface ConfigurationProvider<T> {
 
-	List<String> getPaths();
+  List<String> getPaths();
 
-	Map<String, Object> getConfiguration(String path);
-	
-	void saveConfiguration(String path, Map<String, Object> configuration, boolean reload) throws Exception;
+  Map<String, Object> getConfiguration(String path);
 
-	void removeConfiguration(String path) throws Exception;
+  void saveConfiguration(String path, Map<String, Object> configuration, boolean reload)
+      throws Exception;
 
-	void validateConfiguration(String path, Map<String, Object> c) throws Exception;
+  void removeConfiguration(String path) throws Exception;
 
-	T toConfig(String path, Map<String, Object> configuration) throws Exception;
+  void validateConfiguration(String path, Map<String, Object> c) throws Exception;
 
-	MetaObject describeConfiguration(String path, Map<String, Object> json, ConfigContext ctx, ClassLoader cl) throws WsException;
+  T toConfig(String path, Map<String, Object> configuration) throws Exception;
 
-	Map<String, Object> createDefaultConfiguration(String path);
+  MetaObject describeConfiguration(String path, Map<String, Object> json, ConfigContext ctx,
+      ClassLoader cl) throws WsException;
 
-	void dispose();
+  Map<String, Object> createDefaultConfiguration(String path);
+
+  void dispose();
 
 }

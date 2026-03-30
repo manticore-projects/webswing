@@ -22,105 +22,108 @@ import tools.jackson.databind.json.JsonMapper;
 
 public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultResourceHandlerImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultResourceHandlerImpl.class);
 
-	private final PrimaryUrlHandler parent;
+  private final PrimaryUrlHandler parent;
 
-	public DefaultResourceHandlerImpl(PrimaryUrlHandler parent, WebResourceProvider webResourceProvider) {
-		super(parent, webResourceProvider);
-		this.parent = parent;
-	}
+  public DefaultResourceHandlerImpl(PrimaryUrlHandler parent,
+      WebResourceProvider webResourceProvider) {
+    super(parent, webResourceProvider);
+    this.parent = parent;
+  }
 
-	@Override
-	protected LookupResult lookupNoCache(HttpServletRequest req, String path) {
-		if (path.equals("/manifest.json")) {
-			return new ManifestResult(parent);
-		}
+  @Override
+  protected LookupResult lookupNoCache(HttpServletRequest req, String path) {
+    if (path.equals("/manifest.json")) {
+      return new ManifestResult(parent);
+    }
 
-		if (isRestrictedAccess(path)) {
-			return new ErrorResult(HttpServletResponse.SC_UNAUTHORIZED, "Access restricted.");
-		}
+    if (isRestrictedAccess(path)) {
+      return new ErrorResult(HttpServletResponse.SC_UNAUTHORIZED, "Access restricted.");
+    }
 
-		return super.lookupNoCache(req, path);
-	}
+    return super.lookupNoCache(req, path);
+  }
 
-	private boolean isRestrictedAccess(String path) {
-		String lpath = path.toLowerCase();
-		for (String restricted : this.parent.getConfig().getRestrictedResources()) {
-			if (!restricted.trim().isEmpty() && lpath.startsWith(restricted.toLowerCase())) {
-				try {
-					checkPermission(WebswingAction.master_basic_access);
-				} catch (WsException e) {
-					log.warn("Accessing restricted resource path. Path '" + path + "' requires authentication. (matches restricted prefix '" + restricted + "')");
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+  private boolean isRestrictedAccess(String path) {
+    String lpath = path.toLowerCase();
+    for (String restricted : this.parent.getConfig().getRestrictedResources()) {
+      if (!restricted.trim().isEmpty() && lpath.startsWith(restricted.toLowerCase())) {
+        try {
+          checkPermission(WebswingAction.master_basic_access);
+        } catch (WsException e) {
+          log.warn("Accessing restricted resource path. Path '" + path
+              + "' requires authentication. (matches restricted prefix '" + restricted + "')");
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-	private static class ManifestResult implements LookupResult {
+  private static class ManifestResult implements LookupResult {
 
-		private final PrimaryUrlHandler handler;
+    private final PrimaryUrlHandler handler;
 
-		public ManifestResult(PrimaryUrlHandler handler) {
-			this.handler = handler;
-		}
+    public ManifestResult(PrimaryUrlHandler handler) {
+      this.handler = handler;
+    }
 
-		@Override
-		public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-			Manifest manifest = getManifest(handler);
+    @Override
+    public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+      Manifest manifest = getManifest(handler);
 
-			JsonMapper mapper = new JsonMapper();
-			String manifestJson = mapper.writeValueAsString(manifest);
+      JsonMapper mapper = new JsonMapper();
+      String manifestJson = mapper.writeValueAsString(manifest);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
 
-			sendContent(resp, manifestJson);
+      sendContent(resp, manifestJson);
 
-			return true;
-		}
+      return true;
+    }
 
-		@Override
-		public boolean respondHead(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-			return false;
-		}
+    @Override
+    public boolean respondHead(HttpServletRequest req, HttpServletResponse resp)
+        throws IOException {
+      return false;
+    }
 
-		@Override
-		public long getLastModified() {
-			return System.currentTimeMillis();
-		}
+    @Override
+    public long getLastModified() {
+      return System.currentTimeMillis();
+    }
 
-		private void sendContent(HttpServletResponse res, String content) throws IOException {
-			try (PrintWriter writer = res.getWriter()) {
-				writer.write(content);
-				writer.flush();
-			}
-		}
+    private void sendContent(HttpServletResponse res, String content) throws IOException {
+      try (PrintWriter writer = res.getWriter()) {
+        writer.write(content);
+        writer.flush();
+      }
+    }
 
-		private Manifest getManifest(PrimaryUrlHandler handler) {
-			// must be accessible without login
-			SecuredPathConfig config = handler.getConfig();
+    private Manifest getManifest(PrimaryUrlHandler handler) {
+      // must be accessible without login
+      SecuredPathConfig config = handler.getConfig();
 
-			String color = "#FFFFFF";
+      String color = "#FFFFFF";
 
-			Manifest manifest = new Manifest();
-			manifest.setName(config.getName());
-			manifest.setShortName(manifest.getName());
-			ManifestIcons icon = new ManifestIcons();
-			icon.setSrc(handler.getFullPathMapping() + "/rest/appicon");
-			icon.setSizes("256x256");// this is just a hardcoded value, not real size
-			manifest.setIcons(List.of(icon));
-			manifest.setStartUrl(handler.getFullPathMapping());
-			manifest.setScope(handler.getFullPathMapping());
-			manifest.setBackgroundColor(color);
-			manifest.setDisplay("fullscreen");
-			manifest.setThemeColor(color);
+      Manifest manifest = new Manifest();
+      manifest.setName(config.getName());
+      manifest.setShortName(manifest.getName());
+      ManifestIcons icon = new ManifestIcons();
+      icon.setSrc(handler.getFullPathMapping() + "/rest/appicon");
+      icon.setSizes("256x256");// this is just a hardcoded value, not real size
+      manifest.setIcons(List.of(icon));
+      manifest.setStartUrl(handler.getFullPathMapping());
+      manifest.setScope(handler.getFullPathMapping());
+      manifest.setBackgroundColor(color);
+      manifest.setDisplay("fullscreen");
+      manifest.setThemeColor(color);
 
-			return manifest;
-		}
+      return manifest;
+    }
 
-	}
+  }
 
 }

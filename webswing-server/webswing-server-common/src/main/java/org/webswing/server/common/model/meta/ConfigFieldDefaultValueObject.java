@@ -7,9 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD })
+@Target(value = {ElementType.METHOD})
 @Inherited
 public @interface ConfigFieldDefaultValueObject {
 
-	Class<?> value() default Void.class;
+  Class<?> value() default Void.class;
 }

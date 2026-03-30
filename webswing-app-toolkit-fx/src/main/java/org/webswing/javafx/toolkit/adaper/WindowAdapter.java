@@ -14,49 +14,49 @@ import java.awt.event.WindowListener;
  * Created by vikto on 03-Mar-17.
  */
 public interface WindowAdapter {
-	Window getThis();
+  Window getThis();
 
-	void setVisible(boolean b);
+  void setVisible(boolean b);
 
-	void dispose();
+  void dispose();
 
-	Container getContentPane();
+  Container getContentPane();
 
-	Rectangle getBounds();
+  Rectangle getBounds();
 
-	void setBounds(int x, int y, int width, int height);
+  void setBounds(int x, int y, int width, int height);
 
-	void setLocation(int x, int y);
+  void setLocation(int x, int y);
 
-	void setResizable(boolean resizable);
+  void setResizable(boolean resizable);
 
-	void requestFocus();
+  void requestFocus();
 
-	void setFocusable(boolean isFocusable);
+  void setFocusable(boolean isFocusable);
 
-	void setTitle(String title);
+  void setTitle(String title);
 
-	void setEnabled(boolean enabled);
+  void setEnabled(boolean enabled);
 
-	void setMinimumSize(Dimension dimension);
+  void setMinimumSize(Dimension dimension);
 
-	void setMaximumSize(Dimension dimension);
+  void setMaximumSize(Dimension dimension);
 
-	void toFront();
+  void toFront();
 
-	void toBack();
+  void toBack();
 
-	void setModal(boolean b);
+  void setModal(boolean b);
 
-	Insets getInsets();
+  Insets getInsets();
 
-	void setIconImages(java.util.List<? extends Image> icons);
+  void setIconImages(java.util.List<? extends Image> icons);
 
-	void addComponentListener(ComponentListener componentListener);
+  void addComponentListener(ComponentListener componentListener);
 
-	void addWindowListener(WindowListener windowListener);
+  void addWindowListener(WindowListener windowListener);
 
-	void addWindowFocusListener(WindowFocusListener windowFocusListener);
+  void addWindowFocusListener(WindowFocusListener windowFocusListener);
 
-	boolean isShowing();
+  boolean isShowing();
 }

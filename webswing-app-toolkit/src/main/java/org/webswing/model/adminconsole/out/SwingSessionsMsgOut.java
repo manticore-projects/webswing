@@ -9,36 +9,36 @@ import org.webswing.model.SyncMsg;
 
 public class SwingSessionsMsgOut implements SyncMsg, MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -562205063402702649L;
+  @Serial
+  private static final long serialVersionUID = -562205063402702649L;
 
-	private List<SwingSessionMsgOut> runningSessions = new ArrayList<>();
-	private List<SwingSessionMsgOut> closedSessions = new ArrayList<>();
-	
-	private String correlationId;
+  private List<SwingSessionMsgOut> runningSessions = new ArrayList<>();
+  private List<SwingSessionMsgOut> closedSessions = new ArrayList<>();
 
-	public List<SwingSessionMsgOut> getRunningSessions() {
-		return runningSessions;
-	}
+  private String correlationId;
 
-	public void setRunningSessions(List<SwingSessionMsgOut> runningSessions) {
-		this.runningSessions = runningSessions;
-	}
+  public List<SwingSessionMsgOut> getRunningSessions() {
+    return runningSessions;
+  }
 
-	public List<SwingSessionMsgOut> getClosedSessions() {
-		return closedSessions;
-	}
+  public void setRunningSessions(List<SwingSessionMsgOut> runningSessions) {
+    this.runningSessions = runningSessions;
+  }
 
-	public void setClosedSessions(List<SwingSessionMsgOut> closedSessions) {
-		this.closedSessions = closedSessions;
-	}
+  public List<SwingSessionMsgOut> getClosedSessions() {
+    return closedSessions;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public void setClosedSessions(List<SwingSessionMsgOut> closedSessions) {
+    this.closedSessions = closedSessions;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
+
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
 }

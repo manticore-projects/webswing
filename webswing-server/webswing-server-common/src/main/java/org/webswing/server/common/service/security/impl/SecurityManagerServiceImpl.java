@@ -19,50 +19,50 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class SecurityManagerServiceImpl implements SecurityManagerService {
-	private static final Logger log = LoggerFactory.getLogger(SecurityManagerServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(SecurityManagerServiceImpl.class);
 
-	public SecurityManagerServiceImpl() {
-	}
+  public SecurityManagerServiceImpl() {}
 
-	@Override
-	public Object secure(final SecurableService handler, final HttpServletRequest req, final HttpServletResponse res) {
-		final HttpServletRequestWrapper request = new SessionlessHttpServletRequestWrapper(req);
+  @Override
+  public Object secure(final SecurableService handler, final HttpServletRequest req,
+      final HttpServletResponse res) {
+    final HttpServletRequestWrapper request = new SessionlessHttpServletRequestWrapper(req);
 
-		final WebswingSecuritySubject subject = WebswingSecuritySubject.buildFrom(request);
-		
-		checkIPAddress(req, subject);
-		
-		try {
-			return subject.execute(() -> handler.secureServe(req, res));
-		} catch (ExecutionException e) {
-			log.error("Failed to execute secured handler.", e);
-			throw new RuntimeException(e);
-		}
-	}
+    final WebswingSecuritySubject subject = WebswingSecuritySubject.buildFrom(request);
 
-	private void checkIPAddress(HttpServletRequest req, WebswingSecuritySubject subject) {
-		// FIXME test this works
-		if (Boolean.getBoolean(Constants.LINK_COOKIE_TO_IP)) {
-			String currentIp = ServerUtil.getClientIp(req);
-			String sessionIp = subject.getHost();
-			if (!StringUtils.equals(currentIp, sessionIp)) {
-				throw new RuntimeException("IP address does not match Session host!");
-			}
-		}
-	}
+    checkIPAddress(req, subject);
 
-	public static class SessionlessHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    try {
+      return subject.execute(() -> handler.secureServe(req, res));
+    } catch (ExecutionException e) {
+      log.error("Failed to execute secured handler.", e);
+      throw new RuntimeException(e);
+    }
+  }
 
-		public SessionlessHttpServletRequestWrapper(HttpServletRequest response) {
-			super(response);
-		}
+  private void checkIPAddress(HttpServletRequest req, WebswingSecuritySubject subject) {
+    // FIXME test this works
+    if (Boolean.getBoolean(Constants.LINK_COOKIE_TO_IP)) {
+      String currentIp = ServerUtil.getClientIp(req);
+      String sessionIp = subject.getHost();
+      if (!StringUtils.equals(currentIp, sessionIp)) {
+        throw new RuntimeException("IP address does not match Session host!");
+      }
+    }
+  }
 
-		public HttpSession getSession() {
-			throw new UnsupportedOperationException("Session storage is not supported.");
-		}
+  public static class SessionlessHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-		public HttpSession getSession(boolean create) {
-			throw new UnsupportedOperationException("Session storage is not supported.");
-		}
-	};
+    public SessionlessHttpServletRequestWrapper(HttpServletRequest response) {
+      super(response);
+    }
+
+    public HttpSession getSession() {
+      throw new UnsupportedOperationException("Session storage is not supported.");
+    }
+
+    public HttpSession getSession(boolean create) {
+      throw new UnsupportedOperationException("Session storage is not supported.");
+    }
+  };
 }

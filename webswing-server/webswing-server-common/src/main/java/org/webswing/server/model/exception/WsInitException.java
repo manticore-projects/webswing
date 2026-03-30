@@ -4,14 +4,14 @@ import java.io.Serial;
 
 public class WsInitException extends Exception {
 
-    @Serial
-    private static final long serialVersionUID = -2905292367900301745L;
+  @Serial
+  private static final long serialVersionUID = -2905292367900301745L;
 
-	public WsInitException(String message) {
-		super(message);
-	}
+  public WsInitException(String message) {
+    super(message);
+  }
 
-	public WsInitException(String msg, Throwable t) {
-		super(msg, t);
-	}
+  public WsInitException(String msg, Throwable t) {
+    super(msg, t);
+  }
 }

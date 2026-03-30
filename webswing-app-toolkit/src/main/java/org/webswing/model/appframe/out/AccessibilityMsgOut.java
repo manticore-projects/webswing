@@ -7,393 +7,393 @@ import org.webswing.model.MsgOut;
 
 public class AccessibilityMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 8060354449415906755L;
+  @Serial
+  private static final long serialVersionUID = 8060354449415906755L;
 
-	// ! make sure to regenerate hashcode and equals after change to this class
-	
-	private String id;
-	private String role;
-	private String text;
-	private String tooltip;
-	private String value;
-	private String description;
-	private String columnheader;
-	private boolean password;
-	private boolean toggle;
-	private int selstart, selend;
-	private int rowheight, rows;
-	private int size, position, level;
-	private int colindex, rowindex, rowcount, colcount;
-	private List<String> states;
-	private int min, max, val;
-	private int screenX, screenY;
-	private int width, height;
-	private List<AccessibilityHierarchyMsgOut> hierarchy;
+  // ! make sure to regenerate hashcode and equals after change to this class
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + colcount;
-		result = prime * result + colindex;
-		result = prime * result + ((columnheader == null) ? 0 : columnheader.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + height;
-		result = prime * result + ((hierarchy == null) ? 0 : hierarchy.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + level;
-		result = prime * result + max;
-		result = prime * result + min;
-		result = prime * result + (password ? 1231 : 1237);
-		result = prime * result + position;
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + rowcount;
-		result = prime * result + rowheight;
-		result = prime * result + rowindex;
-		result = prime * result + rows;
-		result = prime * result + screenX;
-		result = prime * result + screenY;
-		result = prime * result + selend;
-		result = prime * result + selstart;
-		result = prime * result + size;
-		result = prime * result + ((states == null) ? 0 : states.hashCode());
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		result = prime * result + (toggle ? 1231 : 1237);
-		result = prime * result + ((tooltip == null) ? 0 : tooltip.hashCode());
-		result = prime * result + val;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		result = prime * result + width;
-		return result;
-	}
+  private String id;
+  private String role;
+  private String text;
+  private String tooltip;
+  private String value;
+  private String description;
+  private String columnheader;
+  private boolean password;
+  private boolean toggle;
+  private int selstart, selend;
+  private int rowheight, rows;
+  private int size, position, level;
+  private int colindex, rowindex, rowcount, colcount;
+  private List<String> states;
+  private int min, max, val;
+  private int screenX, screenY;
+  private int width, height;
+  private List<AccessibilityHierarchyMsgOut> hierarchy;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AccessibilityMsgOut other = (AccessibilityMsgOut) obj;
-		if (colcount != other.colcount)
-			return false;
-		if (colindex != other.colindex)
-			return false;
-		if (columnheader == null) {
-			if (other.columnheader != null)
-				return false;
-		} else if (!columnheader.equals(other.columnheader))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (height != other.height)
-			return false;
-		if (hierarchy == null) {
-			if (other.hierarchy != null)
-				return false;
-		} else if (!hierarchy.equals(other.hierarchy))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (level != other.level)
-			return false;
-		if (max != other.max)
-			return false;
-		if (min != other.min)
-			return false;
-		if (password != other.password)
-			return false;
-		if (position != other.position)
-			return false;
-		if (role == null) {
-			if (other.role != null)
-				return false;
-		} else if (!role.equals(other.role))
-			return false;
-		if (rowcount != other.rowcount)
-			return false;
-		if (rowheight != other.rowheight)
-			return false;
-		if (rowindex != other.rowindex)
-			return false;
-		if (rows != other.rows)
-			return false;
-		if (screenX != other.screenX)
-			return false;
-		if (screenY != other.screenY)
-			return false;
-		if (selend != other.selend)
-			return false;
-		if (selstart != other.selstart)
-			return false;
-		if (size != other.size)
-			return false;
-		if (states == null) {
-			if (other.states != null)
-				return false;
-		} else if (!states.equals(other.states))
-			return false;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
-			return false;
-		if (toggle != other.toggle)
-			return false;
-		if (tooltip == null) {
-			if (other.tooltip != null)
-				return false;
-		} else if (!tooltip.equals(other.tooltip))
-			return false;
-		if (val != other.val)
-			return false;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
-			return false;
-		if (width != other.width)
-			return false;
-		return true;
-	}
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + colcount;
+    result = prime * result + colindex;
+    result = prime * result + ((columnheader == null) ? 0 : columnheader.hashCode());
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + height;
+    result = prime * result + ((hierarchy == null) ? 0 : hierarchy.hashCode());
+    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + level;
+    result = prime * result + max;
+    result = prime * result + min;
+    result = prime * result + (password ? 1231 : 1237);
+    result = prime * result + position;
+    result = prime * result + ((role == null) ? 0 : role.hashCode());
+    result = prime * result + rowcount;
+    result = prime * result + rowheight;
+    result = prime * result + rowindex;
+    result = prime * result + rows;
+    result = prime * result + screenX;
+    result = prime * result + screenY;
+    result = prime * result + selend;
+    result = prime * result + selstart;
+    result = prime * result + size;
+    result = prime * result + ((states == null) ? 0 : states.hashCode());
+    result = prime * result + ((text == null) ? 0 : text.hashCode());
+    result = prime * result + (toggle ? 1231 : 1237);
+    result = prime * result + ((tooltip == null) ? 0 : tooltip.hashCode());
+    result = prime * result + val;
+    result = prime * result + ((value == null) ? 0 : value.hashCode());
+    result = prime * result + width;
+    return result;
+  }
 
-	public String getRole() {
-		return role;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    AccessibilityMsgOut other = (AccessibilityMsgOut) obj;
+    if (colcount != other.colcount)
+      return false;
+    if (colindex != other.colindex)
+      return false;
+    if (columnheader == null) {
+      if (other.columnheader != null)
+        return false;
+    } else if (!columnheader.equals(other.columnheader))
+      return false;
+    if (description == null) {
+      if (other.description != null)
+        return false;
+    } else if (!description.equals(other.description))
+      return false;
+    if (height != other.height)
+      return false;
+    if (hierarchy == null) {
+      if (other.hierarchy != null)
+        return false;
+    } else if (!hierarchy.equals(other.hierarchy))
+      return false;
+    if (id == null) {
+      if (other.id != null)
+        return false;
+    } else if (!id.equals(other.id))
+      return false;
+    if (level != other.level)
+      return false;
+    if (max != other.max)
+      return false;
+    if (min != other.min)
+      return false;
+    if (password != other.password)
+      return false;
+    if (position != other.position)
+      return false;
+    if (role == null) {
+      if (other.role != null)
+        return false;
+    } else if (!role.equals(other.role))
+      return false;
+    if (rowcount != other.rowcount)
+      return false;
+    if (rowheight != other.rowheight)
+      return false;
+    if (rowindex != other.rowindex)
+      return false;
+    if (rows != other.rows)
+      return false;
+    if (screenX != other.screenX)
+      return false;
+    if (screenY != other.screenY)
+      return false;
+    if (selend != other.selend)
+      return false;
+    if (selstart != other.selstart)
+      return false;
+    if (size != other.size)
+      return false;
+    if (states == null) {
+      if (other.states != null)
+        return false;
+    } else if (!states.equals(other.states))
+      return false;
+    if (text == null) {
+      if (other.text != null)
+        return false;
+    } else if (!text.equals(other.text))
+      return false;
+    if (toggle != other.toggle)
+      return false;
+    if (tooltip == null) {
+      if (other.tooltip != null)
+        return false;
+    } else if (!tooltip.equals(other.tooltip))
+      return false;
+    if (val != other.val)
+      return false;
+    if (value == null) {
+      if (other.value != null)
+        return false;
+    } else if (!value.equals(other.value))
+      return false;
+    if (width != other.width)
+      return false;
+    return true;
+  }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+  public String getRole() {
+    return role;
+  }
 
-	public String getText() {
-		return text;
-	}
+  public void setRole(String role) {
+    this.role = role;
+  }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public List<String> getStates() {
-		return states;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public void setStates(List<String> states) {
-		this.states = states;
-	}
+  public List<String> getStates() {
+    return states;
+  }
 
-	public int getMin() {
-		return min;
-	}
+  public void setStates(List<String> states) {
+    this.states = states;
+  }
 
-	public void setMin(int min) {
-		this.min = min;
-	}
+  public int getMin() {
+    return min;
+  }
 
-	public int getMax() {
-		return max;
-	}
+  public void setMin(int min) {
+    this.min = min;
+  }
 
-	public void setMax(int max) {
-		this.max = max;
-	}
+  public int getMax() {
+    return max;
+  }
 
-	public int getVal() {
-		return val;
-	}
+  public void setMax(int max) {
+    this.max = max;
+  }
 
-	public void setVal(int val) {
-		this.val = val;
-	}
+  public int getVal() {
+    return val;
+  }
 
-	public int getScreenX() {
-		return screenX;
-	}
+  public void setVal(int val) {
+    this.val = val;
+  }
 
-	public void setScreenX(int screenX) {
-		this.screenX = screenX;
-	}
+  public int getScreenX() {
+    return screenX;
+  }
 
-	public int getScreenY() {
-		return screenY;
-	}
+  public void setScreenX(int screenX) {
+    this.screenX = screenX;
+  }
 
-	public void setScreenY(int screenY) {
-		this.screenY = screenY;
-	}
+  public int getScreenY() {
+    return screenY;
+  }
 
-	public int getWidth() {
-		return width;
-	}
+  public void setScreenY(int screenY) {
+    this.screenY = screenY;
+  }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+  public int getWidth() {
+    return width;
+  }
 
-	public int getHeight() {
-		return height;
-	}
+  public void setWidth(int width) {
+    this.width = width;
+  }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+  public int getHeight() {
+    return height;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public void setHeight(int height) {
+    this.height = height;
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getTooltip() {
-		return tooltip;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public void setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-	}
+  public String getTooltip() {
+    return tooltip;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public void setTooltip(String tooltip) {
+    this.tooltip = tooltip;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public String getColumnheader() {
-		return columnheader;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public void setColumnheader(String columnheader) {
-		this.columnheader = columnheader;
-	}
+  public String getColumnheader() {
+    return columnheader;
+  }
 
-	public boolean isPassword() {
-		return password;
-	}
+  public void setColumnheader(String columnheader) {
+    this.columnheader = columnheader;
+  }
 
-	public void setPassword(boolean password) {
-		this.password = password;
-	}
+  public boolean isPassword() {
+    return password;
+  }
 
-	public boolean isToggle() {
-		return toggle;
-	}
+  public void setPassword(boolean password) {
+    this.password = password;
+  }
 
-	public void setToggle(boolean toggle) {
-		this.toggle = toggle;
-	}
+  public boolean isToggle() {
+    return toggle;
+  }
 
-	public int getSelstart() {
-		return selstart;
-	}
+  public void setToggle(boolean toggle) {
+    this.toggle = toggle;
+  }
 
-	public void setSelstart(int selstart) {
-		this.selstart = selstart;
-	}
+  public int getSelstart() {
+    return selstart;
+  }
 
-	public int getSelend() {
-		return selend;
-	}
+  public void setSelstart(int selstart) {
+    this.selstart = selstart;
+  }
 
-	public void setSelend(int selend) {
-		this.selend = selend;
-	}
+  public int getSelend() {
+    return selend;
+  }
 
-	public int getRowheight() {
-		return rowheight;
-	}
+  public void setSelend(int selend) {
+    this.selend = selend;
+  }
 
-	public void setRowheight(int rowheight) {
-		this.rowheight = rowheight;
-	}
+  public int getRowheight() {
+    return rowheight;
+  }
 
-	public int getRows() {
-		return rows;
-	}
+  public void setRowheight(int rowheight) {
+    this.rowheight = rowheight;
+  }
 
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
+  public int getRows() {
+    return rows;
+  }
 
-	public int getSize() {
-		return size;
-	}
+  public void setRows(int rows) {
+    this.rows = rows;
+  }
 
-	public void setSize(int size) {
-		this.size = size;
-	}
+  public int getSize() {
+    return size;
+  }
 
-	public int getPosition() {
-		return position;
-	}
+  public void setSize(int size) {
+    this.size = size;
+  }
 
-	public void setPosition(int position) {
-		this.position = position;
-	}
+  public int getPosition() {
+    return position;
+  }
 
-	public int getLevel() {
-		return level;
-	}
+  public void setPosition(int position) {
+    this.position = position;
+  }
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
+  public int getLevel() {
+    return level;
+  }
 
-	public int getColindex() {
-		return colindex;
-	}
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
-	public void setColindex(int colindex) {
-		this.colindex = colindex;
-	}
+  public int getColindex() {
+    return colindex;
+  }
 
-	public int getRowindex() {
-		return rowindex;
-	}
+  public void setColindex(int colindex) {
+    this.colindex = colindex;
+  }
 
-	public void setRowindex(int rowindex) {
-		this.rowindex = rowindex;
-	}
+  public int getRowindex() {
+    return rowindex;
+  }
 
-	public int getRowcount() {
-		return rowcount;
-	}
+  public void setRowindex(int rowindex) {
+    this.rowindex = rowindex;
+  }
 
-	public void setRowcount(int rowcount) {
-		this.rowcount = rowcount;
-	}
+  public int getRowcount() {
+    return rowcount;
+  }
 
-	public int getColcount() {
-		return colcount;
-	}
+  public void setRowcount(int rowcount) {
+    this.rowcount = rowcount;
+  }
 
-	public void setColcount(int colcount) {
-		this.colcount = colcount;
-	}
+  public int getColcount() {
+    return colcount;
+  }
 
-	public List<AccessibilityHierarchyMsgOut> getHierarchy() {
-		return hierarchy;
-	}
+  public void setColcount(int colcount) {
+    this.colcount = colcount;
+  }
 
-	public void setHierarchy(List<AccessibilityHierarchyMsgOut> hierarchy) {
-		this.hierarchy = hierarchy;
-	}
+  public List<AccessibilityHierarchyMsgOut> getHierarchy() {
+    return hierarchy;
+  }
+
+  public void setHierarchy(List<AccessibilityHierarchyMsgOut> hierarchy) {
+    this.hierarchy = hierarchy;
+  }
 
 }

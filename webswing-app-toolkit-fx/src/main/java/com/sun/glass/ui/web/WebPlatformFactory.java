@@ -18,28 +18,28 @@ import com.sun.glass.ui.delegate.MenuItemDelegate;
 
 public class WebPlatformFactory extends PlatformFactory {
 
-	@Override
-	public Application createApplication() {
-		return WebsinwgFxToolkitFactory.getFactory().createApplication();
-	}
+  @Override
+  public Application createApplication() {
+    return WebsinwgFxToolkitFactory.getFactory().createApplication();
+  }
 
-	@Override
-	public MenuBarDelegate createMenuBarDelegate(MenuBar menubar) {
-		return new WebMenuBarDelegate();
-	}
+  @Override
+  public MenuBarDelegate createMenuBarDelegate(MenuBar menubar) {
+    return new WebMenuBarDelegate();
+  }
 
-	@Override
-	public MenuDelegate createMenuDelegate(Menu menu) {
-		return new WebMenuDelegate();
-	}
+  @Override
+  public MenuDelegate createMenuDelegate(Menu menu) {
+    return new WebMenuDelegate();
+  }
 
-	@Override
-	public MenuItemDelegate createMenuItemDelegate(MenuItem menuItem) {
-		return new WebMenuItemDelegate();
-	}
+  @Override
+  public MenuItemDelegate createMenuItemDelegate(MenuItem menuItem) {
+    return new WebMenuItemDelegate();
+  }
 
-	@Override
-	public ClipboardDelegate createClipboardDelegate() {
-		return new WebClipboardDelegate();
-	}
+  @Override
+  public ClipboardDelegate createClipboardDelegate() {
+    return new WebClipboardDelegate();
+  }
 }

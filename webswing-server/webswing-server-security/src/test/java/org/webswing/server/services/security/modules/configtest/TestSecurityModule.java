@@ -11,18 +11,20 @@ import org.webswing.server.services.security.modules.AbstractSecurityModule;
 
 public class TestSecurityModule extends AbstractSecurityModule<TestSecurityModuleConfig> {
 
-	public TestSecurityModule(TestSecurityModuleConfig config) {
-		super(config);
-	}
+  public TestSecurityModule(TestSecurityModuleConfig config) {
+    super(config);
+  }
 
-	@Override
-	protected AuthenticatedWebswingUser authenticate(HttpServletRequest request) throws WebswingAuthenticationException {
-		return null;
-	}
+  @Override
+  protected AuthenticatedWebswingUser authenticate(HttpServletRequest request)
+      throws WebswingAuthenticationException {
+    return null;
+  }
 
-	@Override
-	protected void serveLoginPartial(HttpServletRequest request, HttpServletResponse response, WebswingAuthenticationException exception) throws IOException {
+  @Override
+  protected void serveLoginPartial(HttpServletRequest request, HttpServletResponse response,
+      WebswingAuthenticationException exception) throws IOException {
 
-	}
+  }
 
 }

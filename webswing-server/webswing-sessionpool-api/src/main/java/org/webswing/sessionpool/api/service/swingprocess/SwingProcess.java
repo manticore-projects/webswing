@@ -4,26 +4,26 @@ import org.webswing.server.common.model.SwingConfig;
 
 public interface SwingProcess {
 
-	boolean isRunning();
+  boolean isRunning();
 
-	void destroy(int delayMs);
+  void destroy(int delayMs);
 
-	void execute() throws Exception;
+  void execute() throws Exception;
 
-	boolean isForceKilled();
+  boolean isForceKilled();
 
-	void setProcessStatusListener(ProcessStatusListener listener);
-	
-	void setProcessExitListener(ProcessExitListener listener);
-	
-	void setApplicationExitListener(ApplicationExitListener listener);
+  void setProcessStatusListener(ProcessStatusListener listener);
 
-	SwingProcessConfig getConfig();
-	
-	SwingConfig getSwingConfig();
+  void setProcessExitListener(ProcessExitListener listener);
 
-	String getInstanceId();
-	
-	void reconnect(String serverUrl);
-	
+  void setApplicationExitListener(ApplicationExitListener listener);
+
+  SwingProcessConfig getConfig();
+
+  SwingConfig getSwingConfig();
+
+  String getInstanceId();
+
+  void reconnect(String serverUrl);
+
 }

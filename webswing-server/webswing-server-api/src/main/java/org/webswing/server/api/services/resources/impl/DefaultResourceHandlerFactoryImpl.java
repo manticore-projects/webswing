@@ -10,9 +10,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultResourceHandlerFactoryImpl implements ResourceHandlerFactory {
 
-	@Override
-	public ResourceHandler create(PrimaryUrlHandler manager, WebResourceProvider webResourceProvider) {
-		return new DefaultResourceHandlerImpl(manager, webResourceProvider);
-	}
+  @Override
+  public ResourceHandler create(PrimaryUrlHandler manager,
+      WebResourceProvider webResourceProvider) {
+    return new DefaultResourceHandlerImpl(manager, webResourceProvider);
+  }
 
 }

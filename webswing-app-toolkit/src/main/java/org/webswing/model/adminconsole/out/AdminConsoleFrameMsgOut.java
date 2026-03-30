@@ -7,125 +7,126 @@ import org.webswing.model.MsgOut;
 
 public class AdminConsoleFrameMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 3253892297375570414L;
+  @Serial
+  private static final long serialVersionUID = 3253892297375570414L;
 
-	private String path;
-	private ThreadDumpMsgOut threadDump;
-	private InstanceCountsStatsWarningsMsgOut instanceCountsStatsWarnings;
-	private SwingSessionsMsgOut swingSessions;
-	private List<RegisterInstanceMsgOut> registerInstances;
-	private ServerInfoMsgOut serverInfo;
-	private ConfigMsgOut config;
-	private MetaMsgOut meta;
-	private ResolveConfigMsgOut resolveConfig;
-	private SearchVariablesMsgOut searchVariables;
-	private SaveConfigResultMsgOut saveConfigResult;
-	private AccessTokenCreatedMsgOut accessTokenCreated;
-	private MirrorFrameMsgOut mirrorFrame;
-	
-	public String getPath() {
-		return path;
-	}
+  private String path;
+  private ThreadDumpMsgOut threadDump;
+  private InstanceCountsStatsWarningsMsgOut instanceCountsStatsWarnings;
+  private SwingSessionsMsgOut swingSessions;
+  private List<RegisterInstanceMsgOut> registerInstances;
+  private ServerInfoMsgOut serverInfo;
+  private ConfigMsgOut config;
+  private MetaMsgOut meta;
+  private ResolveConfigMsgOut resolveConfig;
+  private SearchVariablesMsgOut searchVariables;
+  private SaveConfigResultMsgOut saveConfigResult;
+  private AccessTokenCreatedMsgOut accessTokenCreated;
+  private MirrorFrameMsgOut mirrorFrame;
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public ThreadDumpMsgOut getThreadDump() {
-		return threadDump;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setThreadDump(ThreadDumpMsgOut threadDump) {
-		this.threadDump = threadDump;
-	}
+  public ThreadDumpMsgOut getThreadDump() {
+    return threadDump;
+  }
 
-	public InstanceCountsStatsWarningsMsgOut getInstanceCountsStatsWarnings() {
-		return instanceCountsStatsWarnings;
-	}
-	
-	public void setInstanceCountsStatsWarnings(InstanceCountsStatsWarningsMsgOut instanceCountsStatsWarnings) {
-		this.instanceCountsStatsWarnings = instanceCountsStatsWarnings;
-	}
+  public void setThreadDump(ThreadDumpMsgOut threadDump) {
+    this.threadDump = threadDump;
+  }
 
-	public SwingSessionsMsgOut getSwingSessions() {
-		return swingSessions;
-	}
+  public InstanceCountsStatsWarningsMsgOut getInstanceCountsStatsWarnings() {
+    return instanceCountsStatsWarnings;
+  }
 
-	public void setSwingSessions(SwingSessionsMsgOut swingSessions) {
-		this.swingSessions = swingSessions;
-	}
+  public void setInstanceCountsStatsWarnings(
+      InstanceCountsStatsWarningsMsgOut instanceCountsStatsWarnings) {
+    this.instanceCountsStatsWarnings = instanceCountsStatsWarnings;
+  }
 
-	public List<RegisterInstanceMsgOut> getRegisterInstances() {
-		return registerInstances;
-	}
+  public SwingSessionsMsgOut getSwingSessions() {
+    return swingSessions;
+  }
 
-	public void setRegisterInstances(List<RegisterInstanceMsgOut> registerInstances) {
-		this.registerInstances = registerInstances;
-	}
+  public void setSwingSessions(SwingSessionsMsgOut swingSessions) {
+    this.swingSessions = swingSessions;
+  }
 
-	public ServerInfoMsgOut getServerInfo() {
-		return serverInfo;
-	}
+  public List<RegisterInstanceMsgOut> getRegisterInstances() {
+    return registerInstances;
+  }
 
-	public void setServerInfo(ServerInfoMsgOut serverInfo) {
-		this.serverInfo = serverInfo;
-	}
+  public void setRegisterInstances(List<RegisterInstanceMsgOut> registerInstances) {
+    this.registerInstances = registerInstances;
+  }
 
-	public ConfigMsgOut getConfig() {
-		return config;
-	}
+  public ServerInfoMsgOut getServerInfo() {
+    return serverInfo;
+  }
 
-	public void setConfig(ConfigMsgOut config) {
-		this.config = config;
-	}
+  public void setServerInfo(ServerInfoMsgOut serverInfo) {
+    this.serverInfo = serverInfo;
+  }
 
-	public MetaMsgOut getMeta() {
-		return meta;
-	}
+  public ConfigMsgOut getConfig() {
+    return config;
+  }
 
-	public void setMeta(MetaMsgOut meta) {
-		this.meta = meta;
-	}
+  public void setConfig(ConfigMsgOut config) {
+    this.config = config;
+  }
 
-	public ResolveConfigMsgOut getResolveConfig() {
-		return resolveConfig;
-	}
+  public MetaMsgOut getMeta() {
+    return meta;
+  }
 
-	public void setResolveConfig(ResolveConfigMsgOut resolveConfig) {
-		this.resolveConfig = resolveConfig;
-	}
+  public void setMeta(MetaMsgOut meta) {
+    this.meta = meta;
+  }
 
-	public SearchVariablesMsgOut getSearchVariables() {
-		return searchVariables;
-	}
+  public ResolveConfigMsgOut getResolveConfig() {
+    return resolveConfig;
+  }
 
-	public void setSearchVariables(SearchVariablesMsgOut searchVariables) {
-		this.searchVariables = searchVariables;
-	}
+  public void setResolveConfig(ResolveConfigMsgOut resolveConfig) {
+    this.resolveConfig = resolveConfig;
+  }
 
-	public SaveConfigResultMsgOut getSaveConfigResult() {
-		return saveConfigResult;
-	}
+  public SearchVariablesMsgOut getSearchVariables() {
+    return searchVariables;
+  }
 
-	public void setSaveConfigResult(SaveConfigResultMsgOut saveConfigResult) {
-		this.saveConfigResult = saveConfigResult;
-	}
+  public void setSearchVariables(SearchVariablesMsgOut searchVariables) {
+    this.searchVariables = searchVariables;
+  }
 
-	public AccessTokenCreatedMsgOut getAccessTokenCreated() {
-		return accessTokenCreated;
-	}
+  public SaveConfigResultMsgOut getSaveConfigResult() {
+    return saveConfigResult;
+  }
 
-	public void setAccessTokenCreated(AccessTokenCreatedMsgOut accessTokenCreated) {
-		this.accessTokenCreated = accessTokenCreated;
-	}
+  public void setSaveConfigResult(SaveConfigResultMsgOut saveConfigResult) {
+    this.saveConfigResult = saveConfigResult;
+  }
 
-	public MirrorFrameMsgOut getMirrorFrame() {
-		return mirrorFrame;
-	}
+  public AccessTokenCreatedMsgOut getAccessTokenCreated() {
+    return accessTokenCreated;
+  }
 
-	public void setMirrorFrame(MirrorFrameMsgOut mirrorFrame) {
-		this.mirrorFrame = mirrorFrame;
-	}
+  public void setAccessTokenCreated(AccessTokenCreatedMsgOut accessTokenCreated) {
+    this.accessTokenCreated = accessTokenCreated;
+  }
+
+  public MirrorFrameMsgOut getMirrorFrame() {
+    return mirrorFrame;
+  }
+
+  public void setMirrorFrame(MirrorFrameMsgOut mirrorFrame) {
+    this.mirrorFrame = mirrorFrame;
+  }
 
 }

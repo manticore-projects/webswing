@@ -7,39 +7,40 @@ import org.webswing.directdraw.proto.Directdraw.DrawConstantProto;
 import org.webswing.directdraw.util.DrawConstantPool;
 
 public abstract class CompositeDrawConstantHolder<T> extends DrawConstant<T> {
-	T value;
+  T value;
 
-	public CompositeDrawConstantHolder(DirectDraw ctx) {
-		super(ctx);
-	}
+  public CompositeDrawConstantHolder(DirectDraw ctx) {
+    super(ctx);
+  }
 
-	@Override
-	public T getValue() {
-		return value;
-	}
+  @Override
+  public T getValue() {
+    return value;
+  }
 
-	public abstract void expandAndCacheConstants(List<DrawConstantProto> protos,DrawConstantPool cache);
+  public abstract void expandAndCacheConstants(List<DrawConstantProto> protos,
+      DrawConstantPool cache);
 
-	public abstract int getExpandedConstantCount();
+  public abstract int getExpandedConstantCount();
 
-	@Override
-	public String getFieldName() {
-		return null;
-	}
+  @Override
+  public String getFieldName() {
+    return null;
+  }
 
-	@Override
-	public Object toMessage() {
-		throw new UnsupportedOperationException();
-	}
+  @Override
+  public Object toMessage() {
+    throw new UnsupportedOperationException();
+  }
 
-	@Override
-	public int hashCode() {
-		return getId();
-	}
+  @Override
+  public int hashCode() {
+    return getId();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		return o == this;
-	}
+  @Override
+  public boolean equals(Object o) {
+    return o == this;
+  }
 
 }

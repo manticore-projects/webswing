@@ -18,58 +18,60 @@ import org.webswing.server.model.exception.WsException;
 import org.webswing.server.services.security.api.WebswingSecurityModule;
 
 public class LogoutHandlerImpl extends AbstractUrlHandler implements LogoutHandler {
-	
-	private static final Logger log = LoggerFactory.getLogger(LogoutHandlerImpl.class);
-	
-	private final WebSocketService webSockets;
 
-	public LogoutHandlerImpl(WebSocketService webSockets, UrlHandler parent) {
-		super(parent);
-		this.webSockets = webSockets;
-	}
+  private static final Logger log = LoggerFactory.getLogger(LogoutHandlerImpl.class);
 
-	@Override
-	protected String getPath() {
-		return "logout";
-	}
+  private final WebSocketService webSockets;
 
-	@Override
-	public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
-		AbstractWebswingUser user;
-		try {
-			if ("OPTIONS".equals(req.getMethod())) {
-				return true;//cors preflight, don't forward to security module
-			}
-			user = logout(req, res);
-		} catch (Exception e) {
-			log.error("Failed to logout", e);
-			throw new WsException("Failed to logout", e);
-		}
+  public LogoutHandlerImpl(WebSocketService webSockets, UrlHandler parent) {
+    super(parent);
+    this.webSockets = webSockets;
+  }
 
-		WebswingSecurityModule securityModuleWrapper = getSecurityProvider().get();
-		try {
-			securityModuleWrapper.doLogout(req, res, user);
-		} catch (Exception e) {
-			log.error("Failed Logout by SecurityModule.", e);
-			throw new WsException("Failed Logout by SecurityModule.", e);
-		}
-		return true;
-	}
+  @Override
+  protected String getPath() {
+    return "logout";
+  }
 
-	protected AbstractWebswingUser logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		AbstractWebswingUser user = getUser();
-		if (user != null) {
-			WebswingSecuritySubject subject = WebswingSecuritySubject.get();
-			try {
-				// logout only user for the secured path (in case other users are logged in the same session)
-				// return updated refresh token in set-cookie
-				subject.logout(resp, getSecuredPath());
-			} catch (Exception e) {
-				log.error("Error while logging out!", e);
-			}
-			return user;
-		}
-		return null;
-	}
+  @Override
+  public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
+    AbstractWebswingUser user;
+    try {
+      if ("OPTIONS".equals(req.getMethod())) {
+        return true;// cors preflight, don't forward to security module
+      }
+      user = logout(req, res);
+    } catch (Exception e) {
+      log.error("Failed to logout", e);
+      throw new WsException("Failed to logout", e);
+    }
+
+    WebswingSecurityModule securityModuleWrapper = getSecurityProvider().get();
+    try {
+      securityModuleWrapper.doLogout(req, res, user);
+    } catch (Exception e) {
+      log.error("Failed Logout by SecurityModule.", e);
+      throw new WsException("Failed Logout by SecurityModule.", e);
+    }
+    return true;
+  }
+
+  protected AbstractWebswingUser logout(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    AbstractWebswingUser user = getUser();
+    if (user != null) {
+      WebswingSecuritySubject subject = WebswingSecuritySubject.get();
+      try {
+        // logout only user for the secured path (in case other users are logged in the same
+        // session)
+        // return updated refresh token in set-cookie
+        subject.logout(resp, getSecuredPath());
+      } catch (Exception e) {
+        log.error("Error while logging out!", e);
+      }
+      return user;
+    }
+    return null;
+  }
 
 }

@@ -15,13 +15,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class SwingInstanceFactoryImpl implements SwingInstanceFactory {
 
-	@Inject
-	public SwingInstanceFactoryImpl(SessionPoolHolderService sessionPoolHolderService) {
-	}
+  @Inject
+  public SwingInstanceFactoryImpl(SessionPoolHolderService sessionPoolHolderService) {}
 
-	@Override
-	public ConnectedSwingInstance create(PrimaryWebSocketConnection r, ConnectionHandshakeMsgIn h, SwingInstanceInfo instanceInfo, ServerSessionPoolConnector serverSessionPoolConnector) throws WsException {
-		return new SwingInstanceImpl(r, h, instanceInfo, serverSessionPoolConnector);
-	}
-	
+  @Override
+  public ConnectedSwingInstance create(PrimaryWebSocketConnection r, ConnectionHandshakeMsgIn h,
+      SwingInstanceInfo instanceInfo, ServerSessionPoolConnector serverSessionPoolConnector)
+      throws WsException {
+    return new SwingInstanceImpl(r, h, instanceInfo, serverSessionPoolConnector);
+  }
+
 }

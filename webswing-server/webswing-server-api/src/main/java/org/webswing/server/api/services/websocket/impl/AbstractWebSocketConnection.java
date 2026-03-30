@@ -20,109 +20,114 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractWebSocketConnection implements WebSocketConnection {
-	private static final Logger log = LoggerFactory.getLogger(AbstractWebSocketConnection.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractWebSocketConnection.class);
 
-	private static int maxMessageSize = Integer.getInteger(Constants.WEBSOCKET_MESSAGE_SIZE, Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE);
-	private static long messageTimeout = Long.getLong(Constants.WEBSOCKET_MESSAGE_TIMEOUT, Constants.WEBSOCKET_MESSAGE_TIMEOUT_DEFAULT);
+  private static int maxMessageSize = Integer.getInteger(Constants.WEBSOCKET_MESSAGE_SIZE,
+      Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE);
+  private static long messageTimeout = Long.getLong(Constants.WEBSOCKET_MESSAGE_TIMEOUT,
+      Constants.WEBSOCKET_MESSAGE_TIMEOUT_DEFAULT);
 
-	private static Timer pingTimer = new Timer("Websocket Ping Timer",true);
+  private static Timer pingTimer = new Timer("Websocket Ping Timer", true);
 
-	private ByteArrayOutputStream partialMsg = new ByteArrayOutputStream();
+  private ByteArrayOutputStream partialMsg = new ByteArrayOutputStream();
 
-	protected Session session;
-	
-	private Object sendLock = new Object();
+  protected Session session;
 
-	protected void onOpen(Session session, EndpointConfig config) {
-		this.session = session;
-		session.setMaxBinaryMessageBufferSize(maxMessageSize);
-		session.getAsyncRemote().setSendTimeout(messageTimeout);
+  private Object sendLock = new Object();
 
-		pingTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if (session != null && session.isOpen()) {
-					try {
-						synchronized (sendLock) {
-							session.getAsyncRemote().sendPing(ByteBuffer.wrap(Constants.WEBSOCKET_PING_PONG_CONTENT.getBytes(StandardCharsets.UTF_8)));
-						}
-					} catch (IllegalArgumentException | IOException e) {
-						this.cancel();
-					}
-				} else {
-					this.cancel();
-				}
-			}
-		}, Constants.WEBSOCKET_PING_PONG_INTERVAL, Constants.WEBSOCKET_PING_PONG_INTERVAL);
-	}
+  protected void onOpen(Session session, EndpointConfig config) {
+    this.session = session;
+    session.setMaxBinaryMessageBufferSize(maxMessageSize);
+    session.getAsyncRemote().setSendTimeout(messageTimeout);
 
-	protected Pair<Msg, Integer> getCompleteMessage(byte[] bytes, boolean last) throws IOException {
-		if (bytes == null) {
-			return null;
-		}
+    pingTimer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        if (session != null && session.isOpen()) {
+          try {
+            synchronized (sendLock) {
+              session.getAsyncRemote().sendPing(ByteBuffer
+                  .wrap(Constants.WEBSOCKET_PING_PONG_CONTENT.getBytes(StandardCharsets.UTF_8)));
+            }
+          } catch (IllegalArgumentException | IOException e) {
+            this.cancel();
+          }
+        } else {
+          this.cancel();
+        }
+      }
+    }, Constants.WEBSOCKET_PING_PONG_INTERVAL, Constants.WEBSOCKET_PING_PONG_INTERVAL);
+  }
 
-		try {
-			partialMsg.write(bytes);
-			if (last) {
-				byte[] array = partialMsg.toByteArray();
+  protected Pair<Msg, Integer> getCompleteMessage(byte[] bytes, boolean last) throws IOException {
+    if (bytes == null) {
+      return null;
+    }
 
-				return Pair.of(decodeIncomingMessage(array), array.length);
-			}
-		} finally {
-			if (last) {
-				try {
-					partialMsg.close();
-				} catch (IOException e) {
-					// ignore
-				}
-				partialMsg = new ByteArrayOutputStream();
-			}
-		}
+    try {
+      partialMsg.write(bytes);
+      if (last) {
+        byte[] array = partialMsg.toByteArray();
 
-		return null;
-	}
+        return Pair.of(decodeIncomingMessage(array), array.length);
+      }
+    } finally {
+      if (last) {
+        try {
+          partialMsg.close();
+        } catch (IOException e) {
+          // ignore
+        }
+        partialMsg = new ByteArrayOutputStream();
+      }
+    }
 
-	protected void sendMessage(byte[] encoded) throws IOException {
-		try {
-			synchronized (sendLock) {
-				session.getAsyncRemote().sendBinary(ByteBuffer.wrap(encoded)).get();
-			}
-		} catch (IllegalStateException | InterruptedException | ExecutionException ex){
-			throw new IOException(ex.getMessage(), ex);
-		}
-	}
+    return null;
+  }
 
-	protected void onPong(Session session, PongMessage pongMessage, Logger log) {
-		ByteBuffer buffer = pongMessage.getApplicationData();
-		if (buffer == null) {
-			log.warn("Empty pong message received for session [" + session.getId() + "]!");
-		}
-		byte[] bytes = new byte[buffer.remaining()];
-		buffer.get(bytes);
+  protected void sendMessage(byte[] encoded) throws IOException {
+    try {
+      synchronized (sendLock) {
+        session.getAsyncRemote().sendBinary(ByteBuffer.wrap(encoded)).get();
+      }
+    } catch (IllegalStateException | InterruptedException | ExecutionException ex) {
+      throw new IOException(ex.getMessage(), ex);
+    }
+  }
 
-		String pong = new String(bytes, StandardCharsets.UTF_8);
-		if (!Constants.WEBSOCKET_PING_PONG_CONTENT.equals(pong)) {
-			log.warn("Error receiving pong message for session [" + session.getId() + "], content received [" + pong + "]!");
-		}
-	}
+  protected void onPong(Session session, PongMessage pongMessage, Logger log) {
+    ByteBuffer buffer = pongMessage.getApplicationData();
+    if (buffer == null) {
+      log.warn("Empty pong message received for session [" + session.getId() + "]!");
+    }
+    byte[] bytes = new byte[buffer.remaining()];
+    buffer.get(bytes);
 
-	protected boolean validateHandshakeToken(String secret) {
-		try {
-			if (!JwtUtil.validateHandshakeToken(secret)) {
-				throw new IllegalArgumentException("Invalid token [" + secret + "] received during handshake!");
-			}
-			return true;
-		} catch (Exception e1) {
-			log.error("Could not validate handshake secret message! Disconnecting...", e1);
-			return false;
-		}
-	}
+    String pong = new String(bytes, StandardCharsets.UTF_8);
+    if (!Constants.WEBSOCKET_PING_PONG_CONTENT.equals(pong)) {
+      log.warn("Error receiving pong message for session [" + session.getId()
+          + "], content received [" + pong + "]!");
+    }
+  }
 
-	protected abstract Msg decodeIncomingMessage(byte[] bytes) throws IOException;
+  protected boolean validateHandshakeToken(String secret) {
+    try {
+      if (!JwtUtil.validateHandshakeToken(secret)) {
+        throw new IllegalArgumentException(
+            "Invalid token [" + secret + "] received during handshake!");
+      }
+      return true;
+    } catch (Exception e1) {
+      log.error("Could not validate handshake secret message! Disconnecting...", e1);
+      return false;
+    }
+  }
 
-	@Override
-	public boolean isConnected() {
-		return session != null && session.isOpen();
-	}
+  protected abstract Msg decodeIncomingMessage(byte[] bytes) throws IOException;
+
+  @Override
+  public boolean isConnected() {
+    return session != null && session.isOpen();
+  }
 
 }

@@ -6,35 +6,34 @@ import java.io.Serial;
 
 public class AppConfigMsgIn implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -7226371902803856086L;
+  @Serial
+  private static final long serialVersionUID = -7226371902803856086L;
 
-	private byte[] appConfig;
-	private String sessionPoolId;
+  private byte[] appConfig;
+  private String sessionPoolId;
 
-	public AppConfigMsgIn() {
-	}
-	
-	public AppConfigMsgIn(byte[] appConfig, String sessionPoolId) {
-		super();
-		this.appConfig = appConfig;
-		this.sessionPoolId = sessionPoolId;
-	}
+  public AppConfigMsgIn() {}
 
-	public byte[] getAppConfig() {
-		return appConfig;
-	}
+  public AppConfigMsgIn(byte[] appConfig, String sessionPoolId) {
+    super();
+    this.appConfig = appConfig;
+    this.sessionPoolId = sessionPoolId;
+  }
 
-	public void setAppConfig(byte[] appConfig) {
-		this.appConfig = appConfig;
-	}
+  public byte[] getAppConfig() {
+    return appConfig;
+  }
 
-	public String getSessionPoolId() {
-		return sessionPoolId;
-	}
+  public void setAppConfig(byte[] appConfig) {
+    this.appConfig = appConfig;
+  }
 
-	public void setSessionPoolId(String sessionPoolId) {
-		this.sessionPoolId = sessionPoolId;
-	}
+  public String getSessionPoolId() {
+    return sessionPoolId;
+  }
+
+  public void setSessionPoolId(String sessionPoolId) {
+    this.sessionPoolId = sessionPoolId;
+  }
 
 }

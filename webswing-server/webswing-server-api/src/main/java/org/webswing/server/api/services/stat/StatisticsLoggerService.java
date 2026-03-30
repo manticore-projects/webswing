@@ -4,6 +4,6 @@ import org.webswing.server.common.service.stats.StatisticsLogger;
 
 public interface StatisticsLoggerService {
 
-	StatisticsLogger createLogger();
-	
+  StatisticsLogger createLogger();
+
 }

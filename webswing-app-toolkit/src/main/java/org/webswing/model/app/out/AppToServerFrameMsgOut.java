@@ -6,72 +6,72 @@ import java.io.Serial;
 
 public class AppToServerFrameMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -7029550828562961792L;
-	
-	private AppHandshakeMsgOut handshake;
-	private ThreadDumpMsgOut threadDump;
-	private ExitMsgOut exit;
-	private ApiCallMsgOut apiCall;
-	private JvmStatsMsgOut jvmStats;
-	private SessionDataMsgOut sessionData;
-	
-	private byte[] appFrameMsgOut;
-	
-	public byte[] getAppFrameMsgOut() {
-		return appFrameMsgOut;
-	}
+  @Serial
+  private static final long serialVersionUID = -7029550828562961792L;
 
-	public void setAppFrameMsgOut(byte[] appFrameMsgOut) {
-		this.appFrameMsgOut = appFrameMsgOut;
-	}
+  private AppHandshakeMsgOut handshake;
+  private ThreadDumpMsgOut threadDump;
+  private ExitMsgOut exit;
+  private ApiCallMsgOut apiCall;
+  private JvmStatsMsgOut jvmStats;
+  private SessionDataMsgOut sessionData;
 
-	public ThreadDumpMsgOut getThreadDump() {
-		return threadDump;
-	}
+  private byte[] appFrameMsgOut;
 
-	public void setThreadDump(ThreadDumpMsgOut threadDump) {
-		this.threadDump = threadDump;
-	}
+  public byte[] getAppFrameMsgOut() {
+    return appFrameMsgOut;
+  }
 
-	public ExitMsgOut getExit() {
-		return exit;
-	}
+  public void setAppFrameMsgOut(byte[] appFrameMsgOut) {
+    this.appFrameMsgOut = appFrameMsgOut;
+  }
 
-	public void setExit(ExitMsgOut exit) {
-		this.exit = exit;
-	}
+  public ThreadDumpMsgOut getThreadDump() {
+    return threadDump;
+  }
 
-	public ApiCallMsgOut getApiCall() {
-		return apiCall;
-	}
+  public void setThreadDump(ThreadDumpMsgOut threadDump) {
+    this.threadDump = threadDump;
+  }
 
-	public void setApiCall(ApiCallMsgOut apiCall) {
-		this.apiCall = apiCall;
-	}
+  public ExitMsgOut getExit() {
+    return exit;
+  }
 
-	public JvmStatsMsgOut getJvmStats() {
-		return jvmStats;
-	}
+  public void setExit(ExitMsgOut exit) {
+    this.exit = exit;
+  }
 
-	public void setJvmStats(JvmStatsMsgOut jvmStats) {
-		this.jvmStats = jvmStats;
-	}
+  public ApiCallMsgOut getApiCall() {
+    return apiCall;
+  }
 
-	public AppHandshakeMsgOut getHandshake() {
-		return handshake;
-	}
+  public void setApiCall(ApiCallMsgOut apiCall) {
+    this.apiCall = apiCall;
+  }
 
-	public void setHandshake(AppHandshakeMsgOut handshake) {
-		this.handshake = handshake;
-	}
+  public JvmStatsMsgOut getJvmStats() {
+    return jvmStats;
+  }
 
-	public SessionDataMsgOut getSessionData() {
-		return sessionData;
-	}
+  public void setJvmStats(JvmStatsMsgOut jvmStats) {
+    this.jvmStats = jvmStats;
+  }
 
-	public void setSessionData(SessionDataMsgOut sessionData) {
-		this.sessionData = sessionData;
-	}
-	
+  public AppHandshakeMsgOut getHandshake() {
+    return handshake;
+  }
+
+  public void setHandshake(AppHandshakeMsgOut handshake) {
+    this.handshake = handshake;
+  }
+
+  public SessionDataMsgOut getSessionData() {
+    return sessionData;
+  }
+
+  public void setSessionData(SessionDataMsgOut sessionData) {
+    this.sessionData = sessionData;
+  }
+
 }

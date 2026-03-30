@@ -6,52 +6,52 @@ import org.webswing.model.SyncMsg;
 import java.io.Serial;
 
 public class PixelsAreaRequestMsgOut implements MsgOut, SyncMsg {
-    @Serial
-    private static final long serialVersionUID = -7414037919462952330L;
-	
-	private String correlationId;
-	private int x;
-	private int y;
-	private int w;
-	private int h;
+  @Serial
+  private static final long serialVersionUID = -7414037919462952330L;
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  private String correlationId;
+  private int x;
+  private int y;
+  private int w;
+  private int h;
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public String getCorrelationId() {
+    return correlationId;
+  }
 
-	public int getX() {
-		return x;
-	}
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
-	public void setX(int x) {
-		this.x = x;
-	}
+  public int getX() {
+    return x;
+  }
 
-	public int getY() {
-		return y;
-	}
+  public void setX(int x) {
+    this.x = x;
+  }
 
-	public void setY(int y) {
-		this.y = y;
-	}
+  public int getY() {
+    return y;
+  }
 
-	public int getW() {
-		return w;
-	}
+  public void setY(int y) {
+    this.y = y;
+  }
 
-	public void setW(int w) {
-		this.w = w;
-	}
+  public int getW() {
+    return w;
+  }
 
-	public int getH() {
-		return h;
-	}
+  public void setW(int w) {
+    this.w = w;
+  }
 
-	public void setH(int h) {
-		this.h = h;
-	}
+  public int getH() {
+    return h;
+  }
+
+  public void setH(int h) {
+    this.h = h;
+  }
 }

@@ -13,16 +13,17 @@ import org.webswing.model.appframe.out.AppFrameMsgOut;
 
 public interface ServerConnectionService {
 
-	void reconnect(String reconnectUrl);
-	
-	void sendObject(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame);
+  void reconnect(String reconnectUrl);
 
-	SyncObjectResponse sendObjectSync(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame, String correlationId) throws TimeoutException, Exception;
+  void sendObject(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame);
 
-	AccessibilityMsgOut getAccessibilityInfo();
+  SyncObjectResponse sendObjectSync(AppToServerFrameMsgOut msgOut, AppFrameMsgOut frame,
+      String correlationId) throws TimeoutException, Exception;
 
-	AccessibilityMsgOut getAccessibilityInfo(Component c, int x, int y);
-	
-	Map<String, Serializable> deserializeUserAttributes(byte[] data) throws IOException;
-	
+  AccessibilityMsgOut getAccessibilityInfo();
+
+  AccessibilityMsgOut getAccessibilityInfo(Component c, int x, int y);
+
+  Map<String, Serializable> deserializeUserAttributes(byte[] data) throws IOException;
+
 }

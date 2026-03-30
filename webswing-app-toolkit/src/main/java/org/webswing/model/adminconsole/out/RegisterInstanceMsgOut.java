@@ -6,45 +6,44 @@ import java.io.Serial;
 
 public class RegisterInstanceMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = -4389200203211810885L;
+  @Serial
+  private static final long serialVersionUID = -4389200203211810885L;
 
-	private String path;
-	private String instanceId;
-	private boolean register;
+  private String path;
+  private String instanceId;
+  private boolean register;
 
-	public RegisterInstanceMsgOut() {
-	}
-	
-	public RegisterInstanceMsgOut(String path, String instanceId, boolean register) {
-		super();
-		this.path = path;
-		this.instanceId = instanceId;
-		this.register = register;
-	}
+  public RegisterInstanceMsgOut() {}
 
-	public String getPath() {
-		return path;
-	}
+  public RegisterInstanceMsgOut(String path, String instanceId, boolean register) {
+    super();
+    this.path = path;
+    this.instanceId = instanceId;
+    this.register = register;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public String getInstanceId() {
-		return instanceId;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
+  public String getInstanceId() {
+    return instanceId;
+  }
 
-	public boolean isRegister() {
-		return register;
-	}
+  public void setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
+  }
 
-	public void setRegister(boolean register) {
-		this.register = register;
-	}
+  public boolean isRegister() {
+    return register;
+  }
+
+  public void setRegister(boolean register) {
+    this.register = register;
+  }
 
 }

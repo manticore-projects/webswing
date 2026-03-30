@@ -7,8 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestSecurityModuleProvider implements WebswingSecurityModuleProvider {
-	@Override
-	public List<String> getSecurityModuleClassNames() {
-		return Arrays.asList("org.webswing.server.services.security.modules.configtest.TestSecurityModule");
-	}
+  @Override
+  public List<String> getSecurityModuleClassNames() {
+    return Arrays
+        .asList("org.webswing.server.services.security.modules.configtest.TestSecurityModule");
+  }
 }

@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface WebswingDataStoreModuleProvider {
 
-	List<String> getDataStoreModuleClassNames();
+  List<String> getDataStoreModuleClassNames();
 }

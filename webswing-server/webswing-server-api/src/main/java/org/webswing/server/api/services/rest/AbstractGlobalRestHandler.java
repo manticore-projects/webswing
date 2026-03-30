@@ -9,10 +9,10 @@ import org.webswing.server.model.exception.WsException;
 
 public abstract class AbstractGlobalRestHandler extends AbstractUrlHandler implements UrlHandler {
 
-	public AbstractGlobalRestHandler(UrlHandler parent) {
-		super(parent);
-	}
+  public AbstractGlobalRestHandler(UrlHandler parent) {
+    super(parent);
+  }
 
-	protected abstract List<ApplicationInfoMsg> getApps() throws WsException;
-	
+  protected abstract List<ApplicationInfoMsg> getApps() throws WsException;
+
 }

@@ -6,75 +6,75 @@ import java.io.Serial;
 
 public class ApplicationInfoMsgOut implements MsgOut {
 
-    @Serial
-    private static final long serialVersionUID = 7963526114521293161L;
+  @Serial
+  private static final long serialVersionUID = 7963526114521293161L;
 
-	private String path;
-	private String name;
-	private byte[] byteIcon;
-	private boolean enabled;
-	private int maxClients;
-	private InstanceManagerStatusMsgOut instanceManagerStatus;
+  private String path;
+  private String name;
+  private byte[] byteIcon;
+  private boolean enabled;
+  private int maxClients;
+  private InstanceManagerStatusMsgOut instanceManagerStatus;
 
-	public ApplicationInfoMsgOut() {
-	}
-	
-	public ApplicationInfoMsgOut(String path, String name, byte[] byteIcon, boolean enabled, int maxClients, InstanceManagerStatusMsgOut instanceManagerStatus) {
-		super();
-		this.path = path;
-		this.name = name;
-		this.byteIcon = byteIcon;
-		this.enabled = enabled;
-		this.maxClients = maxClients;
-		this.instanceManagerStatus = instanceManagerStatus;
-	}
+  public ApplicationInfoMsgOut() {}
 
-	public String getPath() {
-		return path;
-	}
+  public ApplicationInfoMsgOut(String path, String name, byte[] byteIcon, boolean enabled,
+      int maxClients, InstanceManagerStatusMsgOut instanceManagerStatus) {
+    super();
+    this.path = path;
+    this.name = name;
+    this.byteIcon = byteIcon;
+    this.enabled = enabled;
+    this.maxClients = maxClients;
+    this.instanceManagerStatus = instanceManagerStatus;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public byte[] getByteIcon() {
-		return byteIcon;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public void setByteIcon(byte[] byteIcon) {
-		this.byteIcon = byteIcon;
-	}
+  public byte[] getByteIcon() {
+    return byteIcon;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setByteIcon(byte[] byteIcon) {
+    this.byteIcon = byteIcon;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+  public boolean isEnabled() {
+    return enabled;
+  }
 
-	public InstanceManagerStatusMsgOut getInstanceManagerStatus() {
-		return instanceManagerStatus;
-	}
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
 
-	public void setInstanceManagerStatus(InstanceManagerStatusMsgOut instanceManagerStatus) {
-		this.instanceManagerStatus = instanceManagerStatus;
-	}
+  public InstanceManagerStatusMsgOut getInstanceManagerStatus() {
+    return instanceManagerStatus;
+  }
 
-	public int getMaxClients() {
-		return maxClients;
-	}
+  public void setInstanceManagerStatus(InstanceManagerStatusMsgOut instanceManagerStatus) {
+    this.instanceManagerStatus = instanceManagerStatus;
+  }
 
-	public void setMaxClients(int maxClients) {
-		this.maxClients = maxClients;
-	}
+  public int getMaxClients() {
+    return maxClients;
+  }
+
+  public void setMaxClients(int maxClients) {
+    this.maxClients = maxClients;
+  }
 
 }

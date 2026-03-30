@@ -4,5 +4,5 @@ import org.webswing.server.api.services.application.AppPathHandler;
 
 public interface FileTransferHandlerFactory {
 
-	FileTransferHandler create(AppPathHandler manager);
+  FileTransferHandler create(AppPathHandler manager);
 }

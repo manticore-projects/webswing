@@ -2,12 +2,12 @@ package org.webswing.server.api.services.swinginstance;
 
 public interface RemoteSwingInstance {
 
-	String getOwnerId();
+  String getOwnerId();
 
-	String getInstanceId();
+  String getInstanceId();
 
-	String getConnectionId();
-	
-	void setConnectionId(String connectionId);
-	
+  String getConnectionId();
+
+  void setConnectionId(String connectionId);
+
 }

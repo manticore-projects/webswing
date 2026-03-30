@@ -9,53 +9,52 @@ import org.webswing.model.SyncMsg;
 
 public class GetMetaMsgIn implements SyncMsg, MsgIn {
 
-    @Serial
-    private static final long serialVersionUID = 518679934438603445L;
-	
-	private String path;
-	private byte[] serverConfig;
-	private List<AppConfigMsgIn> appConfigs;
-	private String correlationId = UUID.randomUUID().toString();
+  @Serial
+  private static final long serialVersionUID = 518679934438603445L;
 
-	public GetMetaMsgIn() {
-	}
-	
-	public GetMetaMsgIn(String path, byte[] serverConfig, List<AppConfigMsgIn> appConfigs) {
-		this.path = path;
-		this.serverConfig = serverConfig;
-		this.appConfigs = appConfigs;
-	}
+  private String path;
+  private byte[] serverConfig;
+  private List<AppConfigMsgIn> appConfigs;
+  private String correlationId = UUID.randomUUID().toString();
 
-	public String getPath() {
-		return path;
-	}
+  public GetMetaMsgIn() {}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+  public GetMetaMsgIn(String path, byte[] serverConfig, List<AppConfigMsgIn> appConfigs) {
+    this.path = path;
+    this.serverConfig = serverConfig;
+    this.appConfigs = appConfigs;
+  }
 
-	public byte[] getServerConfig() {
-		return serverConfig;
-	}
+  public String getPath() {
+    return path;
+  }
 
-	public void setServerConfig(byte[] serverConfig) {
-		this.serverConfig = serverConfig;
-	}
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-	public List<AppConfigMsgIn> getAppConfigs() {
-		return appConfigs;
-	}
+  public byte[] getServerConfig() {
+    return serverConfig;
+  }
 
-	public void setAppConfigs(List<AppConfigMsgIn> appConfigs) {
-		this.appConfigs = appConfigs;
-	}
+  public void setServerConfig(byte[] serverConfig) {
+    this.serverConfig = serverConfig;
+  }
 
-	public String getCorrelationId() {
-		return correlationId;
-	}
+  public List<AppConfigMsgIn> getAppConfigs() {
+    return appConfigs;
+  }
 
-	public void setCorrelationId(String correlationId) {
-		this.correlationId = correlationId;
-	}
+  public void setAppConfigs(List<AppConfigMsgIn> appConfigs) {
+    this.appConfigs = appConfigs;
+  }
+
+  public String getCorrelationId() {
+    return correlationId;
+  }
+
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
+  }
 
 }

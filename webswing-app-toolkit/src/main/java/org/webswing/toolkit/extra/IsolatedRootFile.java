@@ -6,21 +6,21 @@ import java.io.Serial;
 
 public class IsolatedRootFile extends File {
 
-    public IsolatedRootFile(String pathname) {
-        super(pathname);
-    }
+  public IsolatedRootFile(String pathname) {
+    super(pathname);
+  }
 
-    @Serial
-    private static final long serialVersionUID = -2583310076262643707L;
+  @Serial
+  private static final long serialVersionUID = -2583310076262643707L;
 
-    
-    @Override
-    public String getParent() {
-        return null;
-    }
-    
-    @Override
-    public File getParentFile() {
-        return null;
-    }
+
+  @Override
+  public String getParent() {
+    return null;
+  }
+
+  @Override
+  public File getParentFile() {
+    return null;
+  }
 }

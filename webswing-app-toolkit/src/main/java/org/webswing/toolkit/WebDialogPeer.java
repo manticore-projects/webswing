@@ -8,11 +8,10 @@ import java.util.List;
 
 abstract public class WebDialogPeer extends WebWindowPeer implements DialogPeer {
 
-    public WebDialogPeer(Dialog t) {
-        super(t);
-    }
+  public WebDialogPeer(Dialog t) {
+    super(t);
+  }
 
-    public void blockWindows(List<Window> windows) {
-    }
+  public void blockWindows(List<Window> windows) {}
 
 }
