@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 public final class WebPrintDialogResources extends ListResourceBundle {
   protected final Object[][] getContents() {
-    return new Object[][] {{"Automatic-Feeder", "Automatic Feeder"}, {"Cassette", "Cassette"},
+    return new Object[][]{{"Automatic-Feeder", "Automatic Feeder"}, {"Cassette", "Cassette"},
         {"Form-Source", "Form Source"}, {"Large-Format", "Large Format"},
         {"Manual-Envelope", "Manual Envelope"}, {"Small-Format", "Small Format"},
         {"Tractor-Feeder", "Tractor Feeder"}, {"a", "Engineering A"},

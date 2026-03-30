@@ -85,7 +85,7 @@ public interface WebswingSecurityConfig extends Config {
             return Arrays.stream(securityRoot.list()).map(f -> securityRootString + f + "/*")
                 .toArray(String[]::new);
           } else {
-            return new String[] {};
+            return new String[]{};
           }
         } catch (Exception e) {
           // do nothing
@@ -94,7 +94,7 @@ public interface WebswingSecurityConfig extends Config {
         ArrayList<String> discovered = new ArrayList<>();
         ServiceLoader<WebswingSecurityModuleProvider> loader =
             ServiceLoader.load(WebswingSecurityModuleProvider.class, cl);
-        for (Iterator<WebswingSecurityModuleProvider> i = loader.iterator(); i.hasNext();) {
+        for (Iterator<WebswingSecurityModuleProvider> i = loader.iterator(); i.hasNext(); ) {
           discovered.addAll(i.next().getSecurityModuleClassNames());
         }
         Stream<String> builtin =

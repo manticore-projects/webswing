@@ -149,7 +149,7 @@ public class WebFxView extends View {
     int action = mapAction(e);
     int keyCode = mapKeyCode(e);
     int modifiers = mapModifiers(e.getModifiersEx());
-    char[] chars = new char[] {e.getKeyChar()};
+    char[] chars = new char[]{e.getKeyChar()};
     eventHandler.handleKeyEvent(this, time, action, keyCode, chars, modifiers);
   }
 

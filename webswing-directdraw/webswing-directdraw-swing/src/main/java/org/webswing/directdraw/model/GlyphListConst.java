@@ -64,7 +64,7 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
       }
       // create a points proto for size of drawing area and store to cache:
       PointsConst size =
-          new PointsConst(getContext(), new int[] {minX, minY, maxX - minX, maxY - minY});
+          new PointsConst(getContext(), new int[]{minX, minY, maxX - minX, maxY - minY});
       int sizeId = cache.addToCache(protos, size);
       ids[0] = sizeId;
       // create a points proto for x,y locations and store to cache:

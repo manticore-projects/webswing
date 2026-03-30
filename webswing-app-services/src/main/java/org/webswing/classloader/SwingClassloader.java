@@ -293,8 +293,8 @@ public class SwingClassloader extends URLClassLoader {
   private final FallbackURLClassLoader repoClassLoader;
 
   public SwingClassloader(URL[] classpath, ClassLoader parent) {
-    super(new URL[] {}, parent);
-    this.ignored_packages = new String[] {"org.webswing.special.", "org.webswing.model.",
+    super(new URL[]{}, parent);
+    this.ignored_packages = new String[]{"org.webswing.special.", "org.webswing.model.",
         "org.webswing.toolkit.", "netscape.javascript."};
     this.repoClassLoader = new FallbackURLClassLoader(classpath);
 
@@ -366,7 +366,7 @@ public class SwingClassloader extends URLClassLoader {
   protected JavaClass modifyClass(JavaClass clazz) {
 
     // do not modify classes placed in this list
-    if (ClassLoaderUtil.isInPackage(clazz.getPackageName(), new String[] {"org.webswing"})) {
+    if (ClassLoaderUtil.isInPackage(clazz.getPackageName(), new String[]{"org.webswing"})) {
       return clazz;
     }
 
@@ -628,7 +628,7 @@ public class SwingClassloader extends URLClassLoader {
           : classFilePath;
       CodeSource source = null;
       try {
-        source = new CodeSource(new URL(classFilePath), new Certificate[] {});
+        source = new CodeSource(new URL(classFilePath), new Certificate[]{});
       } catch (MalformedURLException e) {
         AppLogger.fatal("Exception resolving code source:", e);
         // should not happen

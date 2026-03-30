@@ -366,7 +366,7 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
       File[] selected = getFileChooserDialog().getSelectedFiles();
       if ((selected == null || selected.length == 0)
           && getFileChooserDialog().getSelectedFile() != null) {
-        selected = new File[] {getFileChooserDialog().getSelectedFile()};
+        selected = new File[]{getFileChooserDialog().getSelectedFile()};
       }
       if (selected != null) {
         for (File f : selected) {

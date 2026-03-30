@@ -311,7 +311,7 @@ public class Util {
 
   public static Window[] getAllWindows() {
     List<Window> windows = new ArrayList<>(Arrays.asList(Window.getWindows()));
-    for (Iterator<Window> i = windows.iterator(); i.hasNext();) {
+    for (Iterator<Window> i = windows.iterator(); i.hasNext(); ) {
       Window w = i.next();
       if (w.getClass().getName().contains("JLightweightFrame")) {
         i.remove();

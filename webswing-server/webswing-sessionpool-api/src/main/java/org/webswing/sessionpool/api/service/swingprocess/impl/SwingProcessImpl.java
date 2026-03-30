@@ -632,9 +632,9 @@ public class SwingProcessImpl implements SwingProcess {
         .setLayout(PatternLayout.newBuilder().withPattern(Constants.SESSION_LOG_PATTERN).build())
         .withPolicy(sizeBasedPolicy)
         .withStrategy(DefaultRolloverStrategy.newBuilder().withMax("1").withConfig(logConfig)
-            .withCustomActions(new Action[] {DeleteAction.createDeleteAction(logDir, false, 1,
+            .withCustomActions(new Action[]{DeleteAction.createDeleteAction(logDir, false, 1,
                 false, PathSortByModificationTime.createSorter(true),
-                new PathCondition[] {IfFileName.createNameCondition(globPattern, null,
+                new PathCondition[]{IfFileName.createNameCondition(globPattern, null,
                     IfAccumulatedFileSize.createFileSizeCondition(maxSize))},
                 null, logConfig)})
             .build())

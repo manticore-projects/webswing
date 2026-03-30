@@ -80,7 +80,7 @@ public class InstanceStats {
   private void calculateSessionValue(MetricRule rule, String name, Number aggregated) {
     String key = name + "." + rule.getAggregation() + ".SESSION";
     if (!sessionStats.containsKey(key)) {
-      sessionStats.put(key, new Number[] {aggregated, 1});
+      sessionStats.put(key, new Number[]{aggregated, 1});
     } else {
       Number result = 0;
       Number[] values = sessionStats.get(key);
@@ -104,7 +104,7 @@ public class InstanceStats {
           break;
       }
 
-      sessionStats.replace(key, new Number[] {result, count.doubleValue() + 1});
+      sessionStats.replace(key, new Number[]{result, count.doubleValue() + 1});
     }
   }
 
@@ -135,7 +135,7 @@ public class InstanceStats {
     // store value
     Number result = 0;
     if (list != null && list.size() > 0) {
-      for (Iterator<Number> iterator = list.iterator(); iterator.hasNext();) {
+      for (Iterator<Number> iterator = list.iterator(); iterator.hasNext(); ) {
         Number number = iterator.next();
         switch (rule.getAggregation()) {
           case MIN:

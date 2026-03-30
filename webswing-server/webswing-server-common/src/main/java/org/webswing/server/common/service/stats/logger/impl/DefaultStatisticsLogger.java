@@ -67,7 +67,7 @@ public class DefaultStatisticsLogger implements StatisticsLogger {
   @Override
   public void log(String instance, String name, Number value) {
     if (value != null) {
-      log.trace("{},{},{}", new Object[] {instance, name, value});
+      log.trace("{},{},{}", new Object[]{instance, name, value});
       processMetric(instance, name, value);
     }
   }

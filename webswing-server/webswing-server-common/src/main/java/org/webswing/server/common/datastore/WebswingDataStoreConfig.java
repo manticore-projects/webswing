@@ -88,7 +88,7 @@ public interface WebswingDataStoreConfig extends Config {
                 .map(f -> "${" + Constants.ROOT_DIR_PATH + "}/datastore/" + f + "/*")
                 .toArray(String[]::new);
           } else {
-            return new String[] {};
+            return new String[]{};
           }
         } catch (Exception e) {
           // do nothing
@@ -97,7 +97,7 @@ public interface WebswingDataStoreConfig extends Config {
         ArrayList<String> discovered = new ArrayList<>();
         ServiceLoader<WebswingDataStoreModuleProvider> loader =
             ServiceLoader.load(WebswingDataStoreModuleProvider.class, cl);
-        for (Iterator<WebswingDataStoreModuleProvider> i = loader.iterator(); i.hasNext();) {
+        for (Iterator<WebswingDataStoreModuleProvider> i = loader.iterator(); i.hasNext(); ) {
           discovered.addAll(i.next().getDataStoreModuleClassNames());
         }
         Stream<String> builtin =

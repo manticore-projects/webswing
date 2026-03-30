@@ -241,11 +241,11 @@ public class WebPrinterJobWrapper extends PrinterJob {
       AttributeSet attributes) {
     String delegateClass = System.getProperty(Constants.PRINTER_JOB_CLASS, null);
     if (delegateClass.equals(WebPrinterJob.class.getCanonicalName())) {
-      return new PrintService[] {WebPrintService.getService()};
+      return new PrintService[]{WebPrintService.getService()};
     } else {
       PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, attributes);
       if (services == null) {
-        services = new PrintService[] {};
+        services = new PrintService[]{};
       }
       return services;
     }

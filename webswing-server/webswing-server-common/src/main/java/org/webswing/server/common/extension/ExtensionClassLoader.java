@@ -43,7 +43,7 @@ public class ExtensionClassLoader extends URLClassLoader {
 
   @Override
   public Enumeration<URL> getResources(String name) throws IOException {
-    Enumeration<URL>[] tmp = (Enumeration<URL>[]) new Enumeration<?>[] {super.getResources(name),
+    Enumeration<URL>[] tmp = (Enumeration<URL>[]) new Enumeration<?>[]{super.getResources(name),
         webClassLoader.getResources(name)};
     return new CompoundEnumeration<URL>(tmp);
   }

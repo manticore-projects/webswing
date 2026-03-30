@@ -73,7 +73,9 @@ subprojects {
                     "**/*Proto.java",
                     "**/*ProtoIn.java",
                     "**/*ProtoOut.java",
-                    "**/Jwt.java"
+                    "**/Jwt.java",
+                    '**/proto/Directdraw.java',
+                    'webswing-app-toolkit/src/main/java/org/webswing/audio/*.java'
             ]
         }
     }
@@ -90,7 +92,8 @@ subprojects {
                 '**/*ProtoIn.java',
                 '**/*ProtoOut.java',
                 '**/Jwt.java',
-                '**/proto/Directdraw.java'
+                '**/proto/Directdraw.java',
+                'webswing-app-toolkit/src/main/java/org/webswing/audio/*.java'
     }
 
     spotless {
@@ -122,12 +125,12 @@ dependencies {
 rewrite {
     configFile = file('config/rewrite/rewrite.yml')
     activeRecipe(
-//            "org.openrewrite.java.migrate.UpgradeToJava17",
+            "org.openrewrite.java.migrate.UpgradeToJava17",
+            'org.openrewrite.staticanalysis.CodeCleanup',
             "org.openrewrite.staticanalysis.NeedBraces",
             "org.openrewrite.staticanalysis.UnnecessaryParentheses",
             "org.openrewrite.staticanalysis.MultipleVariableDeclarations",
             "org.openrewrite.java.format.Spaces",
-            'org.openrewrite.staticanalysis.CodeCleanup',
             'org.openrewrite.java.NoStaticImport',
             'org.openrewrite.java.OrderImports',
             'org.openrewrite.java.RemoveUnusedImports',
@@ -140,7 +143,7 @@ rewrite {
             "**/*ProtoOut.java",
             "**/Jwt.java",
             "**/proto/Directdraw.java",
-            '**/org.webswing.audio/*.java'
+            'webswing-app-toolkit/src/main/java/org/webswing/audio/*.java'
     )
 }
 

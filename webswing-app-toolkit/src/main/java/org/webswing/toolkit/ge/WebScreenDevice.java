@@ -26,7 +26,7 @@ public class WebScreenDevice extends GraphicsDevice {
 
   @Override
   public GraphicsConfiguration[] getConfigurations() {
-    return new GraphicsConfiguration[] {c};
+    return new GraphicsConfiguration[]{c};
   }
 
   @Override

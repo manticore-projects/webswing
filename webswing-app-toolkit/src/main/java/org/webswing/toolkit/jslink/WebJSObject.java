@@ -113,7 +113,7 @@ public class WebJSObject extends JSObject {
   public static List<String> getGarbage() {
     ArrayList<String> result = new ArrayList<String>();
     synchronized (jsGarbageCollectionMap) {
-      for (Iterator<String> i = jsGarbageCollectionMap.keySet().iterator(); i.hasNext();) {
+      for (Iterator<String> i = jsGarbageCollectionMap.keySet().iterator(); i.hasNext(); ) {
         String key = i.next();
         if (jsGarbageCollectionMap.get(key).isEnqueued()) {
           result.add(key);

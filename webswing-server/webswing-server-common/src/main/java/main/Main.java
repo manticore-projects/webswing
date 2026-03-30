@@ -224,7 +224,7 @@ public class Main {
       }
 
       Method method = mainClass.getMethod("main", args.getClass());
-      method.invoke(null, new Object[] {args});
+      method.invoke(null, new Object[]{args});
     } catch (Exception e) {
       System.err.println("Uncaught exception.");
       e.printStackTrace();

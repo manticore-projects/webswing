@@ -334,7 +334,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
    */
   protected void sendHtml(HttpServletRequest request, HttpServletResponse response, String template,
       Object variables) throws IOException {
-    Object[] extendedVars = new Object[] {variables, getDefaultVariables(request)};
+    Object[] extendedVars = new Object[]{variables, getDefaultVariables(request)};
     if (isAjax(request)) {
       Map<String, Object> message = new HashMap<>();
       try {
@@ -366,7 +366,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
   protected void sendPartialHtml(HttpServletRequest request, HttpServletResponse response,
       String template, Object variables) throws IOException {
     Map<String, String> defaultVars = getDefaultVariables(request);
-    Object[] extendedVars = new Object[] {variables, defaultVars};
+    Object[] extendedVars = new Object[]{variables, defaultVars};
     if (isAjax(request)) {
       sendHtml(request, response, template, variables);
     } else {
@@ -540,7 +540,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
       ipAddress = r.getRemoteAddr();
     }
     auditLog.info("{} | {} | {} | {} | {} | {} | {}",
-        new Object[] {sanitizeForLog(status), sanitizeForLog(username), sanitizeForLog(reason),
+        new Object[]{sanitizeForLog(status), sanitizeForLog(username), sanitizeForLog(reason),
             sanitizeForLog(path), sanitizeForLog(protocol), sanitizeForLog(ipAddress),
             sanitizeForLog(module)});
   }

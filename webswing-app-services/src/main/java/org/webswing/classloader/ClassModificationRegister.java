@@ -46,7 +46,7 @@ public class ClassModificationRegister {
     Scanner sc = null;
     try {
       sc = new Scanner(getClassListFile());
-      for (; sc.hasNextLine();) {
+      for (; sc.hasNextLine(); ) {
         unmodifiedClassSet.add(sc.nextLine());
       }
     } catch (FileNotFoundException e) {

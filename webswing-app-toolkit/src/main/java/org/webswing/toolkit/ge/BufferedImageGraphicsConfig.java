@@ -96,7 +96,7 @@ public class BufferedImageGraphicsConfig extends GraphicsConfiguration {
   @Override
   public ColorModel getColorModel(int transparency) {
 
-    if(model.getTransparency()==transparency){return model;}return switch(transparency){case Transparency.OPAQUE->new DirectColorModel(24,0xff0000,0xff00,0xff);case Transparency.BITMASK->new DirectColorModel(25,0xff0000,0xff00,0xff,0x1000000);case Transparency.TRANSLUCENT->ColorModel.getRGBdefault();default->null;};
+    if (model.getTransparency() == transparency) {return model;}return switch(transparency) {case Transparency.OPAQUE->new DirectColorModel(24, 0xff0000, 0xff00, 0xff);case Transparency.BITMASK->new DirectColorModel(25, 0xff0000, 0xff00, 0xff, 0x1000000);case Transparency.TRANSLUCENT->ColorModel.getRGBdefault();default->null;};
   }
 
   /**

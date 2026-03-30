@@ -36,7 +36,7 @@ public class AccessMappingSecurityExtension
         try {
           validAccessTypes = WebswingAction.valueOf(permission).getAccessTypes();
         } catch (IllegalArgumentException e) {
-          validAccessTypes = new WebswingAction.AccessType[] {WebswingAction.AccessType.admin};
+          validAccessTypes = new WebswingAction.AccessType[]{WebswingAction.AccessType.admin};
         }
         for (WebswingAction.AccessType at : validAccessTypes) {
           AccessTypeMapping m = accessMapping.get(at);

@@ -44,7 +44,7 @@ public final class BufferedImageDevice extends GraphicsDevice {
    */
   @Override
   public GraphicsConfiguration[] getConfigurations() {
-    return new GraphicsConfiguration[] {config};
+    return new GraphicsConfiguration[]{config};
   }
 
   /**

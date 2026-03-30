@@ -316,7 +316,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
     }
 
     StringBuilder normalized = new StringBuilder("/");
-    for (Iterator<String> it = stack.iterator(); it.hasNext();) {
+    for (Iterator<String> it = stack.iterator(); it.hasNext(); ) {
       normalized.append(it.next());
       if (it.hasNext()) {
         normalized.append("/");

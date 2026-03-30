@@ -33,7 +33,7 @@ public class ConfigUtil {
       c = new HashMap();
     }
     final Map<String, Object> config = c;
-    return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] {clazz},
+    return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz},
         new InvocationHandler() {
 
           @Override
