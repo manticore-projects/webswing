@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -195,21 +197,121 @@ public class ServerUtil {
 	}
 
 	public static void sendHttpRedirect(HttpServletRequest req, HttpServletResponse resp, String relativeUrl) throws IOException {
-		String proto = req.getHeader("X-Forwarded-Proto");
-		String host = req.getHeader("X-Forwarded-Host");
-		if (StringUtils.startsWithIgnoreCase(relativeUrl, "http://") || StringUtils.startsWithIgnoreCase(relativeUrl, "https://")) {
-			resp.sendRedirect(relativeUrl);
-		} else if (StringUtils.isNotEmpty(proto) && StringUtils.isNotEmpty(host)) {
-			if (!StringUtils.startsWith(relativeUrl, "/")) {
-				String requestPath = ServerUtil.getContextPath(req.getServletContext()) + CommonUtil.toPath(req.getPathInfo());
-				String requestPathBase = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
-				requestPathBase = requestPath.substring(0, requestPath.lastIndexOf("/") + 1);
-				relativeUrl = requestPathBase + relativeUrl;
-			}
-			resp.sendRedirect(proto + "://" + host + relativeUrl);
-		} else {
-			resp.sendRedirect(relativeUrl);
+		String safeUrl = sanitizeRedirectUrl(req, relativeUrl);
+		resp.sendRedirect(safeUrl);
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 * <ul>
+	 *     <li>Strips all Unicode control characters (C0, C1, DEL)</li>
+	 *     <li>Strips Unicode line/paragraph separators</li>
+	 *     <li>Strips bidirectional overrides (Trojan Source defense)</li>
+	 *     <li>Strips zero-width and invisible formatting characters</li>
+	 *     <li>Truncates to a maximum length to prevent log flooding</li>
+	 * </ul>
+	 */
+	private static final int MAX_LOG_LENGTH = 1000;
+
+	private static final Pattern UNSAFE_LOG_CHARS = Pattern.compile(
+			"[\\p{Cc}"       // C0 control chars (U+0000–U+001F), DEL (U+007F), C1 (U+0080–U+009F)
+			+ "\\u200B-\\u200F"   // zero-width space, ZWNJ, ZWJ, LRM, RLM
+			+ "\\u2028\\u2029"    // Unicode line separator, paragraph separator
+			+ "\\u202A-\\u202E"   // bidi overrides: LRE, RLE, PDF, LRO, RLO
+			+ "\\u2060-\\u2064"   // word joiner, invisible operators
+			+ "\\u2066-\\u2069"   // bidi isolates: LRI, RLI, FSI, PDI
+			+ "\\uFEFF"           // BOM / zero-width no-break space
+			+ "]"
+	);
+
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		String sanitized = UNSAFE_LOG_CHARS.matcher(input).replaceAll("_");
+		if (sanitized.length() > MAX_LOG_LENGTH) {
+			sanitized = sanitized.substring(0, MAX_LOG_LENGTH) + "...(truncated)";
 		}
+		return sanitized;
+	}
+
+	private static String sanitizeRedirectUrl(HttpServletRequest req, String relativeUrl) {
+		if (relativeUrl == null || relativeUrl.isEmpty()) {
+			return "/";
+		}
+
+		// 1. Reject absolute URLs entirely — redirects should always be path-based
+		if (relativeUrl.contains("://")
+			|| relativeUrl.startsWith("//")
+			|| relativeUrl.startsWith("\\\\")) {
+			log.warn("Blocked absolute redirect attempt: {}", sanitizeForLog(relativeUrl));
+			return "/";
+		}
+
+		// 2. Reject protocol-relative tricks and dangerous schemes
+		//    Covers "javascript:", "data:", CRLF header injection, etc.
+		if (relativeUrl.matches("(?i)^\\s*(javascript|data|vbscript):.*")
+			|| relativeUrl.contains("\r")
+			|| relativeUrl.contains("\n")
+			|| relativeUrl.contains("%0d")
+			|| relativeUrl.contains("%0a")) {
+			log.warn("Blocked malicious redirect attempt: {}", sanitizeForLog(relativeUrl));
+			return "/";
+		}
+
+		// 3. Normalize to an absolute path so the browser can't reinterpret it
+		if (!relativeUrl.startsWith("/")) {
+			String requestPath = ServerUtil.getContextPath(req.getServletContext())
+								 + CommonUtil.toPath(req.getPathInfo());
+			if (!requestPath.startsWith("/")) {
+				requestPath = "/" + requestPath;
+			}
+			String requestPathBase = requestPath.substring(0, requestPath.lastIndexOf("/") + 1);
+			relativeUrl = requestPathBase + relativeUrl;
+		}
+
+		// 4. Build the full URL using validated forwarding headers
+		String proto = getValidatedProto(req);
+		String host = getValidatedHost(req);
+
+		if (proto != null && host != null) {
+			return proto + "://" + host + relativeUrl;
+		}
+
+		// No forwarding headers — return path only, servlet container resolves it
+		return relativeUrl;
+	}
+
+	private static final Set<String> ALLOWED_PROTOCOLS = Set.of("http", "https");
+
+	private static String getValidatedProto(HttpServletRequest req) {
+		String proto = req.getHeader("X-Forwarded-Proto");
+		if (proto == null) return null;
+		proto = proto.trim().toLowerCase();
+		if (!ALLOWED_PROTOCOLS.contains(proto)) {
+			log.warn("Blocked invalid X-Forwarded-Proto: {}", sanitizeForLog(proto));
+			return null;
+		}
+		return proto;
+	}
+
+	private static final Pattern VALID_HOST = Pattern.compile(
+			"^[a-zA-Z0-9._-]+(:[0-9]{1,5})?$"
+	);
+
+	private static String getValidatedHost(HttpServletRequest req) {
+		String host = req.getHeader("X-Forwarded-Host");
+		if (host == null) return null;
+
+		// X-Forwarded-Host can be comma-separated; take the first (leftmost proxy)
+		if (host.contains(",")) {
+			host = host.substring(0, host.indexOf(","));
+		}
+		host = host.trim();
+
+		if (!VALID_HOST.matcher(host).matches()) {
+			log.warn("Blocked invalid X-Forwarded-Host: {}", sanitizeForLog(host));
+			return null;
+		}
+		return host;
 	}
 
 	public static String normalizeForFileName(String text) {

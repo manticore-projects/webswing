@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -202,7 +203,11 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 			if (maxsize > 0 && filePart.getSize() > maxsize) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write("File '%s' is too large. (Max. file size is %.1fMB)".formatted(escapeJson(filename), maxMB));
+				resp.setContentType("application/json; charset=UTF-8");
+				resp.setCharacterEncoding("UTF-8");
+				resp.getWriter().write(String.format(
+						"{\"error\":\"File '%s' is too large. (Max. file size is %.1fMB)\"}",
+						escapeJson(filename), maxMB));
 			} else {
 				String fileId = createHashedUploadFileId(filename, filePart.getSize() + "");
 				try (InputStream filecontent = filePart.getInputStream()) {
@@ -268,11 +273,34 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 	/**
 	 * Sanitize a string for safe inclusion in log messages.
-	 * Strips newlines, tabs, and carriage returns to prevent log injection.
+	 * <ul>
+	 *     <li>Strips all Unicode control characters (C0, C1, DEL)</li>
+	 *     <li>Strips Unicode line/paragraph separators</li>
+	 *     <li>Strips bidirectional overrides (Trojan Source defense)</li>
+	 *     <li>Strips zero-width and invisible formatting characters</li>
+	 *     <li>Truncates to a maximum length to prevent log flooding</li>
+	 * </ul>
 	 */
+	private static final int MAX_LOG_LENGTH = 1000;
+
+	private static final Pattern UNSAFE_LOG_CHARS = Pattern.compile(
+			"[\\p{Cc}"       // C0 control chars (U+0000–U+001F), DEL (U+007F), C1 (U+0080–U+009F)
+			+ "\\u200B-\\u200F"   // zero-width space, ZWNJ, ZWJ, LRM, RLM
+			+ "\\u2028\\u2029"    // Unicode line separator, paragraph separator
+			+ "\\u202A-\\u202E"   // bidi overrides: LRE, RLE, PDF, LRO, RLO
+			+ "\\u2060-\\u2064"   // word joiner, invisible operators
+			+ "\\u2066-\\u2069"   // bidi isolates: LRI, RLI, FSI, PDI
+			+ "\\uFEFF"           // BOM / zero-width no-break space
+			+ "]"
+	);
+
 	private static String sanitizeForLog(String input) {
 		if (input == null) return "null";
-		return input.replaceAll("[\\r\\n\\t]", "_");
+		String sanitized = UNSAFE_LOG_CHARS.matcher(input).replaceAll("_");
+		if (sanitized.length() > MAX_LOG_LENGTH) {
+			sanitized = sanitized.substring(0, MAX_LOG_LENGTH) + "...(truncated)";
+		}
+		return sanitized;
 	}
 
 	/**
