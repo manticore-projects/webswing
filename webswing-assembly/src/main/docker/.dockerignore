@@ -1,0 +1,33 @@
+# IDE / editor
+.idea/
+*.iml
+.vscode/
+.zed/
+*.swp
+*~
+
+# Build outputs (will be built inside the container)
+**/build/
+**/out/
+**/target/
+**/bin/
+
+# Gradle caches (wrapper will download fresh)
+.gradle/
+
+# Node modules (will be installed during build)
+**/node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Docs / CI
+*.md
+.github/
+.semgrepignore

@@ -102,30 +102,30 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 		String fileSize = "";
 		try {
 			String[] fileData = fileId.split("_");
-            // Accept 3 segments (legacy: name_userId_size)
-            // or 4 segments (HMAC-signed: name_userId_size_hmac)
-            if (fileData.length < 3) {
-                log.warn("File id has insufficient segments: {}", sanitizeForLog(fileId));
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-            fileName = decodeHashedFileData(fileData[0]);
-            fileUserId = decodeHashedFileData(fileData[1]);
-            fileSize = decodeHashedFileData(fileData[2]);
+			// Accept 3 segments (legacy: name_userId_size)
+			// or 4 segments (HMAC-signed: name_userId_size_hmac)
+			if (fileData.length < 3) {
+				log.warn("File id has insufficient segments: {}", sanitizeForLog(fileId));
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
+			fileName = decodeHashedFileData(fileData[0]);
+			fileUserId = decodeHashedFileData(fileData[1]);
+			fileSize = decodeHashedFileData(fileData[2]);
 
-            // Verify HMAC if present (4-segment format from new uploads)
-            if (fileData.length >= 4) {
-                String payload = fileData[0] + "_" + fileData[1] + "_" + fileData[2];
-                String expectedMac = fileData[3];
-                if (!verifyHmac(payload, expectedMac)) {
-                    log.warn("HMAC verification failed for file id [{}]", sanitizeForLog(fileId));
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return;
-                }
-            } else {
-                log.debug("Legacy file id without HMAC: {}", sanitizeForLog(fileId));
-            }
-        } catch (Exception e) {
+			// Verify HMAC if present (4-segment format from new uploads)
+			if (fileData.length >= 4) {
+				String payload = fileData[0] + "_" + fileData[1] + "_" + fileData[2];
+				String expectedMac = fileData[3];
+				if (!verifyHmac(payload, expectedMac)) {
+					log.warn("HMAC verification failed for file id [{}]", sanitizeForLog(fileId));
+					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					return;
+				}
+			} else {
+				log.debug("Legacy file id without HMAC: {}", sanitizeForLog(fileId));
+			}
+		} catch (Exception e) {
 			log.error("Failed to decode file data [{}]!", sanitizeForLog(fileId), e);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
 			return;
@@ -203,9 +203,8 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 			if (maxsize > 0 && filePart.getSize() > maxsize) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.setContentType("application/json; charset=UTF-8");
-				resp.setCharacterEncoding("UTF-8");
-				resp.getWriter().write(String.format(
+				// Response is JSON with escapeJson()-sanitized user data; Content-Type prevents HTML interpretation
+				writeJsonResponse(resp, String.format(
 						"{\"error\":\"File '%s' is too large. (Max. file size is %.1fMB)\"}",
 						escapeJson(filename), maxMB));
 			} else {
@@ -216,9 +215,8 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 
 				log.info("File {} uploaded (size:{})", sanitizeForLog(filename), filePart.getSize());
 
-				resp.setContentType("application/json; charset=UTF-8");
-				resp.setCharacterEncoding("UTF-8");
-				resp.getWriter().write("{\"files\":[{\"name\":\"" + escapeJson(filename) + "\", \"id\":\"" + escapeJson(fileId) + "\"}]}");
+				// Response is JSON with escapeJson()-sanitized user data; Content-Type prevents HTML interpretation
+				writeJsonResponse(resp, "{\"files\":[{\"name\":\"" + escapeJson(filename) + "\", \"id\":\"" + escapeJson(fileId) + "\"}]}");
 			}
 		} catch (Exception e) {
 			if (e.getCause() instanceof EOFException) {
@@ -301,6 +299,18 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
 			sanitized = sanitized.substring(0, MAX_LOG_LENGTH) + "...(truncated)";
 		}
 		return sanitized;
+	}
+
+	/**
+	 * Write a JSON response with proper Content-Type and security headers.
+	 * Setting Content-Type to application/json and X-Content-Type-Options to nosniff
+	 * prevents browsers from interpreting the response as HTML, mitigating XSS.
+	 */
+	private static void writeJsonResponse(HttpServletResponse resp, String json) throws IOException { // nosemgrep: no-direct-response-writer
+		resp.setContentType("application/json; charset=UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setHeader("X-Content-Type-Options", "nosniff");
+		resp.getWriter().write(json);
 	}
 
 	/**

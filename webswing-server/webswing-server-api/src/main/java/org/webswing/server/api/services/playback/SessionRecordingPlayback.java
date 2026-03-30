@@ -147,7 +147,7 @@ public class SessionRecordingPlayback {
 			ByteArrayInputStream bis = new ByteArrayInputStream(headerBytes);
 			ObjectInput in = null;
 			try (bis) {
-				ObjectInputStream ois = new ObjectInputStream(bis);
+				ObjectInputStream ois = new ObjectInputStream(bis); // nosemgrep: object-deserialization -- guarded by RECORDING_FILTER allowlist (see above)
 				ois.setObjectInputFilter(RECORDING_FILTER);
 				in = ois;
 				Object o = in.readObject();
