@@ -84,12 +84,17 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 	}
 
 	protected void handleCorsHeaders(HttpServletRequest req, HttpServletResponse res) throws WsException {
-		if (isOriginAllowed(req.getHeader("Origin"))) {
-			if (req.getHeader("Origin") != null) {
-				res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
-				res.setHeader("Access-Control-Allow-Credentials", "true");
-				res.setHeader("Access-Control-Expose-Headers", Constants.HTTP_ATTR_ARGS + ", " + Constants.HTTP_ATTR_RECORDING_FLAG + ", X-Cache-Date, X-Atmosphere-tracking-id, X-Requested-With");
-			}
+		// Read Origin once into a local variable to avoid TOCTOU and
+		// to make it clear to static analyzers that the value is validated
+		// by isOriginAllowed() before being reflected in the response.
+		String origin = req.getHeader("Origin");
+		if (origin != null && isOriginAllowed(origin)) {
+			res.setHeader("Access-Control-Allow-Origin", origin);
+			res.setHeader("Access-Control-Allow-Credentials", "true");
+			res.setHeader("Access-Control-Expose-Headers", Constants.HTTP_ATTR_ARGS + ", " + Constants.HTTP_ATTR_RECORDING_FLAG + ", X-Cache-Date, X-Atmosphere-tracking-id, X-Requested-With");
+			// Indicate that the response varies by Origin so caches don't
+			// serve one origin's CORS headers to another origin
+			res.setHeader("Vary", "Origin");
 
 			if ("OPTIONS".equals(req.getMethod())) {
 				res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, DELETE");
@@ -98,7 +103,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 			}
 		}
 	}
-	
+
 	protected boolean isOriginAllowed(String header) {
 		return false;
 	}
@@ -120,7 +125,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 		}
 		return false;
 	}
-	
+
 	public String getFullPathMapping() {
 		String handlerPath = toPath(getPathMapping());
 		if (this.parent != null) {
@@ -261,7 +266,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 		}
 		throw new WsException("User '" + user + "' is not allowed to execute action '" + action + "'", HttpServletResponse.SC_UNAUTHORIZED);
 	}
-	
+
 	protected void sendContent(HttpServletResponse res, String content) throws WsException {
 		try (PrintWriter writer = res.getWriter()) {
 			writer.write(content);
@@ -270,7 +275,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 			throw new WsException(e);
 		}
 	}
-	
+
 	protected void sendFile(HttpServletResponse res, File file) throws WsException {
 		try (FileInputStream fis = new FileInputStream(file)) {
 			IOUtils.copy(fis, res.getOutputStream());
@@ -278,5 +283,5 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 			throw new WsException(e);
 		}
 	}
-	
+
 }

@@ -25,16 +25,16 @@ import main.Main;
 import org.webswing.server.common.util.CommonUtil;
 
 public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ScriptWebSocketUrlLoader.class);
-	
+
 	private static final long PROCESS_TIMEOUT_SECONDS = 5;
-	
+
 	private String scriptFilePath;
 	private Set<String> webSocketUrls = Collections.synchronizedSet(new HashSet<>());
-	
+
 	private Process process;
-	
+
 	public ScriptWebSocketUrlLoader(String scriptFilePath) {
 		this.scriptFilePath = getValidFilePath(scriptFilePath);
 	}
@@ -42,7 +42,7 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 	@Override
 	public Set<String> reload() {
 		loadFromScript();
-		
+
 		synchronized (webSocketUrls) {
 			webSocketUrls.clear();
 			String urls = System.getProperty(Constants.SERVER_WEBSOCKET_URL, "");
@@ -55,42 +55,56 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 			return webSocketUrls;
 		}
 	}
-	
+
 	private void loadFromScript() {
 		if (scriptFilePath == null) {
 			log.warn("Could not reload web socket URLs, no script path defined!");
 			return;
 		}
-		
+
 		if (isRunning()) {
 			log.warn("Could not reload web socket URLs, process still running!");
 			return;
 		}
-		
+
+		// Validate the script path resolves to a real, executable file
+		// to prevent execution of arbitrary commands from misconfiguration
+		File scriptFile = new File(scriptFilePath);
+		if (!scriptFile.isFile()) {
+			log.error("Websocket URL loader script does not exist or is not a regular file: {}",
+					  sanitizeForLog(scriptFilePath));
+			return;
+		}
+		if (!scriptFile.canExecute()) {
+			log.error("Websocket URL loader script is not executable: {}",
+					  sanitizeForLog(scriptFilePath));
+			return;
+		}
+
 		String urls = "";
-		
+
 		try {
-			ProcessBuilder processBuilder = new ProcessBuilder(scriptFilePath);
+			ProcessBuilder processBuilder = new ProcessBuilder(scriptFile.getAbsolutePath());
 			process = processBuilder.start();
-			
+
 			StringBuilder sb = new StringBuilder();
-			
+
 			new Thread(() -> {
 				try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 					String line;
 					while ((line = in.readLine()) != null) {
-					    sb.append(line);
+						sb.append(line);
 					}
 				} catch (IOException e) {
-					log.error("Error while getting websocket URL laoder script output!", e);
+					log.error("Error while getting websocket URL loader script output!", e);
 				}
 			}).start();
-			
+
 			process.waitFor(PROCESS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-			
+
 			String output = sb.toString();
-			log.debug("Websocket URL loader script output [" + output + "]");
-			
+			log.debug("Websocket URL loader script output [{}]", sanitizeForLog(output));
+
 			if (StringUtils.isNotBlank(output)) {
 				List<String> parsed = Splitter.on(',').omitEmptyStrings().trimResults().splitToList(output);
 				if (!parsed.isEmpty()) {
@@ -100,10 +114,10 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 		} catch (Exception e) {
 			log.error("Error while executing websocket url loader script!", e);
 		}
-		
+
 		System.setProperty(Constants.SERVER_WEBSOCKET_URL, urls);
 	}
-	
+
 	private boolean isRunning() {
 		if (process == null) {
 			return false;
@@ -115,13 +129,19 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 			return true;
 		}
 	}
-	
+
 	private String getValidFilePath(String pathOrUri) {
 		try {
 			return CommonUtil.getValidFile(pathOrUri).getAbsolutePath();
 		} catch (FileNotFoundException e) {
-			return pathOrUri;
+			log.warn("Script file not found: {}", sanitizeForLog(pathOrUri));
+			return null;
 		}
 	}
 
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\p{Cc}\\p{Cf}]", "_")
+					.substring(0, Math.min(input.length(), 500));
+	}
 }

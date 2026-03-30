@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,7 +27,7 @@ public class SessionRecordingPlayback {
 	private static final Logger log = LoggerFactory.getLogger(SessionRecordingPlayback.class);
 
 	private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT);
-	
+
 	private int numberOfFrames;
 	private ScheduledExecutorService sender = Executors.newSingleThreadScheduledExecutor();
 
@@ -45,7 +46,7 @@ public class SessionRecordingPlayback {
 			this.connection = connection;
 			this.dataStore = dataStore;
 			this.fileName = fileName;
-			
+
 			try (InputStream in = dataStore.readData(WebswingDataStoreType.recording.name(), fileName)) {
 				Integer version = readInt(in);
 				if (SessionRecordingHeader.version == version) {
@@ -59,7 +60,7 @@ public class SessionRecordingPlayback {
 					throw new IOException("Version " + version + " of recording file is not supported. Current supported version is " + SessionRecordingHeader.version);
 				}
 			}
-			
+
 			resetStream();
 			sendNextFrame();
 		} catch (IOException e) {
@@ -116,15 +117,39 @@ public class SessionRecordingPlayback {
 		}
 	}
 
+	/**
+	 * Maximum allowed size for a serialized object header (1 MB).
+	 * Prevents allocation of oversized byte arrays from malicious recording files.
+	 */
+	private static final int MAX_OBJECT_HEADER_SIZE = 1024 * 1024;
+
+	/**
+	 * Deserialization filter that restricts allowed classes to prevent
+	 * arbitrary code execution via gadget chains (CWE-502).
+	 * Only the types actually used in recording headers are permitted.
+	 */
+	private static final ObjectInputFilter RECORDING_FILTER = ObjectInputFilter.Config.createFilter(
+			"org.webswing.util.SessionRecordingHeader"
+			+ ";java.util.Date"
+			+ ";java.lang.String"
+			+ ";java.lang.Number"
+			+ ";!*"  // reject everything else
+	);
+
 	private static Object readObject(InputStream fis) throws IOException {
 		readInt(fis);//delay
 		Integer headerLength = readInt(fis);
+		if (headerLength == null || headerLength <= 0 || headerLength > MAX_OBJECT_HEADER_SIZE) {
+			throw new IOException("Invalid object header length: " + headerLength);
+		}
 		byte[] headerBytes = new byte[headerLength];
 		if (headerLength == fis.read(headerBytes)) {
 			ByteArrayInputStream bis = new ByteArrayInputStream(headerBytes);
 			ObjectInput in = null;
 			try (bis) {
-				in = new ObjectInputStream(bis);
+				ObjectInputStream ois = new ObjectInputStream(bis);
+				ois.setObjectInputFilter(RECORDING_FILTER);
+				in = ois;
 				Object o = in.readObject();
 				return o;
 			} catch (ClassNotFoundException e) {
@@ -176,32 +201,32 @@ public class SessionRecordingPlayback {
 	public synchronized void handlePlaybackControl(PlaybackCommandMsgIn playback) {
 		if (playback != null && playback.getCommand() != null) {
 			switch (playback.getCommand()) {
-			case play:
-				allowedFrame = numberOfFrames;
-				fastForward = false;
-				break;
-			case stop:
-				allowedFrame = currentFrame;
-				break;
-			case step:
-				allowedFrame = currentFrame + 1;
-				fastForward = true;
-				break;
-			case step10:
-				allowedFrame = currentFrame + 10;
-				fastForward = true;
-				break;
-			case step100:
-				allowedFrame = currentFrame + 100;
-				fastForward = true;
-				break;
-			case reset:
-				resetStream();
-				allowedFrame = 1;
-				currentFrame = 0;
-				break;
-			default:
-				break;
+				case play:
+					allowedFrame = numberOfFrames;
+					fastForward = false;
+					break;
+				case stop:
+					allowedFrame = currentFrame;
+					break;
+				case step:
+					allowedFrame = currentFrame + 1;
+					fastForward = true;
+					break;
+				case step10:
+					allowedFrame = currentFrame + 10;
+					fastForward = true;
+					break;
+				case step100:
+					allowedFrame = currentFrame + 100;
+					fastForward = true;
+					break;
+				case reset:
+					resetStream();
+					allowedFrame = 1;
+					currentFrame = 0;
+					break;
+				default:
+					break;
 			}
 			sendNextFrame();
 		}

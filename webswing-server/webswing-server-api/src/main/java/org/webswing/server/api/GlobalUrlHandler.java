@@ -2,7 +2,6 @@ package org.webswing.server.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -221,23 +220,38 @@ public class GlobalUrlHandler extends PrimaryUrlHandler implements SecuredPathHa
 	}
 
 	private void handleException(Exception e, HttpServletRequest req, HttpServletResponse res) {
-		log.debug("Failed to process request. " + req.getPathInfo(), e);
+		// Sanitize user-controlled path before logging to prevent log injection (CRLF / Trojan Source)
+		String safePath = sanitizeForLog(req.getPathInfo());
+		log.debug("Failed to process request. {}", safePath, e);
 		try {
 			if (e instanceof WsException wse) {
 				if (!res.isCommitted()) {
-					res.sendError(wse.getReponseCode(), wse.getLocalizedMessage());
+					// Send generic status text instead of exception message
+					// to prevent leaking internal details to the client
+					res.sendError(wse.getReponseCode());
 				}
 			} else {
-				log.error("Failed to process request. " + req.getPathInfo(), e);
+				log.error("Failed to process request. {}", safePath, e);
 				if (!res.isCommitted()) {
-					res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					e.printStackTrace(new PrintStream(res.getOutputStream()));
+					// Return a generic error body — never send stack traces or
+					// exception messages to the client (information disclosure)
+					res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				}
 			}
 		} catch (IOException e1) {
-			log.error("Failed send error response to client. ");
+			log.error("Failed send error response to client.");
 		}
 
+	}
+
+	/**
+	 * Sanitize a string for safe inclusion in log messages.
+	 * Strips control characters and truncates to prevent log injection / flooding.
+	 */
+	private static String sanitizeForLog(String input) {
+		if (input == null) return "null";
+		return input.replaceAll("[\\p{Cc}\\p{Cf}]", "_")
+					.substring(0, Math.min(input.length(), 500));
 	}
 
 	@Override
