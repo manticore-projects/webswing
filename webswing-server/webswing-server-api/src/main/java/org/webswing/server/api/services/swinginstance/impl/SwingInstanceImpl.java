@@ -400,7 +400,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
         }
       }
     } else {
-      log.warn("Mirror not connected [" + getInstanceId() + "]!");
+      log.warn("Mirror not connected [{}]!", getInstanceId());
     }
   }
 
@@ -624,7 +624,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
   @Override
   public String getUserId() {
-    synchronized (webConnection) {
+    synchronized (this) {
       return webConnection == null ? lastConnection.getUserId() : webConnection.getUserId();
     }
   }

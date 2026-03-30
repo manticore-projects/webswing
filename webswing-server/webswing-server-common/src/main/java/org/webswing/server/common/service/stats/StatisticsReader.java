@@ -6,13 +6,20 @@ import org.webswing.server.common.service.stats.logger.InstanceStats;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface StatisticsReader {
 
-  Map<String, List<Aggregation>> summaryRulesMap = new HashMap<>();
+  Map<String, List<Aggregation>> summaryRulesMap = Map.of(StatisticsLogger.MEMORY_ALLOCATED_METRIC,
+      List.of(Aggregation.SUM), StatisticsLogger.MEMORY_USED_METRIC, List.of(Aggregation.SUM),
+      StatisticsLogger.INBOUND_SIZE_METRIC, List.of(Aggregation.SUM),
+      StatisticsLogger.OUTBOUND_SIZE_METRIC, List.of(Aggregation.SUM),
+      StatisticsLogger.CPU_UTIL_METRIC, List.of(Aggregation.SUM), StatisticsLogger.LATENCY_PING,
+      List.of(Aggregation.AVG), StatisticsLogger.LATENCY_NETWORK_TRANSFER, List.of(Aggregation.AVG),
+      StatisticsLogger.LATENCY_CLIENT_RENDERING, List.of(Aggregation.AVG),
+      StatisticsLogger.LATENCY_SERVER_RENDERING, List.of(Aggregation.AVG), StatisticsLogger.LATENCY,
+      List.of(Aggregation.MAX));
 
   Map<String, Map<String, Pair<BigDecimal, Integer>>> getSummaryStats();
 

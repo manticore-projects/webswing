@@ -39,7 +39,7 @@ public class DefaultWebSocketServiceImpl implements WebswingService, WebSocketSe
     AppPathHandler appPathHandler = handlerMap.get(path);
 
     if (appPathHandler == null) {
-      log.error("No AppPathHandler found for path [" + path + "]!");
+      log.error("No AppPathHandler found for path [{}]!", path);
       return null;
     }
 

@@ -24,7 +24,8 @@ public class ClassModificationRegister {
 
     try {
       if (acquireLock()) {
-        writer = new PrintWriter(new BufferedWriter(new FileWriter(getClassListFile(), true)));
+        writer = new PrintWriter(
+            new BufferedWriter(new FileWriter(getClassListFile(), StandardCharsets.UTF_8, true)));
         AppLogger.info("ClassModificationRegister: lock acquired.");
       }
     } catch (IOException ex) {
@@ -45,11 +46,11 @@ public class ClassModificationRegister {
   private void readUnmodified() {
     Scanner sc = null;
     try {
-      sc = new Scanner(getClassListFile());
-      for (; sc.hasNextLine(); ) {
+      sc = new Scanner(getClassListFile(), StandardCharsets.UTF_8);
+      while (sc.hasNextLine()) {
         unmodifiedClassSet.add(sc.nextLine());
       }
-    } catch (FileNotFoundException e) {
+    } catch (IOException ignore) {
       // do nothing. file not created yet
     } finally {
       if (sc != null) {

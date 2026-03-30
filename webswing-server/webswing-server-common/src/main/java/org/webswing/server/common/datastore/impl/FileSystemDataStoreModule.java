@@ -33,7 +33,7 @@ public class FileSystemDataStoreModule
     String filePath = getFolderPath(getDataType(type));
 
     if (filePath == null) {
-      log.warn("Could not find dataStore path for type [" + type + "]!");
+      log.warn("Could not find dataStore path for type [{}]!", type);
       return null;
     }
 
@@ -94,7 +94,7 @@ public class FileSystemDataStoreModule
     String filePath = getFolderPath(getDataType(type));
 
     if (filePath == null) {
-      log.warn("Could not find dataStore path for type [" + type + "]!");
+      log.warn("Could not find dataStore path for type [{}]!", type);
       return;
     }
 
@@ -121,7 +121,7 @@ public class FileSystemDataStoreModule
     String filePath = getFolderPath(getDataType(type));
 
     if (filePath == null) {
-      log.warn("Could not find dataStore path for type [" + type + "]!");
+      log.warn("Could not find dataStore path for type [{}]!", type);
       return false;
     }
 
@@ -134,7 +134,7 @@ public class FileSystemDataStoreModule
     String filePath = getFolderPath(getDataType(type));
 
     if (filePath == null) {
-      log.warn("Could not find dataStore path for type [" + type + "]!");
+      log.warn("Could not find dataStore path for type [{}]!", type);
       return;
     }
 
@@ -163,7 +163,7 @@ public class FileSystemDataStoreModule
       WebswingDataStoreType dataType = WebswingDataStoreType.valueOf(type);
       return dataType;
     } catch (IllegalArgumentException e) {
-      log.warn("Could not resolve data store data type [" + type + "]!", e);
+      log.warn("Could not resolve data store data type [{}]!", type, e);
     }
     return WebswingDataStoreType.unknown;
   }

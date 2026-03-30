@@ -201,8 +201,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
           try {
             serverConfig = globalHandler.getConfigBytes(getConfig.getPath());
           } catch (Exception e) {
-            log.error("Error getting server configuration for path [" + getConfig.getPath() + "]",
-                e);
+            log.error("Error getting server configuration for path [{}]", getConfig.getPath(), e);
             serverError = ExceptionUtils.getMessage(e);
           }
 
@@ -212,7 +211,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
               getConfig.getCorrelationId()));
           connection.sendMessage(msgOut);
         } catch (Exception e) {
-          log.error("Error getting configuration for path [" + getConfig.getPath() + "]!", e);
+          log.error("Error getting configuration for path [{}]!", getConfig.getPath(), e);
         }
       } else if (frame.getGetMeta() != null) {
         GetMetaMsgIn getMeta = frame.getGetMeta();
@@ -224,8 +223,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
               serverConfig =
                   globalHandler.getMetaBytes(getMeta.getPath(), getMeta.getServerConfig());
             } catch (Exception e) {
-              log.error(
-                  "Error getting server meta configuration for path [" + getMeta.getPath() + "]",
+              log.error("Error getting server meta configuration for path [{}]", getMeta.getPath(),
                   e);
               serverError = ExceptionUtils.getMessage(e);
             }
@@ -245,7 +243,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
               new MetaMsgOut(serverConfig, serverError, appConfigs, getMeta.getCorrelationId()));
           connection.sendMessage(msgOut);
         } catch (Exception e) {
-          log.error("Error getting meta configuration for path [" + getMeta.getPath() + "]!", e);
+          log.error("Error getting meta configuration for path [{}]!", getMeta.getPath(), e);
         }
       } else if (frame.getSaveConfig() != null) {
         SaveConfigMsgIn saveConfig = frame.getSaveConfig();
@@ -256,9 +254,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
             try {
               globalHandler.saveConfig(saveConfig.getPath(), saveConfig.getServerConfig());
             } catch (Exception e) {
-              log.error(
-                  "Error while saving server configuration for path [" + saveConfig.getPath() + "]",
-                  e);
+              log.error("Error while saving server configuration for path [{}]",
+                  saveConfig.getPath(), e);
               serverResult = false;
               serverError = ExceptionUtils.getStackTrace(e);
             }
@@ -283,7 +280,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
               appResults, saveConfig.getCorrelationId()));
           connection.sendMessage(msgOut);
         } catch (Exception e) {
-          log.error("Error saving configuration for path [" + saveConfig.getPath() + "]!", e);
+          log.error("Error saving configuration for path [{}]!", saveConfig.getPath(), e);
         }
       } else if (frame.getResolveConfig() != null) {
         ResolveConfigMsgIn resolve = frame.getResolveConfig();
@@ -370,8 +367,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         ConnectedSwingInstance instance = findInstanceByInstanceId(mirror.getInstanceId());
 
         if (instance == null) {
-          log.error("Could not find instance [" + mirror.getInstanceId()
-              + "] for mirror connection message!");
+          log.error("Could not find instance [{}] for mirror connection message!",
+              mirror.getInstanceId());
         } else {
           if (mirror.isConnect()) {
             try {
@@ -609,7 +606,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
 
     if (instance != null) {
       if (reconnect) {
-        log.warn("Trying to reconnect instance [" + instanceId + "] to the same cluster server?");
+        log.warn("Trying to reconnect instance [{}] to the same cluster server?", instanceId);
       }
       instance.connectApplication(connection, false);
       return true;
@@ -622,16 +619,16 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         PrimaryWebSocketConnection browserConnection = reconnectWaiting.remove(instanceId);
         if (browserConnection == null || browserConnection.getReconnectHandshake() == null) {
           log.error(
-              "Could not find browser websocket connection waiting for reconnect of instance ["
-                  + instanceId + "]! Disconnecting..");
+              "Could not find browser websocket connection waiting for reconnect of instance [{}]! Disconnecting..",
+              instanceId);
           return false;
         }
 
         ServerSessionPoolConnector sessionPool = findSessionPoolByInstanceId(instanceId);
         if (sessionPool == null) {
           // this should not happen
-          log.error("Cannot find session pool to reconnect instance [" + instanceId
-              + "]! Disconnecting..");
+          log.error("Cannot find session pool to reconnect instance [{}]! Disconnecting..",
+              instanceId);
           return false;
         }
 
@@ -641,17 +638,16 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
           sessionPool.reconnectInstance(instanceId, connection, browserConnection,
               browserConnection.getReconnectHandshake(), appHandler.createSwingInstanceInfo());
         } catch (WsException e) {
-          log.error(
-              "Could not create connected instance for reconnecting instance [" + instanceId + "]!",
-              e);
+          log.error("Could not create connected instance for reconnecting instance [{}]!",
+              instanceId, e);
           return false;
         }
         return true;
       }
     }
 
-    log.warn("Could not find a connected instance for [" + connection.getInstanceId()
-        + "]! Must reconnect from browser.");
+    log.warn("Could not find a connected instance for [{}]! Must reconnect from browser.",
+        connection.getInstanceId());
     return false;
   }
 
@@ -848,8 +844,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         byte[] config = sessionPool.getAppConfig(path);
         return new AppConfigMsgOut(config, sessionPool.getId());
       } catch (Exception e) {
-        log.error("Error while getting config from session pool [" + sessionPool.getId()
-            + "] for path [" + path + "]!", e);
+        log.error("Error while getting config from session pool [{}] for path [{}]!",
+            sessionPool.getId(), path, e);
         return new AppConfigMsgOut(ExceptionUtils.getStackTrace(e));
       }
     });
@@ -870,8 +866,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         return Lists
             .newArrayList(new MapMsgOut(pool.getId(), pool.resolveConfig(path, user, resolve)));
       } catch (Exception e) {
-        log.error("Error while resolving from session pool [" + pool.getId() + "] for path [" + path
-            + "]!", e);
+        log.error("Error while resolving from session pool [{}] for path [{}]!", pool.getId(), path,
+            e);
         return Lists.newArrayList(new MapMsgOut(pool.getId(), null));
       }
     }
@@ -881,8 +877,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         String resolved = sessionPool.resolveConfig(path, user, resolve);
         return new MapMsgOut(sessionPool.getId(), resolved);
       } catch (Exception e) {
-        log.error("Error while resolving from session pool [" + sessionPool.getId() + "] for path ["
-            + path + "]!", e);
+        log.error("Error while resolving from session pool [{}] for path [{}]!",
+            sessionPool.getId(), path, e);
         return new MapMsgOut(sessionPool.getId(), null);
       }
     });
@@ -909,8 +905,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         searchList.add(list);
         return searchList;
       } catch (Exception e) {
-        log.error("Error while resolving from session pool [" + pool.getId() + "] for path [" + path
-            + "]!", e);
+        log.error("Error while resolving from session pool [{}] for path [{}]!", pool.getId(), path,
+            e);
         return Collections.emptyList();
       }
     }
@@ -927,8 +923,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         }
         return list;
       } catch (Exception e) {
-        log.error("Error while searching variables from session pool [" + sessionPool.getId()
-            + "] for path [" + path + "]!", e);
+        log.error("Error while searching variables from session pool [{}] for path [{}]!",
+            sessionPool.getId(), path, e);
         return null;
       }
     });
@@ -942,8 +938,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         byte[] meta = sessionPool.getAppMeta(path, configs.get(sessionPool.getId()));
         return new AppConfigMsgOut(meta, sessionPool.getId());
       } catch (Exception e) {
-        log.error("Error while getting meta from session pool [" + sessionPool.getId()
-            + "] for path [" + path + "]!", e);
+        log.error("Error while getting meta from session pool [{}] for path [{}]!",
+            sessionPool.getId(), path, e);
         return new AppConfigMsgOut(ExceptionUtils.getStackTrace(e));
       }
     });
@@ -957,8 +953,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         sessionPool.saveConfig(path, configs.get(sessionPool.getId()));
         return new SaveConfigAppResultMsgOut(true, sessionPool.getId());
       } catch (Exception e) {
-        log.error("Error while saving app config to session pool [" + sessionPool.getId()
-            + "] for path [" + path + "]!", e);
+        log.error("Error while saving app config to session pool [{}] for path [{}]!",
+            sessionPool.getId(), path, e);
         return new SaveConfigAppResultMsgOut(false, sessionPool.getId(),
             ExceptionUtils.getStackTrace(e));
       }
@@ -974,7 +970,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
     List<Thread> threads = new ArrayList<>();
     for (ServerSessionPoolConnector pool : sessionPools.values()) {
       if (sessionPoolIds != null && !sessionPoolIds.contains(pool.getId())) {
-        log.warn("Could not find session pool [" + pool.getId() + "] for sync call!");
+        log.warn("Could not find session pool [{}] for sync call!", pool.getId());
         continue;
       }
       Thread t = new Thread(() -> {
@@ -1068,8 +1064,8 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
     try {
       return VariableSetName.valueOf(type);
     } catch (Exception e) {
-      log.error(
-          "Could not resolve variable substitutor type [" + type + "], falling back to basic!", e);
+      log.error("Could not resolve variable substitutor type [{}], falling back to basic!", type,
+          e);
       return VariableSetName.Basic;
     }
   }

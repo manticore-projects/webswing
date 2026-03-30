@@ -61,7 +61,7 @@ public class SessionRecordingPlayback {
       resetStream();
       sendNextFrame();
     } catch (IOException e) {
-      log.error("Failed to read recording file " + fileName, e);
+      log.error("Failed to read recording file {}", fileName, e);
     }
   }
 

@@ -90,8 +90,8 @@ public class MetadataGenerator<T> {
                   value, false);
               return metadata;
             } catch (Exception e) {
-              log.error("Failed to generate metadata for field '" + fieldName + "' in object "
-                  + config.getClass().getName(), e);
+              log.error("Failed to generate metadata for field '{}' in object {}", fieldName,
+                  config.getClass().getName(), e);
               MetaField metadata = new MetaField();
               setMetadataProperties(metadata, fieldName, config, cl, propertyName, readMethod, null,
                   true);

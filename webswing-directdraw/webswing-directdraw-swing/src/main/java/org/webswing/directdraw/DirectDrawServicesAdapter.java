@@ -10,12 +10,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DirectDrawServicesAdapter {
 
@@ -27,9 +29,9 @@ public class DirectDrawServicesAdapter {
       ImageIO.write(imageContent, "png", baos);
       return baos.toByteArray();
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.getAnonymousLogger().log(Level.SEVERE, "Failed to encode PNG image", e);
+      return new byte[0];
     }
-    return null;
   }
 
   public long getSignature(byte[] data) {
@@ -80,12 +82,12 @@ public class DirectDrawServicesAdapter {
 
   private Map<String, String> getFontFileMap() {
     if (fontFileMap == null) {
-      fontFileMap = new HashMap<String, String>();
+      fontFileMap = new HashMap<>();
       try {
         String customFontConfigFile = System.getProperty("sun.awt.fontconfig");
         if (customFontConfigFile != null && new File(customFontConfigFile).canRead()) {
           File f = new File(customFontConfigFile);
-          try (Scanner s = new Scanner(f)) {
+          try (Scanner s = new Scanner(f, StandardCharsets.UTF_8)) {
             while (s.hasNextLine()) {
               String line = s.nextLine();
               if (line.startsWith("#@@")) {
@@ -98,7 +100,7 @@ public class DirectDrawServicesAdapter {
             }
           }
         }
-      } catch (FileNotFoundException e) {
+      } catch (IOException e) {
         System.err.println("Failed to initialize font file map for DirectDraw rendering.");
         e.printStackTrace();
       }

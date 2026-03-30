@@ -43,7 +43,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
         try {
           handler.init();
         } catch (Exception e) {
-          log.error("Failed to initialize child handler: " + handler.getClass().getName(), e);
+          log.error("Failed to initialize child handler: {}", handler.getClass().getName(), e);
         }
       }
     }
@@ -56,7 +56,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
         try {
           handler.destroy();
         } catch (Exception e) {
-          log.error("Failed to destroy child handler: " + handler.getClass().getName(), e);
+          log.error("Failed to destroy child handler: {}", handler.getClass().getName(), e);
         }
       }
       childHandlers.clear();

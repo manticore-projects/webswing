@@ -50,8 +50,9 @@ public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
         try {
           checkPermission(WebswingAction.master_basic_access);
         } catch (WsException e) {
-          log.warn("Accessing restricted resource path. Path '" + path
-              + "' requires authentication. (matches restricted prefix '" + restricted + "')");
+          log.warn(
+              "Accessing restricted resource path. Path '{}' requires authentication. (matches restricted prefix '{}')",
+              path, restricted);
           return true;
         }
       }

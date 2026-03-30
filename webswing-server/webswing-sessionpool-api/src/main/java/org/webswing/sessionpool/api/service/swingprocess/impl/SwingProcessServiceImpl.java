@@ -448,11 +448,11 @@ public class SwingProcessServiceImpl implements SwingProcessService {
                   + transferDir + "]");
         } else if (transferDir != null) {
           FileUtils.deleteDirectory(new File(transferDir));
-          log.info("Transfer dir for session [" + process.getConfig().getName() + "] cleared. ["
-              + transferDir + "]");
+          log.info("Transfer dir for session [{}] cleared. [{}]", process.getConfig().getName(),
+              transferDir);
         }
       } catch (IOException e) {
-        log.error("Failed to delete transfer dir " + transferDir, e);
+        log.error("Failed to delete transfer dir {}", transferDir, e);
       }
     }
 

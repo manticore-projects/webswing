@@ -20,7 +20,7 @@ public class DefaultStatisticsLogger implements StatisticsLogger {
   private static final long STATS_INTERVAL = Long.getLong(Constants.STATS_INTERVAL, 10);
   private static final int STATS_HISTORY_LIMIT = Integer.getInteger(Constants.STATS_HISTORY, 60);
   private static final double STATS_WARN_MEMUSAGE =
-      Double.valueOf(System.getProperty(Constants.STATS_WARN_MEMUSAGE_TRESHOLD, "" + 0.8));
+      Double.parseDouble(System.getProperty(Constants.STATS_WARN_MEMUSAGE_TRESHOLD, "" + 0.8));
   private static final int STATS_WARN_LATENCY_TRESHOLD =
       Integer.getInteger(Constants.STATS_WARN_LATENCY_TRESHOLD, 700);
   private static final int STATS_WARN_PING_TRESHOLD =
@@ -50,16 +50,6 @@ public class DefaultStatisticsLogger implements StatisticsLogger {
     warningRules.put(EDT_BLOCKED_SEC_METRIC,
         WarningRule.thresholdRule(EDT_BLOCKED_SEC_METRIC, 10, "EDT blocked for %d seconds."));
 
-    summaryRulesMap.put(MEMORY_ALLOCATED_METRIC, Arrays.asList(Aggregation.SUM));
-    summaryRulesMap.put(MEMORY_USED_METRIC, Arrays.asList(Aggregation.SUM));
-    summaryRulesMap.put(INBOUND_SIZE_METRIC, Arrays.asList(Aggregation.SUM));
-    summaryRulesMap.put(OUTBOUND_SIZE_METRIC, Arrays.asList(Aggregation.SUM));
-    summaryRulesMap.put(CPU_UTIL_METRIC, Arrays.asList(Aggregation.SUM));
-    summaryRulesMap.put(LATENCY_PING, Arrays.asList(Aggregation.AVG));
-    summaryRulesMap.put(LATENCY_NETWORK_TRANSFER, Arrays.asList(Aggregation.AVG));
-    summaryRulesMap.put(LATENCY_CLIENT_RENDERING, Arrays.asList(Aggregation.AVG));
-    summaryRulesMap.put(LATENCY_SERVER_RENDERING, Arrays.asList(Aggregation.AVG));
-    summaryRulesMap.put(LATENCY, Arrays.asList(Aggregation.MAX));
   }
 
   Map<String, InstanceStats> instanceMap = new HashMap<>();
@@ -67,7 +57,7 @@ public class DefaultStatisticsLogger implements StatisticsLogger {
   @Override
   public void log(String instance, String name, Number value) {
     if (value != null) {
-      log.trace("{},{},{}", new Object[]{instance, name, value});
+      log.trace("{},{},{}", new Object[] {instance, name, value});
       processMetric(instance, name, value);
     }
   }

@@ -136,7 +136,7 @@ public class CommonUtil {
         }
       }
     } catch (IOException e) {
-      log.error("Failed to load image " + icon, e);
+      log.error("Failed to load image {}", icon, e);
       return null;
     }
   }

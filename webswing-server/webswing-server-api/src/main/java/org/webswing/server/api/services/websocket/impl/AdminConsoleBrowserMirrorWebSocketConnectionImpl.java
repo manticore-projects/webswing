@@ -82,7 +82,7 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
       connected = true;
     } catch (Exception e) {
       disconnect("Unauthorized access!");
-      log.error("Error opening mirror connection [" + instance.getInstanceId() + "]!", e);
+      log.error("Error opening mirror connection [{}]!", instance.getInstanceId(), e);
       throw new WsException(e);
     }
   }
@@ -91,8 +91,8 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
   public void sendMessage(ServerToBrowserFrameMsgOut msgOut) {
     AdminConsoleWebSocketConnection ac = sessionPoolService.getAdminConsoleConnection();
     if (ac == null || !ac.isConnected()) {
-      log.debug(
-          "Cannot send mirror message to admin console, not connected [" + getInstanceId() + "]!");
+      log.debug("Cannot send mirror message to admin console, not connected [{}]!",
+          getInstanceId());
       return;
     }
 
@@ -108,7 +108,7 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
 
       ac.sendMessage(acMsgOut);
     } catch (IOException e) {
-      log.error("Error sending mirror msg to admin console [" + getInstanceId() + "]!", e);
+      log.error("Error sending mirror msg to admin console [{}]!", getInstanceId(), e);
     }
   }
 
@@ -119,9 +119,8 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
       msgOut.setAppFrameMsgOut(appFrameProtoMapper.encodeProto(frame));
       sendMessage(msgOut);
     } catch (IOException e) {
-      log.error(
-          "Could not encode AppFrameMsgOut for admin console mirror msg [" + getInstanceId() + "]!",
-          e);
+      log.error("Could not encode AppFrameMsgOut for admin console mirror msg [{}]!",
+          getInstanceId(), e);
     }
   }
 
@@ -145,8 +144,8 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
 
       instance.handleBrowserMessage(msgIn);
     } catch (IOException e) {
-      log.error("Could not decode BrowserToServerFrameMsgIn from admin console mirror msg ["
-          + getInstanceId() + "]!", e);
+      log.error("Could not decode BrowserToServerFrameMsgIn from admin console mirror msg [{}]!",
+          getInstanceId(), e);
     }
   }
 
@@ -158,8 +157,8 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
 
     AdminConsoleWebSocketConnection ac = sessionPoolService.getAdminConsoleConnection();
     if (ac == null || !ac.isConnected()) {
-      log.error(
-          "Cannot send mirror message to admin console, not connected [" + getInstanceId() + "]!");
+      log.error("Cannot send mirror message to admin console, not connected [{}]!",
+          getInstanceId());
       return;
     }
 

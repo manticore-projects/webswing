@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <FindBugsFilter
-              xmlns="https://github.com/spotbugs/filter/3.0.0"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
-  <Match>
-		<Or>
-			<Package name="net.sf.jsqlparser.parser" />
-			<Source name="*java/test/*" />
-			<Not>
-				<Confidence value="1" />
-			</Not>
-		</Or>
-  </Match>
+<FindBugsFilter
+        xmlns="https://github.com/spotbugs/filter/3.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+    <Match>
+        <Or>
+            <Package name="net.sf.jsqlparser.parser"/>
+            <Source name="*java/test/*"/>
+            <Not>
+                <Confidence value="1"/>
+            </Not>
+        </Or>
+    </Match>
+
+    <!--
+        SpotBugs exclusion filter for Webswing
+        These findings are intentional design patterns or require
+        architectural changes beyond the scope of a bug-fix pass.
+    -->
+
+    <!-- UMAC: AWT SurfaceData methods invoked via JDK internal reflection.
+         These anonymous class methods ARE called, just not via normal dispatch. -->
+    <Match>
+        <Bug pattern="UMAC"/>
+        <Or>
+            <Class name="~.*WebImage\$.*"/>
+            <Class name="~.*VolatileWebImageWrapper\$.*"/>
+        </Or>
+    </Match>
+
+    <!-- Nm: Intentional name shadowing — these classes intercept/override
+         the JDK audio SPI by using the same simple name. -->
+    <Match>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
+        <Or>
+            <Class name="org.webswing.audio.AudioFileReader"/>
+            <Class name="org.webswing.audio.AudioInputStream"/>
+        </Or>
+    </Match>
+
+    <!-- ST: WebToolkit sets static screenWidth/screenHeight from its
+         singleton instance during initialization. Thread-safe in practice
+         because init runs once on the EDT before any reader. -->
+    <Match>
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+        <Class name="org.webswing.toolkit.WebToolkit"/>
+        <Method name="initSize"/>
+    </Match>
+
+    <!-- Se: SwingInstanceImpl has non-serializable fields (proto mappers,
+         connection refs). The class implements Serializable transitively
+         but is never actually serialized. Fixing requires removing
+         Serializable from the hierarchy. -->
+    <Match>
+        <Bug pattern="SE_BAD_FIELD"/>
+        <Class name="org.webswing.server.api.services.swinginstance.impl.SwingInstanceImpl"/>
+    </Match>
+
+    <!-- ML: Synchronization on webConnection/mirroredWebConnection fields
+         that can be reassigned. Proper fix requires a dedicated lock object
+         or volatile + CAS pattern — deferred to concurrency refactoring. -->
+    <Match>
+        <Bug pattern="ML_SYNC_ON_UPDATED_FIELD"/>
+        <Class name="org.webswing.server.api.services.swinginstance.impl.SwingInstanceImpl"/>
+    </Match>
 </FindBugsFilter>

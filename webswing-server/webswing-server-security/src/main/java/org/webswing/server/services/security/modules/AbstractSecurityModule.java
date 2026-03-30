@@ -87,7 +87,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
         if (url != null) {
           try {
             InputStream is = url.openStream();
-            return new InputStreamReader(is);
+            return new InputStreamReader(is, StandardCharsets.UTF_8);
           } catch (IOException e) {
             log.error("Failed to open Template from url: {}", sanitizeForLog(url.toString()));
           }
@@ -334,7 +334,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
    */
   protected void sendHtml(HttpServletRequest request, HttpServletResponse response, String template,
       Object variables) throws IOException {
-    Object[] extendedVars = new Object[]{variables, getDefaultVariables(request)};
+    Object[] extendedVars = new Object[] {variables, getDefaultVariables(request)};
     if (isAjax(request)) {
       Map<String, Object> message = new HashMap<>();
       try {
@@ -346,8 +346,8 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
         throw new IOException("Failed to send login template message", e);
       }
     } else {
-      response.setContentType("text/html");
-      Writer w = new OutputStreamWriter(response.getOutputStream());
+      response.setContentType("text/html;charset=UTF-8");
+      Writer w = new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8);
       processTemplate(w, template, extendedVars);
     }
   }
@@ -366,12 +366,12 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
   protected void sendPartialHtml(HttpServletRequest request, HttpServletResponse response,
       String template, Object variables) throws IOException {
     Map<String, String> defaultVars = getDefaultVariables(request);
-    Object[] extendedVars = new Object[]{variables, defaultVars};
+    Object[] extendedVars = new Object[] {variables, defaultVars};
     if (isAjax(request)) {
       sendHtml(request, response, template, variables);
     } else {
       response.setContentType("text/html;charset=UTF-8");
-      Writer w = new OutputStreamWriter(response.getOutputStream());
+      Writer w = new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8);
       Writer tempw = new StringWriter();
       processTemplate(tempw, template, extendedVars);
       defaultVars.put("partialHtml",
@@ -540,7 +540,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
       ipAddress = r.getRemoteAddr();
     }
     auditLog.info("{} | {} | {} | {} | {} | {} | {}",
-        new Object[]{sanitizeForLog(status), sanitizeForLog(username), sanitizeForLog(reason),
+        new Object[] {sanitizeForLog(status), sanitizeForLog(username), sanitizeForLog(reason),
             sanitizeForLog(path), sanitizeForLog(protocol), sanitizeForLog(ipAddress),
             sanitizeForLog(module)});
   }

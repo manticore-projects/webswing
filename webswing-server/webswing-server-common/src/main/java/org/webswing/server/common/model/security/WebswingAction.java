@@ -85,7 +85,7 @@ public enum WebswingAction {
           roles.addAll(getRolesForAccessType(at));
         }
       } catch (Exception e) {
-        log.error("Error resolving roles for action '" + action + "' falling back to admin");
+        log.error("Error resolving roles for action '{}' falling back to admin", action);
         roles = getRolesForAccessType(AccessType.admin);
       }
       return roles.toArray(new String[roles.size()]);

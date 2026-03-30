@@ -55,7 +55,7 @@ public class LoggerStatisticsUtil {
   private static BigDecimal calculateValue(Aggregation rule, List<Number> list) {
     Number result = 0;
     if (list != null && list.size() > 0) {
-      for (Iterator<Number> iterator = list.iterator(); iterator.hasNext(); ) {
+      for (Iterator<Number> iterator = list.iterator(); iterator.hasNext();) {
         result = calculateValue(rule, result.doubleValue(), iterator.next().doubleValue());
       }
       if (rule.equals(Aggregation.AVG)) {
@@ -140,7 +140,7 @@ public class LoggerStatisticsUtil {
     try {
       aggregation = Aggregation.valueOf(ruleName.substring(ruleName.lastIndexOf('.') + 1));
     } catch (Exception e) {
-      log.warn("Could not parse aggregation rule from rule name [" + ruleName + "]!", e);
+      log.warn("Could not parse aggregation rule from rule name [{}]!", ruleName, e);
       return pair;
     }
 

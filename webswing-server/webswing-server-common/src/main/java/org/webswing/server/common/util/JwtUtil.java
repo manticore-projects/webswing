@@ -43,6 +43,7 @@ public class JwtUtil {
   private static final int GCM_IV_LENGTH = 12; // 96-bit IV recommended for GCM
   private static final int GCM_TAG_LENGTH = 128; // 128-bit authentication tag
   private static final String encryptionKeySpec = "AES";
+  private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
   /**
    * Maximum allowed size for decompressed claim data (1 MB). Prevents decompression bomb attacks
@@ -323,7 +324,7 @@ public class JwtUtil {
       }
       try {
         byte[] iv = new byte[GCM_IV_LENGTH];
-        new SecureRandom().nextBytes(iv);
+        SECURE_RANDOM.nextBytes(iv);
         GCMParameterSpec gcmSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
         Cipher cipher = Cipher.getInstance(encryptionAlg);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);

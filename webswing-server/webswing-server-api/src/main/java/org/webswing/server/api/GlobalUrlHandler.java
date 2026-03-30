@@ -161,7 +161,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
 
   @Override
   protected WebswingSecurityConfig getSecurityConfig() {
-    log.info("Loading master security module.(" + getConfig().getSecurity() + ").");
+    log.info("Loading master security module.({}).", getConfig().getSecurity());
     WebswingSecurityConfig secConfig = super.getSecurityConfig();
     if (BuiltInModules.INHERITED.name().equals(secConfig.getModule())) {
       log.error(
@@ -199,9 +199,8 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
           if (childHandler == null) {
             installApplication(configPath);
           } else {
-            log.error(
-                "Application with path '" + pathMapping + "' already exists! Application skipped.",
-                new IllegalStateException("Invalid Application configuration."));
+            log.error("Application with path '{}' already exists! Application skipped.",
+                pathMapping, new IllegalStateException("Invalid Application configuration."));
           }
         }
       }
@@ -209,7 +208,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
   }
 
   private AppPathHandler installApplication(SecuredPathConfig swing) {
-    log.info("Installing application " + swing.getPath());
+    log.info("Installing application {}", swing.getPath());
     AppPathHandler appPathHandler =
         appPathHandlerFactory.createAppPathHandler(this, swing.getPath());
     registerFirstChildUrlHandler(appPathHandler);
@@ -217,7 +216,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
   }
 
   private void uninstallApplication(AppPathHandler appPathHandlerToRemove) {
-    log.info("Removing application " + appPathHandlerToRemove.getPathMapping());
+    log.info("Removing application {}", appPathHandlerToRemove.getPathMapping());
     appPathHandlerToRemove.destroy();
     removeChildUrlHandler(appPathHandlerToRemove);
   }
@@ -379,10 +378,10 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
         try {
           configService.removeConfiguration(path);
         } catch (Exception e) {
-          log.error("Unable to Remove App '" + path + "'!", e);
+          log.error("Unable to Remove App '{}'!", path, e);
         }
       } else {
-        log.error("Unable to Remove App '" + path + "' while running. Stop the app first");
+        log.error("Unable to Remove App '{}' while running. Stop the app first", path);
       }
     }
   }
@@ -397,10 +396,10 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
                                                      // initiation
         configService.setConfiguration(path, null);// once exists,
       } catch (Exception e) {
-        log.error("Unable to Create App '" + path + "'!", e);
+        log.error("Unable to Create App '{}'!", path, e);
       }
     } else {
-      log.error("Unable to Create App '" + path + "'. Application already exits.");
+      log.error("Unable to Create App '{}'. Application already exits.", path);
     }
   }
 

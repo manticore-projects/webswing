@@ -38,7 +38,7 @@ public class LoginHandlerImpl extends AbstractUrlHandler implements LoginHandler
       login(req, res);
       return true;
     } catch (Exception e) {
-      log.error("Failed to process login request. " + getFullPathMapping(), e);
+      log.error("Failed to process login request. {}", getFullPathMapping(), e);
       throw new WsException("Failed to login", e);
     }
   }

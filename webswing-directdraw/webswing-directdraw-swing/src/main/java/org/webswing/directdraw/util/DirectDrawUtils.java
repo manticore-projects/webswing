@@ -20,7 +20,8 @@ import java.util.List;
 @SuppressWarnings("restriction")
 public class DirectDrawUtils {
 
-  public static final Properties webFonts = new Properties();
+  public static final Map<String, String> webFonts = Map.of("Dialog", "sans-serif", "DialogInput",
+      "monospace", "Serif", "serif", "SansSerif", "sans-serif", "Monospaced", "monospace");
   private static final String DELIMITER = "|";
   private static SunGraphics2D sgHelper;
 
@@ -28,12 +29,6 @@ public class DirectDrawUtils {
     sgHelper = (SunGraphics2D) new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
     sgHelper.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    // logical fonts
-    webFonts.setProperty("Dialog", "sans-serif");
-    webFonts.setProperty("DialogInput", "monospace");
-    webFonts.setProperty("Serif", "serif");
-    webFonts.setProperty("SansSerif", "sans-serif");
-    webFonts.setProperty("Monospaced", "monospace");
   }
 
   public static FontInfo getFontInfo(Font font) {
@@ -378,7 +373,7 @@ public class DirectDrawUtils {
         return fileName;
       }
     } else {
-      return DirectDrawUtils.webFonts.getProperty(font.getFamily());
+      return DirectDrawUtils.webFonts.get(font.getFamily());
     }
   }
 

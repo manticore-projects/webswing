@@ -223,12 +223,12 @@ public abstract class AbstractConfigurationProvider<T> implements ConfigurationP
             // update
             updateHandler.notifyConfigChanged(path,
                 toConfig(path, (Map<String, Object>) newConfig.get(path)));
-            log.info("App configuration for path '" + path + "' changed.");
+            log.info("App configuration for path '{}' changed.", path);
           } catch (Exception e) {
-            log.error("Failed to update app configuration for path '" + path + "'.", e);
+            log.error("Failed to update app configuration for path '{}'.", path, e);
           }
         } else {
-          log.warn("Path '" + path + "' has invalid configuration value.");
+          log.warn("Path '{}' has invalid configuration value.", path);
         }
       }
       oldConfig.remove(path);

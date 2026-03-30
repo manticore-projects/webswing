@@ -479,7 +479,7 @@ public class SwingProcessImpl implements SwingProcess {
     while (out.available() > 0 && !timeout) {
       int available = out.available();
       int read = out.read(buffer, 0, Math.min(available, buffer.length));
-      bufferOut.append(new String(buffer, 0, read));
+      bufferOut.append(new String(buffer, 0, read, StandardCharsets.UTF_8));
       while (bufferOut.indexOf("\n") >= 0) {
         int indexofNewLine = bufferOut.indexOf("\n");
         boolean isCR = indexofNewLine > 0 && bufferOut.charAt(indexofNewLine - 1) == '\r';
@@ -632,9 +632,9 @@ public class SwingProcessImpl implements SwingProcess {
         .setLayout(PatternLayout.newBuilder().withPattern(Constants.SESSION_LOG_PATTERN).build())
         .withPolicy(sizeBasedPolicy)
         .withStrategy(DefaultRolloverStrategy.newBuilder().withMax("1").withConfig(logConfig)
-            .withCustomActions(new Action[]{DeleteAction.createDeleteAction(logDir, false, 1,
+            .withCustomActions(new Action[] {DeleteAction.createDeleteAction(logDir, false, 1,
                 false, PathSortByModificationTime.createSorter(true),
-                new PathCondition[]{IfFileName.createNameCondition(globPattern, null,
+                new PathCondition[] {IfFileName.createNameCondition(globPattern, null,
                     IfAccumulatedFileSize.createFileSizeCondition(maxSize))},
                 null, logConfig)})
             .build())

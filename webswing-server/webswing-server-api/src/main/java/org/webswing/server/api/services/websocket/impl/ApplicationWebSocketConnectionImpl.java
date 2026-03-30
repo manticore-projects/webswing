@@ -55,11 +55,12 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
         (String) config.getUserProperties().get(ApplicationWebSocketConfigurator.ATTR_RECONNECT));
 
     if (!sessionPoolHolderService.connectApplication(this, reconnect)) {
-      log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId ["
-          + sessionPoolId + "]. Waiting for reconnect from browser.");
+      log.info(
+          "Application connected with instanceId [{}] and sessionPoolId [{}]. Waiting for reconnect from browser.",
+          instanceId, sessionPoolId);
     } else {
-      log.info("Application connected with instanceId [" + instanceId + "] and sessionPoolId ["
-          + sessionPoolId + "].");
+      log.info("Application connected with instanceId [{}] and sessionPoolId [{}].", instanceId,
+          sessionPoolId);
     }
   }
 
@@ -86,15 +87,15 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
           // this should not happen, since we disconnect if we cannot get a connected instance in
           // onOpen
           log.warn(
-              "Could not handle message from application, instance not initialized for instanceId ["
-                  + instanceId + "]!");
+              "Could not handle message from application, instance not initialized for instanceId [{}]!",
+              instanceId);
           return;
         }
 
         instance.handleAppMessage(msgOut);
       }
     } catch (IOException e) {
-      log.error("Could not decode proto message from app [" + instanceId + "]!", e);
+      log.error("Could not decode proto message from app [{}]!", instanceId, e);
     }
   }
 
@@ -106,8 +107,8 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
-      log.info("Websocket closed to app, instance [" + instanceId + "]"
-          + (closeReason != null
+      log.info("Websocket closed to app, instance [{}]{}", instanceId,
+          (closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
               : ""));
@@ -119,9 +120,9 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
 
   @OnError
   public void onError(Session session, Throwable t) {
-    log.error("Websocket error from app connection, session ["
-        + (session == null ? null : session.getId()) + "], instanceId [" + instanceId
-        + "], sessionPool [" + sessionPoolId + "] " + t.getMessage());
+    log.error(
+        "Websocket error from app connection, session [{}], instanceId [{}], sessionPool [{}] {}",
+        (session == null ? null : session.getId()), instanceId, sessionPoolId, t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -135,9 +136,9 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
     try {
       super.sendMessage(protoMapper.encodeProto(msgIn));
     } catch (IOException e) {
-      log.error("Failed to send msg to application, session ["
-          + (session == null ? null : session.getId()) + "], instanceId [" + instanceId
-          + "], sessionPool [" + sessionPoolId + "] " + e.getMessage());
+      log.error(
+          "Failed to send msg to application, session [{}], instanceId [{}], sessionPool [{}] {}",
+          (session == null ? null : session.getId()), instanceId, sessionPoolId, e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }
@@ -157,9 +158,9 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
       try {
         session.close(new CloseReason(closeCode, reason));
       } catch (IOException e) {
-        log.error("Failed to disconnect application connection, session [" + session.getId()
-            + "], instanceId [" + instanceId + "], sessionPool [" + sessionPoolId + "] "
-            + e.getMessage());
+        log.error(
+            "Failed to disconnect application connection, session [{}], instanceId [{}], sessionPool [{}] {}",
+            session.getId(), instanceId, sessionPoolId, e.getMessage());
         log.debug(e.getMessage(), e);
       }
     }

@@ -78,13 +78,13 @@ public class IsolatedFsShellFolderManager extends DefaultShellFolderManager {
     }
     if (key.startsWith("optionPaneIcon ")) {
       String iconType;
-      if (key == "optionPaneIcon Error") {
+      if ("optionPaneIcon Error".equals(key)) {
         iconType = platformImagesFolder + "/Error.gif";
-      } else if (key == "optionPaneIcon Information") {
+      } else if ("optionPaneIcon Information".equals(key)) {
         iconType = platformImagesFolder + "/Inform.gif";
-      } else if (key == "optionPaneIcon Question") {
+      } else if ("optionPaneIcon Question".equals(key)) {
         iconType = platformImagesFolder + "/Question.gif";
-      } else if (key == "optionPaneIcon Warning") {
+      } else if ("optionPaneIcon Warning".equals(key)) {
         iconType = platformImagesFolder + "/Warn.gif";
       } else {
         return null;

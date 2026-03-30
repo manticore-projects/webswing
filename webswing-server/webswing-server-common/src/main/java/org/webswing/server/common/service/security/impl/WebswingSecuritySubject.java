@@ -96,13 +96,13 @@ public class WebswingSecuritySubject {
       String webswingClaim = claims.getBody().get(Constants.JWT_CLAIM_WEBSWING, String.class);
 
       if (StringUtils.isBlank(webswingClaim)) {
-        log.error("Empty webswing claim in token [" + token + "]!");
+        log.error("Empty webswing claim in token [{}]!", token);
         return null;
       }
 
       result.webswingClaim = JwtUtil.deserializeWebswingClaim(webswingClaim);
     } catch (Exception e) {
-      log.error("Failed to parse JWT token [" + token + "]!", e);
+      log.error("Failed to parse JWT token [{}]!", token, e);
     }
 
     return result;

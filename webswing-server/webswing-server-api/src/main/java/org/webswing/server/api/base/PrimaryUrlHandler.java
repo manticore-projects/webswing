@@ -81,7 +81,7 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
       }
       initialized = true;
     } catch (Throwable e) {
-      log.error("Failed to start '" + getPathMapping() + "'.", e);
+      log.error("Failed to start '{}'.", getPathMapping(), e);
       try {
         destroy();
       } catch (Throwable e1) {
@@ -108,7 +108,7 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
           securityModule.destroy();
         }
       } catch (Exception e) {
-        log.error("Failed to destroy Security module for " + path + ".", e);
+        log.error("Failed to destroy Security module for {}.", path, e);
       }
       securityModule = securityModuleFactory.create(this, securityConfig);
       if (securityModule != null) {

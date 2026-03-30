@@ -72,8 +72,8 @@ public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnec
         sessionPoolHolderService.handleAdminConsoleMessage(msgIn, this);
       }
     } catch (IOException e) {
-      log.error("Could not decode proto message from admin console, session id [" + session.getId()
-          + "]!", e);
+      log.error("Could not decode proto message from admin console, session id [{}]!",
+          session.getId(), e);
     }
   }
 
@@ -85,8 +85,8 @@ public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnec
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
-      log.info("Websocket closed to admin console, session [" + session.getId() + "]"
-          + (closeReason != null
+      log.info("Websocket closed to admin console, session [{}]{}", session.getId(),
+          (closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
               : ""));
@@ -98,8 +98,8 @@ public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnec
 
   @OnError
   public void onError(Session session, Throwable t) {
-    log.error("Websocket error from admin console connection, session ["
-        + (session == null ? null : session.getId()) + "]" + t.getMessage());
+    log.error("Websocket error from admin console connection, session [{}]{}",
+        (session == null ? null : session.getId()), t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -108,8 +108,8 @@ public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnec
     try {
       super.sendMessage(protoMapper.encodeProto(msgOut));
     } catch (IOException e) {
-      log.error("Failed to send msg to admin console, session ["
-          + (session == null ? null : session.getId()) + "]!" + e.getMessage());
+      log.error("Failed to send msg to admin console, session [{}]!{}",
+          (session == null ? null : session.getId()), e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }
@@ -129,8 +129,8 @@ public class AdminConsoleWebSocketConnectionImpl extends AbstractWebSocketConnec
       try {
         session.close(new CloseReason(closeCode, reason));
       } catch (IOException e) {
-        log.error("Failed to disconnect admin console connection session [" + session.getId() + "]!"
-            + e.getMessage());
+        log.error("Failed to disconnect admin console connection session [{}]!{}", session.getId(),
+            e.getMessage());
         log.debug(e.getMessage(), e);
       }
     }

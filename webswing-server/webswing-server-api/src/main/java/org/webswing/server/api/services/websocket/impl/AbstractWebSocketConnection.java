@@ -98,15 +98,15 @@ public abstract class AbstractWebSocketConnection implements WebSocketConnection
   protected void onPong(Session session, PongMessage pongMessage, Logger log) {
     ByteBuffer buffer = pongMessage.getApplicationData();
     if (buffer == null) {
-      log.warn("Empty pong message received for session [" + session.getId() + "]!");
+      log.warn("Empty pong message received for session [{}]!", session.getId());
     }
     byte[] bytes = new byte[buffer.remaining()];
     buffer.get(bytes);
 
     String pong = new String(bytes, StandardCharsets.UTF_8);
     if (!Constants.WEBSOCKET_PING_PONG_CONTENT.equals(pong)) {
-      log.warn("Error receiving pong message for session [" + session.getId()
-          + "], content received [" + pong + "]!");
+      log.warn("Error receiving pong message for session [{}], content received [{}]!",
+          session.getId(), pong);
     }
   }
 

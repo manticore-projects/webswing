@@ -96,7 +96,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
 
           sendMessage(msgOut);
         } catch (IOException e) {
-          log.error("Could not encode proto message for browser [" + session.getId() + "]!", e);
+          log.error("Could not encode proto message for browser [{}]!", session.getId(), e);
         }
       } else {
         ServerToBrowserFrameMsgOut msgOut = new ServerToBrowserFrameMsgOut();
@@ -108,7 +108,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
         return;
       }
     } catch (IOException e) {
-      log.error("Could not encode proto message for browser [" + session.getId() + "]!", e);
+      log.error("Could not encode proto message for browser [{}]!", session.getId(), e);
     }
   }
 
@@ -148,7 +148,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
       sessionPoolHolderService.logStatValue(instance.getInstanceId(), path,
           StatisticsLogger.INBOUND_SIZE_METRIC, frameWithLength.getValue());
     } catch (IOException e) {
-      log.error("Could not decode proto message from browser [" + session.getId() + "]!", e);
+      log.error("Could not decode proto message from browser [{}]!", session.getId(), e);
     }
   }
 
@@ -160,8 +160,8 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
-      log.info("Websocket to browser closed, session [" + session.getId() + "]"
-          + (closeReason != null
+      log.info("Websocket to browser closed, session [{}]{}", session.getId(),
+          (closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
               : ""));
@@ -177,9 +177,9 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
 
   @OnError
   public void onError(Session session, Throwable t) {
-    log.error("Websocket error from browser connection, session ["
-        + (session == null ? null : session.getId()) + "], instanceId ["
-        + (instance == null ? null : instance.getInstanceId()) + "] " + t.getMessage());
+    log.error("Websocket error from browser connection, session [{}], instanceId [{}] {}",
+        (session == null ? null : session.getId()),
+        (instance == null ? null : instance.getInstanceId()), t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -189,9 +189,8 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
       try {
         session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, reason));
       } catch (IOException e) {
-        log.error("Failed to disconnect browser connection, session [" + session.getId()
-            + "], instanceId [" + (instance == null ? null : instance.getInstanceId()) + "] "
-            + e.getMessage());
+        log.error("Failed to disconnect browser connection, session [{}], instanceId [{}] {}",
+            session.getId(), (instance == null ? null : instance.getInstanceId()), e.getMessage());
         log.debug(e.getMessage(), e);
       }
     }
@@ -204,7 +203,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
       msgOut.setAppFrameMsgOut(appFrameProtoMapper.encodeProto(frame));
       sendMessage(msgOut);
     } catch (IOException e) {
-      log.error("Could not encode AppFrameMsgOut for session [" + session.getId() + "]!", e);
+      log.error("Could not encode AppFrameMsgOut for session [{}]!", session.getId(), e);
     }
   }
 
@@ -221,9 +220,9 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
       sessionPoolHolderService.logStatValue(instance.getInstanceId(), path,
           StatisticsLogger.OUTBOUND_SIZE_METRIC, encoded.length);
     } catch (IOException e) {
-      log.error("Failed to send msg to browser, session ["
-          + (session == null ? null : session.getId()) + "], instanceId ["
-          + (instance == null ? null : instance.getInstanceId()) + "] " + e.getMessage());
+      log.error("Failed to send msg to browser, session [{}], instanceId [{}] {}",
+          (session == null ? null : session.getId()),
+          (instance == null ? null : instance.getInstanceId()), e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }
@@ -246,7 +245,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
 
       sendMessage(msgOut);
     } catch (IOException e) {
-      log.error("Could not encode proto message for browser [" + session.getId() + "]!", e);
+      log.error("Could not encode proto message for browser [{}]!", session.getId(), e);
     }
   }
 

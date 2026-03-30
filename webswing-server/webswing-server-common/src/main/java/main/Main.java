@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -212,7 +213,7 @@ public class Main {
           try (InputStream readme =
               Main.class.getClassLoader().getResourceAsStream("WEB-INF/server-lib/README.txt")) {
             if (readme != null) {
-              try (Scanner s = new Scanner(readme).useDelimiter("\\A")) {
+              try (Scanner s = new Scanner(readme, StandardCharsets.UTF_8).useDelimiter("\\A")) {
                 String result = s.hasNext() ? s.next() : "";
                 throw new Exception(result, e);
               }
@@ -224,7 +225,7 @@ public class Main {
       }
 
       Method method = mainClass.getMethod("main", args.getClass());
-      method.invoke(null, new Object[]{args});
+      method.invoke(null, new Object[] {args});
     } catch (Exception e) {
       System.err.println("Uncaught exception.");
       e.printStackTrace();

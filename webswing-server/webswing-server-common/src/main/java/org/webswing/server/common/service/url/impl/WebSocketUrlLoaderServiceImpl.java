@@ -37,8 +37,8 @@ public class WebSocketUrlLoaderServiceImpl implements WebSocketUrlLoaderService 
     try {
       loaderType = WebSocketUrlLoaderType.valueOf(loaderProp);
     } catch (IllegalArgumentException e) {
-      log.warn("Unknown loader type [" + loaderProp + "]! Using default ["
-          + WebSocketUrlLoaderType.propertyFile + "].", e);
+      log.warn("Unknown loader type [{}]! Using default [{}].", loaderProp,
+          WebSocketUrlLoaderType.propertyFile, e);
       loaderType = WebSocketUrlLoaderType.propertyFile;
     }
 
@@ -90,7 +90,7 @@ public class WebSocketUrlLoaderServiceImpl implements WebSocketUrlLoaderService 
         try {
           URI.create(url);
         } catch (Exception e) {
-          log.warn("Could not validate webswocket URL [" + url + "]!", e);
+          log.warn("Could not validate webswocket URL [{}]!", url, e);
           it.remove();
         }
       }

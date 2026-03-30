@@ -10,6 +10,7 @@ import org.webswing.server.common.service.url.WebSocketUrlLoader;
 import org.webswing.server.common.util.CommonUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -82,8 +83,8 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
       StringBuilder sb = new StringBuilder();
 
       new Thread(() -> {
-        try (BufferedReader in =
-            new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(
+            new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
           String line;
           while ((line = in.readLine()) != null) {
             sb.append(line);

@@ -43,7 +43,7 @@ public class WebswingServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    log.info("Initializing Webswing " + GitRepositoryState.getInstance().getDescribe());
+    log.info("Initializing Webswing {}", GitRepositoryState.getInstance().getDescribe());
     Module servletModule = new Module() {
       public void configure(Binder binder) {
         binder.bind(ServletContext.class).toInstance(getServletContext());
@@ -97,11 +97,11 @@ public class WebswingServlet extends HttpServlet {
 
     System.setProperty(Constants.WEBSWING_SERVER_ID, UUID.randomUUID().toString());
 
-    log.info("Starting webswing server with id [" + System.getProperty(Constants.WEBSWING_SERVER_ID)
-        + "]...");
+    log.info("Starting webswing server with id [{}]...",
+        System.getProperty(Constants.WEBSWING_SERVER_ID));
 
     if (StringUtils.isBlank(System.getProperty(Constants.WEBSWING_CONNECTION_SECRET))) {
-      log.error("Missing " + Constants.WEBSWING_CONNECTION_SECRET + " system property!");
+      log.error("Missing {} system property!", Constants.WEBSWING_CONNECTION_SECRET);
       System.exit(-1);
     }
 
