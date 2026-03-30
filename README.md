@@ -12,6 +12,10 @@
 [![Build](https://img.shields.io/badge/Build-Gradle%20%7C%20Maven-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
 [![GitHub](https://img.shields.io/github/stars/manticore-projects/webswing?style=for-the-badge&logo=github)](https://github.com/manticore-projects/webswing)
 
+[![Known Vulnerabilities](https://snyk.io/test/github/manticore-projects/webswing/badge.svg?style=flat-square)](https://snyk.io/test/github/manticore-projects/webswing)
+[![Semgrep](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml/badge.svg)](https://github.com/manticore-projects/webswing/actions/workflows/semgrep.yml)
+[![Semgrep](https://img.shields.io/badge/semgrep-scanning-green?style=flat-square&logo=semgrep)](https://semgrep.dev)
+
 <br/>
 
 *Run any Java Swing application inside a modern web browser — pure HTML5, zero plugins, zero client-side installation.*
