@@ -227,7 +227,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 				URL brUrl = webResourceProvider.getWebResource(path + ".br");
 				if (brUrl != null) {
 					try {
-						return new PreCompressedResourceUrl(mimeType, brUrl.openConnection(), "br");
+						return new PreCompressedResourceUrl(mimeType, safeOpenConnection(brUrl), "br");
 					} catch (IOException e) {
 						log.error("Failed to serve pre-compressed brotli for {}", sanitizeForLog(path), e);
 					}
@@ -237,7 +237,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 				URL gzUrl = webResourceProvider.getWebResource(path + ".gz");
 				if (gzUrl != null) {
 					try {
-						return new PreCompressedResourceUrl(mimeType, gzUrl.openConnection(), "gzip");
+						return new PreCompressedResourceUrl(mimeType, safeOpenConnection(gzUrl), "gzip");
 					} catch (IOException e) {
 						log.error("Failed to serve pre-compressed gzip for {}", sanitizeForLog(path), e);
 					}
@@ -246,7 +246,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		}
 
 		try {
-			return new ResourceUrl(mimeType, url.openConnection());
+			return new ResourceUrl(mimeType, safeOpenConnection(url));
 		} catch (IOException e) {
 			log.error("Failed to serve path {} with resource {}", sanitizeForLog(path), sanitizeForLog(url.toString()), e);
 			// Return a generic error message instead of the raw exception message
@@ -327,6 +327,45 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler impleme
 		// After leading slash stripping, reject paths that still start with /
 		// (which become protocol-relative //host) or contain ://
 		return path.startsWith("/") || path.contains("://") || path.startsWith("\\");
+	}
+
+	/**
+	 * Allowlist of URL schemes that are safe to open connections to.
+	 * Only local resource schemes are permitted; network schemes like
+	 * http, https, ftp, gopher etc. are rejected to prevent SSRF.
+	 */
+	private static final java.util.Set<String> SAFE_URL_SCHEMES = java.util.Set.of("file", "jar");
+
+	/**
+	 * Open a connection to the given URL after validating that its scheme
+	 * is on the allowlist. This prevents Server-Side Request Forgery (SSRF)
+	 * when the URL originates from user-influenced resource lookups.
+	 *
+	 * @throws IOException if the scheme is not allowed or the connection fails
+	 */
+	private static URLConnection safeOpenConnection(URL url) throws IOException {
+		String scheme = url.getProtocol();
+		if (scheme == null || !SAFE_URL_SCHEMES.contains(scheme.toLowerCase(java.util.Locale.ROOT))) {
+			throw new IOException("Blocked connection to disallowed URL scheme: " + scheme);
+		}
+		// For jar: URLs, verify the nested URL also uses a safe scheme
+		if ("jar".equalsIgnoreCase(scheme)) {
+			String spec = url.toString(); // jar:file:/path!/entry
+			int bangIdx = spec.indexOf("!/");
+			if (bangIdx > 0) {
+				String inner = spec.substring(4, bangIdx); // strip "jar:"
+				try {
+					URL innerUrl = new URL(inner);
+					String innerScheme = innerUrl.getProtocol();
+					if (innerScheme == null || !SAFE_URL_SCHEMES.contains(innerScheme.toLowerCase(java.util.Locale.ROOT))) {
+						throw new IOException("Blocked jar entry with disallowed inner URL scheme: " + innerScheme);
+					}
+				} catch (java.net.MalformedURLException e) {
+					throw new IOException("Malformed inner URL in jar reference", e);
+				}
+			}
+		}
+		return url.openConnection();
 	}
 
 	/**
