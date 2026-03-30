@@ -1,15 +1,16 @@
 package org.webswing.server.api.services.swinginstance.holder.impl;
 
-import java.util.List;
-
 import org.webswing.server.api.services.swinginstance.ConnectedSwingInstance;
 import org.webswing.server.api.services.swinginstance.holder.SwingInstanceHolder;
 import org.webswing.server.api.services.swinginstance.holder.SwingInstanceSet;
 
+import java.util.List;
+
 public class DefaultSwingInstanceHolderImpl implements SwingInstanceHolder {
 
-  private SwingInstanceSet<ConnectedSwingInstance> runningInstances = new SwingInstanceSet<>();
-  private SwingInstanceSet<ConnectedSwingInstance> closedInstances = new SwingInstanceSet<>();
+  private final SwingInstanceSet<ConnectedSwingInstance> runningInstances =
+      new SwingInstanceSet<>();
+  private final SwingInstanceSet<ConnectedSwingInstance> closedInstances = new SwingInstanceSet<>();
 
   @Override
   public ConnectedSwingInstance findInstanceByOwnerId(String ownerId) {

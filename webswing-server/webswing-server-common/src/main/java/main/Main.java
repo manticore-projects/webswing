@@ -1,5 +1,7 @@
 package main;
 
+import org.webswing.Constants;
+
 import java.awt.AWTError;
 import java.awt.Toolkit;
 import java.io.Closeable;
@@ -16,27 +18,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystems;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.webswing.Constants;
 
 public class Main {
 
@@ -149,7 +141,7 @@ public class Main {
         // swing-lib role: pick only swing-lib whitelisted JARs from lib/
         populateClasspathFromDir("WEB-INF/lib", urls, WHITELISTS.get("swing-lib"));
 
-        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Void>() {
+        AccessController.doPrivileged(new PrivilegedAction<Void>() {
           public Void run() {
             Class<?> cls = null;
             String nm = System.getProperty("awt.toolkit");

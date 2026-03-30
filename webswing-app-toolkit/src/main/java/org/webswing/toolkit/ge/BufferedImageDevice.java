@@ -32,7 +32,7 @@ public final class BufferedImageDevice extends GraphicsDevice {
    */
   @Override
   public String getIDstring() {
-    return ("BufferedImage");
+    return "BufferedImage";
   }
 
   /**

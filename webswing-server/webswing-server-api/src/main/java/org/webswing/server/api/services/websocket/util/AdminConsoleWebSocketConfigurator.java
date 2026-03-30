@@ -1,9 +1,9 @@
 package org.webswing.server.api.services.websocket.util;
 
-import javax.websocket.server.ServerEndpointConfig;
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+
+import javax.websocket.server.ServerEndpointConfig;
 
 public class AdminConsoleWebSocketConfigurator extends ServerEndpointConfig.Configurator {
 

@@ -30,48 +30,61 @@ public class AccessibilityHierarchyMsgOut implements MsgOut {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((position == null) ? 0 : position.hashCode());
-    result = prime * result + ((role == null) ? 0 : role.hashCode());
-    result = prime * result + ((size == null) ? 0 : size.hashCode());
-    result = prime * result + ((text == null) ? 0 : text.hashCode());
+    result = prime * result + (id == null ? 0 : id.hashCode());
+    result = prime * result + (position == null ? 0 : position.hashCode());
+    result = prime * result + (role == null ? 0 : role.hashCode());
+    result = prime * result + (size == null ? 0 : size.hashCode());
+    result = prime * result + (text == null ? 0 : text.hashCode());
     return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     AccessibilityHierarchyMsgOut other = (AccessibilityHierarchyMsgOut) obj;
     if (id == null) {
-      if (other.id != null)
+      if (other.id != null) {
         return false;
-    } else if (!id.equals(other.id))
+      }
+    } else if (!id.equals(other.id)) {
       return false;
+    }
     if (position == null) {
-      if (other.position != null)
+      if (other.position != null) {
         return false;
-    } else if (!position.equals(other.position))
+      }
+    } else if (!position.equals(other.position)) {
       return false;
+    }
     if (role == null) {
-      if (other.role != null)
+      if (other.role != null) {
         return false;
-    } else if (!role.equals(other.role))
+      }
+    } else if (!role.equals(other.role)) {
       return false;
+    }
     if (size == null) {
-      if (other.size != null)
+      if (other.size != null) {
         return false;
-    } else if (!size.equals(other.size))
+      }
+    } else if (!size.equals(other.size)) {
       return false;
+    }
     if (text == null) {
-      if (other.text != null)
+      if (other.text != null) {
         return false;
-    } else if (!text.equals(other.text))
+      }
+    } else if (!text.equals(other.text)) {
       return false;
+    }
     return true;
   }
 

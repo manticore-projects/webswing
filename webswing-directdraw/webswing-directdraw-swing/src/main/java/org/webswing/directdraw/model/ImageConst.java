@@ -1,14 +1,12 @@
 package org.webswing.directdraw.model;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import com.google.protobuf.ByteString;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.ImageProto;
 
-import com.google.protobuf.ByteString;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class ImageConst extends ImmutableDrawConstantHolder<byte[]> {
 

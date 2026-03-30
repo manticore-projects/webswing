@@ -1,14 +1,15 @@
 package org.webswing.directdraw.toolkit;
 
+import sun.awt.image.SurfaceManager;
+import sun.java2d.SurfaceData;
+
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.ImageCapabilities;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.VolatileImage;
-
-import sun.awt.image.SurfaceManager;
-import sun.java2d.SurfaceData;
 
 @SuppressWarnings("restriction")
 public class VolatileWebImageWrapper extends VolatileImage {
@@ -24,13 +25,13 @@ public class VolatileWebImageWrapper extends VolatileImage {
       @SuppressWarnings("unused")
       // java 1.6
       public SurfaceData getSourceSurfaceData(sun.java2d.SurfaceData s,
-          sun.java2d.loops.CompositeType c, java.awt.Color color, boolean b) {
+          sun.java2d.loops.CompositeType c, Color color, boolean b) {
         BufferedImage snapshot = VolatileWebImageWrapper.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {
           return (SurfaceData) m.getClass()
               .getDeclaredMethod("getSourceSurfaceData", sun.java2d.SurfaceData.class,
-                  sun.java2d.loops.CompositeType.class, java.awt.Color.class, Boolean.TYPE)
+                  sun.java2d.loops.CompositeType.class, Color.class, Boolean.TYPE)
               .invoke(m, s, c, color, b);
         } catch (Exception e) {
           e.printStackTrace();

@@ -1,30 +1,19 @@
 package org.webswing.toolkit;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
-import java.awt.KeyboardFocusManager;
-import java.awt.Panel;
-import java.awt.Window;
-import java.awt.event.FocusEvent;
-import java.awt.peer.FramePeer;
-import java.awt.peer.KeyboardFocusManagerPeer;
-import java.lang.reflect.Method;
-
 import org.webswing.toolkit.ge.WebGraphicsEnvironment;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
-
 import sun.awt.LightweightFrame;
 import sun.awt.SunToolkit;
 import sun.awt.datatransfer.DataTransferer;
 import sun.awt.image.SurfaceManager;
 import sun.java2d.SurfaceData;
+
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.peer.FramePeer;
+import java.awt.peer.KeyboardFocusManagerPeer;
+import java.lang.reflect.Method;
 
 public class WebToolkit11 extends WebToolkit {
   private KeyboardFocusManagerPeer kfmp;

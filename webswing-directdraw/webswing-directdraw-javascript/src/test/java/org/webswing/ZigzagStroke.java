@@ -10,7 +10,7 @@ public class ZigzagStroke implements Stroke {
 
   private float amplitude = 10.0f;
   private float wavelength = 10.0f;
-  private Stroke stroke;
+  private final Stroke stroke;
   private static final float FLATNESS = 1;
 
   public ZigzagStroke(Stroke stroke, float amplitude, float wavelength) {
@@ -23,9 +23,12 @@ public class ZigzagStroke implements Stroke {
     GeneralPath result = new GeneralPath();
     PathIterator it = new FlatteningPathIterator(shape.getPathIterator(null), FLATNESS);
     float points[] = new float[6];
-    float moveX = 0, moveY = 0;
-    float lastX = 0, lastY = 0;
-    float thisX = 0, thisY = 0;
+    float moveX = 0;
+    float moveY = 0;
+    float lastX = 0;
+    float lastY = 0;
+    float thisX = 0;
+    float thisY = 0;
     int type = 0;
     boolean first = false;
     float next = 0;
@@ -47,7 +50,8 @@ public class ZigzagStroke implements Stroke {
         case PathIterator.SEG_CLOSE:
           points[0] = moveX;
           points[1] = moveY;
-          // Fall into....
+          break;
+        // Fall into....
 
         case PathIterator.SEG_LINETO:
           thisX = points[0];
@@ -63,10 +67,11 @@ public class ZigzagStroke implements Stroke {
               float y = lastY + next * dy * r;
               float tx = amplitude * dy * r;
               float ty = amplitude * dx * r;
-              if ((phase & 1) == 0)
+              if ((phase & 1) == 0) {
                 result.lineTo(x + amplitude * dy * r, y - amplitude * dx * r);
-              else
+              } else {
                 result.lineTo(x - amplitude * dy * r, y + amplitude * dx * r);
+              }
               next += wavelength;
               phase++;
             }
@@ -75,8 +80,9 @@ public class ZigzagStroke implements Stroke {
           first = false;
           lastX = thisX;
           lastY = thisY;
-          if (type == PathIterator.SEG_CLOSE)
+          if (type == PathIterator.SEG_CLOSE) {
             result.closePath();
+          }
           break;
       }
       it.next();

@@ -1,19 +1,23 @@
 package org.webswing.server.api.services.resources;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.AbstractUrlHandler;
 import org.webswing.server.api.util.ServerApiUtil;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.model.exception.WsException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayDeque;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
 
 public abstract class AbstractResourceHandler extends AbstractUrlHandler
     implements ResourceHandler {
@@ -36,9 +40,9 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
   @Override
   public boolean serve(HttpServletRequest req, HttpServletResponse res) throws WsException {
     try {
-      if (req.getMethod().equals("GET")) {
+      if ("GET".equals(req.getMethod())) {
         return lookup(req).respondGet(req, res);
-      } else if (req.getMethod().equals("HEAD")) {
+      } else if ("HEAD".equals(req.getMethod())) {
         return lookup(req).respondHead(req, res);
       }
       return false;
@@ -138,8 +142,9 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
       resp.setContentType(mime);
       // Prevent browsers from MIME-sniffing the content type
       resp.setHeader("X-Content-Type-Options", "nosniff");
-      if (url.getContentLength() >= 0)
+      if (url.getContentLength() >= 0) {
         resp.setContentLength(url.getContentLength());
+      }
     }
 
     public boolean respondGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -207,8 +212,9 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
       return new ErrorResult(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
     }
 
-    if (isForbidden(path))
+    if (isForbidden(path)) {
       return new ErrorResult(HttpServletResponse.SC_NOT_FOUND, "Forbidden");
+    }
 
     URL url = webResourceProvider.getWebResource(path + "/index.html");// check if this is folder
                                                                        // with default index
@@ -294,7 +300,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
 
     // Resolve . and .. segments
     String[] segments = path.split("/");
-    java.util.ArrayDeque<String> stack = new java.util.ArrayDeque<>();
+    ArrayDeque<String> stack = new ArrayDeque<>();
     for (String seg : segments) {
       if (seg.isEmpty() || ".".equals(seg)) {
         continue;
@@ -310,7 +316,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
     }
 
     StringBuilder normalized = new StringBuilder("/");
-    for (java.util.Iterator<String> it = stack.iterator(); it.hasNext();) {
+    for (Iterator<String> it = stack.iterator(); it.hasNext();) {
       normalized.append(it.next());
       if (it.hasNext()) {
         normalized.append("/");
@@ -338,7 +344,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
    * Allowlist of URL schemes that are safe to open connections to. Only local resource schemes are
    * permitted; network schemes like http, https, ftp, gopher etc. are rejected to prevent SSRF.
    */
-  private static final java.util.Set<String> SAFE_URL_SCHEMES = java.util.Set.of("file", "jar");
+  private static final Set<String> SAFE_URL_SCHEMES = Set.of("file", "jar");
 
   /**
    * Open a connection to the given URL after validating that its scheme is on the allowlist. This
@@ -349,7 +355,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
    */
   private static URLConnection safeOpenConnection(URL url) throws IOException {
     String scheme = url.getProtocol();
-    if (scheme == null || !SAFE_URL_SCHEMES.contains(scheme.toLowerCase(java.util.Locale.ROOT))) {
+    if (scheme == null || !SAFE_URL_SCHEMES.contains(scheme.toLowerCase(Locale.ROOT))) {
       throw new IOException("Blocked connection to disallowed URL scheme: " + scheme);
     }
     // For jar: URLs, verify the nested URL also uses a safe scheme
@@ -362,11 +368,11 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
           URL innerUrl = new URL(inner);
           String innerScheme = innerUrl.getProtocol();
           if (innerScheme == null
-              || !SAFE_URL_SCHEMES.contains(innerScheme.toLowerCase(java.util.Locale.ROOT))) {
+              || !SAFE_URL_SCHEMES.contains(innerScheme.toLowerCase(Locale.ROOT))) {
             throw new IOException(
                 "Blocked jar entry with disallowed inner URL scheme: " + innerScheme);
           }
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
           throw new IOException("Malformed inner URL in jar reference", e);
         }
       }
@@ -378,8 +384,9 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
    * Sanitize a string for safe inclusion in log messages.
    */
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\r\\n\\t]", "_");
   }
 

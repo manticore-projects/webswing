@@ -1,11 +1,5 @@
 package org.webswing.server.api.services.rest.impl;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.webswing.server.api.GlobalUrlHandler;
 import org.webswing.server.api.base.PrimaryUrlHandler;
@@ -14,6 +8,11 @@ import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
 import org.webswing.util.GitRepositoryState;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class AppRestHandlerImpl extends AbstractAppRestHandler {
 

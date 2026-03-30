@@ -6,8 +6,8 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 public class CpuMonitor {
-  static long previousCPUTime = 0;
-  static long previousTime = 0;
+  static long previousCPUTime;
+  static long previousTime;
 
   static Method getProcessCpuTimeMethod;
 
@@ -56,4 +56,6 @@ public class CpuMonitor {
       return -1;
     }
   }
+
+  private CpuMonitor() {}
 }

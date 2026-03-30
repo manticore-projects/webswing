@@ -1,12 +1,12 @@
 package org.webswing.directdraw.model;
 
-import java.awt.AlphaComposite;
-import java.awt.Composite;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.CompositeProto;
 import org.webswing.directdraw.proto.Directdraw.CompositeProto.CompositeTypeProto;
 import org.webswing.directdraw.util.XorModeComposite;
+
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 
 public class CompositeConst extends ImmutableDrawConstantHolder<Composite> {
 

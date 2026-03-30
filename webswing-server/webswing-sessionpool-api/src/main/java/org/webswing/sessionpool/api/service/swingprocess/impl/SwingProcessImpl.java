@@ -1,20 +1,5 @@
 package org.webswing.sessionpool.api.service.swingprocess.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.StringTokenizer;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -40,12 +25,23 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.webswing.Constants;
 import org.webswing.server.common.model.SwingConfig;
 import org.webswing.server.common.util.ServerUtil;
-import org.webswing.sessionpool.api.service.swingprocess.ApplicationExitListener;
-import org.webswing.sessionpool.api.service.swingprocess.ProcessExitListener;
-import org.webswing.sessionpool.api.service.swingprocess.ProcessStatusListener;
-import org.webswing.sessionpool.api.service.swingprocess.SwingProcess;
-import org.webswing.sessionpool.api.service.swingprocess.SwingProcessConfig;
+import org.webswing.sessionpool.api.service.swingprocess.*;
 import org.webswing.sessionpool.api.service.swingprocess.impl.SwingProcessServiceImpl.SessionLogAppenderParams;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class SwingProcessImpl implements SwingProcess {
   private final ScheduledExecutorService processHandlerThread;
@@ -81,7 +77,7 @@ public class SwingProcessImpl implements SwingProcess {
 
   private boolean destroying;
   private ScheduledFuture<?> delayedTermination;
-  private boolean forceKilled = false;
+  private boolean forceKilled;
   private ProcessExitListener closeListener;
   private ProcessStatusListener statusListener;
   private ApplicationExitListener appExitListener;

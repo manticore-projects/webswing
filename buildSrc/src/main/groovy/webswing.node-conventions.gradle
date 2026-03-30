@@ -16,19 +16,19 @@ node {
 
 def isDev = project.hasProperty('dev')
 
-tasks.register('npmInstallTask', com.github.gradle.node.npm.task.NpmTask) {
+tasks.register('npmInstallTask', NpmTask) {
     args = ['install']
     enabled = !isDev
 }
 
-tasks.register('npmAuditFix', com.github.gradle.node.npm.task.NpmTask) {
+tasks.register('npmAuditFix', NpmTask) {
     dependsOn 'npmInstallTask'
     args = ['audit', 'fix']
     enabled = !isDev
     ignoreExitValue = true     // npm audit fix returns non-zero when it cannot fix everything
 }
 
-tasks.register('npmBuild', com.github.gradle.node.npm.task.NpmTask) {
+tasks.register('npmBuild', NpmTask) {
     dependsOn 'npmAuditFix'
     args = ['run', 'build']
     enabled = !isDev

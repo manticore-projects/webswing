@@ -1,8 +1,5 @@
 package org.webswing.server.services.security.extension.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
@@ -11,6 +8,9 @@ import org.webswing.server.services.security.api.WebswingAuthenticationException
 import org.webswing.server.services.security.api.WebswingSecurityModule;
 import org.webswing.server.services.security.modules.AbstractExtendableSecurityModule;
 import org.webswing.server.services.security.modules.AbstractSecurityModule;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Security Extension prototype used in {@link AbstractExtendableSecurityModule}. Supports four
@@ -28,7 +28,7 @@ import org.webswing.server.services.security.modules.AbstractSecurityModule;
  */
 public abstract class SecurityModuleExtension<T extends SecurityModuleExtensionConfig> {
 
-  private T config;
+  private final T config;
 
   public SecurityModuleExtension(T config) {
     this.config = config;

@@ -1,13 +1,13 @@
 package org.webswing.directdraw.model;
 
+import org.webswing.directdraw.DirectDraw;
+import org.webswing.directdraw.proto.Directdraw.PathProto;
+import org.webswing.directdraw.proto.Directdraw.PathProto.SegmentTypeProto;
+
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.util.List;
-
-import org.webswing.directdraw.DirectDraw;
-import org.webswing.directdraw.proto.Directdraw.PathProto;
-import org.webswing.directdraw.proto.Directdraw.PathProto.SegmentTypeProto;
 
 public class PathConst extends MutableDrawConstantHolder<Shape, PathProto> {
 
@@ -49,8 +49,8 @@ public class PathConst extends MutableDrawConstantHolder<Shape, PathProto> {
         return 4;
       case PathIterator.SEG_CUBICTO:
         return 6;
-      default:
       case PathIterator.SEG_CLOSE:
+      default:
         return 0;
     }
   }

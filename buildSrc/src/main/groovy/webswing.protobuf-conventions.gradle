@@ -11,12 +11,15 @@
 def protocClassifier = {
     def os = System.getProperty('os.name').toLowerCase()
     def arch = System.getProperty('os.arch')
-    if (os.contains('linux'))
+    if (os.contains('linux')) {
         return arch.contains('aarch64') ? 'linux-aarch_64' : 'linux-x86_64'
-    if (os.contains('mac') || os.contains('darwin'))
+    }
+    if (os.contains('mac') || os.contains('darwin')) {
         return arch.contains('aarch64') ? 'osx-aarch_64' : 'osx-x86_64'
-    if (os.contains('windows'))
+    }
+    if (os.contains('windows')) {
         return 'windows-x86_64'
+    }
     throw new GradleException("Unsupported OS: ${os} / ${arch}")
 }()
 

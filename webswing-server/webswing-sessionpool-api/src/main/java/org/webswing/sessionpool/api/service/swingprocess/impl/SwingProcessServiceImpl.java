@@ -1,19 +1,8 @@
 package org.webswing.sessionpool.api.service.swingprocess.impl;
 
-import java.awt.print.PrinterJob;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Joiner;
+import com.google.inject.Singleton;
+import main.Main;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,10 +21,18 @@ import org.webswing.sessionpool.api.service.swingprocess.SwingProcessService;
 import org.webswing.util.ClasspathUtil;
 import org.webswing.util.NamedThreadFactory;
 
-import com.google.common.base.Joiner;
-import com.google.inject.Singleton;
-
-import main.Main;
+import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Singleton
 public class SwingProcessServiceImpl implements SwingProcessService {
@@ -97,7 +94,7 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 
   @Override
   public void killAll() {
-    getAll().forEach((process) -> kill(process.getInstanceId(), 0));
+    getAll().forEach(process -> kill(process.getInstanceId(), 0));
   }
 
   @Override
@@ -353,11 +350,11 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_FONT_CONFIG,
           FontUtils.createFontConfiguration(startupParams.getAppConfig(), startupParams.getSubs()));
       processConfig.addProperty(Constants.SWING_SCREEN_WIDTH,
-          ((startupParams.getScreenWidth() == null) ? Constants.SWING_SCREEN_WIDTH_MIN
-              : startupParams.getScreenWidth()));
+          startupParams.getScreenWidth() == null ? Constants.SWING_SCREEN_WIDTH_MIN
+              : startupParams.getScreenWidth());
       processConfig.addProperty(Constants.SWING_SCREEN_HEIGHT,
-          ((startupParams.getScreenHeight() == null) ? Constants.SWING_SCREEN_HEIGHT_MIN
-              : startupParams.getScreenHeight()));
+          startupParams.getScreenHeight() == null ? Constants.SWING_SCREEN_HEIGHT_MIN
+              : startupParams.getScreenHeight());
       processConfig.addProperty(Constants.WEBSOCKET_MESSAGE_SIZE, System.getProperty(
           Constants.WEBSOCKET_MESSAGE_SIZE, "" + Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE));
       processConfig.addProperty(Constants.WEBSOCKET_MESSAGE_TIMEOUT, System.getProperty(

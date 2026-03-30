@@ -1,10 +1,10 @@
 package org.webswing.model.appframe.out;
 
+import org.webswing.model.MsgOut;
+
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.webswing.model.MsgOut;
 
 public class AppFrameMsgOut implements MsgOut {
 

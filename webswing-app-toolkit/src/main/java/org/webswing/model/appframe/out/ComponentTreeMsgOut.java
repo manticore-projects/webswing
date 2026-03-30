@@ -1,20 +1,15 @@
 package org.webswing.model.appframe.out;
 
+import org.webswing.model.MsgOut;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.IllegalComponentStateException;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.JToggleButton;
-import javax.swing.text.JTextComponent;
-
-import org.webswing.model.MsgOut;
 
 public class ComponentTreeMsgOut implements MsgOut {
 

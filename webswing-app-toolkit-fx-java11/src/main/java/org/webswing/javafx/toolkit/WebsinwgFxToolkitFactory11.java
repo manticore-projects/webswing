@@ -1,8 +1,5 @@
 package org.webswing.javafx.toolkit;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
 import com.sun.glass.ui.Application;
 import com.sun.glass.ui.Pixels;
 import com.sun.javafx.font.FontFactory;
@@ -10,6 +7,9 @@ import com.sun.prism.Graphics;
 import com.sun.prism.web.WebFontFactory11;
 import com.sun.prism.web.WebPrismGraphicsWrapper11;
 import com.sun.prism.web.WebRTTextureWrapper;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public class WebsinwgFxToolkitFactory11 extends WebsinwgFxToolkitFactory {
   @Override

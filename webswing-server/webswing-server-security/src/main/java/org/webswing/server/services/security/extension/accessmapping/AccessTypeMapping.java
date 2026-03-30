@@ -1,15 +1,11 @@
 package org.webswing.server.services.security.extension.accessmapping;
 
+import org.webswing.server.common.model.Config;
+import org.webswing.server.common.model.meta.*;
+import org.webswing.server.common.model.security.WebswingAction;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.webswing.server.common.model.Config;
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueBoolean;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueObject;
-import org.webswing.server.common.model.meta.ConfigFieldOrder;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.security.WebswingAction;
 
 @ConfigFieldOrder({"accessType", "everyone", "roles", "users"})
 public interface AccessTypeMapping extends Config {

@@ -1,18 +1,10 @@
 package org.webswing.server.api.services.sessionpool.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,11 +26,7 @@ import org.webswing.server.api.services.sessionpool.loadbalance.LoadBalanceResol
 import org.webswing.server.api.services.sessionpool.loadbalance.RoundRobinLoadBalanceResolver;
 import org.webswing.server.api.services.swinginstance.ConnectedSwingInstance;
 import org.webswing.server.api.services.swinginstance.SwingInstanceInfo;
-import org.webswing.server.api.services.websocket.AdminConsoleWebSocketConnection;
-import org.webswing.server.api.services.websocket.ApplicationWebSocketConnection;
-import org.webswing.server.api.services.websocket.MirrorWebSocketConnection;
-import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
-import org.webswing.server.api.services.websocket.WebSocketService;
+import org.webswing.server.api.services.websocket.*;
 import org.webswing.server.api.services.websocket.impl.AdminConsoleBrowserMirrorWebSocketConnectionImpl;
 import org.webswing.server.common.datastore.WebswingDataStoreModule;
 import org.webswing.server.common.model.SecuredPathConfig;
@@ -53,12 +41,18 @@ import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
 import org.webswing.server.model.exception.WsInitException;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Singleton
 public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
@@ -293,7 +287,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         }
       } else if (frame.getResolveConfig() != null) {
         ResolveConfigMsgIn resolve = frame.getResolveConfig();
-        SecuredPathHandler handler = resolve.getPath().equals("/") ? globalHandler
+        SecuredPathHandler handler = "/".equals(resolve.getPath()) ? globalHandler
             : globalHandler.getAppHandler(resolve.getPath());
 
         List<MapMsgOut> resolvedList = new ArrayList<>();
@@ -320,7 +314,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
         connection.sendMessage(msgOut);
       } else if (frame.getSearchVariables() != null) {
         SearchVariablesMsgIn searchVariables = frame.getSearchVariables();
-        SecuredPathHandler handler = searchVariables.getPath().equals("/") ? globalHandler
+        SecuredPathHandler handler = "/".equals(searchVariables.getPath()) ? globalHandler
             : globalHandler.getAppHandler(searchVariables.getPath());
 
         List<MapMsgOut> variablesList = new ArrayList<>();
@@ -849,7 +843,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
   }
 
   private List<AppConfigMsgOut> getAppConfigs(String path) {
-    List<AppConfigMsgOut> appConfigs = callSessionPoolsSync(null, (sessionPool) -> {
+    List<AppConfigMsgOut> appConfigs = callSessionPoolsSync(null, sessionPool -> {
       try {
         byte[] config = sessionPool.getAppConfig(path);
         return new AppConfigMsgOut(config, sessionPool.getId());
@@ -882,7 +876,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
       }
     }
 
-    List<MapMsgOut> appResolved = callSessionPoolsSync(null, (sessionPool) -> {
+    List<MapMsgOut> appResolved = callSessionPoolsSync(null, sessionPool -> {
       try {
         String resolved = sessionPool.resolveConfig(path, user, resolve);
         return new MapMsgOut(sessionPool.getId(), resolved);
@@ -921,7 +915,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
       }
     }
 
-    List<List<MapMsgOut>> appVariables = callSessionPoolsSync(null, (sessionPool) -> {
+    List<List<MapMsgOut>> appVariables = callSessionPoolsSync(null, sessionPool -> {
       try {
         Map<String, String> variables = sessionPool.searchVariables(path, user, search);
         if (variables == null) {
@@ -943,7 +937,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
   }
 
   private List<AppConfigMsgOut> getAppMetas(String path, Map<String, byte[]> configs) {
-    List<AppConfigMsgOut> appConfigs = callSessionPoolsSync(configs.keySet(), (sessionPool) -> {
+    List<AppConfigMsgOut> appConfigs = callSessionPoolsSync(configs.keySet(), sessionPool -> {
       try {
         byte[] meta = sessionPool.getAppMeta(path, configs.get(sessionPool.getId()));
         return new AppConfigMsgOut(meta, sessionPool.getId());
@@ -958,7 +952,7 @@ public class SessionPoolHolderServiceImpl implements SessionPoolHolderService {
   }
 
   private List<SaveConfigAppResultMsgOut> saveAppConfigs(String path, Map<String, byte[]> configs) {
-    List<SaveConfigAppResultMsgOut> appConfigs = callSessionPoolsSync(null, (sessionPool) -> {
+    List<SaveConfigAppResultMsgOut> appConfigs = callSessionPoolsSync(null, sessionPool -> {
       try {
         sessionPool.saveConfig(path, configs.get(sessionPool.getId()));
         return new SaveConfigAppResultMsgOut(true, sessionPool.getId());

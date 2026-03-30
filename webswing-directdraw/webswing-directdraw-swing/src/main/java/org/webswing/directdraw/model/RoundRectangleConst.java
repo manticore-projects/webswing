@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.awt.geom.RoundRectangle2D;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.RoundRectangleProto;
+
+import java.awt.geom.RoundRectangle2D;
 
 public class RoundRectangleConst
     extends MutableDrawConstantHolder<RoundRectangle2D, RoundRectangleProto> {

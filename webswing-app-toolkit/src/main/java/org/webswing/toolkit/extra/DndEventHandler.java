@@ -1,5 +1,11 @@
 package org.webswing.toolkit.extra;
 
+import org.webswing.toolkit.WebDragSourceContextPeer;
+import org.webswing.toolkit.WebDropTargetContextPeer;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+
+import javax.swing.TransferHandler;
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -8,13 +14,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import javax.swing.TransferHandler;
-
-import org.webswing.toolkit.WebDragSourceContextPeer;
-import org.webswing.toolkit.WebDropTargetContextPeer;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-
 @SuppressWarnings("restriction")
 public class DndEventHandler {
 
@@ -22,7 +21,7 @@ public class DndEventHandler {
   private long[] formats;
   private WebDragSourceContextPeer dragSource;
   private int sourceActions;
-  private int lastDropTargetAction = 0;
+  private int lastDropTargetAction;
   private boolean dropped;
   private boolean finished = true;
   private Component enteredComponent;

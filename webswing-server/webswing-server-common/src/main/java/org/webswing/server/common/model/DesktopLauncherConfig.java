@@ -1,10 +1,6 @@
 package org.webswing.server.common.model;
 
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldOrder;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.meta.ConfigType;
-import org.webswing.server.common.model.meta.VariableSetName;
+import org.webswing.server.common.model.meta.*;
 
 @ConfigType
 @ConfigFieldOrder({"mainClass", "args"})

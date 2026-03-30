@@ -1,24 +1,6 @@
 package org.webswing.server.api.services.websocket.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.CloseReason;
-import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.PongMessage;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
-
+import com.google.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +29,12 @@ import org.webswing.server.common.util.ProtoMapper;
 import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.model.exception.WsException;
 
-import com.google.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import javax.websocket.*;
+import javax.websocket.CloseReason.CloseCodes;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 
 @ServerEndpoint(value = "/{appPath}/async/swing-bin",
     configurator = BrowserWebSocketConfigurator.class)
@@ -92,7 +79,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
     this.webSocketUserInfo = new WebSocketUserInfo(getUserId(), getClientBrowser(), getCustomArgs(),
         getDebugPort(), getRemoteAddr(), getClientOS()/*, getLogoutHandle()*/);
 
-    if (!((Boolean) session.getUserProperties().get(BrowserWebSocketConfigurator.AUTHENTICATED))
+    if (!(Boolean) session.getUserProperties().get(BrowserWebSocketConfigurator.AUTHENTICATED)
         || this.user == null) {
       disconnect("Unauthorized access!");
       return;

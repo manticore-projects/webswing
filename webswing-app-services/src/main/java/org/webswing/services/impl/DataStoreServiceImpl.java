@@ -1,18 +1,5 @@
 package org.webswing.services.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.FileUtils;
 import org.webswing.ext.services.DataStoreService;
 import org.webswing.server.common.datastore.DataStoreModuleWrapper;
@@ -24,14 +11,25 @@ import org.webswing.server.common.util.WebswingObjectMapper;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
+import java.util.Map;
+import java.util.concurrent.*;
+
 public class DataStoreServiceImpl implements DataStoreService {
 
   private static DataStoreServiceImpl impl;
 
   private DataStoreModuleWrapper dataStore;
 
-  private Map<String, FileDescriptor> fileMap = new ConcurrentHashMap<String, FileDescriptor>();
-  private ScheduledExecutorService validatorService = Executors.newSingleThreadScheduledExecutor();
+  private final Map<String, FileDescriptor> fileMap =
+      new ConcurrentHashMap<String, FileDescriptor>();
+  private final ScheduledExecutorService validatorService =
+      Executors.newSingleThreadScheduledExecutor();
 
   public static DataStoreServiceImpl getInstance() {
     if (impl == null) {

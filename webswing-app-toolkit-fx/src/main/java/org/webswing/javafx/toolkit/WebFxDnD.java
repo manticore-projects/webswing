@@ -1,17 +1,16 @@
 package org.webswing.javafx.toolkit;
 
-import java.util.HashMap;
-
+import com.sun.glass.ui.SystemClipboard;
 import org.webswing.toolkit.util.Util;
 
-import com.sun.glass.ui.SystemClipboard;
+import java.util.HashMap;
 
 /**
  * Created by vikto on 07-Mar-17.
  */
 public class WebFxDnD extends SystemClipboard {
   private HashMap<String, Object> data;
-  private int actions = 0;
+  private int actions;
 
   public WebFxDnD(String clipboardName) {
     super(clipboardName);

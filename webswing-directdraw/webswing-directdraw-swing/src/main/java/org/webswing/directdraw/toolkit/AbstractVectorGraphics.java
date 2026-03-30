@@ -2,35 +2,13 @@
 // Modification to original: merged with AbstractVectorGraphicsIO
 package org.webswing.directdraw.toolkit;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
-import java.awt.Paint;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.Toolkit;
+import org.webswing.directdraw.util.DirectDrawUtils;
+
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
@@ -40,8 +18,6 @@ import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedCharacterIterator.Attribute;
 import java.util.Map;
-
-import org.webswing.directdraw.util.DirectDrawUtils;
 
 /**
  * This class implements all conversions from integer to double as well as a few other convenience
@@ -105,7 +81,7 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   protected AbstractVectorGraphics(Dimension size) {
     this.size = size;
 
-    deviceClip = (size != null ? new Rectangle(0, 0, size.width, size.height) : null);
+    deviceClip = size != null ? new Rectangle(0, 0, size.width, size.height) : null;
     userClip = null;
     currentTransform = new AffineTransform();
     currentComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
@@ -136,10 +112,10 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   protected AbstractVectorGraphics(Component component) {
     this.size = component.getSize();
 
-    deviceClip = (size != null ? new Rectangle(0, 0, size.width, size.height) : null);
+    deviceClip = size != null ? new Rectangle(0, 0, size.width, size.height) : null;
     userClip = null;
     GraphicsConfiguration gc = component.getGraphicsConfiguration();
-    currentTransform = (gc != null) ? gc.getDefaultTransform() : new AffineTransform();
+    currentTransform = gc != null ? gc.getDefaultTransform() : new AffineTransform();
     currentComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     currentStroke = new BasicStroke();
 
@@ -402,8 +378,8 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
                                                       // flipped XOR
                                                       // dest flipped
 
-    double tx = (flipHorizontal) ? (double) dx2 : (double) dx1;
-    double ty = (flipVertical) ? (double) dy2 : (double) dy1;
+    double tx = flipHorizontal ? (double) dx2 : (double) dx1;
+    double ty = flipVertical ? (double) dy2 : (double) dy1;
 
     double sx = (double) width / srcWidth;
     sx = flipHorizontal ? -1 * sx : sx;
@@ -453,7 +429,7 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
    */
   public void drawString(String string, double x, double y) {
     // something to draw?
-    if (string == null || string.trim().equals("")) {
+    if (string == null || "".equals(string.trim())) {
       return;
     }
     writeString(string, x, y);
@@ -612,14 +588,15 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   @Override
   public Rectangle getClipBounds() {
     Shape clip = getClip();
-    return (clip != null) ? getClip().getBounds() : null;
+    return clip != null ? getClip().getBounds() : null;
   }
 
   @Override
   public Rectangle getClipBounds(Rectangle r) {
     Rectangle bounds = getClipBounds();
-    if (bounds != null)
+    if (bounds != null) {
       r.setBounds(bounds);
+    }
     return r;
   }
 
@@ -738,11 +715,13 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
 
   @Override
   public void setColor(Color c) {
-    if (c == null)
+    if (c == null) {
       return;
+    }
 
-    if (c.equals(getPaint()))
+    if (c.equals(getPaint())) {
       return;
+    }
 
     currentColor = c;
     currentPaint = c;
@@ -751,14 +730,17 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
 
   @Override
   public void setPaint(Paint paint) {
-    if (paint == null)
+    if (paint == null) {
       return;
+    }
 
-    if (paint.equals(getPaint()))
+    if (paint.equals(getPaint())) {
       return;
+    }
 
-    if (paint instanceof Color color)
+    if (paint instanceof Color color) {
       currentColor = color;
+    }
 
     currentPaint = paint;
     writePaint(paint);
@@ -809,8 +791,9 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   @Override
   public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) {
     // extra protection, failed on under MacOS X 10.2.6, jdk 1.4.1_01-39/14
-    if ((hintKey == null) || (hintValue == null))
+    if ((hintKey == null) || (hintValue == null)) {
       return;
+    }
     hints.put(hintKey, hintValue);
   }
 
@@ -880,15 +863,17 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
           lastY = yPoints[i];
         }
       }
-      if (close)
+      if (close) {
         path.closePath();
+      }
     }
     return path;
   }
 
   protected Shape transformShape(AffineTransform at, Shape s) {
-    if (s == null)
+    if (s == null) {
       return null;
+    }
     return at.createTransformedShape(s);
   }
 
@@ -897,8 +882,9 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   }
 
   protected Shape untransformShape(Shape s) {
-    if (s == null)
+    if (s == null) {
       return null;
+    }
     try {
       return transformShape(currentTransform.createInverse(), s);
     } catch (NoninvertibleTransformException e) {

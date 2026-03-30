@@ -1,15 +1,14 @@
 package org.webswing.server.services.security.api;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.modules.AbstractExtendableSecurityModule;
 import org.webswing.server.services.security.modules.AbstractSecurityModule;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * <p>

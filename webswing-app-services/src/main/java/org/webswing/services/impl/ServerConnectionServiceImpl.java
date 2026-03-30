@@ -1,14 +1,5 @@
 package org.webswing.services.impl;
 
-import java.awt.Component;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.webswing.Constants;
 import org.webswing.ext.services.ServerConnectionService;
 import org.webswing.model.SyncObjectResponse;
@@ -24,9 +15,18 @@ import org.webswing.util.AccessibilityUtil;
 import org.webswing.util.AppLogger;
 import org.webswing.util.ClassLoaderUtil;
 import org.webswing.util.ProtoMapper;
-
+import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
+
+import java.awt.Component;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Viktor_Meszaros This class is needed to achieve classpath isolation for swing
@@ -37,12 +37,12 @@ public class ServerConnectionServiceImpl
 
   private static ServerConnectionServiceImpl impl;
 
-  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT,
+  private final ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT,
       ProtoMapper.PROTO_PACKAGE_APPFRAME_IN, ClassLoaderUtil.getServiceClassLoader());
 
-  private ServerConnection connection;
-  private AtomicBoolean closed = new AtomicBoolean(false);
-  private List<QueuedMsg> startupMsgQueue = Collections.synchronizedList(new ArrayList<>());
+  private final ServerConnection connection;
+  private final AtomicBoolean closed = new AtomicBoolean(false);
+  private final List<QueuedMsg> startupMsgQueue = Collections.synchronizedList(new ArrayList<>());
   private String serverUrl = System.getProperty(Constants.SWING_START_SYS_PROP_WEBSOCKET_URL, "");
 
   public static ServerConnectionServiceImpl getInstance() {
@@ -199,7 +199,7 @@ public class ServerConnectionServiceImpl
     }
     try {
       return new JsonMapper().readValue(data, new TypeReference<Map<String, Serializable>>() {});
-    } catch (tools.jackson.core.JacksonException e) {
+    } catch (JacksonException e) {
       throw new IOException("Failed to deserialize user attributes", e);
     }
   }

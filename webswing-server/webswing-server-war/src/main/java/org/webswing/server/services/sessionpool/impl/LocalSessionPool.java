@@ -1,9 +1,5 @@
 package org.webswing.server.services.sessionpool.impl;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
@@ -21,9 +17,12 @@ import org.webswing.server.model.exception.WsException;
 import org.webswing.sessionpool.api.service.swingprocess.ProcessExitListener;
 import org.webswing.sessionpool.api.service.swingprocess.SwingProcess;
 import org.webswing.sessionpool.api.service.swingprocess.SwingProcessService;
-
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Holds process related functionality.

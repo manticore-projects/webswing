@@ -1,12 +1,12 @@
 package org.webswing.directdraw.model;
 
-import java.awt.GradientPaint;
-import java.awt.geom.Point2D;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.CyclicMethodProto;
 import org.webswing.directdraw.proto.Directdraw.LinearGradientProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
+
+import java.awt.GradientPaint;
+import java.awt.geom.Point2D;
 
 public class GradientConst extends ImmutableDrawConstantHolder<GradientPaint> {
 

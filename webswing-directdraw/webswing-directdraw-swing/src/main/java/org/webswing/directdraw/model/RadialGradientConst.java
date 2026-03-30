@@ -1,13 +1,13 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Color;
-import java.awt.RadialGradientPaint;
-import java.util.Arrays;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.CyclicMethodProto;
 import org.webswing.directdraw.proto.Directdraw.RadialGradientProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
+
+import java.awt.Color;
+import java.awt.RadialGradientPaint;
+import java.util.Arrays;
 
 public class RadialGradientConst extends ImmutableDrawConstantHolder<RadialGradientPaint> {
 

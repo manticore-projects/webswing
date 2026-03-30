@@ -1,25 +1,18 @@
 package org.webswing.toolkit.extra;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Panel;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.util.HashMap;
-import java.util.Map;
+import org.webswing.toolkit.util.Util;
 
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
-
-import org.webswing.toolkit.util.Util;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WebRepaintManager extends RepaintManager {
 
   private RepaintManager delegate;
-  private Map<Container, Rectangle> dirty = new HashMap<Container, Rectangle>();
+  private final Map<Container, Rectangle> dirty = new HashMap<Container, Rectangle>();
 
   public WebRepaintManager(RepaintManager delegate) {
     if (delegate != null) {
@@ -70,10 +63,11 @@ public class WebRepaintManager extends RepaintManager {
     synchronized (delegate) {
       r = dirty.get(aComponent);
     }
-    if (r == null)
+    if (r == null) {
       return new Rectangle(0, 0, 0, 0);
-    else
+    } else {
       return new Rectangle(r);
+    }
   }
 
   @Override

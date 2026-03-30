@@ -1,17 +1,7 @@
 package org.webswing.toolkit.util;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.naming.OperationNotSupportedException;
-
-import org.webswing.model.appframe.in.AppFrameMsgIn;
-import org.webswing.model.appframe.in.JSObjectMsgIn;
-import org.webswing.model.appframe.in.JavaEvalRequestMsgIn;
-import org.webswing.model.appframe.in.JsParamMsgIn;
-import org.webswing.model.appframe.in.JsResultMsgIn;
+import netscape.javascript.JSException;
+import org.webswing.model.appframe.in.*;
 import org.webswing.model.appframe.out.AppFrameMsgOut;
 import org.webswing.model.appframe.out.JsEvalRequestMsgOut;
 import org.webswing.model.appframe.out.JsEvalRequestMsgOut.JsEvalRequestType;
@@ -20,7 +10,11 @@ import org.webswing.model.appframe.out.JsResultMsgOut;
 import org.webswing.toolkit.jslink.WebJSObject;
 import org.webswing.util.AppLogger;
 
-import netscape.javascript.JSException;
+import javax.naming.OperationNotSupportedException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class JsLinkUtil {
 
@@ -209,4 +203,6 @@ public class JsLinkUtil {
 
     return false;
   }
+
+  private JsLinkUtil() {}
 }

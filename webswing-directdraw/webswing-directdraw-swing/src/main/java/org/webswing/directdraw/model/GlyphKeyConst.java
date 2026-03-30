@@ -1,10 +1,9 @@
 package org.webswing.directdraw.model;
 
+import com.google.protobuf.ByteString;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.GlyphProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
-
-import com.google.protobuf.ByteString;
 import sun.font.GlyphList;
 
 @SuppressWarnings("restriction")

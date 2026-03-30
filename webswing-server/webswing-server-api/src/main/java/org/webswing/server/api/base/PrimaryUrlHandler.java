@@ -1,16 +1,7 @@
 package org.webswing.server.api.base;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +29,15 @@ import org.webswing.server.services.security.api.WebswingAuthenticationException
 import org.webswing.server.services.security.api.WebswingSecurityConfig;
 import org.webswing.server.services.security.api.WebswingSecurityModule;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PrimaryUrlHandler extends AbstractUrlHandler
     implements SecuredPathHandler, SecurityContext, DataStoreHandler {
@@ -51,12 +49,12 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
   private final ConfigurationService<SecuredPathConfig> configService;
 
   private WebswingSecurityModule securityModule;
-  private boolean enabled = false;
+  private boolean enabled;
   private VariableSubstitutor varSubs;
-  private InstanceManagerStatus status = new InstanceManagerStatus();
+  private final InstanceManagerStatus status = new InstanceManagerStatus();
   protected WebswingDataStoreModule dataStore;
 
-  private boolean initialized = false;
+  private boolean initialized;
 
   private SecuredPathConfig config;
 
@@ -262,7 +260,7 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
     }
 
     for (String s : allowedCorsOrigins) {
-      if (s.trim().equals(header) || s.trim().equals("*")) {
+      if (s.trim().equals(header) || "*".equals(s.trim())) {
         return true;
       }
     }

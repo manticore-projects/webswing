@@ -1,9 +1,9 @@
 package org.webswing.model.appframe.in;
 
+import org.webswing.model.MsgIn;
+
 import java.io.Serial;
 import java.util.List;
-
-import org.webswing.model.MsgIn;
 
 public class JsParamMsgIn implements MsgIn {
   @Serial

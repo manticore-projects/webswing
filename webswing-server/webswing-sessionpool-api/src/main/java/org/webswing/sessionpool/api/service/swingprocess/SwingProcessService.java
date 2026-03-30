@@ -1,9 +1,9 @@
 package org.webswing.sessionpool.api.service.swingprocess;
 
-import java.util.List;
-
 import org.webswing.server.common.service.swingprocess.ProcessStartupParams;
 import org.webswing.sessionpool.api.base.SessionPoolService;
+
+import java.util.List;
 
 public interface SwingProcessService extends SessionPoolService {
 

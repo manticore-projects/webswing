@@ -1,10 +1,10 @@
 package org.webswing.directdraw.model;
 
-import java.awt.geom.Arc2D;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.ArcProto;
 import org.webswing.directdraw.proto.Directdraw.ArcProto.ArcTypeProto;
+
+import java.awt.geom.Arc2D;
 
 public class ArcConst extends MutableDrawConstantHolder<Arc2D, ArcProto> {
 

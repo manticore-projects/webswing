@@ -1,15 +1,14 @@
 package org.webswing.javafx.toolkit;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import org.webswing.Constants;
-
 import com.sun.glass.ui.Application;
 import com.sun.glass.ui.Pixels;
 import com.sun.javafx.font.FontFactory;
 import com.sun.prism.Graphics;
 import com.sun.prism.web.WebRTTextureWrapper;
+import org.webswing.Constants;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public abstract class WebsinwgFxToolkitFactory {
   private static WebsinwgFxToolkitFactory factory;

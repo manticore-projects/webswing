@@ -1,9 +1,5 @@
 package org.webswing.server.api.services.websocket.impl;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.model.adminconsole.out.AdminConsoleFrameMsgOut;
@@ -24,8 +20,10 @@ import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.impl.WebswingSecuritySubject;
 import org.webswing.server.common.util.ProtoMapper;
 import org.webswing.server.model.exception.WsException;
-
 import tools.jackson.databind.json.JsonMapper;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * This is a proxy class between real BrowserMirrorWebSocketConnection class in Admin Console Server
@@ -36,10 +34,11 @@ public class AdminConsoleBrowserMirrorWebSocketConnectionImpl implements MirrorW
   private static final Logger log =
       LoggerFactory.getLogger(AdminConsoleBrowserMirrorWebSocketConnectionImpl.class);
 
-  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_SERVER_BROWSER_FRAME,
-      ProtoMapper.PROTO_PACKAGE_SERVER_BROWSER_FRAME);
-  private ProtoMapper appFrameProtoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT,
-      ProtoMapper.PROTO_PACKAGE_APPFRAME_IN);
+  private final ProtoMapper protoMapper =
+      new ProtoMapper(ProtoMapper.PROTO_PACKAGE_SERVER_BROWSER_FRAME,
+          ProtoMapper.PROTO_PACKAGE_SERVER_BROWSER_FRAME);
+  private final ProtoMapper appFrameProtoMapper = new ProtoMapper(
+      ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT, ProtoMapper.PROTO_PACKAGE_APPFRAME_IN);
 
   private final String browserSessionId;
   private final SessionPoolHolderService sessionPoolService;

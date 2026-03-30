@@ -1,14 +1,14 @@
 package org.webswing.toolkit;
 
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
 import java.awt.peer.DesktopPeer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
 
 public class WebDesktopPeer implements DesktopPeer {
 

@@ -1,15 +1,15 @@
 package org.webswing.ext.services;
 
+import org.webswing.model.SyncObjectResponse;
+import org.webswing.model.app.out.AppToServerFrameMsgOut;
+import org.webswing.model.appframe.out.AccessibilityMsgOut;
+import org.webswing.model.appframe.out.AppFrameMsgOut;
+
 import java.awt.Component;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
-
-import org.webswing.model.SyncObjectResponse;
-import org.webswing.model.app.out.AppToServerFrameMsgOut;
-import org.webswing.model.appframe.out.AccessibilityMsgOut;
-import org.webswing.model.appframe.out.AppFrameMsgOut;
 
 public interface ServerConnectionService {
 

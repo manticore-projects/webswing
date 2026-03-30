@@ -1,8 +1,8 @@
 package org.webswing.server.common.model.meta;
 
-import java.util.List;
-
 import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
+
+import java.util.List;
 
 public class MetaField {
 

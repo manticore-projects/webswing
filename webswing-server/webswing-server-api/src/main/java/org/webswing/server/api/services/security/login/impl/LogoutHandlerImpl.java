@@ -1,11 +1,5 @@
 package org.webswing.server.api.services.security.login.impl;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.AbstractUrlHandler;
@@ -16,6 +10,11 @@ import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.impl.WebswingSecuritySubject;
 import org.webswing.server.model.exception.WsException;
 import org.webswing.server.services.security.api.WebswingSecurityModule;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class LogoutHandlerImpl extends AbstractUrlHandler implements LogoutHandler {
 

@@ -1,5 +1,29 @@
 package org.webswing.toolkit;
 
+import org.webswing.Constants;
+import org.webswing.dispatch.*;
+import org.webswing.model.Msg;
+import org.webswing.model.common.in.MirroringStatusEnum;
+import org.webswing.model.common.in.RecordingStatusEnum;
+import org.webswing.toolkit.api.WebswingApi;
+import org.webswing.toolkit.api.WebswingApiProvider;
+import org.webswing.toolkit.api.lifecycle.ShutdownReason;
+import org.webswing.toolkit.extra.WindowManager;
+import org.webswing.toolkit.ge.WebGraphicsConfig;
+import org.webswing.toolkit.listener.WebToolkitStartupListener;
+import org.webswing.toolkit.util.EvaluationProperties;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+import org.webswing.util.NamedThreadFactory;
+import org.webswing.util.SessionMirror;
+import org.webswing.util.SessionRecorder;
+import sun.awt.SunToolkit;
+import sun.awt.image.SurfaceManager;
+import sun.java2d.SurfaceData;
+import sun.print.PrintJob2D;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -44,12 +68,7 @@ import java.awt.TextField;
 import java.awt.TrayIcon;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragGestureRecognizer;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.InvalidDnDOperationException;
-import java.awt.dnd.MouseDragGestureRecognizer;
+import java.awt.dnd.*;
 import java.awt.dnd.peer.DragSourceContextPeer;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -58,33 +77,7 @@ import java.awt.font.TextAttribute;
 import java.awt.im.InputMethodHighlight;
 import java.awt.im.spi.InputMethodDescriptor;
 import java.awt.image.ColorModel;
-import java.awt.peer.ButtonPeer;
-import java.awt.peer.CheckboxMenuItemPeer;
-import java.awt.peer.CheckboxPeer;
-import java.awt.peer.ChoicePeer;
-import java.awt.peer.ComponentPeer;
-import java.awt.peer.DesktopPeer;
-import java.awt.peer.DialogPeer;
-import java.awt.peer.FileDialogPeer;
-import java.awt.peer.FontPeer;
-import java.awt.peer.FramePeer;
-import java.awt.peer.KeyboardFocusManagerPeer;
-import java.awt.peer.LabelPeer;
-import java.awt.peer.ListPeer;
-import java.awt.peer.MenuBarPeer;
-import java.awt.peer.MenuItemPeer;
-import java.awt.peer.MenuPeer;
-import java.awt.peer.MouseInfoPeer;
-import java.awt.peer.PanelPeer;
-import java.awt.peer.PopupMenuPeer;
-import java.awt.peer.RobotPeer;
-import java.awt.peer.ScrollPanePeer;
-import java.awt.peer.ScrollbarPeer;
-import java.awt.peer.SystemTrayPeer;
-import java.awt.peer.TextAreaPeer;
-import java.awt.peer.TextFieldPeer;
-import java.awt.peer.TrayIconPeer;
-import java.awt.peer.WindowPeer;
+import java.awt.peer.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
@@ -101,45 +94,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-
-import org.webswing.Constants;
-import org.webswing.dispatch.CwmPaintDispatcher;
-import org.webswing.dispatch.EventDispatcher;
-import org.webswing.dispatch.PaintDispatcher;
-import org.webswing.dispatch.SessionWatchdog;
-import org.webswing.dispatch.WebEventDispatcher;
-import org.webswing.dispatch.WebPaintDispatcher;
-import org.webswing.dispatch.WebSessionWatchdog;
-import org.webswing.model.Msg;
-import org.webswing.model.common.in.MirroringStatusEnum;
-import org.webswing.model.common.in.RecordingStatusEnum;
-import org.webswing.toolkit.api.WebswingApi;
-import org.webswing.toolkit.api.WebswingApiProvider;
-import org.webswing.toolkit.api.lifecycle.ShutdownReason;
-import org.webswing.toolkit.extra.WindowManager;
-import org.webswing.toolkit.listener.WebToolkitStartupListener;
-import org.webswing.toolkit.util.EvaluationProperties;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-import org.webswing.util.NamedThreadFactory;
-import org.webswing.util.SessionMirror;
-import org.webswing.util.SessionRecorder;
-
-import sun.awt.SunToolkit;
-import sun.awt.image.SurfaceManager;
-import sun.java2d.SurfaceData;
-import sun.print.PrintJob2D;
-
 @SuppressWarnings("restriction")
 public abstract class WebToolkit extends SunToolkit implements WebswingApiProvider {
   public static final Font defaultFont = new Font("Dialog", Font.PLAIN, 12);
@@ -147,7 +101,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
   public static final String BACKGROUND_WINDOW_ID = "BG";
   private static final int DEFAULT_SCREEN_RESOLUTION =
       Integer.getInteger("webswing.screenResolution", 96);
-  private static Object TREELOCK = null;
+  private static Object TREELOCK;
 
   private EventDispatcher eventDispatcher;
   private PaintDispatcher paintDispatcher;
@@ -182,7 +136,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
       String geName = System.getProperty("java.awt.graphicsenv");
       if (geName != null) {
         // Force initialization of the LocalGE holder (triggers createGE)
-        java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment.getLocalGraphicsEnvironment();
 
         // Use Unsafe (via reflection) to replace the final static INSTANCE field
         Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
@@ -197,8 +151,8 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
         Field instanceField = localGEClass.getDeclaredField("INSTANCE");
         long offset = (long) staticFieldOffsetMethod.invoke(unsafe, instanceField);
 
-        java.awt.GraphicsEnvironment webGE = (java.awt.GraphicsEnvironment) Class.forName(geName)
-            .getDeclaredConstructor().newInstance();
+        GraphicsEnvironment webGE =
+            (GraphicsEnvironment) Class.forName(geName).getDeclaredConstructor().newInstance();
         putObjectMethod.invoke(unsafe, localGEClass, offset, webGE);
         AppLogger.info("Replaced GraphicsEnvironment with: " + webGE.getClass().getName());
       }
@@ -456,7 +410,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
   private WebClipboard clipboard;
   private Clipboard selectionClipboard;
 
-  private boolean exiting = false;
+  private boolean exiting;
 
   public static int screenWidth = Math.max(Constants.SWING_SCREEN_WIDTH_MIN, Integer.parseInt(
       System.getProperty(Constants.SWING_SCREEN_WIDTH, Constants.SWING_SCREEN_WIDTH_MIN + "")));
@@ -493,75 +447,73 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
     this.desktopProperties.put("awt.mouse.numButtons", 5);
     this.desktopProperties.put("awt.multiClickInterval", 500);
     this.desktopProperties.put("awt.wheelMousePresent", true);
-    this.desktopProperties.put("win.3d.backgroundColor", new java.awt.Color(240, 240, 240));
-    this.desktopProperties.put("win.3d.darkShadowColor", new java.awt.Color(105, 105, 105));
-    this.desktopProperties.put("win.3d.highlightColor", new java.awt.Color(255, 255, 255));
-    this.desktopProperties.put("win.3d.lightColor", new java.awt.Color(227, 227, 227));
-    this.desktopProperties.put("win.3d.shadowColor", new java.awt.Color(160, 160, 160));
+    this.desktopProperties.put("win.3d.backgroundColor", new Color(240, 240, 240));
+    this.desktopProperties.put("win.3d.darkShadowColor", new Color(105, 105, 105));
+    this.desktopProperties.put("win.3d.highlightColor", new Color(255, 255, 255));
+    this.desktopProperties.put("win.3d.lightColor", new Color(227, 227, 227));
+    this.desktopProperties.put("win.3d.shadowColor", new Color(160, 160, 160));
     this.desktopProperties.put("win.ansiFixed.font", Font.decode("Monospaced 0 13"));
     this.desktopProperties.put("win.ansiFixed.font.height", 13);
     this.desktopProperties.put("win.ansiVar.font", Font.decode("Dialog 0 11"));
     this.desktopProperties.put("win.ansiVar.font.height", 11);
-    this.desktopProperties.put("win.button.textColor", new java.awt.Color(0, 0, 0));
+    this.desktopProperties.put("win.button.textColor", new Color(0, 0, 0));
     this.desktopProperties.put("win.caret.width", 1);
     this.desktopProperties.put("win.defaultGUI.font", Font.decode("Dialog 0 11"));
     this.desktopProperties.put("win.defaultGUI.font.height", 11);
-    this.desktopProperties.put("win.desktop.backgroundColor", new java.awt.Color(0, 0, 0));
+    this.desktopProperties.put("win.desktop.backgroundColor", new Color(0, 0, 0));
     this.desktopProperties.put("win.deviceDefault.font", Font.decode("Dialog 1 13"));
     this.desktopProperties.put("win.deviceDefault.font.height", 13);
     this.desktopProperties.put("win.drag.height", 4);
     this.desktopProperties.put("win.drag.width", 4);
-    this.desktopProperties.put("win.frame.activeBorderColor", new java.awt.Color(180, 180, 180));
-    this.desktopProperties.put("win.frame.activeCaptionColor", new java.awt.Color(153, 180, 209));
-    this.desktopProperties.put("win.frame.activeCaptionGradientColor",
-        new java.awt.Color(185, 209, 234));
-    this.desktopProperties.put("win.frame.backgroundColor", new java.awt.Color(255, 255, 255));
+    this.desktopProperties.put("win.frame.activeBorderColor", new Color(180, 180, 180));
+    this.desktopProperties.put("win.frame.activeCaptionColor", new Color(153, 180, 209));
+    this.desktopProperties.put("win.frame.activeCaptionGradientColor", new Color(185, 209, 234));
+    this.desktopProperties.put("win.frame.backgroundColor", new Color(255, 255, 255));
     this.desktopProperties.put("win.frame.captionButtonHeight", 22);
     this.desktopProperties.put("win.frame.captionButtonWidth", 36);
     this.desktopProperties.put("win.frame.captionFont", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.frame.captionFont.height", 12);
     this.desktopProperties.put("win.frame.captionGradientsOn", true);
     this.desktopProperties.put("win.frame.captionHeight", 22);
-    this.desktopProperties.put("win.frame.captionTextColor", new java.awt.Color(0, 0, 0));
-    this.desktopProperties.put("win.frame.color", new java.awt.Color(100, 100, 100));
+    this.desktopProperties.put("win.frame.captionTextColor", new Color(0, 0, 0));
+    this.desktopProperties.put("win.frame.color", new Color(100, 100, 100));
     this.desktopProperties.put("win.frame.fullWindowDragsOn", true);
-    this.desktopProperties.put("win.frame.inactiveBorderColor", new java.awt.Color(244, 247, 252));
-    this.desktopProperties.put("win.frame.inactiveCaptionColor", new java.awt.Color(191, 205, 219));
-    this.desktopProperties.put("win.frame.inactiveCaptionGradientColor",
-        new java.awt.Color(215, 228, 242));
-    this.desktopProperties.put("win.frame.inactiveCaptionTextColor", new java.awt.Color(0, 0, 0));
+    this.desktopProperties.put("win.frame.inactiveBorderColor", new Color(244, 247, 252));
+    this.desktopProperties.put("win.frame.inactiveCaptionColor", new Color(191, 205, 219));
+    this.desktopProperties.put("win.frame.inactiveCaptionGradientColor", new Color(215, 228, 242));
+    this.desktopProperties.put("win.frame.inactiveCaptionTextColor", new Color(0, 0, 0));
     this.desktopProperties.put("win.frame.sizingBorderWidth", 5);
     this.desktopProperties.put("win.frame.smallCaptionButtonHeight", 22);
     this.desktopProperties.put("win.frame.smallCaptionButtonWidth", 22);
     this.desktopProperties.put("win.frame.smallCaptionFont", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.frame.smallCaptionFont.height", 12);
     this.desktopProperties.put("win.frame.smallCaptionHeight", 22);
-    this.desktopProperties.put("win.frame.textColor", new java.awt.Color(0, 0, 0));
+    this.desktopProperties.put("win.frame.textColor", new Color(0, 0, 0));
     this.desktopProperties.put("win.highContrast.on", false);
     this.desktopProperties.put("win.icon.font", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.icon.font.height", 12);
     this.desktopProperties.put("win.icon.hspacing", 75);
     this.desktopProperties.put("win.icon.titleWrappingOn", true);
     this.desktopProperties.put("win.icon.vspacing", 75);
-    this.desktopProperties.put("win.item.highlightColor", new java.awt.Color(51, 153, 255));
-    this.desktopProperties.put("win.item.highlightTextColor", new java.awt.Color(255, 255, 255));
-    this.desktopProperties.put("win.item.hotTrackedColor", new java.awt.Color(0, 102, 204));
+    this.desktopProperties.put("win.item.highlightColor", new Color(51, 153, 255));
+    this.desktopProperties.put("win.item.highlightTextColor", new Color(255, 255, 255));
+    this.desktopProperties.put("win.item.hotTrackedColor", new Color(0, 102, 204));
     this.desktopProperties.put("win.item.hotTrackingOn", true);
-    this.desktopProperties.put("win.mdi.backgroundColor", new java.awt.Color(171, 171, 171));
-    this.desktopProperties.put("win.menu.backgroundColor", new java.awt.Color(240, 240, 240));
+    this.desktopProperties.put("win.mdi.backgroundColor", new Color(171, 171, 171));
+    this.desktopProperties.put("win.menu.backgroundColor", new Color(240, 240, 240));
     this.desktopProperties.put("win.menu.buttonWidth", 19);
     this.desktopProperties.put("win.menu.font", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.menu.font.height", 12);
     this.desktopProperties.put("win.menu.height", 19);
     this.desktopProperties.put("win.menu.keyboardCuesOn", false);
-    this.desktopProperties.put("win.menu.textColor", new java.awt.Color(0, 0, 0));
-    this.desktopProperties.put("win.menubar.backgroundColor", new java.awt.Color(240, 240, 240));
+    this.desktopProperties.put("win.menu.textColor", new Color(0, 0, 0));
+    this.desktopProperties.put("win.menubar.backgroundColor", new Color(240, 240, 240));
     this.desktopProperties.put("win.messagebox.font", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.messagebox.font.height", 12);
     this.desktopProperties.put("win.oemFixed.font", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.oemFixed.font.height", 12);
     this.desktopProperties.put("win.properties.version", 3);
-    this.desktopProperties.put("win.scrollbar.backgroundColor", new java.awt.Color(200, 200, 200));
+    this.desktopProperties.put("win.scrollbar.backgroundColor", new Color(200, 200, 200));
     this.desktopProperties.put("win.scrollbar.height", 17);
     this.desktopProperties.put("win.scrollbar.width", 17);
     this.desktopProperties.put("win.status.font", Font.decode("Dialog 0 12"));
@@ -574,11 +526,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
     this.desktopProperties.put("win.text.fontSmoothingOn", true);
     this.desktopProperties.put("win.text.fontSmoothingOrientation", 1);
     this.desktopProperties.put("win.text.fontSmoothingType", 2);
-    this.desktopProperties.put("win.text.grayedTextColor", new java.awt.Color(109, 109, 109));
-    this.desktopProperties.put("win.tooltip.backgroundColor", new java.awt.Color(255, 255, 225));
+    this.desktopProperties.put("win.text.grayedTextColor", new Color(109, 109, 109));
+    this.desktopProperties.put("win.tooltip.backgroundColor", new Color(255, 255, 225));
     this.desktopProperties.put("win.tooltip.font", Font.decode("Dialog 0 12"));
     this.desktopProperties.put("win.tooltip.font.height", 12);
-    this.desktopProperties.put("win.tooltip.textColor", new java.awt.Color(0, 0, 0));
+    this.desktopProperties.put("win.tooltip.textColor", new Color(0, 0, 0));
     this.desktopProperties.put("win.xpstyle.colorName", "NormalColor");
     this.desktopProperties.put("win.xpstyle.dllName",
         "C:\\WINDOWS\\resources\\themes\\Aero\\Aero.msstyles");
@@ -684,7 +636,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
       this.cacheFontPeer = new Hashtable<>(5, 0.9F);
     }
     this.cacheFontPeer.put(str + paramInt, localObject);
-    return ((FontPeer) localObject);
+    return (FontPeer) localObject;
   }
 
   public Clipboard getSystemClipboard() throws HeadlessException {
@@ -768,8 +720,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
   }
 
   public static void resetGC() {
-    config =
-        org.webswing.toolkit.ge.WebGraphicsConfig.getWebGraphicsConfig(screenWidth, screenHeight);
+    config = WebGraphicsConfig.getWebGraphicsConfig(screenWidth, screenHeight);
   }
 
   public abstract void displayChanged();
@@ -1134,7 +1085,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
       linkButton.setFocusPainted(false);
       linkButton.setToolTipText(url);
       linkButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      linkButton.addActionListener((event) -> {
+      linkButton.addActionListener(event -> {
         if (Desktop.isDesktopSupported()) {
           try {
             URI targetUri = URI.create(url);
@@ -1165,7 +1116,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
       dismissButton.setContentAreaFilled(false);
       dismissButton.setFocusPainted(false);
       dismissButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      dismissButton.addActionListener((event) -> {
+      dismissButton.addActionListener(event -> {
         evalWin.dispose();
         resizeTimer.cancel();
       });

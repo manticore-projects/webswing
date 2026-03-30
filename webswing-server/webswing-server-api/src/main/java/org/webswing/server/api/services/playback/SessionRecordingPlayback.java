@@ -1,15 +1,5 @@
 package org.webswing.server.api.services.playback;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputFilter;
-import java.io.ObjectInputStream;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.model.appframe.in.PlaybackCommandMsgIn;
@@ -21,16 +11,21 @@ import org.webswing.server.common.datastore.WebswingDataStoreType;
 import org.webswing.server.common.util.ProtoMapper;
 import org.webswing.util.SessionRecordingHeader;
 
+import java.io.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class SessionRecordingPlayback {
   private static final Logger log = LoggerFactory.getLogger(SessionRecordingPlayback.class);
 
-  private ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_IN,
+  private final ProtoMapper protoMapper = new ProtoMapper(ProtoMapper.PROTO_PACKAGE_APPFRAME_IN,
       ProtoMapper.PROTO_PACKAGE_APPFRAME_OUT);
 
   private int numberOfFrames;
-  private ScheduledExecutorService sender = Executors.newSingleThreadScheduledExecutor();
+  private final ScheduledExecutorService sender = Executors.newSingleThreadScheduledExecutor();
 
-  private int currentFrame = 0;
+  private int currentFrame;
   private int allowedFrame = 1;
 
   private RecordingWebSocketConnection connection;

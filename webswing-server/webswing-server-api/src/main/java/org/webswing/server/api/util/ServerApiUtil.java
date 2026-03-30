@@ -1,16 +1,15 @@
 package org.webswing.server.api.util;
 
-import java.io.IOException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
 import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.model.SecuredPathConfig.SessionMode;
 import org.webswing.server.common.util.ServerUtil;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class ServerApiUtil {
 
@@ -50,5 +49,7 @@ public class ServerApiUtil {
       String relativeUrl) throws IOException {
     ServerUtil.sendHttpRedirect(req, resp, relativeUrl);
   }
+
+  private ServerApiUtil() {}
 
 }

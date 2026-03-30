@@ -14,6 +14,7 @@ import org.apache.shiro.config.Ini;
 import org.apache.shiro.env.BasicIniEnvironment;
 import org.apache.shiro.env.Environment;
 import org.apache.shiro.mgt.RealmSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -38,7 +39,7 @@ public class ShiroSecurityModule
   private final TreeSet<String> definedRoles = new TreeSet<>();
   */
 
-  private volatile org.apache.shiro.mgt.SecurityManager securityManager;
+  private volatile SecurityManager securityManager;
   private ShiroConfigMonitor configMonitor;
 
   // Reflection helper to access protected Shiro methods for dynamic discovery
@@ -80,7 +81,7 @@ public class ShiroSecurityModule
 
       // Modern Shiro Environment setup (Non-deprecated)
       Environment env = new BasicIniEnvironment(ini);
-      org.apache.shiro.mgt.SecurityManager newManager = env.getSecurityManager();
+      SecurityManager newManager = env.getSecurityManager();
 
       /* OLD [roles] SCRAPING LOGIC (Commented out)
       
@@ -112,7 +113,7 @@ public class ShiroSecurityModule
   public AuthenticatedWebswingUser verifyUserPassword(String user, String password)
       throws WebswingAuthenticationException {
     String originalPassword = deobfuscate(password);
-    org.apache.shiro.mgt.SecurityManager currentMgr = this.securityManager;
+    SecurityManager currentMgr = this.securityManager;
 
     if (currentMgr != null) {
       UsernamePasswordToken token = new UsernamePasswordToken(user, originalPassword);
@@ -222,8 +223,9 @@ public class ShiroSecurityModule
   }
 
   private String resolvePath(String path) {
-    if (path == null)
+    if (path == null) {
       return null;
+    }
     String homePath = new File(System.getProperty("user.home")).toURI().getPath();
     String resolved = path.replaceFirst("~", Matcher.quoteReplacement(homePath));
     resolved = resolved.replaceFirst("\\$\\{" + Constants.ROOT_DIR_PATH + "}",
@@ -243,15 +245,17 @@ public class ShiroSecurityModule
     try {
       byte[] decodedBytes = Base64.getDecoder().decode(encoded);
       String decoded = new String(decodedBytes, StandardCharsets.UTF_8);
-      if (decoded.length() < 8 || !decoded.matches(".*\\d{8}$"))
+      if (decoded.length() < 8 || !decoded.matches(".*\\d{8}$")) {
         return encoded;
+      }
       String digits = decoded.substring(decoded.length() - 8);
       String front = decoded.substring(0, decoded.length() - 8);
       int seed = Integer.parseInt(digits);
       Mulberry32 rng = new Mulberry32(seed);
       List<Integer> indices = new ArrayList<>();
-      for (int i = 0; i < front.length(); i++)
+      for (int i = 0; i < front.length(); i++) {
         indices.add(i);
+      }
       for (int i = indices.size() - 1; i > 0; i--) {
         float rand = rng.next();
         int j = (int) Math.floor(rand * (i + 1));
@@ -259,8 +263,9 @@ public class ShiroSecurityModule
       }
       char[] shuffled = front.toCharArray();
       char[] unshuffled = new char[shuffled.length];
-      for (int i = 0; i < indices.size(); i++)
+      for (int i = 0; i < indices.size(); i++) {
         unshuffled[indices.get(i)] = shuffled[i];
+      }
       return new String(unshuffled) + digits;
     } catch (IllegalArgumentException ex) {
       return encoded;

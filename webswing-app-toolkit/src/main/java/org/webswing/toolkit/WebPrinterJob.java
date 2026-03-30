@@ -1,13 +1,8 @@
 package org.webswing.toolkit;
 
-import java.awt.HeadlessException;
-import java.awt.print.PageFormat;
-import java.awt.print.Pageable;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
 
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -16,16 +11,16 @@ import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
-
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
+import java.awt.HeadlessException;
+import java.awt.print.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class WebPrinterJob extends PrinterJob {
-  private PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
+  private final PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
   private Printable printable;
   private Pageable pageable;
-  private PrintService service;
+  private final PrintService service;
 
   public WebPrinterJob() {
     service = WebPrintService.getService();

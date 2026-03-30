@@ -1,11 +1,5 @@
 package org.webswing.server.api.services.security.login.impl;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.AbstractUrlHandler;
@@ -14,6 +8,11 @@ import org.webswing.server.api.services.security.login.LoginHandler;
 import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.impl.WebswingSecuritySubject;
 import org.webswing.server.model.exception.WsException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class LoginHandlerImpl extends AbstractUrlHandler implements LoginHandler {
 
@@ -48,7 +47,7 @@ public class LoginHandlerImpl extends AbstractUrlHandler implements LoginHandler
       throws ServletException, IOException {
     AbstractWebswingUser user = getUser();
     String path = getPathInfo(req);
-    if (user != null && !path.equals("/")) {
+    if (user != null && !"/".equals(path)) {
       getSecurityProvider().get().doServeAuthenticated(user, path, req, resp);
     } else {
       try {

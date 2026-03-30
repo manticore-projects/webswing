@@ -1,17 +1,16 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Font;
-import java.awt.geom.AffineTransform;
-import java.util.List;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.model.GlyphListConst.StringConstValue;
 import org.webswing.directdraw.proto.Directdraw.DrawConstantProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
 import org.webswing.directdraw.util.DrawConstantPool;
-
 import sun.font.GlyphList;
 import sun.java2d.loops.FontInfo;
+
+import java.awt.Font;
+import java.awt.geom.AffineTransform;
+import java.util.List;
 
 @SuppressWarnings("restriction")
 public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue> {
@@ -27,7 +26,10 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
     char[] chars = new char[value.string.length()];
     value.string.getChars(0, value.string.length(), chars, 0);
     int[] pts = new int[2 * chars.length];// (x,y) location per char
-    int minX = 0, minY = 0, maxX = 0, maxY = 0;// size of drawing area
+    int minX = 0;
+    int minY = 0;
+    int maxX = 0;
+    int maxY = 0;// size of drawing area
     int[] ids = new int[2 + chars.length]; // address of the drawing area size + address of
                                            // locations constant + address of glyph constant per
                                            // char

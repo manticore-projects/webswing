@@ -1,7 +1,5 @@
 package org.webswing.server.api.services.application;
 
-import java.io.File;
-
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.server.api.base.UrlHandler;
 import org.webswing.server.api.model.ApplicationInfoMsg;
@@ -9,6 +7,8 @@ import org.webswing.server.api.services.datastore.DataStoreHandler;
 import org.webswing.server.api.services.security.login.SecuredPathHandler;
 import org.webswing.server.api.services.swinginstance.SwingInstanceInfo;
 import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
+
+import java.io.File;
 
 public interface AppPathHandler extends SecuredPathHandler, UrlHandler, DataStoreHandler {
 

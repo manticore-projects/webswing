@@ -1,13 +1,12 @@
 package org.webswing.javafx.toolkit;
 
+import com.sun.glass.ui.Timer;
+import org.webswing.util.NamedThreadFactory;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import org.webswing.util.NamedThreadFactory;
-
-import com.sun.glass.ui.Timer;
 
 public class WebTimer extends Timer {
   static ScheduledExecutorService timer;

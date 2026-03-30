@@ -1,15 +1,16 @@
 package org.webswing.services.impl;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.webswing.directdraw.DirectDrawServicesAdapter;
+import org.webswing.services.impl.ddutil.FastDirectDrawServicesAdapter;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.webswing.directdraw.DirectDrawServicesAdapter;
-import org.webswing.services.impl.ddutil.FastDirectDrawServicesAdapter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class FastDirectDrawServicesAdaptorTest {
   FastDirectDrawServicesAdapter dd;

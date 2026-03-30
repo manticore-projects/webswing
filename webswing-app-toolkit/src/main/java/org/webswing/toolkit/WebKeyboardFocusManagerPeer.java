@@ -1,11 +1,8 @@
 package org.webswing.toolkit;
 
-import java.awt.Component;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.peer.KeyboardFocusManagerPeer;
+import org.webswing.model.appframe.out.FocusEventMsgOut;
+import org.webswing.toolkit.api.component.HtmlPanel;
+import org.webswing.toolkit.util.Util;
 
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
@@ -13,10 +10,8 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-
-import org.webswing.model.appframe.out.FocusEventMsgOut;
-import org.webswing.toolkit.api.component.HtmlPanel;
-import org.webswing.toolkit.util.Util;
+import java.awt.*;
+import java.awt.peer.KeyboardFocusManagerPeer;
 
 @SuppressWarnings("restriction")
 public class WebKeyboardFocusManagerPeer implements KeyboardFocusManagerPeer {

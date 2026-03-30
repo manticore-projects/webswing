@@ -1,9 +1,5 @@
 package org.webswing.server.api.services.application.impl;
 
-import java.io.File;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.model.appframe.out.SimpleEventMsgOut;
@@ -33,6 +29,9 @@ import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
 import org.webswing.server.services.security.api.AuthorizationConfig;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 public class AppPathHandlerImpl extends PrimaryUrlHandler
     implements AppPathHandler, WebResourceProvider {

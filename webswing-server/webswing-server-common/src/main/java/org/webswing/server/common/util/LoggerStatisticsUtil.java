@@ -1,23 +1,15 @@
 package org.webswing.server.common.util;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.service.stats.StatisticsReader;
 import org.webswing.server.common.service.stats.logger.Aggregation;
 import org.webswing.server.common.service.stats.logger.InstanceStats;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class LoggerStatisticsUtil {
 
@@ -167,5 +159,7 @@ public class LoggerStatisticsUtil {
 
     return Pair.of(new BigDecimal(result.toString()), counts);
   }
+
+  private LoggerStatisticsUtil() {}
 
 }

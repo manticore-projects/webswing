@@ -1,19 +1,9 @@
 package org.webswing.server;
 
-import java.io.*;
-import java.net.URI;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.inject.Binder;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +15,18 @@ import org.webswing.server.common.service.security.SecurityManagerService;
 import org.webswing.server.services.sessionpool.impl.LocalSessionPoolConnector;
 import org.webswing.util.GitRepositoryState;
 
-import com.google.inject.Binder;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URI;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
 @WebServlet(asyncSupported = true, displayName = "WebswingServlet", urlPatterns = {"/*"})
 @MultipartConfig(fileSizeThreshold = 5242880)

@@ -1,22 +1,21 @@
 package org.webswing.server.services.security.extension.accessmapping;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.extension.api.SecurityModuleExtension;
 import org.webswing.server.services.security.extension.api.WebswingUserDecorator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class AccessMappingSecurityExtension
     extends SecurityModuleExtension<AccessMappingExtensionConfig> {
 
-  private Map<WebswingAction.AccessType, AccessTypeMapping> accessMapping = new HashMap<>();
+  private final Map<WebswingAction.AccessType, AccessTypeMapping> accessMapping = new HashMap<>();
 
   public AccessMappingSecurityExtension(AccessMappingExtensionConfig config) {
     super(config);

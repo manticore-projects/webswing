@@ -5,7 +5,7 @@ import org.webswing.server.common.datastore.impl.FileSystemDataStoreModule;
 public enum BuiltInDataStoreModules {
   INHERITED(null), FILESYSTEM(FileSystemDataStoreModule.class.getName());
 
-  private String type;
+  private final String type;
 
   private BuiltInDataStoreModules(String type) {
     this.type = type;

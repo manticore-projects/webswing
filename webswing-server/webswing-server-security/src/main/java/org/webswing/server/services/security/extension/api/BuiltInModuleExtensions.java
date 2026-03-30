@@ -5,7 +5,7 @@ import org.webswing.server.services.security.extension.accessmapping.AccessMappi
 public enum BuiltInModuleExtensions {
   AccessMapping(AccessMappingSecurityExtension.class.getName());
 
-  private String className;
+  private final String className;
 
   BuiltInModuleExtensions(String className) {
     this.className = className;

@@ -1,22 +1,7 @@
 package org.webswing.directdraw.toolkit;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import org.webswing.directdraw.DirectDraw;
-import org.webswing.directdraw.model.CompositeDrawConstantHolder;
-import org.webswing.directdraw.model.DrawConstant;
-import org.webswing.directdraw.model.DrawInstruction;
-import org.webswing.directdraw.model.FontFaceConst;
-import org.webswing.directdraw.model.IntegerConst;
+import org.webswing.directdraw.model.*;
 import org.webswing.directdraw.proto.Directdraw.DrawConstantProto;
 import org.webswing.directdraw.proto.Directdraw.DrawInstructionProto.InstructionProto;
 import org.webswing.directdraw.proto.Directdraw.FontFaceProto;
@@ -24,9 +9,16 @@ import org.webswing.directdraw.proto.Directdraw.WebImageProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
 import org.webswing.directdraw.util.DrawConstantPool;
 import org.webswing.directdraw.util.RenderUtil;
-
 import sun.awt.image.SurfaceManager;
 import sun.java2d.SurfaceData;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.util.*;
+import java.util.List;
 
 public class WebImage extends Image {
 
@@ -34,11 +26,11 @@ public class WebImage extends Image {
   private String id = UUID.randomUUID().toString();
   private DirectDraw context;
   private final Dimension size;
-  private volatile int lastGraphicsId = 0;
-  private WebGraphics lastUsedG = null;
+  private volatile int lastGraphicsId;
+  private WebGraphics lastUsedG;
   private Set<WebGraphics> usedGraphics;
   private List<DrawInstruction> instructions;
-  private int instructionConstantsCountEstimate = 0;
+  private int instructionConstantsCountEstimate;
   private boolean resetBeforeRepaint;
 
   private RenderUtil.RenderContext fallbackContext;
@@ -61,13 +53,13 @@ public class WebImage extends Image {
 
       // java 1.6
       public SurfaceData getSourceSurfaceData(sun.java2d.SurfaceData s,
-          sun.java2d.loops.CompositeType c, java.awt.Color color, boolean b) {
+          sun.java2d.loops.CompositeType c, Color color, boolean b) {
         BufferedImage snapshot = WebImage.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {
           return (SurfaceData) m.getClass()
               .getDeclaredMethod("getSourceSurfaceData", sun.java2d.SurfaceData.class,
-                  sun.java2d.loops.CompositeType.class, java.awt.Color.class, Boolean.TYPE)
+                  sun.java2d.loops.CompositeType.class, Color.class, Boolean.TYPE)
               .invoke(m, s, c, color, b);
         } catch (Exception e) {
           e.printStackTrace();

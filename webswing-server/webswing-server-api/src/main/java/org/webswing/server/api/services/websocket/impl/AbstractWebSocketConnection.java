@@ -22,18 +22,18 @@ import java.util.concurrent.ExecutionException;
 public abstract class AbstractWebSocketConnection implements WebSocketConnection {
   private static final Logger log = LoggerFactory.getLogger(AbstractWebSocketConnection.class);
 
-  private static int maxMessageSize = Integer.getInteger(Constants.WEBSOCKET_MESSAGE_SIZE,
+  private static final int maxMessageSize = Integer.getInteger(Constants.WEBSOCKET_MESSAGE_SIZE,
       Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE);
-  private static long messageTimeout = Long.getLong(Constants.WEBSOCKET_MESSAGE_TIMEOUT,
+  private static final long messageTimeout = Long.getLong(Constants.WEBSOCKET_MESSAGE_TIMEOUT,
       Constants.WEBSOCKET_MESSAGE_TIMEOUT_DEFAULT);
 
-  private static Timer pingTimer = new Timer("Websocket Ping Timer", true);
+  private static final Timer pingTimer = new Timer("Websocket Ping Timer", true);
 
   private ByteArrayOutputStream partialMsg = new ByteArrayOutputStream();
 
   protected Session session;
 
-  private Object sendLock = new Object();
+  private final Object sendLock = new Object();
 
   protected void onOpen(Session session, EndpointConfig config) {
     this.session = session;

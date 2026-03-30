@@ -1,30 +1,19 @@
 package org.webswing.server.services.security.api;
 
+import org.webswing.Constants;
+import org.webswing.server.common.model.Config;
+import org.webswing.server.common.model.meta.*;
+import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
+import org.webswing.server.common.util.CommonUtil;
+import org.webswing.server.services.security.api.WebswingSecurityConfig.WebswingSecurityMetadataGenerator;
+import org.webswing.util.ClasspathUtil;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Stream;
-
-import org.webswing.server.common.model.Config;
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueObject;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueString;
-import org.webswing.server.common.model.meta.ConfigFieldDiscriminator;
-import org.webswing.server.common.model.meta.ConfigFieldEditorType;
-import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
-import org.webswing.server.common.model.meta.ConfigFieldOrder;
-import org.webswing.server.common.model.meta.ConfigFieldPresets;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.meta.ConfigType;
-import org.webswing.server.common.model.meta.MetaObject;
-import org.webswing.server.common.model.meta.MetadataGenerator;
-import org.webswing.server.common.model.meta.VariableSetName;
-import org.webswing.server.common.util.CommonUtil;
-import org.webswing.server.services.security.api.WebswingSecurityConfig.WebswingSecurityMetadataGenerator;
-import org.webswing.util.ClasspathUtil;
-import org.webswing.Constants;
 
 @ConfigType(metadataGenerator = WebswingSecurityMetadataGenerator.class)
 @ConfigFieldOrder({"classPath", "module", "config", "authorizationConfig"})
@@ -87,7 +76,7 @@ public interface WebswingSecurityConfig extends Config {
     @Override
     protected String[] getPresets(WebswingSecurityConfig config, ClassLoader cl,
         String propertyName, Method readMethod) {
-      if (propertyName.equals("classPath")) {
+      if ("classPath".equals(propertyName)) {
         try {
           String securityRootString = "${" + Constants.ROOT_DIR_PATH + "}/security/";
           File securityRoot = new File(
@@ -101,7 +90,7 @@ public interface WebswingSecurityConfig extends Config {
         } catch (Exception e) {
           // do nothing
         }
-      } else if (propertyName.equals("module")) {
+      } else if ("module".equals(propertyName)) {
         ArrayList<String> discovered = new ArrayList<>();
         ServiceLoader<WebswingSecurityModuleProvider> loader =
             ServiceLoader.load(WebswingSecurityModuleProvider.class, cl);
@@ -119,7 +108,7 @@ public interface WebswingSecurityConfig extends Config {
     @Override
     public Class<?> getExplicitType(WebswingSecurityConfig config, ClassLoader cl,
         String propertyName, Method readMethod, Object value) throws ClassNotFoundException {
-      if (propertyName.equals("config")) {
+      if ("config".equals(propertyName)) {
         String securityModuleClassName =
             BuiltInModules.getSecurityModuleClassName(config.getModule());
         if (securityModuleClassName != null) {

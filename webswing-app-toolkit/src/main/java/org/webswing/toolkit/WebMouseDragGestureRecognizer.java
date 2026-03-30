@@ -1,5 +1,7 @@
 package org.webswing.toolkit;
 
+import sun.awt.dnd.SunDragSourceContextPeer;
+
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DragGestureListener;
@@ -7,8 +9,6 @@ import java.awt.dnd.DragSource;
 import java.awt.dnd.MouseDragGestureRecognizer;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
-
-import sun.awt.dnd.SunDragSourceContextPeer;
 
 @SuppressWarnings("restriction")
 public class WebMouseDragGestureRecognizer extends MouseDragGestureRecognizer {

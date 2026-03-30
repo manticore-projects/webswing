@@ -1,5 +1,19 @@
 package org.webswing.javafx.toolkit;
 
+import com.sun.glass.ui.Cursor;
+import com.sun.glass.ui.Pixels;
+import com.sun.glass.ui.Screen;
+import com.sun.glass.ui.View;
+import com.sun.glass.ui.Window;
+import javafx.stage.Modality;
+import org.webswing.javafx.toolkit.adaper.JDialogAdapter;
+import org.webswing.javafx.toolkit.adaper.JFrameAdapter;
+import org.webswing.javafx.toolkit.adaper.JWindowAdapter;
+import org.webswing.javafx.toolkit.adaper.WindowAdapter;
+import org.webswing.javafx.toolkit.util.WebFxUtil;
+import org.webswing.util.AppLogger;
+
+import javax.swing.SwingUtilities;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -10,27 +24,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
-import org.webswing.javafx.toolkit.adaper.JDialogAdapter;
-import org.webswing.javafx.toolkit.adaper.JFrameAdapter;
-import org.webswing.javafx.toolkit.adaper.JWindowAdapter;
-import org.webswing.javafx.toolkit.adaper.WindowAdapter;
-import org.webswing.javafx.toolkit.util.WebFxUtil;
-import org.webswing.util.AppLogger;
-
-import com.sun.glass.ui.Cursor;
-import com.sun.glass.ui.Pixels;
-import com.sun.glass.ui.Screen;
-import com.sun.glass.ui.View;
-import com.sun.glass.ui.Window;
-
-import javafx.stage.Modality;
 
 /**
  * Created by vikto on 01-Mar-17.
@@ -226,11 +222,14 @@ public class WebWindow extends Window {
       int cw, int ch, float xGravity, float yGravity) {
     if (this.w != null) {
       Rectangle rect = getContentBounds();
-      if (xSet)
+      if (xSet) {
         rect.x = x;
-      if (ySet)
+      }
+      if (ySet) {
         rect.y = y;
-      boolean hSet = false, wSet = false;
+      }
+      boolean hSet = false;
+      boolean wSet = false;
       if (w != -1) {
         wSet = true;
         rect.width = w;

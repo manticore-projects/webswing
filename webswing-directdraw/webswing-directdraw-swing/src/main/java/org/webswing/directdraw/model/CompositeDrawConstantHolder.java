@@ -1,10 +1,10 @@
 package org.webswing.directdraw.model;
 
-import java.util.List;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.DrawConstantProto;
 import org.webswing.directdraw.util.DrawConstantPool;
+
+import java.util.List;
 
 public abstract class CompositeDrawConstantHolder<T> extends DrawConstant<T> {
   T value;

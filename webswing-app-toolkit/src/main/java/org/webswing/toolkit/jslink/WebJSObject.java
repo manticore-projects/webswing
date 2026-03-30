@@ -1,18 +1,7 @@
 package org.webswing.toolkit.jslink;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeoutException;
-
+import netscape.javascript.JSException;
+import netscape.javascript.JSObject;
 import org.webswing.Constants;
 import org.webswing.model.SyncObjectResponse;
 import org.webswing.model.app.out.AppToServerFrameMsgOut;
@@ -25,8 +14,12 @@ import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.WeakValueHashMap;
 import org.webswing.util.NamedThreadFactory;
 
-import netscape.javascript.JSException;
-import netscape.javascript.JSObject;
+import java.lang.ref.WeakReference;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeoutException;
 
 public class WebJSObject extends JSObject {
 
@@ -34,15 +27,15 @@ public class WebJSObject extends JSObject {
       new HashMap<String, WeakReference<JSObjectMsgIn>>();
   private static final WeakValueHashMap<String, Object> javaReferences =
       new WeakValueHashMap<String, Object>();
-  private static boolean jsLinkAllowed =
+  private static final boolean jsLinkAllowed =
       Boolean.getBoolean(Constants.SWING_START_SYS_PROP_ALLOW_JSLINK);
-  private static String jsLinkWhitelistProp =
+  private static final String jsLinkWhitelistProp =
       System.getProperty(Constants.SWING_START_SYS_PROP_JSLINK_WHITELIST, "");
   private static List<String> jsLinkWhitelist;
-  private static ScheduledExecutorService javaEvalThread =
+  private static final ScheduledExecutorService javaEvalThread =
       Executors.newSingleThreadScheduledExecutor(
           NamedThreadFactory.getInstance("Webswing JsLink Processor"));
-  private JSObjectMsgIn jsThis;
+  private final JSObjectMsgIn jsThis;
 
   static {
     jsLinkWhitelist = new ArrayList<>();

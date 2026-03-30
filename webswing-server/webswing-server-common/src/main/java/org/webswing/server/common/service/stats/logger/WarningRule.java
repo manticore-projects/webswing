@@ -1,8 +1,8 @@
 package org.webswing.server.common.service.stats.logger;
 
-import java.util.Map;
-
 import org.webswing.server.common.service.stats.StatisticsLogger;
+
+import java.util.Map;
 
 public abstract class WarningRule {
 

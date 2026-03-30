@@ -1,13 +1,13 @@
 package org.webswing.dispatch;
 
+import org.webswing.model.app.in.ServerToAppFrameMsgIn;
+import org.webswing.model.appframe.in.AppFrameMsgIn;
+import org.webswing.toolkit.WebDragSourceContextPeer;
+
 import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
-
-import org.webswing.model.app.in.ServerToAppFrameMsgIn;
-import org.webswing.model.appframe.in.AppFrameMsgIn;
-import org.webswing.toolkit.WebDragSourceContextPeer;
 
 public interface EventDispatcher {
 

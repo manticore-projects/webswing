@@ -1,10 +1,10 @@
 package org.webswing.toolkit.extra;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
-import javax.swing.filechooser.FileSystemView;
 
 // Drop-in replacement for DefaultShellFolder
 public class DefaultShellFolder extends File {

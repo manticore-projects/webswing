@@ -1,8 +1,8 @@
 package org.webswing.server.services.security.api;
 
-import java.net.URL;
-
 import org.webswing.server.common.model.meta.ConfigContext;
+
+import java.net.URL;
 
 /**
  * Context for {@link WebswingSecurityModule} stored in {@link WebswingSecurityModuleConfig} that

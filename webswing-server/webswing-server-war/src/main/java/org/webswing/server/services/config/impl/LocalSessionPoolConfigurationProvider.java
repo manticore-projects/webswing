@@ -1,14 +1,14 @@
 package org.webswing.server.services.config.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.webswing.server.common.model.SwingConfig;
 import org.webswing.server.common.service.config.ConfigurationUpdateHandler;
 import org.webswing.server.common.service.config.MigrationConfigurationProvider;
 import org.webswing.server.common.util.ConfigUtil;
 import org.webswing.server.model.exception.WsInitException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class LocalSessionPoolConfigurationProvider
     extends MigrationConfigurationProvider<SwingConfig> {

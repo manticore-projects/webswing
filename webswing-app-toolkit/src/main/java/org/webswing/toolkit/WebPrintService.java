@@ -1,34 +1,13 @@
 package org.webswing.toolkit;
 
-import java.util.Locale;
-
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.print.ServiceUIFactory;
-import javax.print.attribute.Attribute;
-import javax.print.attribute.AttributeSet;
-import javax.print.attribute.AttributeSetUtilities;
-import javax.print.attribute.HashAttributeSet;
-import javax.print.attribute.HashPrintServiceAttributeSet;
-import javax.print.attribute.PrintServiceAttribute;
-import javax.print.attribute.PrintServiceAttributeSet;
-import javax.print.attribute.standard.Chromaticity;
-import javax.print.attribute.standard.ColorSupported;
-import javax.print.attribute.standard.Copies;
-import javax.print.attribute.standard.CopiesSupported;
-import javax.print.attribute.standard.Fidelity;
-import javax.print.attribute.standard.JobName;
-import javax.print.attribute.standard.Media;
-import javax.print.attribute.standard.MediaPrintableArea;
-import javax.print.attribute.standard.MediaSize;
-import javax.print.attribute.standard.MediaSizeName;
-import javax.print.attribute.standard.OrientationRequested;
-import javax.print.attribute.standard.PageRanges;
-import javax.print.attribute.standard.RequestingUserName;
-import javax.print.attribute.standard.SheetCollate;
-import javax.print.attribute.standard.Sides;
+import javax.print.attribute.*;
+import javax.print.attribute.standard.*;
 import javax.print.event.PrintServiceAttributeListener;
+import java.util.Locale;
 
 public class WebPrintService implements PrintService {
 
@@ -41,7 +20,7 @@ public class WebPrintService implements PrintService {
       MediaSizeName.ISO_A5, MediaSizeName.ISO_A6, MediaSizeName.NA_LETTER, MediaSizeName.NA_LEGAL,
       MediaSizeName.LEDGER, MediaSizeName.EXECUTIVE};
 
-  private static WebPrintService thisService = new WebPrintService();
+  private static final WebPrintService thisService = new WebPrintService();
 
   public static WebPrintService getService() {
     return thisService;
@@ -119,16 +98,19 @@ public class WebPrintService implements PrintService {
     if (!isAttributeCategorySupported(category)) {
       return null;
     }
-    if (category == Copies.class)
+    if (category == Copies.class) {
       return new Copies(1);
-    if (category == Chromaticity.class)
+    }
+    if (category == Chromaticity.class) {
       return Chromaticity.COLOR;
-    if (category == Fidelity.class)
+    }
+    if (category == Fidelity.class) {
       return Fidelity.FIDELITY_FALSE;
+    }
     String str;
     if (category == Media.class) {
       str = Locale.getDefault().getCountry();
-      if ((str != null) && ((str.equals("")) || (str.equals(Locale.US.getCountry()))
+      if ((str != null) && (("".equals(str)) || (str.equals(Locale.US.getCountry()))
           || (str.equals(Locale.CANADA.getCountry())))) {
         return MediaSizeName.NA_LETTER;
       }
@@ -139,7 +121,7 @@ public class WebPrintService implements PrintService {
       float margin = 1.0F;
       float w;
       float h;
-      if ((str != null) && ((str.equals("")) || (str.equals(Locale.US.getCountry()))
+      if ((str != null) && (("".equals(str)) || (str.equals(Locale.US.getCountry()))
           || (str.equals(Locale.CANADA.getCountry())))) {
         w = MediaSize.NA.LETTER.getX(MediaSize.INCH) - margin * 2;
         h = MediaSize.NA.LETTER.getY(MediaSize.INCH) - margin * 2;
@@ -149,12 +131,15 @@ public class WebPrintService implements PrintService {
       }
       return new MediaPrintableArea(margin, margin, w, h, MediaSize.INCH);
     }
-    if (category == OrientationRequested.class)
+    if (category == OrientationRequested.class) {
       return OrientationRequested.PORTRAIT;
-    if (category == PageRanges.class)
+    }
+    if (category == PageRanges.class) {
       return new PageRanges(1, Integer.MAX_VALUE);
-    if (category == SheetCollate.class)
+    }
+    if (category == SheetCollate.class) {
       return SheetCollate.UNCOLLATED;
+    }
     if (category == Sides.class) {
       return Sides.ONE_SIDED;
     }
@@ -175,10 +160,12 @@ public class WebPrintService implements PrintService {
 
       return supportedValues;
     }
-    if (type == JobName.class)
+    if (type == JobName.class) {
       return new JobName("", null);
-    if (type == RequestingUserName.class)
+    }
+    if (type == RequestingUserName.class) {
       return new RequestingUserName("", null);
+    }
     if (type == OrientationRequested.class) {
       if ((paramDocFlavor == null) || (paramDocFlavor.equals(DocFlavor.SERVICE_FORMATTED.PAGEABLE))
           || (paramDocFlavor.equals(DocFlavor.SERVICE_FORMATTED.PRINTABLE))) {
@@ -211,7 +198,7 @@ public class WebPrintService implements PrintService {
       MediaSize size = (MediaSize) attribs.get(MediaSize.class);
       if (size == null) {
         Media media = (Media) attribs.get(Media.class);
-        if ((media != null) && ((media instanceof MediaSizeName mediaName))) {
+        if ((media != null) && (media instanceof MediaSizeName mediaName)) {
           size = MediaSize.getMediaSizeForName(mediaName);
         }
       }

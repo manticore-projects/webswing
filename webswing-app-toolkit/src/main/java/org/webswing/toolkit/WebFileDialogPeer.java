@@ -1,5 +1,8 @@
 package org.webswing.toolkit;
 
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import java.awt.FileDialog;
 import java.awt.Window;
 import java.awt.peer.FileDialogPeer;
@@ -7,13 +10,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 abstract public class WebFileDialogPeer extends WebWindowPeer implements FileDialogPeer {
 
-  private FileDialog dialog;
+  private final FileDialog dialog;
 
   @SuppressWarnings("deprecation")
   private JFileChooser fc = new JFileChooser() {

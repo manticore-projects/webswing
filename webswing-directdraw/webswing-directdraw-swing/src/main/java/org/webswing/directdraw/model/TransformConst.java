@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.awt.geom.AffineTransform;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.TransformProto;
+
+import java.awt.geom.AffineTransform;
 
 public class TransformConst extends MutableDrawConstantHolder<AffineTransform, TransformProto> {
 

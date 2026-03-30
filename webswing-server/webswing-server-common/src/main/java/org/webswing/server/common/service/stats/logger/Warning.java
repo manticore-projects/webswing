@@ -7,7 +7,7 @@ import java.util.Date;
 public class Warning {
   private static final DateFormat format = new SimpleDateFormat("dd MMM HH:mm:ss");
 
-  private Date start = new Date();
+  private final Date start = new Date();
   private String metric;
   private String message;
 

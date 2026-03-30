@@ -4,7 +4,7 @@ import org.webswing.Constants;
 import org.webswing.model.common.in.MirroringStatusEnum;
 import org.webswing.toolkit.util.Util;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 import static org.webswing.toolkit.util.Util.async;
 
@@ -13,7 +13,7 @@ public class SessionMirror {
   private MirroringStatusEnum mirroringStatus = MirroringStatusEnum.NOT_MIRRORING;
 
   private Runnable doAfterAllowingMirroring;
-  private boolean showingApprovalDialog = false;
+  private boolean showingApprovalDialog;
 
   public MirroringStatusEnum getMirroringStatus() {
     return mirroringStatus;
@@ -54,8 +54,9 @@ public class SessionMirror {
   }
 
   private void showApprovalDialog() {
-    if (showingApprovalDialog)
+    if (showingApprovalDialog) {
       return;
+    }
 
     Object[] approvalDialogButtons = new Object[] {
         System.getProperty(Constants.SWING_START_SYS_PROP_MIRRORING_ALLOW_BUTTON,

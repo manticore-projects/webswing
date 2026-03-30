@@ -33,4 +33,6 @@ public class WebswingFileChooserUtil {
     setUploadAllowed(chooser, null);
     setDeleteAllowed(chooser, null);
   }
+
+  private WebswingFileChooserUtil() {}
 }

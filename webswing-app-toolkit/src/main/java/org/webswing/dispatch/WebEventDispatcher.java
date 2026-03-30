@@ -1,44 +1,9 @@
 package org.webswing.dispatch;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Frame;
-import java.awt.IllegalComponentStateException;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileFilter;
-
 import org.webswing.Constants;
 import org.webswing.audio.AudioClip;
-import org.webswing.model.appframe.in.ActionEventMsgIn;
-import org.webswing.model.appframe.in.AudioEventMsgIn;
-import org.webswing.model.appframe.in.CopyEventMsgIn;
-import org.webswing.model.appframe.in.FilesSelectedEventMsgIn;
-import org.webswing.model.appframe.in.JSObjectMsgIn;
-import org.webswing.model.appframe.in.KeyboardEventMsgIn;
-import org.webswing.model.appframe.in.MouseEventMsgIn;
+import org.webswing.model.appframe.in.*;
 import org.webswing.model.appframe.in.MouseEventMsgIn.MouseEventType;
-import org.webswing.model.appframe.in.PasteEventMsgIn;
-import org.webswing.model.appframe.in.UploadEventMsgIn;
-import org.webswing.model.appframe.in.WindowEventMsgIn;
-import org.webswing.model.appframe.in.WindowFocusMsgIn;
 import org.webswing.model.appframe.out.FileDialogEventMsgOut.FileDialogEventType;
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.model.common.in.SimpleEventMsgIn;
@@ -49,12 +14,26 @@ import org.webswing.toolkit.WebWindowPeer;
 import org.webswing.toolkit.api.component.HtmlPanel;
 import org.webswing.toolkit.api.lifecycle.ShutdownReason;
 import org.webswing.toolkit.extra.WindowManager;
-import org.webswing.toolkit.jslink.WebJSObject;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
-import netscape.javascript.JSObject;
+import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 import static java.awt.event.KeyEvent.KEY_LOCATION_NUMPAD;
 import static java.awt.event.KeyEvent.KEY_LOCATION_STANDARD;
@@ -512,7 +491,7 @@ public class WebEventDispatcher extends AbstractEventDispatcher {
 
     synchronized (Util.getWebToolkit().getTreeLock()) {
       synchronized (WebPaintDispatcher.webPaintLock) {
-        final Window win = ((Window) winPeer.getTarget());
+        final Window win = (Window) winPeer.getTarget();
         if (windowUpdate.getEventType() != null) {
           switch (windowUpdate.getEventType()) {
             case close:

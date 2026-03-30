@@ -1,5 +1,7 @@
 package org.webswing.toolkit;
 
+import org.webswing.toolkit.util.Util;
+
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -7,14 +9,12 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serial;
 
-import org.webswing.toolkit.util.Util;
-
 public class WebCursor extends Cursor {
 
   @Serial
   private static final long serialVersionUID = -7369225579337480240L;
   private Image image;
-  private Point hotSpot;
+  private final Point hotSpot;
 
   public WebCursor(Image cursor, Point hotSpot, String name) {
     super(name);

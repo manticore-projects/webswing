@@ -1,5 +1,8 @@
 package org.webswing.server;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.GlobalUrlHandler;
@@ -39,10 +42,6 @@ import org.webswing.server.common.service.security.SecurityManagerService;
 import org.webswing.server.common.service.security.impl.SecurityManagerServiceImpl;
 import org.webswing.server.common.service.startup.Initializer;
 import org.webswing.server.common.service.startup.impl.DefaultInitializer;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 
 public class WebswingServerModule extends AbstractModule {
   private static final Logger log = LoggerFactory.getLogger(WebswingServerModule.class);

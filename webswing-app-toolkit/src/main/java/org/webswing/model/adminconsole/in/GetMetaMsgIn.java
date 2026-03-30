@@ -1,11 +1,11 @@
 package org.webswing.model.adminconsole.in;
 
+import org.webswing.model.MsgIn;
+import org.webswing.model.SyncMsg;
+
 import java.io.Serial;
 import java.util.List;
 import java.util.UUID;
-
-import org.webswing.model.MsgIn;
-import org.webswing.model.SyncMsg;
 
 public class GetMetaMsgIn implements SyncMsg, MsgIn {
 

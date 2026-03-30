@@ -1,14 +1,14 @@
 package org.webswing.server.services.security.modules.embeded;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.api.WebswingAuthenticationException;
 import org.webswing.server.services.security.modules.AbstractUserPasswordSecurityModule;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EmbededSecurityModule
     extends AbstractUserPasswordSecurityModule<EmbededSecurityModuleConfig> {

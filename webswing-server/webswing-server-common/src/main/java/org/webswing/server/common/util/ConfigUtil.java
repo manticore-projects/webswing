@@ -1,36 +1,20 @@
 package org.webswing.server.common.util;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.model.Config;
-import org.webswing.server.common.model.meta.ConfigContext;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueBoolean;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueGenerator;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueNumber;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueObject;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueString;
-import org.webswing.server.common.model.meta.MetaObject;
-import org.webswing.server.common.model.meta.MetadataGenerator;
+import org.webswing.server.common.model.meta.*;
+
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.lang.reflect.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ConfigUtil {
@@ -56,14 +40,14 @@ public class ConfigUtil {
           public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             BeanInfo info = Introspector.getBeanInfo(method.getDeclaringClass());
             PropertyDescriptor[] pds = info.getPropertyDescriptors();
-            if (method.getName().equals("getValueAs") && method.getParameterTypes().length == 2
+            if ("getValueAs".equals(method.getName()) && method.getParameterTypes().length == 2
                 && args[0] instanceof String s && args[1] instanceof Class c) {
               Object o = config.get(s);
               Map<String, Object> subConfig =
                   (Map<String, Object>) (o instanceof HashMap ? o : new HashMap());
               return instantiateConfig(subConfig, c, context);
             }
-            if (method.getName().equals("asMap") && method.getParameterTypes().length == 0) {
+            if ("asMap".equals(method.getName()) && method.getParameterTypes().length == 0) {
               return config;
             }
             for (PropertyDescriptor pd : pds) {
@@ -125,8 +109,9 @@ public class ConfigUtil {
                   Class<?> returnType = method.getReturnType();
                   Object generated = getDefaultGeneratedValue(method, clazz, proxy);
                   if (generated != null
-                      && ClassUtils.isAssignable(generated.getClass(), returnType))
+                      && ClassUtils.isAssignable(generated.getClass(), returnType)) {
                     return generated;
+                  }
                   if (ClassUtils.isAssignable(returnType, String.class)) {
                     String defaultStringValue = getDefaultStringValue(method);
                     config.put(pd.getName(), defaultStringValue);
@@ -303,4 +288,6 @@ public class ConfigUtil {
         "Could not convert number [" + number + "] of type [" + number.getClass().getName()
             + "] to target class [" + targetClass.getName() + "]: overflow");
   }
+
+  private ConfigUtil() {}
 }

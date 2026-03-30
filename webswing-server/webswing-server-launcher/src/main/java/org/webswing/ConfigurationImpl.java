@@ -1,19 +1,14 @@
 package org.webswing;
 
+import org.apache.commons.cli.*;
+import org.webswing.util.AppLogger;
+import org.webswing.util.GitRepositoryState;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.webswing.util.AppLogger;
-import org.webswing.util.GitRepositoryState;
 
 public class ConfigurationImpl extends Configuration {
 
@@ -25,13 +20,13 @@ public class ConfigurationImpl extends Configuration {
   private boolean http = true;
   private String httpPort = "8080";
 
-  private boolean https = false;
+  private boolean https;
   private String httpsPort = "8443";
   private String truststore;
   private String truststorePassword;
   private String keystore;
   private String keystorePassword;
-  private boolean clientAuthEnabled = false;
+  private boolean clientAuthEnabled;
 
   private String configFile;
   private String propFile;
@@ -86,7 +81,7 @@ public class ConfigurationImpl extends Configuration {
 
       if (line.getOptionValue('p') != null) {
         String value = line.getOptionValue('p');
-        cimpl.setHttp(value.equals("0") ? false : true);
+        cimpl.setHttp("0".equals(value) ? false : true);
         cimpl.setHttpPort(value);
       }
 
@@ -102,7 +97,7 @@ public class ConfigurationImpl extends Configuration {
 
       if (line.getOptionValue('s') != null) {
         String value = line.getOptionValue('s');
-        cimpl.setHttps(value.equals("0") ? false : true);
+        cimpl.setHttps("0".equals(value) ? false : true);
         cimpl.setHttpsPort(value);
       }
 

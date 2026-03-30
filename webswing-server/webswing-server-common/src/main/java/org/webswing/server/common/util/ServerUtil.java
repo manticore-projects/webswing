@@ -1,5 +1,17 @@
 package org.webswing.server.common.util;
 
+import com.google.common.collect.Iterators;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.webswing.Constants;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,32 +24,19 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.webswing.Constants;
-
-import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Iterators;
-
 public class ServerUtil {
 
   private static final Logger log = LoggerFactory.getLogger(ServerUtil.class);
 
   private static final DateFormat EXPIRES_FORMAT =
-      new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.US);
+      new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
 
   private static final String HEADER_AUTHORIZATION = "Authorization";
   private static final String BEARER_TYPE = "Bearer";
@@ -191,7 +190,7 @@ public class ServerUtil {
     String contextPathExplicit = System.getProperty(Constants.REVERSE_PROXY_CONTEXT_PATH);
     if (contextPathExplicit != null) {
       return CommonUtil.toPath(contextPathExplicit);
-    } else if (contextPath != null && !contextPath.equals("/") && !contextPath.equals("")) {
+    } else if (contextPath != null && !"/".equals(contextPath) && !"".equals(contextPath)) {
       return CommonUtil.toPath(contextPath);
     } else {
       return "";
@@ -229,8 +228,9 @@ public class ServerUtil {
       + "]");
 
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     String sanitized = UNSAFE_LOG_CHARS.matcher(input).replaceAll("_");
     if (sanitized.length() > MAX_LOG_LENGTH) {
       sanitized = sanitized.substring(0, MAX_LOG_LENGTH) + "...(truncated)";
@@ -286,8 +286,9 @@ public class ServerUtil {
 
   private static String getValidatedProto(HttpServletRequest req) {
     String proto = req.getHeader("X-Forwarded-Proto");
-    if (proto == null)
+    if (proto == null) {
       return null;
+    }
     proto = proto.trim().toLowerCase();
     if (!ALLOWED_PROTOCOLS.contains(proto)) {
       log.warn("Blocked invalid X-Forwarded-Proto: {}", sanitizeForLog(proto));
@@ -300,8 +301,9 @@ public class ServerUtil {
 
   private static String getValidatedHost(HttpServletRequest req) {
     String host = req.getHeader("X-Forwarded-Host");
-    if (host == null)
+    if (host == null) {
       return null;
+    }
 
     // X-Forwarded-Host can be comma-separated; take the first (leftmost proxy)
     if (host.contains(",")) {
@@ -354,7 +356,7 @@ public class ServerUtil {
   private static String extractBearerToken(Iterator<String> headers) {
     while (headers.hasNext()) { // typically there is only one (most servers enforce that)
       String value = headers.next();
-      if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
+      if (value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase())) {
         String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
         int commaIndex = authHeaderValue.indexOf(',');
         if (commaIndex > 0) {
@@ -479,5 +481,7 @@ public class ServerUtil {
     ServerUtil.setTokenCookie(resp, Constants.WEBSWING_SESSION_ADMIN_CONSOLE_DOWNLOAD_TOKEN,
         "expired", true);
   }
+
+  private ServerUtil() {}
 
 }

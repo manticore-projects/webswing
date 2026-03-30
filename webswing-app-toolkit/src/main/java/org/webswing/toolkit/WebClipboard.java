@@ -1,5 +1,15 @@
 package org.webswing.toolkit;
 
+import org.webswing.Constants;
+import org.webswing.toolkit.api.clipboard.BrowserTransferable;
+import org.webswing.toolkit.api.clipboard.PasteRequestContext;
+import org.webswing.toolkit.api.clipboard.WebswingClipboardData;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+import sun.awt.datatransfer.TransferableProxy;
+
+import javax.swing.SwingUtilities;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.datatransfer.Clipboard;
@@ -10,17 +20,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.SwingUtilities;
-
-import org.webswing.Constants;
-import org.webswing.toolkit.api.clipboard.BrowserTransferable;
-import org.webswing.toolkit.api.clipboard.PasteRequestContext;
-import org.webswing.toolkit.api.clipboard.WebswingClipboardData;
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-import sun.awt.datatransfer.TransferableProxy;
 
 public class WebClipboard extends Clipboard {
   private static DataFlavor htmlDf;

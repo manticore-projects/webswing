@@ -1,14 +1,13 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Font;
-import java.io.File;
-import java.io.FileInputStream;
-
+import com.google.protobuf.ByteString;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.FontFaceProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
 
-import com.google.protobuf.ByteString;
+import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
 
 public class FontFaceConst extends ImmutableDrawConstantHolder<Font> {
 

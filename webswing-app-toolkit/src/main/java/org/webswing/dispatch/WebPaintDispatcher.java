@@ -1,22 +1,5 @@
 package org.webswing.dispatch;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.webswing.model.app.out.AppToServerFrameMsgOut;
 import org.webswing.model.appframe.out.AppFrameMsgOut;
 import org.webswing.model.appframe.out.WindowMoveActionMsgOut;
@@ -28,6 +11,14 @@ import org.webswing.toolkit.extra.WebRepaintManager;
 import org.webswing.toolkit.extra.WindowManager;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WebPaintDispatcher extends AbstractPaintDispatcher {
   private volatile WindowMoveActionMsgOut moveAction;

@@ -1,10 +1,20 @@
 package org.webswing.dispatch;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
+import org.webswing.Constants;
+import org.webswing.model.app.in.ServerToAppFrameMsgIn;
+import org.webswing.model.appframe.in.*;
+import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
+import org.webswing.model.common.in.SimpleEventMsgIn;
+import org.webswing.toolkit.WebDragSourceContextPeer;
+import org.webswing.toolkit.extra.DndEventHandler;
+import org.webswing.toolkit.jslink.WebJSObject;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+import org.webswing.util.NamedThreadFactory;
+import sun.awt.UngrabEvent;
+
+import javax.swing.SwingUtilities;
+import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -17,45 +27,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.swing.SwingUtilities;
-
-import org.webswing.Constants;
-import org.webswing.model.app.in.ServerToAppFrameMsgIn;
-import org.webswing.model.appframe.in.ActionEventMsgIn;
-import org.webswing.model.appframe.in.AppFrameMsgIn;
-import org.webswing.model.appframe.in.AudioEventMsgIn;
-import org.webswing.model.appframe.in.CopyEventMsgIn;
-import org.webswing.model.appframe.in.FilesSelectedEventMsgIn;
-import org.webswing.model.appframe.in.KeyboardEventMsgIn;
-import org.webswing.model.appframe.in.MouseEventMsgIn;
-import org.webswing.model.appframe.in.PasteEventMsgIn;
-import org.webswing.model.appframe.in.UploadEventMsgIn;
-import org.webswing.model.appframe.in.WindowEventMsgIn;
-import org.webswing.model.appframe.in.WindowFocusMsgIn;
-import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
-import org.webswing.model.common.in.SimpleEventMsgIn;
-import org.webswing.toolkit.WebDragSourceContextPeer;
-import org.webswing.toolkit.extra.DndEventHandler;
-import org.webswing.toolkit.jslink.WebJSObject;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-import org.webswing.util.NamedThreadFactory;
-
-import sun.awt.UngrabEvent;
-
 public abstract class AbstractEventDispatcher implements EventDispatcher {
 
-  private AtomicLong lastMessageTimestamp = new AtomicLong(System.currentTimeMillis());
-  private AtomicLong lastUserInputTimestamp = new AtomicLong(System.currentTimeMillis());
+  private final AtomicLong lastMessageTimestamp = new AtomicLong(System.currentTimeMillis());
+  private final AtomicLong lastUserInputTimestamp = new AtomicLong(System.currentTimeMillis());
 
   private MouseEvent lastMouseEvent;
   private WebEventDispatcher.MouseEventInfo lastMousePressEvent;
-  private Point lastMousePosition = new Point();
-  private AtomicBoolean javaFXdragStarted = new AtomicBoolean(false);
+  private final Point lastMousePosition = new Point();
+  private final AtomicBoolean javaFXdragStarted = new AtomicBoolean(false);
   private Component lastEnteredWindow;
   private final DndEventHandler dndHandler;
   private final HashMap<String, String> uploadMap = new HashMap<String, String>();
-  private ExecutorService eventDispatcher = Executors
+  private final ExecutorService eventDispatcher = Executors
       .newSingleThreadExecutor(NamedThreadFactory.getInstance("Webswing Event Dispatcher"));
   // release char map derives the event char for keyrelease event from previous keypressed events
   // (keycode=char)
@@ -107,9 +91,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
         if (msgIn.getEvents() != null) {
           msgIn.getEvents().forEach(this::dispatchMessage);
         }
-        if (msgIn.getTimestamps() != null) {
-          // do nothing, this needs to be received so that resetLastMessageTimestamp() gets called
-        }
+        msgIn.getTimestamps();
         if (frame != null) {
           if (frame.getJavaRequest() != null) {
             WebJSObject.evaluateJava(frame.getJavaRequest());

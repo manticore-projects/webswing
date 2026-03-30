@@ -1,11 +1,11 @@
 package org.webswing.common;
 
+import org.webswing.model.appframe.out.AccessibilityMsgOut;
+
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Window;
-
-import org.webswing.model.appframe.out.AccessibilityMsgOut;
 
 public interface WindowDecoratorTheme {
 

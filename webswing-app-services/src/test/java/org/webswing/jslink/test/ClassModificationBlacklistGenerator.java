@@ -1,7 +1,6 @@
 package org.webswing.jslink.test;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-
 import org.webswing.Constants;
 import org.webswing.classloader.ClassModificationRegister;
 import org.webswing.classloader.SwingClassloader;

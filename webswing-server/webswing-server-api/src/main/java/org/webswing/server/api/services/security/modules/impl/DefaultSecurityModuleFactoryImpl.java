@@ -1,18 +1,13 @@
 package org.webswing.server.api.services.security.modules.impl;
 
-import java.util.Map;
-
+import com.google.inject.Singleton;
 import org.webswing.server.api.services.security.modules.SecurityModuleFactory;
 import org.webswing.server.api.services.security.modules.SecurityModuleWrapper;
 import org.webswing.server.common.util.ConfigUtil;
-import org.webswing.server.services.security.api.BuiltInModules;
-import org.webswing.server.services.security.api.SecurityContext;
-import org.webswing.server.services.security.api.WebswingSecurityConfig;
-import org.webswing.server.services.security.api.WebswingSecurityModule;
-import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
+import org.webswing.server.services.security.api.*;
 import org.webswing.server.services.security.modules.noaccess.NoAccessSecurityModule;
 
-import com.google.inject.Singleton;
+import java.util.Map;
 
 @Singleton
 public class DefaultSecurityModuleFactoryImpl implements SecurityModuleFactory {

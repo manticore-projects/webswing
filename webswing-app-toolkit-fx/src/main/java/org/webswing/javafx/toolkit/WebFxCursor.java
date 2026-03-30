@@ -1,12 +1,11 @@
 package org.webswing.javafx.toolkit;
 
-import java.awt.Point;
-
+import com.sun.glass.ui.Cursor;
+import com.sun.glass.ui.Pixels;
 import org.webswing.javafx.toolkit.util.WebFxUtil;
 import org.webswing.toolkit.WebCursor;
 
-import com.sun.glass.ui.Cursor;
-import com.sun.glass.ui.Pixels;
+import java.awt.Point;
 
 /**
  * Created by vikto on 06-Mar-17.

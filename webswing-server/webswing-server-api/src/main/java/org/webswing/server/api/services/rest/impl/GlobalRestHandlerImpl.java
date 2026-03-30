@@ -1,11 +1,5 @@
 package org.webswing.server.api.services.rest.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.webswing.server.api.GlobalUrlHandler;
 import org.webswing.server.api.model.ApplicationInfoMsg;
@@ -15,9 +9,13 @@ import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
-
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GlobalRestHandlerImpl extends AbstractGlobalRestHandler {
 

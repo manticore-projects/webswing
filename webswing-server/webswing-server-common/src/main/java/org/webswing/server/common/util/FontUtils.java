@@ -1,27 +1,22 @@
 package org.webswing.server.common.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.webswing.Constants;
 import org.webswing.server.common.model.SwingConfig;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.*;
+
 public class FontUtils {
 
-  private static List<String> logicalNames =
+  private static final List<String> logicalNames =
       Arrays.asList("monospaced", "serif", "sansserif", "dialoginput", "dialog");
-  private static List<String> styles = Arrays.asList("bolditalic", "italic", "bold", "plain");
-  private static String defaultChargroup =
+  private static final List<String> styles = Arrays.asList("bolditalic", "italic", "bold", "plain");
+  private static final String defaultChargroup =
       System.getProperty("os.name", "").startsWith("Windows") ? "alpbabet" : "latin-1";
 
   public static String createFontConfiguration(SwingConfig appConfig, VariableSubstitutor subs)
@@ -162,4 +157,6 @@ public class FontUtils {
     }
     return false;
   }
+
+  private FontUtils() {}
 }

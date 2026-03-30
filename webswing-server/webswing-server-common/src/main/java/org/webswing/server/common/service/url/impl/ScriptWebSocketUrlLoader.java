@@ -1,28 +1,20 @@
 package org.webswing.server.common.service.url.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
 import org.webswing.server.common.service.url.WebSocketUrlLoader;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-
-import main.Main;
 import org.webswing.server.common.util.CommonUtil;
+
+import java.io.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 
@@ -30,8 +22,8 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
 
   private static final long PROCESS_TIMEOUT_SECONDS = 5;
 
-  private String scriptFilePath;
-  private Set<String> webSocketUrls = Collections.synchronizedSet(new HashSet<>());
+  private final String scriptFilePath;
+  private final Set<String> webSocketUrls = Collections.synchronizedSet(new HashSet<>());
 
   private Process process;
 
@@ -141,8 +133,9 @@ public class ScriptWebSocketUrlLoader implements WebSocketUrlLoader {
   }
 
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\p{Cc}\\p{Cf}]", "_").substring(0, Math.min(input.length(), 500));
   }
 }

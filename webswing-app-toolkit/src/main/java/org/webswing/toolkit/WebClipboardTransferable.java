@@ -1,12 +1,12 @@
 package org.webswing.toolkit;
 
-import java.awt.Image;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-
 import org.webswing.model.appframe.in.PasteEventMsgIn;
 import org.webswing.toolkit.api.clipboard.BrowserTransferable;
 import org.webswing.toolkit.util.Services;
+
+import java.awt.Image;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class WebClipboardTransferable implements BrowserTransferable {
 

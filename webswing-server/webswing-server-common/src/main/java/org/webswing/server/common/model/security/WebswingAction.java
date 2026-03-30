@@ -55,7 +55,7 @@ public enum WebswingAction {
   file_download(AccessType.admin, AccessType.support,
       AccessType.basic), file_upload(AccessType.admin, AccessType.support, AccessType.basic);
 
-  private AccessType[] accessTypes;
+  private final AccessType[] accessTypes;
 
   WebswingAction(AccessType... accessTypes) {
 

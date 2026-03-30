@@ -1,41 +1,16 @@
 package org.webswing.toolkit;
 
-import java.awt.print.PageFormat;
-import java.awt.print.Pageable;
-import java.awt.print.Paper;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
+import javax.print.*;
+import javax.print.attribute.*;
+import javax.print.attribute.standard.*;
+import javax.print.event.PrintJobAttributeListener;
+import javax.print.event.PrintJobEvent;
+import javax.print.event.PrintJobListener;
+import java.awt.print.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.attribute.Attribute;
-import javax.print.attribute.AttributeSetUtilities;
-import javax.print.attribute.DocAttributeSet;
-import javax.print.attribute.HashPrintJobAttributeSet;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintJobAttribute;
-import javax.print.attribute.PrintJobAttributeSet;
-import javax.print.attribute.PrintRequestAttribute;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.DocumentName;
-import javax.print.attribute.standard.JobName;
-import javax.print.attribute.standard.JobOriginatingUserName;
-import javax.print.attribute.standard.Media;
-import javax.print.attribute.standard.MediaSize;
-import javax.print.attribute.standard.MediaSizeName;
-import javax.print.attribute.standard.OrientationRequested;
-import javax.print.attribute.standard.RequestingUserName;
-import javax.print.event.PrintJobAttributeListener;
-import javax.print.event.PrintJobEvent;
-import javax.print.event.PrintJobListener;
 
 public class WebPrintJob implements DocPrintJob {
 
@@ -45,8 +20,8 @@ public class WebPrintJob implements DocPrintJob {
   private static final int JOB_FAILED = 103;
   private static final int JOB_CANCELED = 101;
   private transient List<PrintJobListener> jobListeners;
-  private PrintJobAttributeSet jobAttrSet = null;
-  private WebPrintService service;
+  private PrintJobAttributeSet jobAttrSet;
+  private final WebPrintService service;
   private boolean printing;
   private PrinterJob job;
   private MediaSize mediaSize = MediaSize.NA.LETTER;
@@ -115,7 +90,7 @@ public class WebPrintJob implements DocPrintJob {
     getAttributeValues((DocFlavor) flavor);
 
     String str = ((DocFlavor) flavor).getRepresentationClassName();
-    if (str.equals("java.awt.print.Pageable")) {
+    if ("java.awt.print.Pageable".equals(str)) {
       try {
         pageableJob((Pageable) doc.getPrintData(), attributes);
         return;
@@ -127,7 +102,7 @@ public class WebPrintJob implements DocPrintJob {
         throw new PrintException(localIOException3);
       }
     }
-    if (str.equals("java.awt.print.Printable")) {
+    if ("java.awt.print.Printable".equals(str)) {
       try {
         printableJob((Printable) doc.getPrintData(), attributes);
         return;
@@ -252,7 +227,7 @@ public class WebPrintJob implements DocPrintJob {
       this.reqAttrSet.addAll(paramPrintRequestAttributeSet);
       arrayOfAttribute = paramPrintRequestAttributeSet.toArray();
       for (int i = 0; i < arrayOfAttribute.length; i++) {
-        if ((arrayOfAttribute[i] instanceof PrintJobAttribute)) {
+        if (arrayOfAttribute[i] instanceof PrintJobAttribute) {
           this.jobAttrSet.add(arrayOfAttribute[i]);
         }
       }
@@ -262,10 +237,10 @@ public class WebPrintJob implements DocPrintJob {
     if (localDocAttributeSet != null) {
       arrayOfAttribute = localDocAttributeSet.toArray();
       for (int j = 0; j < arrayOfAttribute.length; j++) {
-        if ((arrayOfAttribute[j] instanceof PrintRequestAttribute)) {
+        if (arrayOfAttribute[j] instanceof PrintRequestAttribute) {
           this.reqAttrSet.add(arrayOfAttribute[j]);
         }
-        if ((arrayOfAttribute[j] instanceof PrintJobAttribute)) {
+        if (arrayOfAttribute[j] instanceof PrintJobAttribute) {
           this.jobAttrSet.add(arrayOfAttribute[j]);
         }
       }
@@ -277,7 +252,7 @@ public class WebPrintJob implements DocPrintJob {
     } catch (SecurityException localSecurityException) {
     }
     Object localObject1;
-    if ((str == null) || (str.equals(""))) {
+    if ((str == null) || ("".equals(str))) {
       localObject1 =
           (RequestingUserName) paramPrintRequestAttributeSet.get(RequestingUserName.class);
 
@@ -305,7 +280,7 @@ public class WebPrintJob implements DocPrintJob {
         localObject2 = "JPS Job:" + paramDoc;
         try {
           Object localObject3 = paramDoc.getPrintData();
-          if ((localObject3 instanceof URL)) {
+          if (localObject3 instanceof URL) {
             localObject2 = ((URL) paramDoc.getPrintData()).toString();
           }
         } catch (IOException localIOException) {
@@ -324,12 +299,12 @@ public class WebPrintJob implements DocPrintJob {
       Attribute localAttribute = arrayOfAttribute[i];
       Class<?> localClass = localAttribute.getCategory();
       if (localClass == Media.class) {
-        if (((localAttribute instanceof MediaSizeName name))
+        if ((localAttribute instanceof MediaSizeName name)
             && (this.service.isAttributeValueSupported(localAttribute, null, null))) {
           this.mediaSize = MediaSize.getMediaSizeForName(name);
         }
       } else if (localClass == OrientationRequested.class) {
-        this.orient = ((OrientationRequested) localAttribute);
+        this.orient = (OrientationRequested) localAttribute;
       }
     }
   }

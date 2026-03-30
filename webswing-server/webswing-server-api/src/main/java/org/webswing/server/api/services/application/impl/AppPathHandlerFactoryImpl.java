@@ -1,5 +1,7 @@
 package org.webswing.server.api.services.application.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.webswing.server.api.GlobalUrlHandler;
 import org.webswing.server.api.services.application.AppPathHandler;
 import org.webswing.server.api.services.application.AppPathHandlerFactory;
@@ -12,9 +14,6 @@ import org.webswing.server.api.services.sessionpool.SessionPoolHolderService;
 import org.webswing.server.api.services.websocket.WebSocketService;
 import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.service.config.ConfigurationService;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class AppPathHandlerFactoryImpl implements AppPathHandlerFactory {

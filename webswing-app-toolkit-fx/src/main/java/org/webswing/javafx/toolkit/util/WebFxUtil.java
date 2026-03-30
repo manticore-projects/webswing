@@ -1,5 +1,10 @@
 package org.webswing.javafx.toolkit.util;
 
+import com.sun.glass.ui.Pixels;
+import com.sun.javafx.geom.RectBounds;
+import org.webswing.util.AppLogger;
+import org.webswing.util.NamedThreadFactory;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
@@ -15,12 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.webswing.util.AppLogger;
-import org.webswing.util.NamedThreadFactory;
-
-import com.sun.glass.ui.Pixels;
-import com.sun.javafx.geom.RectBounds;
-
 /**
  * Created by vikto on 06-Mar-17.
  */
@@ -28,7 +27,7 @@ public class WebFxUtil {
 
   private static final int SQ = 45;
   private static final int threadCount = Runtime.getRuntime().availableProcessors();
-  private static ExecutorService processorPool =
+  private static final ExecutorService processorPool =
       Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),
           NamedThreadFactory.getInstance("Webswing JavaFx Pixel processor"));
 
@@ -78,8 +77,10 @@ public class WebFxUtil {
     List<RectBounds> toCompare = new ArrayList<>();
     for (int c = 0; c <= width / SQ; c++) {
       for (int r = 0; r <= height / SQ; r++) {
-        int x = Math.min(c * SQ, width - 1), y = Math.min(r * SQ, height - 1);
-        int w = Math.min(x + SQ, width), h = Math.min(y + SQ, height);
+        int x = Math.min(c * SQ, width - 1);
+        int y = Math.min(r * SQ, height - 1);
+        int w = Math.min(x + SQ, width);
+        int h = Math.min(y + SQ, height);
         if (tmpBounds != null) {
           for (RectBounds bound : tmpBounds) {
             if (bound.intersects(x, y, w, h)) {
@@ -137,5 +138,7 @@ public class WebFxUtil {
     }
     return completeResult;
   }
+
+  private WebFxUtil() {}
 
 }

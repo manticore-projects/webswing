@@ -1,14 +1,14 @@
 package org.webswing.javafx.toolkit;
 
+import com.sun.glass.ui.GlassRobot;
+import com.sun.glass.ui.Pixels;
+import com.sun.glass.ui.Screen;
+
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.IntBuffer;
-
-import com.sun.glass.ui.GlassRobot;
-import com.sun.glass.ui.Pixels;
-import com.sun.glass.ui.Screen;
 
 public class WebApplication11 extends AbstractWebApplication {
   @Override

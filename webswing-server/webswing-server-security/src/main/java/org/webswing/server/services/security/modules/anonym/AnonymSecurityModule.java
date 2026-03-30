@@ -1,17 +1,16 @@
 package org.webswing.server.services.security.modules.anonym;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.webswing.Constants;
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.api.WebswingAuthenticationException;
 import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
 import org.webswing.server.services.security.modules.AbstractSecurityModule;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 public class AnonymSecurityModule extends AbstractSecurityModule<WebswingSecurityModuleConfig> {
   public static final String anonymUserName = "anonym";

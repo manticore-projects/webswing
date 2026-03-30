@@ -1,22 +1,8 @@
 package org.webswing.classloader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLStreamHandler;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableBiMap.Builder;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
@@ -43,11 +29,24 @@ import org.apache.commons.io.IOUtils;
 import org.webswing.util.AppLogger;
 import org.webswing.util.ClassLoaderUtil;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableBiMap.Builder;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLStreamHandler;
 import java.security.AllPermission;
+import java.security.CodeSource;
+import java.security.Permissions;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("restriction")
 public class SwingClassloader extends URLClassLoader {
@@ -136,8 +135,8 @@ public class SwingClassloader extends URLClassLoader {
         "javax.swing.JDesktopPane putClientProperty (Ljava/lang/Object;Ljava/lang/Object;)V",
         "org.webswing.special.RedirectedMethods putClientProperty (Ljavax/swing/JDesktopPane;Ljava/lang/Object;Ljava/lang/Object;)V");
 
-    if (System.getProperty(org.webswing.Constants.SWING_START_SYS_PROP_ISOLATED_FS, "")
-        .equalsIgnoreCase("true")) {
+    if ("true".equalsIgnoreCase(
+        System.getProperty(org.webswing.Constants.SWING_START_SYS_PROP_ISOLATED_FS, ""))) {
       methodReplacementBuilder.put("java.io.File listRoots ()[Ljava/io/File;",
           "org.webswing.special.RedirectedMethods listRoots ()[Ljava/io/File;");
     }
@@ -619,7 +618,7 @@ public class SwingClassloader extends URLClassLoader {
       }
     }
     if (bytes != null) {
-      java.security.Permissions perms = new java.security.Permissions();
+      Permissions perms = new Permissions();
       perms.add(new AllPermission());
       String classFilePath =
           repoClassLoader.getResource(class_name.replace('.', '/') + ".class").toExternalForm();
@@ -634,7 +633,7 @@ public class SwingClassloader extends URLClassLoader {
         AppLogger.fatal("Exception resolving code source:", e);
         // should not happen
       }
-      ProtectionDomain allPermDomain = new java.security.ProtectionDomain(source, perms);
+      ProtectionDomain allPermDomain = new ProtectionDomain(source, perms);
       cl = defineClass(class_name, bytes, 0, bytes.length, allPermDomain);
     } else {
       cl = Class.forName(class_name);

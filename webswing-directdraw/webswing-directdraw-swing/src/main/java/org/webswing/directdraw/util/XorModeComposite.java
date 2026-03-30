@@ -1,6 +1,5 @@
 package org.webswing.directdraw.util;
 
-import javax.naming.OperationNotSupportedException;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.CompositeContext;

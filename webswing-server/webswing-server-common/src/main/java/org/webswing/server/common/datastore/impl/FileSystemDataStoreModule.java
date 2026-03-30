@@ -1,16 +1,5 @@
 package org.webswing.server.common.datastore.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +7,22 @@ import org.webswing.server.common.datastore.AbstractDataStoreModule;
 import org.webswing.server.common.datastore.WebswingDataStoreType;
 import org.webswing.server.common.util.VariableSubstitutor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.*;
+
 public class FileSystemDataStoreModule
     extends AbstractDataStoreModule<FileSystemDataStoreModuleConfig> {
 
   private static final Logger log = LoggerFactory.getLogger(FileSystemDataStoreModule.class);
   private static final long TIMEOUT_RETRY_MILLIS = 1000;
 
-  private VariableSubstitutor subs = VariableSubstitutor.basic();
+  private final VariableSubstitutor subs = VariableSubstitutor.basic();
 
-  private ScheduledExecutorService retryService = Executors.newScheduledThreadPool(10);
+  private final ScheduledExecutorService retryService = Executors.newScheduledThreadPool(10);
 
   public FileSystemDataStoreModule(FileSystemDataStoreModuleConfig config) {
     super(config);

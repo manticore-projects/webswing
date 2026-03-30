@@ -1,12 +1,9 @@
 package org.webswing.classloader;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
+import org.webswing.Constants;
+import org.webswing.util.AppLogger;
+
+import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
@@ -16,13 +13,10 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.webswing.Constants;
-import org.webswing.util.AppLogger;
-
 public class ClassModificationRegister {
   private static FileLock lock;
-  private Set<String> unmodifiedClassSet = new HashSet<>();
-  private PrintWriter writer = null;
+  private final Set<String> unmodifiedClassSet = new HashSet<>();
+  private PrintWriter writer;
 
   public ClassModificationRegister() {
     // read set of unmodified classes from file
@@ -32,7 +26,6 @@ public class ClassModificationRegister {
       if (acquireLock()) {
         writer = new PrintWriter(new BufferedWriter(new FileWriter(getClassListFile(), true)));
         AppLogger.info("ClassModificationRegister: lock acquired.");
-      } else {
       }
     } catch (IOException ex) {
       AppLogger.error("ClassModificationRegister: Failed to create unmodified class register map. "

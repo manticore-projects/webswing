@@ -1,5 +1,8 @@
 package org.webswing.server.common.util;
 
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.parser.LoaderContext;
+import com.github.weisj.jsvg.parser.SVGLoader;
 import com.github.weisj.jsvg.view.FloatSize;
 import com.github.weisj.jsvg.view.ViewBox;
 import main.Main;
@@ -21,17 +24,14 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
 import java.security.ProtectionDomain;
 import java.util.*;
 
-import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.parser.LoaderContext;
-import com.github.weisj.jsvg.parser.SVGLoader;
-import com.manticore.tools.FPNGEncoder;
 import com.manticore.tools.FPNGE;
+import com.manticore.tools.FPNGEncoder;
 
 public class CommonUtil {
   public static final int bufferSize = 4 * 1024;
@@ -258,8 +258,9 @@ public class CommonUtil {
     try {
       byte[] buf = new byte[bufferSize];
       int bytesRead;
-      while ((bytesRead = is.read(buf)) != -1)
+      while ((bytesRead = is.read(buf)) != -1) {
         os.write(buf, 0, bytesRead);
+      }
     } finally {
       is.close();
       os.close();
@@ -284,7 +285,7 @@ public class CommonUtil {
         result.append(cpe).append(";");
       }
       result = new StringBuilder(
-          (!result.isEmpty()) ? result.substring(0, result.length() - 1) : result.toString());
+          !result.isEmpty() ? result.substring(0, result.length() - 1) : result.toString());
     }
     return result.toString();
   }
@@ -457,4 +458,6 @@ public class CommonUtil {
     }
     throw new FileNotFoundException("Path not specified.");
   }
+
+  private CommonUtil() {}
 }

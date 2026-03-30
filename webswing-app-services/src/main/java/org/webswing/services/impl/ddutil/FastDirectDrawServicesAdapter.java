@@ -1,5 +1,13 @@
 package org.webswing.services.impl.ddutil;
 
+import net.jpountz.xxhash.StreamingXXHash64;
+import net.jpountz.xxhash.XXHashFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.webswing.directdraw.DirectDrawServicesAdapter;
+import org.webswing.directdraw.util.ImageConsumerAdapter;
+import org.webswing.services.impl.ImageServiceImpl;
+
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -8,15 +16,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.webswing.directdraw.DirectDrawServicesAdapter;
-import org.webswing.directdraw.util.ImageConsumerAdapter;
-import org.webswing.services.impl.ImageServiceImpl;
-
-import net.jpountz.xxhash.StreamingXXHash64;
-import net.jpountz.xxhash.XXHashFactory;
 
 public class FastDirectDrawServicesAdapter extends DirectDrawServicesAdapter {
   private static final Logger log = LoggerFactory.getLogger(FastDirectDrawServicesAdapter.class);

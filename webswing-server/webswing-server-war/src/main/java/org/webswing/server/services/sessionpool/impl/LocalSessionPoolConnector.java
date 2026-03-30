@@ -1,13 +1,16 @@
 package org.webswing.server.services.sessionpool.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import org.webswing.Constants;
+import org.webswing.model.adminconsole.in.ManageSessionPoolMsgIn;
 import org.webswing.model.adminconsole.out.SessionPoolAppMsgOut;
 import org.webswing.model.adminconsole.out.SessionPoolInfoMsgOut;
-import org.webswing.model.adminconsole.in.ManageSessionPoolMsgIn;
 import org.webswing.server.api.services.sessionpool.ServerSessionPoolConnector;
 import org.webswing.server.api.services.sessionpool.SessionPoolHolderService;
 import org.webswing.server.api.services.stat.StatisticsLoggerService;
@@ -25,13 +28,9 @@ import org.webswing.sessionpool.api.service.startup.impl.SessionPoolStartupServi
 import org.webswing.sessionpool.api.service.swingprocess.SwingProcessService;
 import org.webswing.sessionpool.api.service.swingprocess.impl.SwingProcessServiceImpl;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LocalSessionPoolConnector extends ServerSessionPoolConnector {
 

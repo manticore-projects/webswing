@@ -1,60 +1,16 @@
 package org.webswing.util;
 
-import java.awt.AWTEvent;
-import java.awt.AWTKeyStroke;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.IllegalComponentStateException;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.AWTEventListener;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.sun.java.accessibility.util.AccessibilityEventMonitor;
+import com.sun.java.accessibility.util.Translator;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.webswing.model.appframe.out.AccessibilityHierarchyMsgOut;
+import org.webswing.model.appframe.out.AccessibilityMsgOut;
+import org.webswing.model.appframe.out.FileDialogEventMsgOut.FileDialogEventType;
+import org.webswing.toolkit.util.Util;
 
-import javax.accessibility.Accessible;
-import javax.accessibility.AccessibleContext;
-import javax.accessibility.AccessibleRelation;
-import javax.accessibility.AccessibleRole;
-import javax.accessibility.AccessibleState;
-import javax.accessibility.AccessibleStateSet;
-import javax.accessibility.AccessibleText;
-import javax.accessibility.AccessibleValue;
-import javax.swing.FocusManager;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JRootPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.MenuElement;
-import javax.swing.MenuSelectionManager;
-import javax.swing.SwingUtilities;
+import javax.accessibility.*;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -63,16 +19,13 @@ import javax.swing.text.View;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.webswing.model.appframe.out.AccessibilityHierarchyMsgOut;
-import org.webswing.model.appframe.out.AccessibilityMsgOut;
-import org.webswing.model.appframe.out.FileDialogEventMsgOut.FileDialogEventType;
-import org.webswing.toolkit.util.Util;
-
-import com.sun.java.accessibility.util.AccessibilityEventMonitor;
-import com.sun.java.accessibility.util.Translator;
+import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+import java.util.List;
 
 @SuppressWarnings("restriction")
 public class AccessibilityUtil {
@@ -867,5 +820,7 @@ public class AccessibilityUtil {
 
     return accessibleStateMap.get(state);
   }
+
+  private AccessibilityUtil() {}
 
 }

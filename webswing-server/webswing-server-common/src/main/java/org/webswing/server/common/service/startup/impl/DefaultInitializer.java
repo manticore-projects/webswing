@@ -1,8 +1,6 @@
 package org.webswing.server.common.service.startup.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
+import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
@@ -10,7 +8,8 @@ import org.webswing.server.common.service.startup.Initializer;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.model.exception.WsInitException;
 
-import main.Main;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class DefaultInitializer implements Initializer {
   private static final Logger log = LoggerFactory.getLogger(DefaultInitializer.class);

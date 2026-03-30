@@ -1,28 +1,5 @@
 package org.webswing.toolkit;
 
-import java.awt.Container;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-
 import org.webswing.Constants;
 import org.webswing.component.HtmlPanelImpl;
 import org.webswing.dispatch.PaintDispatcher;
@@ -58,8 +35,24 @@ import org.webswing.toolkit.api.url.WebswingUrlStateChangeListener;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
-import org.webswing.util.NamedThreadFactory;
 import org.webswing.util.GitRepositoryState;
+import org.webswing.util.NamedThreadFactory;
+
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import java.awt.Container;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WebswingApiImpl implements WebswingApi {
   private final List<WebswingShutdownListener> shutdownListeners =
@@ -70,7 +63,7 @@ public class WebswingApiImpl implements WebswingApi {
       Collections.synchronizedList(new ArrayList<WebswingUrlStateChangeListener>());
   private final List<WebActionListener> browserActionListeners =
       Collections.synchronizedList(new ArrayList<WebActionListener>());
-  private ExecutorService apiProcessor =
+  private final ExecutorService apiProcessor =
       Executors.newSingleThreadExecutor(NamedThreadFactory.getInstance("Webswing API Processor"));
   private WebswingUser primaryUser;
   private WebswingUser mirrorUser;

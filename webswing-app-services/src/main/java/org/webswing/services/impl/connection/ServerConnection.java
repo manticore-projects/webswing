@@ -1,11 +1,11 @@
 package org.webswing.services.impl.connection;
 
-import java.util.concurrent.TimeoutException;
-
 import org.webswing.model.SyncObjectResponse;
 import org.webswing.model.app.in.ServerToAppFrameMsgIn;
 import org.webswing.model.app.out.AppToServerFrameMsgOut;
 import org.webswing.model.appframe.in.AppFrameMsgIn;
+
+import java.util.concurrent.TimeoutException;
 
 public interface ServerConnection {
 
@@ -27,5 +27,3 @@ public interface ServerConnection {
   }
 
 }
-
-

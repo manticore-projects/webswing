@@ -1,17 +1,5 @@
 package org.directdraw.webswing.util;
 
-import static org.junit.Assert.assertEquals;
-
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.webswing.directdraw.DirectDraw;
@@ -20,6 +8,14 @@ import org.webswing.directdraw.toolkit.DrawInstructionFactory;
 import org.webswing.directdraw.toolkit.WebGraphics;
 import org.webswing.directdraw.toolkit.WebImage;
 import org.webswing.directdraw.util.DirectDrawUtils;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class DirectDrawUtilsTest {
 

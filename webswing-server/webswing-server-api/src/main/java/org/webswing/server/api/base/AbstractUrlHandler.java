@@ -1,17 +1,5 @@
 package org.webswing.server.api.base;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +13,17 @@ import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.common.service.security.SecurableService;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.model.exception.WsException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class AbstractUrlHandler implements UrlHandler, SecurableService {
   private static final Logger log = LoggerFactory.getLogger(AbstractUrlHandler.class);

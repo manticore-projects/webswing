@@ -1,5 +1,7 @@
 package org.webswing.server.api.services.swinginstance.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.server.api.services.sessionpool.ServerSessionPoolConnector;
 import org.webswing.server.api.services.sessionpool.SessionPoolHolderService;
@@ -8,9 +10,6 @@ import org.webswing.server.api.services.swinginstance.SwingInstanceFactory;
 import org.webswing.server.api.services.swinginstance.SwingInstanceInfo;
 import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
 import org.webswing.server.model.exception.WsException;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class SwingInstanceFactoryImpl implements SwingInstanceFactory {

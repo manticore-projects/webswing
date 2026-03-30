@@ -1,11 +1,7 @@
 package org.webswing.server.services.security.modules.shiro;
 
 import org.webswing.Constants;
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueBoolean;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueString;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.meta.VariableSetName;
+import org.webswing.server.common.model.meta.*;
 import org.webswing.server.services.security.extension.api.WebswingExtendableSecurityModuleConfig;
 
 public interface ShiroSecurityModuleConfig extends WebswingExtendableSecurityModuleConfig {

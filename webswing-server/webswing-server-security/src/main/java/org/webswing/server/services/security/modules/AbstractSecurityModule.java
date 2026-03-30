@@ -1,23 +1,8 @@
 package org.webswing.server.services.security.modules;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +15,18 @@ import org.webswing.server.services.security.api.LoginResponseClosedException;
 import org.webswing.server.services.security.api.WebswingAuthenticationException;
 import org.webswing.server.services.security.api.WebswingSecurityModule;
 import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheResolver;
 import tools.jackson.databind.ObjectMapper;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -303,7 +295,7 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
    */
   protected boolean isAjax(HttpServletRequest request) {
     String requestedWithHeader = request.getHeader("X-Requested-With");
-    return requestedWithHeader != null && requestedWithHeader.equals("XMLHttpRequest");
+    return "XMLHttpRequest".equals(requestedWithHeader);
   }
 
   /**
@@ -583,8 +575,9 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
    * prevent HTTP response header injection.
    */
   private static String sanitizeHeaderValue(String value) {
-    if (value == null)
+    if (value == null) {
       return "";
+    }
     return value.replaceAll("[\\r\\n]", "");
   }
 
@@ -593,8 +586,9 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
    * returns to prevent log injection.
    */
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\r\\n\\t]", "_");
   }
 

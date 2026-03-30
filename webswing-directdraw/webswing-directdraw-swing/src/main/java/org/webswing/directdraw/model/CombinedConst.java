@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.util.Arrays;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.CombinedProto;
+
+import java.util.Arrays;
 
 public class CombinedConst extends ImmutableDrawConstantHolder<int[]> {
 

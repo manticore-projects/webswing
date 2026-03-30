@@ -1,13 +1,5 @@
 package org.webswing.server.common.service.stats.logger.impl;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +10,10 @@ import org.webswing.server.common.service.stats.logger.InstanceStats;
 import org.webswing.server.common.service.stats.logger.MetricRule;
 import org.webswing.server.common.service.stats.logger.WarningRule;
 import org.webswing.server.common.util.LoggerStatisticsUtil;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class DefaultStatisticsLogger implements StatisticsLogger {
 

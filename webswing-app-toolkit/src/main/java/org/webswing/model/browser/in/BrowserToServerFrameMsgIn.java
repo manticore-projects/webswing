@@ -1,13 +1,13 @@
 package org.webswing.model.browser.in;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.MsgIn;
 import org.webswing.model.appframe.in.PlaybackCommandMsgIn;
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.model.common.in.SimpleEventMsgIn;
 import org.webswing.model.common.in.TimestampsMsgIn;
+
+import java.io.Serial;
+import java.util.List;
 
 public class BrowserToServerFrameMsgIn implements MsgIn {
 

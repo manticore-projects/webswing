@@ -23,7 +23,7 @@ public class Watcher implements Runnable {
   private final String path;
   private final String[] triggers;
   private final String[] buildCommand;
-  private AtomicBoolean buildInProgress = new AtomicBoolean();
+  private final AtomicBoolean buildInProgress = new AtomicBoolean();
 
   Watcher(List<Path> dir, String name, Path workingdir, String path, String[] triggers,
       String... buildCommand) throws IOException {
@@ -86,7 +86,7 @@ public class Watcher implements Runnable {
 
             // if directory is created, and watching recursively, then
             // register it and its sub-directories
-            if ((event.kind() == ENTRY_CREATE)) {
+            if (event.kind() == ENTRY_CREATE) {
               try {
                 if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
                   registerDir(Arrays.asList(child));

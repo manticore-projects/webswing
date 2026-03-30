@@ -1,19 +1,7 @@
 package org.webswing.server.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +30,17 @@ import org.webswing.server.common.util.ServerUtil;
 import org.webswing.server.model.exception.WsException;
 import org.webswing.server.services.security.api.BuiltInModules;
 import org.webswing.server.services.security.api.WebswingSecurityConfig;
-
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 @Singleton
 public class GlobalUrlHandler extends PrimaryUrlHandler
@@ -259,8 +252,9 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
    * to prevent log injection / flooding.
    */
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\p{Cc}\\p{Cf}]", "_").substring(0, Math.min(input.length(), 500));
   }
 
@@ -348,7 +342,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
   }
 
   public byte[] getConfigBytes(String path) throws Exception {
-    ConfigContext configContext = path.equals("/") ? this : getAppPrimaryUrlHandler(path);
+    ConfigContext configContext = "/".equals(path) ? this : getAppPrimaryUrlHandler(path);
     MetaObject config = configService.describeConfiguration(path, null, configContext);
     return mapper.writeValueAsBytes(config);
   }
@@ -357,7 +351,7 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
   public byte[] getMetaBytes(String path, byte[] requestBody) throws Exception {
     Map<String, Object> meta =
         mapper.readValue(requestBody, new TypeReference<Map<String, Object>>() {});
-    ConfigContext configContext = path.equals("/") ? this : getAppPrimaryUrlHandler(path);
+    ConfigContext configContext = "/".equals(path) ? this : getAppPrimaryUrlHandler(path);
     if (meta != null && meta.get("data") != null) {
       MetaObject config = configService.describeConfiguration(path,
           (Map<String, Object>) meta.get("data"), configContext);

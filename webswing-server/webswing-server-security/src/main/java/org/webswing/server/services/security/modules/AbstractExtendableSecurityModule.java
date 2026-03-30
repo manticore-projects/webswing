@@ -1,14 +1,5 @@
 package org.webswing.server.services.security.modules;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.service.security.AbstractWebswingUser;
@@ -19,6 +10,14 @@ import org.webswing.server.services.security.extension.api.BuiltInModuleExtensio
 import org.webswing.server.services.security.extension.api.SecurityModuleExtension;
 import org.webswing.server.services.security.extension.api.SecurityModuleExtensionConfig;
 import org.webswing.server.services.security.extension.api.WebswingExtendableSecurityModuleConfig;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Adds extensions support to {@link AbstractSecurityModule}. Four extension points are provided (
@@ -207,8 +206,9 @@ public abstract class AbstractExtendableSecurityModule<T extends WebswingExtenda
    * Sanitize a string for safe inclusion in log messages.
    */
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\r\\n\\t]", "_");
   }
 }

@@ -16,7 +16,7 @@ public class ShiroConfigMonitor {
   private final Path configPath;
   private final Consumer<String> reloadCallback;
   private final ExecutorService reloadExecutor;
-  private long lastReloadTime = 0;
+  private long lastReloadTime;
   private static final long DEBOUNCE_DELAY_MS = 1000;
 
   public ShiroConfigMonitor(String filePath, Consumer<String> reloadCallback) {

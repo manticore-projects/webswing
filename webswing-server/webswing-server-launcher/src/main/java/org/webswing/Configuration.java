@@ -4,7 +4,7 @@ import java.io.File;
 
 public abstract class Configuration {
 
-  private static Configuration singleton = new ConfigurationImpl();
+  private static final Configuration singleton = new ConfigurationImpl();
 
   public abstract String getHost();
 

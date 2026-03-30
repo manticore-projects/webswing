@@ -1,12 +1,12 @@
 package org.webswing.model.app.in;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.MsgIn;
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
 import org.webswing.model.common.in.SimpleEventMsgIn;
 import org.webswing.model.common.in.TimestampsMsgIn;
+
+import java.io.Serial;
+import java.util.List;
 
 public class ServerToAppFrameMsgIn implements MsgIn {
 

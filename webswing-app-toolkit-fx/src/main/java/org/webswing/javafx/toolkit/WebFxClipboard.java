@@ -1,5 +1,9 @@
 package org.webswing.javafx.toolkit;
 
+import com.sun.glass.ui.SystemClipboard;
+import org.webswing.toolkit.WebClipboard;
+import org.webswing.toolkit.util.Util;
+
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -9,11 +13,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.webswing.toolkit.WebClipboard;
-import org.webswing.toolkit.util.Util;
-
-import com.sun.glass.ui.SystemClipboard;
 
 /**
  * Created by vikto on 07-Mar-17.

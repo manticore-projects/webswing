@@ -1,11 +1,11 @@
 package org.webswing.server.api.services.swinginstance.holder;
 
+import org.webswing.server.api.services.swinginstance.RemoteSwingInstance;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.webswing.server.api.services.swinginstance.RemoteSwingInstance;
 
 public class SwingInstanceSet<T extends RemoteSwingInstance> {
   Set<T> instances = new HashSet<>();

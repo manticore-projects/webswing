@@ -92,4 +92,6 @@ public class ClasspathUtil {
     return name.matches("^" + pathSeg.replaceAll("\\.", "\\\\.").replaceAll("\\[", "\\\\[")
         .replaceAll("\\]", "\\\\]").replaceAll("\\?", ".").replaceAll("\\*", ".*") + "$");
   }
+
+  private ClasspathUtil() {}
 }

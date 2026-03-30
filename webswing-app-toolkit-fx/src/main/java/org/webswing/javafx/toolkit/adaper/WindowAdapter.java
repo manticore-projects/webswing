@@ -1,14 +1,10 @@
 package org.webswing.javafx.toolkit.adaper;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.util.List;
 
 /**
  * Created by vikto on 03-Mar-17.
@@ -50,7 +46,7 @@ public interface WindowAdapter {
 
   Insets getInsets();
 
-  void setIconImages(java.util.List<? extends Image> icons);
+  void setIconImages(List<? extends Image> icons);
 
   void addComponentListener(ComponentListener componentListener);
 

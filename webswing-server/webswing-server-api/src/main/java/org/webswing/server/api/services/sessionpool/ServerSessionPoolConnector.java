@@ -1,31 +1,14 @@
 package org.webswing.server.api.services.sessionpool;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.webswing.model.adminconsole.in.ManageSessionPoolMsgIn;
 import org.webswing.model.adminconsole.in.RecordingRequestMsgIn;
-import org.webswing.model.adminconsole.out.MetricMsgOut;
-import org.webswing.model.adminconsole.out.SessionPoolInfoMsgOut;
-import org.webswing.model.adminconsole.out.StatEntryMsgOut;
-import org.webswing.model.adminconsole.out.SwingSessionMsgOut;
-import org.webswing.model.adminconsole.out.ThreadDumpMsgOut;
+import org.webswing.model.adminconsole.out.*;
 import org.webswing.model.app.in.ServerToAppFrameMsgIn;
 import org.webswing.model.app.in.ThreadDumpRequestMsgIn;
 import org.webswing.model.common.in.ConnectionHandshakeMsgIn;
-import org.webswing.model.adminconsole.in.ManageSessionPoolMsgIn;
 import org.webswing.model.common.in.ParamMsgIn;
 import org.webswing.model.common.in.SimpleEventMsgIn;
 import org.webswing.model.common.in.SimpleEventMsgIn.SimpleEventType;
@@ -49,9 +32,20 @@ import org.webswing.server.common.service.stats.logger.InstanceStats;
 import org.webswing.server.common.service.swingprocess.ProcessStartupParams;
 import org.webswing.server.common.util.WebswingObjectMapper;
 import org.webswing.server.model.exception.WsException;
-
-import com.google.common.collect.Lists;
 import tools.jackson.core.JacksonException;
+
+import javax.annotation.Nullable;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public abstract class ServerSessionPoolConnector {
 

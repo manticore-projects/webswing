@@ -1,10 +1,10 @@
 package org.webswing.toolkit;
 
+import org.webswing.toolkit.util.Util;
+
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.peer.MouseInfoPeer;
-
-import org.webswing.toolkit.util.Util;
 
 
 public class WebMouseInfoPeer implements MouseInfoPeer {

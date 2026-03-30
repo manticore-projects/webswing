@@ -1,31 +1,21 @@
 package org.webswing.directdraw.util;
 
-import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.text.AttributedCharacterIterator.Attribute;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.model.DrawConstant;
 import org.webswing.directdraw.model.DrawInstruction;
 import org.webswing.directdraw.model.TransformConst;
 import org.webswing.directdraw.proto.Directdraw.DrawInstructionProto.InstructionProto;
-
 import sun.java2d.SunGraphics2D;
 import sun.java2d.loops.FontInfo;
+
+import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.awt.geom.AffineTransform;
+import java.awt.image.*;
+import java.io.File;
+import java.text.AttributedCharacterIterator.Attribute;
+import java.util.*;
+import java.util.List;
 
 @SuppressWarnings("restriction")
 public class DirectDrawUtils {
@@ -76,7 +66,7 @@ public class DirectDrawUtils {
   }
 
   public static BufferedImage createBufferedImage(Image image, ImageObserver observer, Color bkg) {
-    if ((bkg == null) && ((image instanceof BufferedImage bufferedImage))) {
+    if ((bkg == null) && (image instanceof BufferedImage bufferedImage)) {
       return bufferedImage;
     }
     BufferedImage bufferedImage =
@@ -179,7 +169,7 @@ public class DirectDrawUtils {
     String txtI = s.substring(index, Math.min(index + 1, s.length()));
     String txtR = s.substring(Math.min(index + 1, s.length()));
 
-    double wL = (fm.stringWidth(txtL));
+    double wL = fm.stringWidth(txtL);
     double xL = x;
     if (clip.contains(xL, y, wL, h) || clip.intersects(xL, y, wL, h)) {
       result.leftVisible = true;
@@ -391,4 +381,6 @@ public class DirectDrawUtils {
       return DirectDrawUtils.webFonts.getProperty(font.getFamily());
     }
   }
+
+  private DirectDrawUtils() {}
 }

@@ -28,4 +28,6 @@ public class WebswingUtil {
     }
   }
 
+  private WebswingUtil() {}
+
 }

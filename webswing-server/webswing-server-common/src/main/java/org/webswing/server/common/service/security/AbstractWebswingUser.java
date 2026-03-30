@@ -1,12 +1,12 @@
 package org.webswing.server.common.service.security;
 
+import org.webswing.toolkit.api.security.WebswingUser;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.webswing.toolkit.api.security.WebswingUser;
 
 public final class AbstractWebswingUser implements WebswingUser {
 

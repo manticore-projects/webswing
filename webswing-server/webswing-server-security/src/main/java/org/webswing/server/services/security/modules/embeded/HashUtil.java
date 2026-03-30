@@ -1,5 +1,7 @@
 package org.webswing.server.services.security.modules.embeded;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -8,9 +10,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 public final class HashUtil {
 
@@ -39,14 +38,16 @@ public final class HashUtil {
 
   public static boolean authenticate(char[] password, String token) {
     Matcher m = layout.matcher(token);
-    if (!m.matches())
+    if (!m.matches()) {
       throw new IllegalArgumentException("Invalid token format");
+    }
     byte[] hash = Base64.getUrlDecoder().decode(m.group(1));
     byte[] salt = Arrays.copyOfRange(hash, 0, SIZE / 8);
     byte[] check = pbkdf2(password, salt, COST);
     int zero = 0;
-    for (int idx = 0; idx < check.length; ++idx)
+    for (int idx = 0; idx < check.length; idx++) {
       zero |= hash[salt.length + idx] ^ check[idx];
+    }
     return zero == 0;
   }
 
@@ -61,4 +62,6 @@ public final class HashUtil {
       throw new IllegalStateException("Invalid SecretKeyFactory", ex);
     }
   }
+
+  private HashUtil() {}
 }

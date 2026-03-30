@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 
 public class InstanceStats {
   private static final int MAX_WARNING_HISTORY_SIZE = 20;
-  private DateFormat format = new SimpleDateFormat("HH:mm:ss");
-  private Map<String, Map<Long, Number>> statisticsLog = new ConcurrentHashMap<>();
-  private Map<String, Long> lastTimestampMap = new ConcurrentHashMap<String, Long>();
-  private Map<String, List<Number>> lastTimestampNumbers =
+  private final DateFormat format = new SimpleDateFormat("HH:mm:ss");
+  private final Map<String, Map<Long, Number>> statisticsLog = new ConcurrentHashMap<>();
+  private final Map<String, Long> lastTimestampMap = new ConcurrentHashMap<String, Long>();
+  private final Map<String, List<Number>> lastTimestampNumbers =
       new ConcurrentHashMap<String, List<Number>>();
-  private Map<String, Number> lastMetrics = new ConcurrentHashMap<>();
-  private Map<String, Warning> warnings = new ConcurrentHashMap<>();
-  private ConcurrentLinkedQueue<String> warningHistory = new ConcurrentLinkedQueue<>();
-  private Map<String, Number[]> sessionStats = new ConcurrentHashMap<String, Number[]>();
+  private final Map<String, Number> lastMetrics = new ConcurrentHashMap<>();
+  private final Map<String, Warning> warnings = new ConcurrentHashMap<>();
+  private final ConcurrentLinkedQueue<String> warningHistory = new ConcurrentLinkedQueue<>();
+  private final Map<String, Number[]> sessionStats = new ConcurrentHashMap<String, Number[]>();
 
   public void processMetric(MetricRule rule, String name, Number value, WarningRule warnRule) {
     // round timestamp to interval milis

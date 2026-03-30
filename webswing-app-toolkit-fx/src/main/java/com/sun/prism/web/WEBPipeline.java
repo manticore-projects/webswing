@@ -1,15 +1,14 @@
 package com.sun.prism.web;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.webswing.javafx.toolkit.WebsinwgFxToolkitFactory;
-
 import com.sun.glass.ui.Screen;
 import com.sun.javafx.font.FontFactory;
 import com.sun.prism.GraphicsPipeline;
 import com.sun.prism.ResourceFactory;
 import com.sun.prism.sw.SWPipeline;
+import org.webswing.javafx.toolkit.WebsinwgFxToolkitFactory;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class WEBPipeline extends GraphicsPipeline {
 

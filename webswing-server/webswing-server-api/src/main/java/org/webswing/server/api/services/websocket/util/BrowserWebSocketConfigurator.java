@@ -1,19 +1,17 @@
 package org.webswing.server.api.services.websocket.util;
 
-import java.util.List;
-
-import javax.websocket.HandshakeResponse;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpointConfig;
-
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
 import org.webswing.server.common.service.security.SecurityManagerService;
 import org.webswing.server.common.service.security.impl.WebswingSecuritySubject;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import javax.websocket.HandshakeResponse;
+import javax.websocket.server.HandshakeRequest;
+import javax.websocket.server.ServerEndpointConfig;
+import java.util.List;
 
 public class BrowserWebSocketConfigurator extends ServerEndpointConfig.Configurator {
 

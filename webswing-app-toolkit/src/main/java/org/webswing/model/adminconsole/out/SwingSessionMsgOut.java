@@ -1,12 +1,12 @@
 package org.webswing.model.adminconsole.out;
 
-import java.io.Serial;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.webswing.model.MsgOut;
 import org.webswing.model.common.in.MirroringStatusEnum;
 import org.webswing.model.common.in.RecordingStatusEnum;
+
+import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SwingSessionMsgOut implements MsgOut {
 

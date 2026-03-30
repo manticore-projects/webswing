@@ -1,10 +1,5 @@
 package org.webswing.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Instruction;
@@ -15,12 +10,13 @@ import org.webswing.classloader.SwingClassLoaderFactory;
 import org.webswing.ext.services.ImageService;
 import org.webswing.ext.services.PdfService;
 import org.webswing.ext.services.SwingClassLoaderFactoryService;
-import org.webswing.services.impl.DataStoreServiceImpl;
-import org.webswing.services.impl.DirectDrawServiceImpl;
-import org.webswing.services.impl.ImageServiceImpl;
-import org.webswing.services.impl.JsLinkServiceImpl;
-import org.webswing.services.impl.ServerConnectionServiceImpl;
+import org.webswing.services.impl.*;
 import org.webswing.toolkit.util.Services;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 public class ClassLoaderUtil {
 
@@ -52,7 +48,7 @@ public class ClassLoaderUtil {
   public static List<Method> getAllConstructors(JavaClass clazz) {
     List<Method> result = new ArrayList<Method>();
     for (Method m : clazz.getMethods()) {
-      if (m.getName().equals("<init>")) {
+      if ("<init>".equals(m.getName())) {
         result.add(m);
       }
     }
@@ -61,8 +57,8 @@ public class ClassLoaderUtil {
 
   public static Method getPaintMethod(JavaClass clazz) {
     for (Method m : clazz.getMethods()) {
-      if (m.getName().equals("paint") && m.isPublic() && m.getArgumentTypes().length == 1
-          && m.getArgumentTypes()[0].getSignature().equals("Ljava/awt/Graphics;")) {
+      if ("paint".equals(m.getName()) && m.isPublic() && m.getArgumentTypes().length == 1
+          && "Ljava/awt/Graphics;".equals(m.getArgumentTypes()[0].getSignature())) {
         return m;
       }
     }
@@ -72,7 +68,7 @@ public class ClassLoaderUtil {
   public static boolean isSubClassOfJComponent(JavaClass clazz) {
     try {
       for (JavaClass c : clazz.getSuperClasses()) {
-        if (c.getClassName().equals("javax.swing.JComponent")) {
+        if ("javax.swing.JComponent".equals(c.getClassName())) {
           return true;
         }
       }
@@ -121,5 +117,7 @@ public class ClassLoaderUtil {
         StandardCharsets.UTF_8);
     System.setProperty(Constants.WEBSWING_CONNECTION_SECRET, connectionSecretDeserialized);
   }
+
+  private ClassLoaderUtil() {}
 
 }

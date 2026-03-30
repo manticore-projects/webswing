@@ -1,11 +1,11 @@
 package org.webswing.model.app.out;
 
+import org.webswing.model.MsgOut;
+import org.webswing.model.SyncMsg;
+
 import java.io.Serial;
 import java.util.List;
 import java.util.UUID;
-
-import org.webswing.model.MsgOut;
-import org.webswing.model.SyncMsg;
 
 public class ApiCallMsgOut implements MsgOut, SyncMsg {
 

@@ -1,14 +1,14 @@
 package org.webswing.directdraw;
 
-import java.awt.Font;
-import java.awt.ImageCapabilities;
-
 import org.webswing.directdraw.model.FontFaceConst;
 import org.webswing.directdraw.toolkit.DrawInstructionFactory;
 import org.webswing.directdraw.toolkit.VolatileWebImageWrapper;
 import org.webswing.directdraw.toolkit.WebImage;
 import org.webswing.directdraw.util.DirectDrawUtils;
 import org.webswing.directdraw.util.DrawConstantPool;
+
+import java.awt.Font;
+import java.awt.ImageCapabilities;
 
 public class DirectDraw {
 

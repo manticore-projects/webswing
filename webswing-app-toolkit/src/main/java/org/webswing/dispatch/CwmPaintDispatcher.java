@@ -1,29 +1,7 @@
 package org.webswing.dispatch;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.swing.JFrame;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-
 import org.webswing.model.app.out.AppToServerFrameMsgOut;
 import org.webswing.model.appframe.out.AppFrameMsgOut;
-import org.webswing.model.appframe.out.WindowDockMsgOut;
 import org.webswing.toolkit.WebComponentPeer;
 import org.webswing.toolkit.WebToolkit;
 import org.webswing.toolkit.WebWindowPeer;
@@ -32,12 +10,21 @@ import org.webswing.toolkit.extra.WebRepaintManager;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class CwmPaintDispatcher extends AbstractPaintDispatcher {
 
-  private Map<Container, Void> registeredContainers = new WeakHashMap<>();
-  private Map<HtmlPanel, Void> registeredHtmlPanels = new WeakHashMap<>();
+  private final Map<Container, Void> registeredContainers = new WeakHashMap<>();
+  private final Map<HtmlPanel, Void> registeredHtmlPanels = new WeakHashMap<>();
   private RepaintManager defaultRepaintManager;
-  private AtomicBoolean sendUpdateScheduled = new AtomicBoolean(false);
+  private final AtomicBoolean sendUpdateScheduled = new AtomicBoolean(false);
 
 
   public CwmPaintDispatcher() {

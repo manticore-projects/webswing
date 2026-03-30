@@ -1,24 +1,15 @@
 package org.webswing.toolkit;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.peer.WindowPeer;
-import java.util.logging.Logger;
-
 import org.webswing.Constants;
 import org.webswing.toolkit.api.component.Dockable;
 import org.webswing.toolkit.extra.WindowManager;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
-
 import sun.java2d.InvalidPipeException;
+
+import java.awt.*;
+import java.awt.peer.WindowPeer;
+import java.util.logging.Logger;
 
 abstract public class WebWindowPeer extends WebContainerPeer implements WindowPeer {
 
@@ -113,11 +104,11 @@ abstract public class WebWindowPeer extends WebContainerPeer implements WindowPe
     if (y > (screen.height - insets.top)) {
       result.y = screen.height - insets.top;
     }
-    if (x < ((w - VALIDATE_BOUNDS_THRESHOLD) * (-1))) {
-      result.x = (w - VALIDATE_BOUNDS_THRESHOLD) * (-1);
+    if (x < ((w - VALIDATE_BOUNDS_THRESHOLD) * -1)) {
+      result.x = (w - VALIDATE_BOUNDS_THRESHOLD) * -1;
     }
     if (x > (screen.width - VALIDATE_BOUNDS_THRESHOLD)) {
-      result.x = (screen.width - VALIDATE_BOUNDS_THRESHOLD);
+      result.x = screen.width - VALIDATE_BOUNDS_THRESHOLD;
     }
     if ((target instanceof Frame frame) && frame.getExtendedState() == Frame.MAXIMIZED_BOTH) {
       result.x = 0;

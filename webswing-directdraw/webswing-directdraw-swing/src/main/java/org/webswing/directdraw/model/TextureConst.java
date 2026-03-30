@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.awt.TexturePaint;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.TextureProto;
+
+import java.awt.TexturePaint;
 
 public class TextureConst extends MutableDrawConstantHolder<TexturePaint, TextureProto> {
 

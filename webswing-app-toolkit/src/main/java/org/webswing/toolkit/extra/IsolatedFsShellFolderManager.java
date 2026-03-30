@@ -1,18 +1,13 @@
 package org.webswing.toolkit.extra;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.webswing.Constants;
 import org.webswing.util.AppLogger;
+
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("restriction")
 public class IsolatedFsShellFolderManager extends DefaultShellFolderManager {
@@ -54,27 +49,27 @@ public class IsolatedFsShellFolderManager extends DefaultShellFolderManager {
 
   @Override
   public Object get(String key) {
-    if (key.equals("fileChooserDefaultFolder")) {
+    if ("fileChooserDefaultFolder".equals(key)) {
       return ensureExists(root);
     }
-    if (key.equals("roots")) {
+    if ("roots".equals(key)) {
       return ensureExists(roots.toArray(new File[roots.size()]));
     }
-    if (key.equals("fileChooserComboBoxFolders")) {
+    if ("fileChooserComboBoxFolders".equals(key)) {
       return ensureExists(roots.toArray(new File[roots.size()]));
     }
-    if (key.equals("fileChooserShortcutPanelFolders")) {
+    if ("fileChooserShortcutPanelFolders".equals(key)) {
       return ensureExists(roots.toArray(new File[roots.size()]));
     }
     if (key.startsWith("fileChooserIcon ")) {
       String fcIconType;
-      if (key.equals("fileChooserIcon ListView") || key.equals("fileChooserIcon ViewMenu")) {
+      if ("fileChooserIcon ListView".equals(key) || "fileChooserIcon ViewMenu".equals(key)) {
         fcIconType = platformImagesFolder + "/ListView.gif";
-      } else if (key.equals("fileChooserIcon DetailsView")) {
+      } else if ("fileChooserIcon DetailsView".equals(key)) {
         fcIconType = platformImagesFolder + "/DetailsView.gif";;
-      } else if (key.equals("fileChooserIcon UpFolder")) {
+      } else if ("fileChooserIcon UpFolder".equals(key)) {
         fcIconType = platformImagesFolder + "/UpFolder.gif";;
-      } else if (key.equals("fileChooserIcon NewFolder")) {
+      } else if ("fileChooserIcon NewFolder".equals(key)) {
         fcIconType = platformImagesFolder + "/NewFolder.gif";;
       } else {
         return null;

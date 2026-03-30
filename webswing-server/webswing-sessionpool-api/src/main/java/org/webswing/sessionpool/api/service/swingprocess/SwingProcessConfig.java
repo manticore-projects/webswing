@@ -1,9 +1,9 @@
 package org.webswing.sessionpool.api.service.swingprocess;
 
+import org.webswing.sessionpool.api.service.swingprocess.impl.SwingProcessServiceImpl.SessionLogAppenderParams;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.webswing.sessionpool.api.service.swingprocess.impl.SwingProcessServiceImpl.SessionLogAppenderParams;
 
 public class SwingProcessConfig {
   private String path;
@@ -14,7 +14,7 @@ public class SwingProcessConfig {
   private String mainClass;
   private String classPath;
   private String jvmArgs;
-  private Map<String, String> properties = new HashMap<String, String>();
+  private final Map<String, String> properties = new HashMap<String, String>();
   private String args;
   private SessionLogAppenderParams sessionLogAppenderParams;
 

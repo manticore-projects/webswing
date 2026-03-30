@@ -1,5 +1,12 @@
 package org.webswing;
 
+import org.webswing.ext.services.ToolkitFXService;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+import org.webswing.util.ClasspathUtil;
+
+import javax.swing.SwingUtilities;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.File;
@@ -10,14 +17,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
-import org.webswing.ext.services.ToolkitFXService;
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-import org.webswing.util.ClasspathUtil;
 
 public class SwingMain {
 
@@ -166,7 +165,7 @@ public class SwingMain {
     Class<?> clazz = swingLibClassLoader
         .loadClass(System.getProperty(Constants.SWING_START_SYS_PROP_MAIN_CLASS));
     Class<?>[] mainArgType = {String[].class};
-    java.lang.reflect.Method main = clazz.getMethod("main", mainArgType);
+    Method main = clazz.getMethod("main", mainArgType);
     Util.getWebToolkit().startDispatchers();
     initializeJavaFX();
     Object[] argsArray = {args};
@@ -198,7 +197,7 @@ public class SwingMain {
       try {
         Class<?> clazz = swingLibClassLoader.loadClass("com.sun.javafx.application.PlatformImpl");
         Class<?> startupAttrType[] = {Runnable.class};
-        java.lang.reflect.Method startup = clazz.getMethod("startup", startupAttrType);
+        Method startup = clazz.getMethod("startup", startupAttrType);
         startup.invoke(null, new Runnable() {
           @Override
           public void run() {

@@ -1,16 +1,6 @@
 package org.webswing.server.api.services.swinginstance.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,11 +32,7 @@ import org.webswing.server.api.model.ProcessStatusEnum;
 import org.webswing.server.api.services.sessionpool.ServerSessionPoolConnector;
 import org.webswing.server.api.services.swinginstance.ConnectedSwingInstance;
 import org.webswing.server.api.services.swinginstance.SwingInstanceInfo;
-import org.webswing.server.api.services.websocket.ApplicationWebSocketConnection;
-import org.webswing.server.api.services.websocket.BrowserWebSocketConnection;
-import org.webswing.server.api.services.websocket.MirrorWebSocketConnection;
-import org.webswing.server.api.services.websocket.PrimaryWebSocketConnection;
-import org.webswing.server.api.services.websocket.WebSocketUserInfo;
+import org.webswing.server.api.services.websocket.*;
 import org.webswing.server.common.datastore.WebswingDataStoreModule;
 import org.webswing.server.common.datastore.WebswingDataStoreType;
 import org.webswing.server.common.model.SecuredPathConfig;
@@ -55,10 +41,19 @@ import org.webswing.server.common.service.stats.StatisticsLogger;
 import org.webswing.server.common.util.ProtoMapper;
 import org.webswing.server.common.util.VariableSubstitutor;
 import org.webswing.server.model.exception.WsException;
-
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
-import com.google.common.collect.Lists;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
@@ -85,22 +80,22 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
   private MirroringStatusEnum mirroringStatus = MirroringStatusEnum.NOT_MIRRORING;
   private Runnable doAfterMirroringAccepted;
 
-  private ServerSessionPoolConnector poolConnector;
+  private final ServerSessionPoolConnector poolConnector;
 
-  private SecuredPathConfig config;
-  private String goodbyeUrl;
+  private final SecuredPathConfig config;
+  private final String goodbyeUrl;
 
   private final Date startedAt = new Date();
-  private WebSocketUserInfo lastConnection = null;
+  private WebSocketUserInfo lastConnection;
 
-  private Date endedAt = null; // finished instances only
+  private Date endedAt; // finished instances only
 
   private List<String> warningHistoryLog;
-  private Map<Long, ThreadDumpMsgOut> threadDumps = new ConcurrentHashMap<>();
+  private final Map<Long, ThreadDumpMsgOut> threadDumps = new ConcurrentHashMap<>();
   private SessionDataMsgOut sessionData;
   private ProcessStatusEnum processStatus;
 
-  private List<ServerToAppFrameMsgIn> startupMsgQueue =
+  private final List<ServerToAppFrameMsgIn> startupMsgQueue =
       Collections.synchronizedList(new ArrayList<>());
 
   public SwingInstanceImpl(PrimaryWebSocketConnection websocket, ConnectionHandshakeMsgIn h,

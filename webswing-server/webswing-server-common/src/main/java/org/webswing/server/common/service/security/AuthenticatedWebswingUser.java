@@ -1,13 +1,13 @@
 package org.webswing.server.common.service.security;
 
+import org.webswing.server.common.model.security.WebswingAction;
+import org.webswing.toolkit.api.security.WebswingUser;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.webswing.server.common.model.security.WebswingAction;
-import org.webswing.toolkit.api.security.WebswingUser;
 
 /**
  * Authenticated users in Webswing are represented by this class

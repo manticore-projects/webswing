@@ -1,5 +1,23 @@
 package org.webswing.javafx.toolkit;
 
+import com.sun.glass.events.KeyEvent;
+import com.sun.glass.ui.Clipboard;
+import com.sun.glass.ui.Pixels;
+import com.sun.glass.ui.View;
+import com.sun.javafx.geom.RectBounds;
+import com.sun.prism.web.WebTextureWrapper;
+import javafx.stage.Stage;
+import org.webswing.ext.services.ToolkitFXService;
+import org.webswing.javafx.toolkit.adaper.WindowAdapter;
+import org.webswing.javafx.toolkit.util.WebFxUtil;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Cursor;
@@ -24,27 +42,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-
-import org.webswing.ext.services.ToolkitFXService;
-import org.webswing.javafx.toolkit.adaper.WindowAdapter;
-import org.webswing.javafx.toolkit.util.WebFxUtil;
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-
-import com.sun.glass.events.KeyEvent;
-import com.sun.glass.ui.Clipboard;
-import com.sun.glass.ui.Pixels;
-import com.sun.glass.ui.View;
-import com.sun.javafx.geom.RectBounds;
-import com.sun.prism.web.WebTextureWrapper;
-
-import javafx.stage.Stage;
 
 /**
  * Created by vikto on 01-Mar-17.
@@ -145,8 +142,9 @@ public class WebFxView extends View {
 
   private void handleKeyEvent(java.awt.event.KeyEvent e) {
     EventHandler eventHandler = getEventHandler();
-    if (eventHandler == null)
+    if (eventHandler == null) {
       return;
+    }
     long time = getTime(e);
     int action = mapAction(e);
     int keyCode = mapKeyCode(e);
@@ -173,8 +171,9 @@ public class WebFxView extends View {
 
   private void handleMouseEvent(MouseEvent e) {
     EventHandler eventHandler = getEventHandler();
-    if (eventHandler == null)
+    if (eventHandler == null) {
       return;
+    }
     long time = getTime(e);
     int type = mapType(e.getID());
     if (type != 0) {

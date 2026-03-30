@@ -1,9 +1,9 @@
 package org.webswing.model.appframe.out;
 
+import org.webswing.model.MsgOut;
+
 import java.io.Serial;
 import java.util.List;
-
-import org.webswing.model.MsgOut;
 
 public class JsParamMsgOut implements MsgOut {
   @Serial

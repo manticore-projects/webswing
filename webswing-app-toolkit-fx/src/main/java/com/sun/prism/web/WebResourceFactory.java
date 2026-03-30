@@ -1,27 +1,17 @@
 package com.sun.prism.web;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import com.sun.glass.ui.Screen;
-import com.sun.prism.Image;
-import com.sun.prism.MediaFrame;
-import com.sun.prism.Mesh;
-import com.sun.prism.MeshView;
-import com.sun.prism.PhongMaterial;
-import com.sun.prism.PixelFormat;
-import com.sun.prism.Presentable;
-import com.sun.prism.PresentableState;
-import com.sun.prism.RTTexture;
-import com.sun.prism.ResourceFactory;
-import com.sun.prism.Texture;
+import com.sun.prism.*;
 import com.sun.prism.impl.BaseResourceFactory;
 import com.sun.prism.impl.TextureResourcePool;
 import com.sun.prism.impl.shape.BasicShapeRep;
 import com.sun.prism.shape.ShapeRep;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 public class WebResourceFactory extends BaseResourceFactory {
-  private static ShapeRep theRep = new BasicShapeRep();
+  private static final ShapeRep theRep = new BasicShapeRep();
 
   private static final Map<Image, Texture> clampTexCache = new WeakHashMap<>();
   private static final Map<Image, Texture> repeatTexCache = new WeakHashMap<>();

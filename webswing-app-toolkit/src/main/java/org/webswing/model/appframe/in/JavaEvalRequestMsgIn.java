@@ -1,10 +1,10 @@
 package org.webswing.model.appframe.in;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
+
+import java.io.Serial;
+import java.util.List;
 
 public class JavaEvalRequestMsgIn implements MsgIn, SyncMsg {
   @Serial

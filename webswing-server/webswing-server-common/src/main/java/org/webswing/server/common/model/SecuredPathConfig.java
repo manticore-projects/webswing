@@ -1,24 +1,9 @@
 package org.webswing.server.common.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueBoolean;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueNumber;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueObject;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueString;
-import org.webswing.server.common.model.meta.ConfigFieldDiscriminator;
-import org.webswing.server.common.model.meta.ConfigFieldEditorType;
+import org.webswing.server.common.model.meta.*;
 import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
-import org.webswing.server.common.model.meta.ConfigFieldOrder;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.meta.ConfigType;
-import org.webswing.server.common.model.meta.MetadataGenerator;
-import org.webswing.server.common.model.meta.VariableSetName;
+
+import java.util.*;
 
 @ConfigType(metadataGenerator = SecuredPathConfig.SecuredPathConfigurationMetadataGenerator.class)
 // NOTE: if you change these names, please see also MigrationConfigurationProvider

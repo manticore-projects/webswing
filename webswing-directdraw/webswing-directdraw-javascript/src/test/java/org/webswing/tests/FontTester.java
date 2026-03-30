@@ -1,12 +1,12 @@
 package org.webswing.tests;
 
-import java.awt.Font;
-import java.lang.reflect.Method;
-import java.util.Locale;
-
 import sun.font.CompositeFont;
 import sun.font.Font2D;
 import sun.font.PhysicalFont;
+
+import java.awt.Font;
+import java.lang.reflect.Method;
+import java.util.Locale;
 
 public class FontTester {
 
@@ -32,7 +32,8 @@ public class FontTester {
         PhysicalFont pf = cf.getSlotFont(i);
         describeFont2D(pf);
       }
-    } else
+    } else {
       System.out.println("-> " + font);
+    }
   }
 }

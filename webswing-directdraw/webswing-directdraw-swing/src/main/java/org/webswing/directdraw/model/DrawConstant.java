@@ -1,13 +1,13 @@
 package org.webswing.directdraw.model;
 
+import org.webswing.directdraw.DirectDraw;
+
 import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
-import org.webswing.directdraw.DirectDraw;
-
 public abstract class DrawConstant<T> {
 
-  private static WeakHashMap<Object, WeakReference<Object>> flyweightRegister =
+  private static final WeakHashMap<Object, WeakReference<Object>> flyweightRegister =
       new WeakHashMap<Object, WeakReference<Object>>();
 
   @SuppressWarnings("unchecked")

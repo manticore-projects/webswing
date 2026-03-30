@@ -1,8 +1,8 @@
 package org.webswing.server.common.model;
 
-import java.util.Map;
-
 import org.webswing.server.common.model.meta.ConfigType;
+
+import java.util.Map;
 
 @ConfigType
 public interface Config {

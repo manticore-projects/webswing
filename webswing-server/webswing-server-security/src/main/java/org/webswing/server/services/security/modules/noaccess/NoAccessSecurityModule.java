@@ -1,14 +1,13 @@
 package org.webswing.server.services.security.modules.noaccess;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.api.WebswingAuthenticationException;
 import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
 import org.webswing.server.services.security.modules.AbstractSecurityModule;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class NoAccessSecurityModule extends AbstractSecurityModule<WebswingSecurityModuleConfig> {
 

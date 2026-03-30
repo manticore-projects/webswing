@@ -1,5 +1,16 @@
 package org.webswing.theme;
 
+import org.webswing.Constants;
+import org.webswing.common.WindowActionType;
+import org.webswing.common.WindowDecoratorTheme;
+import org.webswing.model.appframe.out.AccessibilityMsgOut;
+import org.webswing.toolkit.api.component.Dockable;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,18 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import org.webswing.Constants;
-import org.webswing.common.WindowActionType;
-import org.webswing.common.WindowDecoratorTheme;
-import org.webswing.model.appframe.out.AccessibilityMsgOut;
-import org.webswing.toolkit.api.component.Dockable;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
 
 public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
   private static final String DEFAULT_THEME = "Murrine";
@@ -36,7 +35,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 
   public int BUTTON_OFFSET = 7;
   public int BUTTON_SPACING = 4;
-  public int TITLE_HORIZONTAL_OFFSET = 0;
+  public int TITLE_HORIZONTAL_OFFSET;
 
   private abstract class ImageSet {
     BufferedImage TOP_LEFT;
@@ -225,7 +224,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
     g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
     ImageSet is =
-        (window != null && window.equals(Util.getWebToolkit().getWindowManager().getActiveWindow()))
+        window != null && window.equals(Util.getWebToolkit().getWindowManager().getActiveWindow())
             ? active
             : inactive;
 
@@ -311,7 +310,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 
   private Rectangle getDockUndockRect(Window w) {
     ImageSet is =
-        (w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow())) ? active
+        w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow()) ? active
             : inactive;
     boolean undocked = Util.isWindowUndocked(w);
     BufferedImage img = undocked ? is.DOCK : is.UNDOCK;
@@ -329,7 +328,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 
   private Rectangle getHideRect(Window w) {
     ImageSet is =
-        (w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow())) ? active
+        w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow()) ? active
             : inactive;
     int x = w.getWidth() - BUTTON_SPACING - is.MAXIMIZE.getWidth() - BUTTON_SPACING
         - is.HIDE.getWidth();
@@ -342,7 +341,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 
   private Rectangle getMaximizeRect(Window w) {
     ImageSet is =
-        (w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow())) ? active
+        w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow()) ? active
             : inactive;
     int x = w.getWidth() - BUTTON_SPACING - is.MAXIMIZE.getWidth();
     if (isCloseButtonVisible(w)) {
@@ -354,7 +353,7 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
 
   private Rectangle getCloseRect(Window w) {
     ImageSet is =
-        (w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow())) ? active
+        w != null && w.equals(Util.getWebToolkit().getWindowManager().getActiveWindow()) ? active
             : inactive;
     int x = w.getWidth() - BUTTON_SPACING - is.CLOSE.getWidth();
     return new Rectangle(x, 0 + (is.TITLE.getHeight() - is.CLOSE.getHeight()) / 2,

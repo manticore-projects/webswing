@@ -1,27 +1,16 @@
 package org.webswing.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.util.Date;
-
 import org.webswing.Constants;
 import org.webswing.model.common.in.RecordingStatusEnum;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import java.io.*;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.util.Date;
 
 import static org.webswing.toolkit.util.Util.async;
 
@@ -37,10 +26,10 @@ public class SessionRecorder {
   private String fileName;
 
   private RunnableWithException doAfterAllowingRecording;
-  private boolean showingApprovalDialog = false;
-  private boolean consentApproved = false;
+  private boolean showingApprovalDialog;
+  private boolean consentApproved;
 
-  private long lastFrame = 0;
+  private long lastFrame;
 
   public SessionRecorder(String instanceId) {
     this.instanceId = instanceId;
@@ -210,8 +199,9 @@ public class SessionRecorder {
   }
 
   private void showApprovalDialog() {
-    if (showingApprovalDialog)
+    if (showingApprovalDialog) {
       return;
+    }
 
     Object[] approvalDialogButtons = new Object[] {
         System.getProperty(Constants.SWING_START_SYS_PROP_RECORDING_ALLOW_BUTTON,

@@ -22,7 +22,7 @@ public interface EmbededSecurityModuleConfig extends WebswingExtendableSecurityM
     protected Object getValue(EmbededSecurityModuleConfig config, ClassLoader cl,
         String propertyName, Method readMethod) throws Exception {
       Object value = super.getValue(config, cl, propertyName, readMethod);
-      if (propertyName.equals("users") && value instanceof List) {
+      if ("users".equals(propertyName) && value instanceof List) {
         List<EmbededUserEntry> users = (List<EmbededUserEntry>) value;
         for (EmbededUserEntry user : users) {
           if (user.getPassword() != null && !user.getPassword().startsWith(HashUtil.PREFIX)) {

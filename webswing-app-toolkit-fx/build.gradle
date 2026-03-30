@@ -1,9 +1,15 @@
 import org.gradle.internal.os.OperatingSystem
 
 def javafxPlatform = OperatingSystem.current().with {
-    if (isLinux()) return 'linux'
-    if (isMacOsX()) return 'mac'
-    if (isWindows()) return 'win'
+    if (isLinux()) {
+        return 'linux'
+    }
+    if (isMacOsX()) {
+        return 'mac'
+    }
+    if (isWindows()) {
+        return 'win'
+    }
     return 'linux'
 }
 

@@ -20,7 +20,7 @@ public class WebGraphics extends AbstractVectorGraphics {
 
   WebImage thisImage;
   private DrawInstructionFactory dif;
-  private boolean disposed = false;
+  private boolean disposed;
   private int id;
   private boolean onDemandTexturePaint;
   private static Map<Image, ImageObserver> loadedImgs = new WeakHashMap<>();

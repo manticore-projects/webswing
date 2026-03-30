@@ -1,23 +1,16 @@
 package org.webswing;
 
+import org.webswing.directdraw.DirectDrawServicesAdapter;
+import org.webswing.directdraw.toolkit.WebGraphics;
+import org.webswing.directdraw.toolkit.WebImage;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
-
-import org.webswing.directdraw.DirectDrawServicesAdapter;
-import org.webswing.directdraw.toolkit.WebGraphics;
-import org.webswing.directdraw.toolkit.WebImage;
 
 public class Tests {
 

@@ -1,15 +1,5 @@
 package org.webswing.server.api.services.security.modules;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.concurrent.Callable;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.extension.ExtensionClassLoader;
@@ -18,20 +8,25 @@ import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.common.util.ConfigUtil;
 import org.webswing.server.model.exception.WsInitException;
-import org.webswing.server.services.security.api.BuiltInModules;
-import org.webswing.server.services.security.api.SecurityContext;
-import org.webswing.server.services.security.api.WebswingSecurityConfig;
-import org.webswing.server.services.security.api.WebswingSecurityModule;
-import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
+import org.webswing.server.services.security.api.*;
 import org.webswing.util.ClasspathUtil;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.concurrent.Callable;
 
 public class SecurityModuleWrapper implements WebswingSecurityModule {
   private static final Logger log = LoggerFactory.getLogger(SecurityModuleWrapper.class);
 
   private WebswingSecurityModule custom;
-  private WebswingSecurityConfig config;
+  private final WebswingSecurityConfig config;
   private URLClassLoader customCL;
-  private SecurityContext context;
+  private final SecurityContext context;
 
   public SecurityModuleWrapper(SecurityContext context, WebswingSecurityConfig config) {
     this.context = context;

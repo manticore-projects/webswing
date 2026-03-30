@@ -1,14 +1,14 @@
 package org.webswing.server.api.services.sessionpool.loadbalance;
 
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
-
 import org.webswing.server.api.services.sessionpool.ServerSessionPoolConnector;
 import org.webswing.server.common.model.SecuredPathConfig;
 
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 public class RoundRobinLoadBalanceResolver implements LoadBalanceResolver {
 
-  private Deque<ServerSessionPoolConnector> sessionPools = new ConcurrentLinkedDeque<>();
+  private final Deque<ServerSessionPoolConnector> sessionPools = new ConcurrentLinkedDeque<>();
 
   @Override
   public ServerSessionPoolConnector resolveLoadBalance(String path, SecuredPathConfig config) {

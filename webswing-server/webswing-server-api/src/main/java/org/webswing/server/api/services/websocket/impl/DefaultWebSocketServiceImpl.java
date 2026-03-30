@@ -1,9 +1,6 @@
 package org.webswing.server.api.services.websocket.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.WebswingService;
@@ -11,7 +8,9 @@ import org.webswing.server.api.services.application.AppPathHandler;
 import org.webswing.server.api.services.websocket.WebSocketService;
 import org.webswing.server.model.exception.WsInitException;
 
-import com.google.inject.Singleton;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Singleton
 public class DefaultWebSocketServiceImpl implements WebswingService, WebSocketService {

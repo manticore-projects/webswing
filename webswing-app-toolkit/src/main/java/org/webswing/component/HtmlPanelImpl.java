@@ -1,15 +1,14 @@
 package org.webswing.component;
 
+import org.webswing.toolkit.api.action.WebActionEvent;
+import org.webswing.toolkit.api.action.WebWindowActionListener;
+import org.webswing.toolkit.api.component.HtmlPanel;
+
+import javax.swing.JComponent;
 import java.awt.Container;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JComponent;
-
-import org.webswing.toolkit.api.action.WebActionEvent;
-import org.webswing.toolkit.api.action.WebWindowActionListener;
-import org.webswing.toolkit.api.component.HtmlPanel;
 
 public class HtmlPanelImpl extends HtmlPanel {
 

@@ -1,14 +1,10 @@
 package org.webswing.javafx.toolkit.util;
 
-import java.nio.Buffer;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 import com.sun.javafx.geom.RectBounds;
 import com.sun.prism.web.WebTextureWrapper;
+
+import java.nio.Buffer;
+import java.util.*;
 
 public class DirtyAreaTracker {
   public final Map<Buffer, Set<RectBounds>> areasByBufferLookup =

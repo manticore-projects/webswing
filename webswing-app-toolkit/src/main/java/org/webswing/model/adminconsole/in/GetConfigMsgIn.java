@@ -1,10 +1,10 @@
 package org.webswing.model.adminconsole.in;
 
-import java.io.Serial;
-import java.util.UUID;
-
 import org.webswing.model.MsgIn;
 import org.webswing.model.SyncMsg;
+
+import java.io.Serial;
+import java.util.UUID;
 
 public class GetConfigMsgIn implements SyncMsg, MsgIn {
 

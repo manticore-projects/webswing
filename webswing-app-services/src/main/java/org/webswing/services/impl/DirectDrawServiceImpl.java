@@ -1,14 +1,14 @@
 package org.webswing.services.impl;
 
-import java.awt.Image;
-import java.awt.ImageCapabilities;
-import java.awt.image.VolatileImage;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.toolkit.VolatileWebImageWrapper;
 import org.webswing.directdraw.toolkit.WebImage;
 import org.webswing.ext.services.DirectDrawService;
 import org.webswing.services.impl.ddutil.FastDirectDrawServicesAdapter;
+
+import java.awt.Image;
+import java.awt.ImageCapabilities;
+import java.awt.image.VolatileImage;
 
 public class DirectDrawServiceImpl implements DirectDrawService {
 

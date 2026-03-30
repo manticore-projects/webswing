@@ -1,67 +1,5 @@
 package org.webswing.toolkit.util;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Panel;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ImageObserver;
-import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.management.LockInfo;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MonitorInfo;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JWindow;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-
 import org.webswing.Constants;
 import org.webswing.component.HtmlPanelImpl;
 import org.webswing.dispatch.WebPaintDispatcher;
@@ -85,9 +23,31 @@ import org.webswing.toolkit.api.component.HtmlPanel;
 import org.webswing.toolkit.api.file.WebswingFileChooserUtil;
 import org.webswing.util.AppLogger;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ImageObserver;
+import java.awt.image.WritableRaster;
+import java.io.*;
+import java.lang.management.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+
 public class Util {
 
-  private static boolean evaluation;
+  private static final boolean evaluation;
   private static EvaluationProperties evaluationProps;
 
   public static byte[] convertCursor(BufferedImage img, int x, int y) {
@@ -122,7 +82,7 @@ public class Util {
 
   }
 
-  private static List<Integer> NO_CHAR_KEY_CODES =
+  private static final List<Integer> NO_CHAR_KEY_CODES =
       Arrays.asList(KeyEvent.VK_F1, KeyEvent.VK_F2, KeyEvent.VK_F3, KeyEvent.VK_F4, KeyEvent.VK_F5,
           KeyEvent.VK_F6, KeyEvent.VK_F7, KeyEvent.VK_F8, KeyEvent.VK_F9, KeyEvent.VK_F10,
           KeyEvent.VK_F11, KeyEvent.VK_F12, KeyEvent.VK_PRINTSCREEN, KeyEvent.VK_SCROLL_LOCK,
@@ -130,7 +90,7 @@ public class Util {
           KeyEvent.VK_END, KeyEvent.VK_PAGE_DOWN, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_UP,
           KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT,
           KeyEvent.VK_CONTROL, KeyEvent.VK_ALT, KeyEvent.VK_WINDOWS, KeyEvent.VK_ALT_GRAPH);
-  private static Map<Integer, Character> CONTROL_MAP;
+  private static final Map<Integer, Character> CONTROL_MAP;
 
   static {
     CONTROL_MAP = new HashMap<Integer, Character>();
@@ -311,7 +271,7 @@ public class Util {
   }
 
   public static WebToolkit getWebToolkit() {
-    return ((WebToolkit) Toolkit.getDefaultToolkit());
+    return (WebToolkit) Toolkit.getDefaultToolkit();
   }
 
   public static WebWindowPeer findWindowPeerById(String id) {
@@ -364,7 +324,7 @@ public class Util {
       Map<String, Map<Integer, BufferedImage>> windowImages) {
     for (WindowMsgOut window : json.getWindows()) {
       WebWindowPeer w = findWindowPeerById(window.getId());
-      if (window.getId().equals(WebToolkit.BACKGROUND_WINDOW_ID)) {
+      if (WebToolkit.BACKGROUND_WINDOW_ID.equals(window.getId())) {
         windowImages.put(window.getId(), new HashMap<Integer, BufferedImage>());// background image
                                                                                 // is handled on
                                                                                 // client
@@ -384,7 +344,7 @@ public class Util {
   public static Map<String, Image> extractWindowWebImages(Set<String> updatedWindows,
       Map<String, Image> webImages) {
     for (String windowId : updatedWindows) {
-      if (windowId.equals(WebToolkit.BACKGROUND_WINDOW_ID)) {
+      if (WebToolkit.BACKGROUND_WINDOW_ID.equals(windowId)) {
         continue;
       }
       WebWindowPeer w = findWindowPeerById(windowId);
@@ -399,7 +359,7 @@ public class Util {
   public static void encodeWindowImages(Map<String, Map<Integer, BufferedImage>> windowImages,
       AppFrameMsgOut json) {
     for (WindowMsgOut window : json.getWindows()) {
-      if (!window.getId().equals(WebToolkit.BACKGROUND_WINDOW_ID)) {
+      if (!WebToolkit.BACKGROUND_WINDOW_ID.equals(window.getId())) {
         Map<Integer, BufferedImage> imageMap = windowImages.get(window.getId());
         for (int i = 0; i < window.getContent().size(); i++) {
           WindowPartialContentMsgOut c = window.getContent().get(i);
@@ -430,9 +390,9 @@ public class Util {
     AppFrameMsgOut json = new AppFrameMsgOut();
     for (String windowId : currentAreasToUpdate.keySet()) {
       WebWindowPeer ww = Util.findWindowPeerById(windowId);
-      if (ww != null || windowId.equals(WebToolkit.BACKGROUND_WINDOW_ID)) {
+      if (ww != null || WebToolkit.BACKGROUND_WINDOW_ID.equals(windowId)) {
         WindowMsgOut window = json.getOrCreateWindowById(windowId);
-        if (windowId.equals(WebToolkit.BACKGROUND_WINDOW_ID)) {
+        if (WebToolkit.BACKGROUND_WINDOW_ID.equals(windowId)) {
           window.setPosX(0);
           window.setPosY(0);
           window.setWidth(getWebToolkit().getScreenSize().width);
@@ -1057,7 +1017,7 @@ public class Util {
       int keycode, char character, int keyLocationStandard) {
     KeyEvent e = new KeyEvent(src, type, when, modifiers, keycode, character, keyLocationStandard);
     try {
-      java.lang.reflect.Field f = KeyEvent.class.getDeclaredField("extendedKeyCode");
+      Field f = KeyEvent.class.getDeclaredField("extendedKeyCode");
       f.setAccessible(true);
       f.set(e, keycode);
     } catch (Exception e1) {
@@ -1276,10 +1236,11 @@ public class Util {
     StringBuilder sb = new StringBuilder(
         "\"" + ti.getThreadName() + "\"" + " Id=" + ti.getThreadId() + " " + ti.getThreadState());
     if (ti.getLockName() != null) {
-      sb.append(" on " + ti.getLockName());
+      sb.append(" on ").append(ti.getLockName());
     }
     if (ti.getLockOwnerName() != null) {
-      sb.append(" owned by \"" + ti.getLockOwnerName() + "\" Id=" + ti.getLockOwnerId());
+      sb.append(" owned by \"").append(ti.getLockOwnerName()).append("\" Id=")
+          .append(ti.getLockOwnerId());
     }
     if (ti.isSuspended()) {
       sb.append(" (suspended)");
@@ -1292,21 +1253,21 @@ public class Util {
     StackTraceElement[] stackTrace = ti.getStackTrace();
     for (; i < stackTrace.length; i++) {
       StackTraceElement ste = stackTrace[i];
-      sb.append("\tat " + ste.toString());
+      sb.append("\tat ").append(ste.toString());
       sb.append('\n');
       if (i == 0 && ti.getLockInfo() != null) {
         Thread.State ts = ti.getThreadState();
         switch (ts) {
           case BLOCKED:
-            sb.append("\t-  blocked on " + ti.getLockInfo());
+            sb.append("\t-  blocked on ").append(ti.getLockInfo());
             sb.append('\n');
             break;
           case WAITING:
-            sb.append("\t-  waiting on " + ti.getLockInfo());
+            sb.append("\t-  waiting on ").append(ti.getLockInfo());
             sb.append('\n');
             break;
           case TIMED_WAITING:
-            sb.append("\t-  waiting on " + ti.getLockInfo());
+            sb.append("\t-  waiting on ").append(ti.getLockInfo());
             sb.append('\n');
             break;
           default:
@@ -1316,7 +1277,7 @@ public class Util {
       MonitorInfo[] lockedMonitors = ti.getLockedMonitors();
       for (MonitorInfo mi : lockedMonitors) {
         if (mi.getLockedStackDepth() == i) {
-          sb.append("\t-  locked " + mi);
+          sb.append("\t-  locked ").append(mi);
           sb.append('\n');
         }
       }
@@ -1331,7 +1292,7 @@ public class Util {
       sb.append("\n\tNumber of locked synchronizers = " + locks.length);
       sb.append('\n');
       for (LockInfo li : locks) {
-        sb.append("\t- " + li);
+        sb.append("\t- ").append(li);
         sb.append('\n');
       }
     }
@@ -1393,4 +1354,6 @@ public class Util {
     thread.start();
     return thread;
   }
+
+  private Util() {}
 }

@@ -1,43 +1,5 @@
 package org.webswing.toolkit;
 
-import java.awt.AWTEvent;
-import java.awt.AWTException;
-import java.awt.BufferCapabilities;
-import java.awt.BufferCapabilities.FlipContents;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ComponentEvent;
-import java.awt.event.PaintEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.awt.image.VolatileImage;
-import java.awt.peer.ComponentPeer;
-import java.awt.peer.ContainerPeer;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.UUID;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
-
 import org.webswing.common.GraphicsWrapper;
 import org.webswing.common.WindowActionType;
 import org.webswing.dispatch.WebPaintDispatcher;
@@ -49,7 +11,6 @@ import org.webswing.toolkit.util.DummyGraphics2D;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
-
 import sun.awt.AWTAccessor;
 import sun.awt.PaintEventDispatcher;
 import sun.awt.RepaintArea;
@@ -61,6 +22,21 @@ import sun.java2d.InvalidPipeException;
 import sun.java2d.SunGraphics2D;
 import sun.java2d.SurfaceData;
 import sun.java2d.pipe.Region;
+
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.BufferCapabilities.FlipContents;
+import java.awt.event.ComponentEvent;
+import java.awt.event.PaintEvent;
+import java.awt.image.*;
+import java.awt.peer.ComponentPeer;
+import java.awt.peer.ContainerPeer;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.UUID;
 
 @SuppressWarnings("restriction")
 abstract public class WebComponentPeer implements ComponentPeer {
@@ -135,7 +111,8 @@ abstract public class WebComponentPeer implements ComponentPeer {
       return;
     }
 
-    int w, h;
+    int w;
+    int h;
     if (Util.isDD()) {
       w = webImage.getWidth(null);
       h = webImage.getHeight(null);
@@ -238,7 +215,7 @@ abstract public class WebComponentPeer implements ComponentPeer {
     if (localFont != null) {
       setFont(localFont);
     }
-    if (!(((Component) this.target).isEnabled())) {
+    if (!((Component) this.target).isEnabled()) {
       disable();
     }
     Rectangle localRectangle = ((Component) this.target).getBounds();
@@ -288,10 +265,11 @@ abstract public class WebComponentPeer implements ComponentPeer {
   }
 
   public void setEnabled(boolean paramBoolean) {
-    if (paramBoolean)
+    if (paramBoolean) {
       enable();
-    else
+    } else {
       disable();
+    }
   }
 
   public void paint(Graphics paramGraphics) {
@@ -400,13 +378,14 @@ abstract public class WebComponentPeer implements ComponentPeer {
   private void repaintPeerTarget() {
     Component localComponent = (Component) this.target;
     Rectangle localRectangle = AWTAccessor.getComponentAccessor().getBounds(localComponent);
-    if (!(((Component) this.target).getIgnoreRepaint())) {
+    if (!((Component) this.target).getIgnoreRepaint()) {
       ((Component) this.target).invalidate();
       ((Component) this.target).validate();
       PaintEvent localPaintEvent = PaintEventDispatcher.getPaintEventDispatcher().createPaintEvent(
           (Component) this.target, 0, 0, localRectangle.width, localRectangle.height);
-      if (localPaintEvent != null)
+      if (localPaintEvent != null) {
         postEvent(localPaintEvent);
+      }
     }
   }
 

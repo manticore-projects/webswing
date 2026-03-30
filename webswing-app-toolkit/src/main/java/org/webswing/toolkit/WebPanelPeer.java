@@ -1,23 +1,15 @@
 package org.webswing.toolkit;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Panel;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.peer.PanelPeer;
-
-import javax.swing.SwingUtilities;
-
 import org.webswing.common.GraphicsWrapper;
 import org.webswing.toolkit.util.Util;
 
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.peer.PanelPeer;
+
 abstract public class WebPanelPeer extends WebContainerPeer implements PanelPeer {
 
-  private Insets insets;
+  private final Insets insets;
 
   public WebPanelPeer(Container t) {
     super(t);

@@ -1,13 +1,5 @@
 package org.webswing.server.common.datastore;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.concurrent.Callable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.common.extension.ExtensionClassLoader;
@@ -15,6 +7,14 @@ import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.common.util.ConfigUtil;
 import org.webswing.server.model.exception.WsInitException;
 import org.webswing.util.ClasspathUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.concurrent.Callable;
 
 public class DataStoreModuleWrapper implements WebswingDataStoreModule {
 

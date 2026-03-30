@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Color;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.ColorProto;
+
+import java.awt.Color;
 
 public class ColorConst extends ImmutableDrawConstantHolder<Color> {
 

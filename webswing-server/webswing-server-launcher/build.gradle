@@ -56,8 +56,8 @@ if (project.hasProperty('serverless')) {
             def dir = layout.buildDirectory.dir('WEB-INF/server-lib').get().asFile
             dir.mkdirs()
             new File(dir, 'README.txt').text =
-                    'This is a serverless Webswing build. No embedded server is included. ' +
-                            'Deploy to supported Servlet container. (ie. Tomcat)'
+                    'This is a serverless Webswing build. No embedded server is included. '
+                            + 'Deploy to supported Servlet container. (ie. Tomcat)'
         }
     }
     assemble.dependsOn 'copyServerless', 'copyJarToServerless', 'writeServerlessReadme'

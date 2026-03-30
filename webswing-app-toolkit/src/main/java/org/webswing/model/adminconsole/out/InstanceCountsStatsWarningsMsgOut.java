@@ -1,11 +1,11 @@
 package org.webswing.model.adminconsole.out;
 
+import org.webswing.model.MsgOut;
+import org.webswing.model.SyncMsg;
+
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.webswing.model.MsgOut;
-import org.webswing.model.SyncMsg;
 
 public class InstanceCountsStatsWarningsMsgOut implements SyncMsg, MsgOut {
 

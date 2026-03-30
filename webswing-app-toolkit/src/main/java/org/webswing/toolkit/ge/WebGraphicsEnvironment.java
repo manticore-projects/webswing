@@ -1,11 +1,10 @@
 package org.webswing.toolkit.ge;
 
-import java.awt.GraphicsDevice;
-
 import org.webswing.Constants;
 import org.webswing.toolkit.WebToolkit;
-
 import sun.awt.FontConfiguration;
+
+import java.awt.GraphicsDevice;
 
 @SuppressWarnings("restriction")
 public abstract class WebGraphicsEnvironment extends sun.java2d.SunGraphicsEnvironment {

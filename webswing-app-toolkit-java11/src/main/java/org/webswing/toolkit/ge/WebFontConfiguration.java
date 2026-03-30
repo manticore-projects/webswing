@@ -1,9 +1,9 @@
 package org.webswing.toolkit.ge;
 
-import java.nio.charset.Charset;
-
 import sun.awt.FontConfiguration;
 import sun.font.SunFontManager;
+
+import java.nio.charset.Charset;
 
 
 @SuppressWarnings("restriction")

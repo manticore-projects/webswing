@@ -1,14 +1,13 @@
 package com.sun.prism.web;
 
-import java.nio.Buffer;
-
-import org.webswing.javafx.toolkit.util.DirtyAreaTracker;
-
 import com.sun.javafx.geom.RectBounds;
 import com.sun.prism.Image;
 import com.sun.prism.MediaFrame;
 import com.sun.prism.PixelFormat;
 import com.sun.prism.Texture;
+import org.webswing.javafx.toolkit.util.DirtyAreaTracker;
+
+import java.nio.Buffer;
 
 public class WebTextureWrapper implements Texture {
 

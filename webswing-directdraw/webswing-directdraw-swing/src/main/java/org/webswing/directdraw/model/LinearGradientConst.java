@@ -1,12 +1,12 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Color;
-import java.awt.LinearGradientPaint;
-import java.util.Arrays;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.CyclicMethodProto;
 import org.webswing.directdraw.proto.Directdraw.LinearGradientProto;
+
+import java.awt.Color;
+import java.awt.LinearGradientPaint;
+import java.util.Arrays;
 
 public class LinearGradientConst extends ImmutableDrawConstantHolder<LinearGradientPaint> {
 

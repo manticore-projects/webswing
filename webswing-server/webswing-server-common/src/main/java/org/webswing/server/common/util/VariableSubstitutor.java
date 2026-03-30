@@ -1,14 +1,5 @@
 package org.webswing.server.common.util;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Map.Entry;
-import java.util.stream.Stream;
-
 import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.webswing.Constants;
@@ -16,11 +7,20 @@ import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.model.SwingConfig;
 import tools.jackson.core.JacksonException;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Stream;
+
 
 public class VariableSubstitutor {
 
-  private Map<String, String> customVars;
-  private StrSubstitutor subs;
+  private final Map<String, String> customVars;
+  private final StrSubstitutor subs;
 
   public static VariableSubstitutor basic() {
     return new VariableSubstitutor(new HashMap<String, String>());

@@ -1,21 +1,20 @@
 package org.webswing.services.impl;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.imageio.spi.IIORegistry;
-
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.common.WindowDecoratorTheme;
 import org.webswing.ext.services.ImageService;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
-import com.manticore.tools.FPNGEncoder;
+import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import com.manticore.tools.FPNGE;
+import com.manticore.tools.FPNGEncoder;
 
 public class ImageServiceImpl implements ImageService {
 

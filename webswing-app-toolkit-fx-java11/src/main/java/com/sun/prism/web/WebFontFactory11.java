@@ -1,9 +1,9 @@
 package com.sun.prism.web;
 
-import java.io.InputStream;
-
 import com.sun.javafx.font.FontFactory;
 import com.sun.javafx.font.PGFont;
+
+import java.io.InputStream;
 
 public class WebFontFactory11 extends AbstractWebFontFactory {
 

@@ -1,23 +1,5 @@
 package org.webswing.javafx.toolkit;
 
-import java.awt.SecondaryLoop;
-import java.awt.Toolkit;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.webswing.Constants;
-import org.webswing.javafx.toolkit.adaper.WindowAdapter;
-import org.webswing.toolkit.util.Util;
-
 import com.sun.glass.ui.Application;
 import com.sun.glass.ui.CommonDialogs;
 import com.sun.glass.ui.Cursor;
@@ -27,8 +9,23 @@ import com.sun.glass.ui.Size;
 import com.sun.glass.ui.Timer;
 import com.sun.glass.ui.View;
 import com.sun.glass.ui.Window;
-
+import org.webswing.Constants;
+import org.webswing.javafx.toolkit.adaper.WindowAdapter;
+import org.webswing.toolkit.util.Util;
 import sun.awt.AWTAccessor;
+
+import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.SecondaryLoop;
+import java.awt.Toolkit;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by vikto on 28-Feb-17.
@@ -156,7 +153,7 @@ public abstract class AbstractWebApplication extends Application {
     fc.setDialogTitle(title);
     fc.setMultiSelectionEnabled(multipleMode);
     for (int i = 0; i < extensionFilters.length; i++) {
-      java.util.List<String> list = extensionFilters[i].getExtensions();
+      List<String> list = extensionFilters[i].getExtensions();
       if (list.size() > 0) {
         fc.addChoosableFileFilter(new FileNameExtensionFilter(extensionFilters[i].getDescription(),
             list.toArray(new String[list.size()])));

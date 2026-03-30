@@ -1,12 +1,12 @@
 package org.webswing;
 
-import tools.jackson.databind.ObjectWriter;
-import tools.jackson.databind.json.JsonMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.toolkit.VolatileWebImageWrapper;
 import org.webswing.directdraw.toolkit.WebImage;
 import org.webswing.services.impl.ddutil.FastDirectDrawServicesAdapter;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 
 import javax.imageio.ImageIO;
 import javax.swing.RepaintManager;
@@ -130,8 +130,9 @@ public class TestJsonGenerator {
   public static String[] getTestMethods() {
     List<String> result = new ArrayList<String>();
     for (Method m : Tests.class.getDeclaredMethods()) {
-      if (m.getName().endsWith("Test"))
+      if (m.getName().endsWith("Test")) {
         result.add(m.getName());
+      }
     }
     Collections.sort(result);
     return result.toArray(new String[result.size()]);

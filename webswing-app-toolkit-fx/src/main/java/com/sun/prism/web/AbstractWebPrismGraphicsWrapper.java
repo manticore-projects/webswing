@@ -11,14 +11,7 @@ import com.sun.javafx.scene.text.GlyphList;
 import com.sun.javafx.sg.prism.NGCamera;
 import com.sun.javafx.sg.prism.NGLightBase;
 import com.sun.javafx.sg.prism.NodePath;
-import com.sun.prism.BasicStroke;
-import com.sun.prism.CompositeMode;
-import com.sun.prism.Graphics;
-import com.sun.prism.RTTexture;
-import com.sun.prism.ReadbackGraphics;
-import com.sun.prism.RenderTarget;
-import com.sun.prism.ResourceFactory;
-import com.sun.prism.Texture;
+import com.sun.prism.*;
 import com.sun.prism.paint.Color;
 import com.sun.prism.paint.Paint;
 
@@ -465,8 +458,9 @@ public abstract class AbstractWebPrismGraphicsWrapper implements ReadbackGraphic
 
   @Override
   public void releaseReadBackBuffer(RTTexture view) {
-    if (original instanceof ReadbackGraphics graphics)
+    if (original instanceof ReadbackGraphics graphics) {
       graphics.releaseReadBackBuffer(view);
+    }
   }
 
   @Override

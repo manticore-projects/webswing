@@ -1,22 +1,18 @@
 package org.webswing.directdraw.toolkit;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.model.*;
 import org.webswing.directdraw.proto.Directdraw.DrawInstructionProto.InstructionProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
 import org.webswing.directdraw.util.XorModeComposite;
 
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+
 public class DrawInstructionFactory {
 
-  private DirectDraw ctx;
+  private final DirectDraw ctx;
 
   public DrawInstructionFactory(DirectDraw ctx) {
     this.ctx = ctx;
@@ -150,8 +146,9 @@ public class DrawInstructionFactory {
       return new LinearGradientConst(ctx, paint1);
     } else if (p instanceof RadialGradientPaint paint) {
       return new RadialGradientConst(ctx, paint);
-    } else
+    } else {
       throw new UnsupportedOperationException();
+    }
   }
 
   public DrawInstruction setFont(Font font) {

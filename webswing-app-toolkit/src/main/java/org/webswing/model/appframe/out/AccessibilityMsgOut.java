@@ -1,9 +1,9 @@
 package org.webswing.model.appframe.out;
 
+import org.webswing.model.MsgOut;
+
 import java.io.Serial;
 import java.util.List;
-
-import org.webswing.model.MsgOut;
 
 public class AccessibilityMsgOut implements MsgOut {
 
@@ -21,14 +21,25 @@ public class AccessibilityMsgOut implements MsgOut {
   private String columnheader;
   private boolean password;
   private boolean toggle;
-  private int selstart, selend;
-  private int rowheight, rows;
-  private int size, position, level;
-  private int colindex, rowindex, rowcount, colcount;
+  private int selstart;
+  private int selend;
+  private int rowheight;
+  private int rows;
+  private int size;
+  private int position;
+  private int level;
+  private int colindex;
+  private int rowindex;
+  private int rowcount;
+  private int colcount;
   private List<String> states;
-  private int min, max, val;
-  private int screenX, screenY;
-  private int width, height;
+  private int min;
+  private int max;
+  private int val;
+  private int screenX;
+  private int screenY;
+  private int width;
+  private int height;
   private List<AccessibilityHierarchyMsgOut> hierarchy;
 
   @Override
@@ -37,17 +48,17 @@ public class AccessibilityMsgOut implements MsgOut {
     int result = 1;
     result = prime * result + colcount;
     result = prime * result + colindex;
-    result = prime * result + ((columnheader == null) ? 0 : columnheader.hashCode());
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + (columnheader == null ? 0 : columnheader.hashCode());
+    result = prime * result + (description == null ? 0 : description.hashCode());
     result = prime * result + height;
-    result = prime * result + ((hierarchy == null) ? 0 : hierarchy.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + (hierarchy == null ? 0 : hierarchy.hashCode());
+    result = prime * result + (id == null ? 0 : id.hashCode());
     result = prime * result + level;
     result = prime * result + max;
     result = prime * result + min;
     result = prime * result + (password ? 1231 : 1237);
     result = prime * result + position;
-    result = prime * result + ((role == null) ? 0 : role.hashCode());
+    result = prime * result + (role == null ? 0 : role.hashCode());
     result = prime * result + rowcount;
     result = prime * result + rowheight;
     result = prime * result + rowindex;
@@ -57,110 +68,151 @@ public class AccessibilityMsgOut implements MsgOut {
     result = prime * result + selend;
     result = prime * result + selstart;
     result = prime * result + size;
-    result = prime * result + ((states == null) ? 0 : states.hashCode());
-    result = prime * result + ((text == null) ? 0 : text.hashCode());
+    result = prime * result + (states == null ? 0 : states.hashCode());
+    result = prime * result + (text == null ? 0 : text.hashCode());
     result = prime * result + (toggle ? 1231 : 1237);
-    result = prime * result + ((tooltip == null) ? 0 : tooltip.hashCode());
+    result = prime * result + (tooltip == null ? 0 : tooltip.hashCode());
     result = prime * result + val;
-    result = prime * result + ((value == null) ? 0 : value.hashCode());
+    result = prime * result + (value == null ? 0 : value.hashCode());
     result = prime * result + width;
     return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     AccessibilityMsgOut other = (AccessibilityMsgOut) obj;
-    if (colcount != other.colcount)
+    if (colcount != other.colcount) {
       return false;
-    if (colindex != other.colindex)
+    }
+    if (colindex != other.colindex) {
       return false;
+    }
     if (columnheader == null) {
-      if (other.columnheader != null)
+      if (other.columnheader != null) {
         return false;
-    } else if (!columnheader.equals(other.columnheader))
+      }
+    } else if (!columnheader.equals(other.columnheader)) {
       return false;
+    }
     if (description == null) {
-      if (other.description != null)
+      if (other.description != null) {
         return false;
-    } else if (!description.equals(other.description))
+      }
+    } else if (!description.equals(other.description)) {
       return false;
-    if (height != other.height)
+    }
+    if (height != other.height) {
       return false;
+    }
     if (hierarchy == null) {
-      if (other.hierarchy != null)
+      if (other.hierarchy != null) {
         return false;
-    } else if (!hierarchy.equals(other.hierarchy))
+      }
+    } else if (!hierarchy.equals(other.hierarchy)) {
       return false;
+    }
     if (id == null) {
-      if (other.id != null)
+      if (other.id != null) {
         return false;
-    } else if (!id.equals(other.id))
+      }
+    } else if (!id.equals(other.id)) {
       return false;
-    if (level != other.level)
+    }
+    if (level != other.level) {
       return false;
-    if (max != other.max)
+    }
+    if (max != other.max) {
       return false;
-    if (min != other.min)
+    }
+    if (min != other.min) {
       return false;
-    if (password != other.password)
+    }
+    if (password != other.password) {
       return false;
-    if (position != other.position)
+    }
+    if (position != other.position) {
       return false;
+    }
     if (role == null) {
-      if (other.role != null)
+      if (other.role != null) {
         return false;
-    } else if (!role.equals(other.role))
+      }
+    } else if (!role.equals(other.role)) {
       return false;
-    if (rowcount != other.rowcount)
+    }
+    if (rowcount != other.rowcount) {
       return false;
-    if (rowheight != other.rowheight)
+    }
+    if (rowheight != other.rowheight) {
       return false;
-    if (rowindex != other.rowindex)
+    }
+    if (rowindex != other.rowindex) {
       return false;
-    if (rows != other.rows)
+    }
+    if (rows != other.rows) {
       return false;
-    if (screenX != other.screenX)
+    }
+    if (screenX != other.screenX) {
       return false;
-    if (screenY != other.screenY)
+    }
+    if (screenY != other.screenY) {
       return false;
-    if (selend != other.selend)
+    }
+    if (selend != other.selend) {
       return false;
-    if (selstart != other.selstart)
+    }
+    if (selstart != other.selstart) {
       return false;
-    if (size != other.size)
+    }
+    if (size != other.size) {
       return false;
+    }
     if (states == null) {
-      if (other.states != null)
+      if (other.states != null) {
         return false;
-    } else if (!states.equals(other.states))
+      }
+    } else if (!states.equals(other.states)) {
       return false;
+    }
     if (text == null) {
-      if (other.text != null)
+      if (other.text != null) {
         return false;
-    } else if (!text.equals(other.text))
+      }
+    } else if (!text.equals(other.text)) {
       return false;
-    if (toggle != other.toggle)
+    }
+    if (toggle != other.toggle) {
       return false;
+    }
     if (tooltip == null) {
-      if (other.tooltip != null)
+      if (other.tooltip != null) {
         return false;
-    } else if (!tooltip.equals(other.tooltip))
+      }
+    } else if (!tooltip.equals(other.tooltip)) {
       return false;
-    if (val != other.val)
+    }
+    if (val != other.val) {
       return false;
+    }
     if (value == null) {
-      if (other.value != null)
+      if (other.value != null) {
         return false;
-    } else if (!value.equals(other.value))
+      }
+    } else if (!value.equals(other.value)) {
       return false;
-    if (width != other.width)
+    }
+    if (width != other.width) {
       return false;
+    }
     return true;
   }
 

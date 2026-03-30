@@ -1,17 +1,8 @@
 package org.webswing.toolkit.ge;
 
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DirectColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 
 public class BufferedImageGraphicsConfig extends GraphicsConfiguration {
 
@@ -31,7 +22,7 @@ public class BufferedImageGraphicsConfig extends GraphicsConfiguration {
     int type = bImg.getType();
 
     BufferedImageGraphicsConfig[] configs =
-        (scaleX == 1 && scaleY == 1) ? standardConfigs : scaledConfigs;
+        scaleX == 1 && scaleY == 1 ? standardConfigs : scaledConfigs;
     if (type > 0 && type < numconfigs) {
       ret = configs[type];
       if (ret != null && ret.getNormalizingTransform().getScaleX() == scaleX

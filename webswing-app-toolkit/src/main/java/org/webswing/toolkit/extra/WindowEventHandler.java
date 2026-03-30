@@ -1,25 +1,19 @@
 package org.webswing.toolkit.extra;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
+import org.webswing.common.WindowActionType;
+import org.webswing.toolkit.util.Util;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
-import org.webswing.common.WindowActionType;
-import org.webswing.toolkit.util.Util;
-
 public class WindowEventHandler {
 
-  private Map<Window, Rectangle> previousSize = new HashMap<Window, Rectangle>();
+  private final Map<Window, Rectangle> previousSize = new HashMap<Window, Rectangle>();
   private boolean lockedOnEvent;
   private WindowActionType lockEventType;
   private Point referenceMouseLocation;

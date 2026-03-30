@@ -1,37 +1,32 @@
 package org.webswing.toolkit.extra;
 
-import java.awt.Dialog;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.Window.Type;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
 import org.webswing.toolkit.WebToolkit;
 import org.webswing.toolkit.WebWindowPeer;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dialog.ModalityType;
+import java.awt.Window.Type;
+import java.util.*;
+import java.util.List;
+
 public class WindowHierarchyTree {
 
-  private Map<Window, WindowHierarchyNode> lookup = new HashMap<Window, WindowHierarchyNode>();
-  private LinkedList<WindowHierarchyNode> rootWindowNodes = new LinkedList<WindowHierarchyNode>();
+  private final Map<Window, WindowHierarchyNode> lookup =
+      new HashMap<Window, WindowHierarchyNode>();
+  private final LinkedList<WindowHierarchyNode> rootWindowNodes =
+      new LinkedList<WindowHierarchyNode>();
 
-  private LinkedList<WindowHierarchyNode> alwaysOnTopZOrder = new LinkedList<WindowHierarchyNode>();
-  private LinkedList<WindowHierarchyNode> regularZOrder = new LinkedList<WindowHierarchyNode>();
-  private LinkedList<WindowHierarchyNode> zOrder = new LinkedList<WindowHierarchyNode>();
+  private final LinkedList<WindowHierarchyNode> alwaysOnTopZOrder =
+      new LinkedList<WindowHierarchyNode>();
+  private final LinkedList<WindowHierarchyNode> regularZOrder =
+      new LinkedList<WindowHierarchyNode>();
+  private final LinkedList<WindowHierarchyNode> zOrder = new LinkedList<WindowHierarchyNode>();
 
-  private ArrayDeque<Window> modalsStack = new ArrayDeque<>();
+  private final ArrayDeque<Window> modalsStack = new ArrayDeque<>();
 
   protected void bringToFront(Window w) {
     if (w != null && !w.isEnabled()) {

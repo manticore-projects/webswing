@@ -1,9 +1,9 @@
 package org.webswing.ext.services;
 
+import org.webswing.model.appframe.out.ComponentTreeMsgOut;
+
 import java.awt.Window;
 import java.util.List;
-
-import org.webswing.model.appframe.out.ComponentTreeMsgOut;
 
 public interface ToolkitFXService {
 

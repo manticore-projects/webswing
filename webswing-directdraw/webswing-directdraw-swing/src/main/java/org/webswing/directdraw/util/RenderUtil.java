@@ -1,5 +1,10 @@
 package org.webswing.directdraw.util;
 
+import org.webswing.directdraw.model.DrawConstant;
+import org.webswing.directdraw.model.DrawInstruction;
+import org.webswing.directdraw.model.GlyphListConst.StringConstValue;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -10,12 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import org.webswing.directdraw.model.DrawConstant;
-import org.webswing.directdraw.model.DrawInstruction;
-import org.webswing.directdraw.model.GlyphListConst.StringConstValue;
 
 public class RenderUtil {
 
@@ -38,7 +37,7 @@ public class RenderUtil {
   public static class RenderContext {
     private final RenderingHints hints;
     private Map<Integer, Graphics2D> map = new HashMap<Integer, Graphics2D>();
-    private Graphics2D currentGraphics = null;
+    private Graphics2D currentGraphics;
     private BufferedImage result;
 
     RenderContext(BufferedImage image) {
@@ -101,6 +100,7 @@ public class RenderUtil {
           break;
         case DRAW_GLYPH_LIST:
           iprtDrawGlyphList(currentGraphics, di);
+          break;
         default:
           break;
       }
@@ -317,4 +317,6 @@ public class RenderUtil {
       return null;
     }
   }
+
+  private RenderUtil() {}
 }

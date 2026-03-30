@@ -2,7 +2,6 @@ package org.webswing.server.services.security.modules.configtest;
 
 import org.webswing.server.services.security.api.WebswingSecurityModuleProvider;
 
-import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
 

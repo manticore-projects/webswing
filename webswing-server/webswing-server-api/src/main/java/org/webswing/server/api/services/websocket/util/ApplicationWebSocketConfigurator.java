@@ -1,13 +1,12 @@
 package org.webswing.server.api.services.websocket.util;
 
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import java.util.List;
 
 public class ApplicationWebSocketConfigurator extends ServerEndpointConfig.Configurator {
 

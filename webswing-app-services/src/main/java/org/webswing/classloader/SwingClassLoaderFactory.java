@@ -1,12 +1,12 @@
 package org.webswing.classloader;
 
+import org.webswing.ext.services.SwingClassLoaderFactoryService;
+
 import java.net.URL;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-
-import org.webswing.ext.services.SwingClassLoaderFactoryService;
 
 public class SwingClassLoaderFactory implements SwingClassLoaderFactoryService {
 

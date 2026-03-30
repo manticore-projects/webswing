@@ -142,7 +142,7 @@ public interface Constants {
 
 
   // websocket constants
-  int WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE = (5 * 1024 * 1024);
+  int WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE = 5 * 1024 * 1024;
   String WEBSOCKET_MESSAGE_SIZE = "webswing.websocketMessageSizeLimit";
   long WEBSOCKET_MESSAGE_TIMEOUT_DEFAULT = TimeUnit.SECONDS.toMillis(30);
   String WEBSOCKET_MESSAGE_TIMEOUT = "webswing.websocketMessageTimeout";

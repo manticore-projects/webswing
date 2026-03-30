@@ -1,12 +1,12 @@
 package org.webswing.directdraw.util;
 
-import java.util.HashMap;
-
 import org.webswing.directdraw.model.DrawConstant;
+
+import java.util.HashMap;
 
 public class LRUDrawConstantPoolCache {
 
-  private HashMap<DrawConstant<?>, DoubleLinkedListNode> map =
+  private final HashMap<DrawConstant<?>, DoubleLinkedListNode> map =
       new HashMap<DrawConstant<?>, DoubleLinkedListNode>();
   private DoubleLinkedListNode head;
   private DoubleLinkedListNode end;

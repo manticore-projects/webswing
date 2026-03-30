@@ -1,9 +1,9 @@
 package org.webswing.util;
 
+import org.webswing.Constants;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import org.webswing.Constants;
 
 public class AppLogger {
 
@@ -14,7 +14,7 @@ public class AppLogger {
   public static final int ERROR = 4;
   public static final int FATAL = 5;
 
-  private static AppLogger log = new AppLogger();
+  private static final AppLogger log = new AppLogger();
   private int threshold = Integer.getInteger(Constants.SWING_START_SYS_PROP_LOG_LEVEL, 2);
 
   public static void trace(String message, Object... o) {

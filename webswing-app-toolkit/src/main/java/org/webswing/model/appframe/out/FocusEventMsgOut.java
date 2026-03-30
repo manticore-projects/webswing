@@ -13,7 +13,13 @@ public class FocusEventMsgOut implements MsgOut {
   }
 
   FocusEventType type;
-  int x, y, w, h, caretX, caretY, caretH;
+  int x;
+  int y;
+  int w;
+  int h;
+  int caretX;
+  int caretY;
+  int caretH;
   boolean editable;
 
   public FocusEventType getType() {

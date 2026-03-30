@@ -1,5 +1,13 @@
 package org.webswing.server.common.datastore;
 
+import org.webswing.Constants;
+import org.webswing.server.common.datastore.WebswingDataStoreConfig.WebswingDataStoreMetadataGenerator;
+import org.webswing.server.common.model.Config;
+import org.webswing.server.common.model.meta.*;
+import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
+import org.webswing.server.common.util.CommonUtil;
+import org.webswing.util.ClasspathUtil;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -12,24 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
-
-import org.webswing.Constants;
-import org.webswing.server.common.datastore.WebswingDataStoreConfig.WebswingDataStoreMetadataGenerator;
-import org.webswing.server.common.model.Config;
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueObject;
-import org.webswing.server.common.model.meta.ConfigFieldDefaultValueString;
-import org.webswing.server.common.model.meta.ConfigFieldDiscriminator;
-import org.webswing.server.common.model.meta.ConfigFieldEditorType;
-import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
-import org.webswing.server.common.model.meta.ConfigFieldOrder;
-import org.webswing.server.common.model.meta.ConfigFieldPresets;
-import org.webswing.server.common.model.meta.ConfigFieldVariables;
-import org.webswing.server.common.model.meta.ConfigType;
-import org.webswing.server.common.model.meta.MetaObject;
-import org.webswing.server.common.model.meta.MetadataGenerator;
-import org.webswing.server.common.util.CommonUtil;
-import org.webswing.util.ClasspathUtil;
 
 @ConfigType(metadataGenerator = WebswingDataStoreMetadataGenerator.class)
 @ConfigFieldOrder({"classPath", "module", "config"})
@@ -88,7 +78,7 @@ public interface WebswingDataStoreConfig extends Config {
     @Override
     protected String[] getPresets(WebswingDataStoreConfig config, ClassLoader cl,
         String propertyName, Method readMethod) {
-      if (propertyName.equals("classPath")) {
+      if ("classPath".equals(propertyName)) {
         // FIXME test this
         try {
           File dataStoreRoot = new File(
@@ -103,7 +93,7 @@ public interface WebswingDataStoreConfig extends Config {
         } catch (Exception e) {
           // do nothing
         }
-      } else if (propertyName.equals("module")) {
+      } else if ("module".equals(propertyName)) {
         ArrayList<String> discovered = new ArrayList<>();
         ServiceLoader<WebswingDataStoreModuleProvider> loader =
             ServiceLoader.load(WebswingDataStoreModuleProvider.class, cl);
@@ -121,7 +111,7 @@ public interface WebswingDataStoreConfig extends Config {
     @Override
     public Class<?> getExplicitType(WebswingDataStoreConfig config, ClassLoader cl,
         String propertyName, Method readMethod, Object value) throws ClassNotFoundException {
-      if (propertyName.equals("config")) {
+      if ("config".equals(propertyName)) {
         String dataStoreModuleClassName =
             BuiltInDataStoreModules.getDataStoreModuleClassName(config.getModule());
         if (dataStoreModuleClassName != null) {

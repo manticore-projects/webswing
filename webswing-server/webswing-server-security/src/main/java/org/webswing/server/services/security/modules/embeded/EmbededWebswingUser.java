@@ -1,12 +1,12 @@
 package org.webswing.server.services.security.modules.embeded;
 
+import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 
 public class EmbededWebswingUser extends AuthenticatedWebswingUser {
 

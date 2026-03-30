@@ -1,11 +1,11 @@
 package org.webswing.server.common.service.swingprocess;
 
+import org.webswing.server.common.model.SwingConfig;
+import org.webswing.server.common.util.VariableSubstitutor;
+
 import java.io.File;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.webswing.server.common.model.SwingConfig;
-import org.webswing.server.common.util.VariableSubstitutor;
 
 public class ProcessStartupParams {
 

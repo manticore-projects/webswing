@@ -1,11 +1,11 @@
 package org.webswing.directdraw.model;
 
-import java.awt.BasicStroke;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.StrokeProto;
 import org.webswing.directdraw.proto.Directdraw.StrokeProto.StrokeCapProto;
 import org.webswing.directdraw.proto.Directdraw.StrokeProto.StrokeJoinProto;
+
+import java.awt.BasicStroke;
 
 public class StrokeConst extends ImmutableDrawConstantHolder<BasicStroke> {
 

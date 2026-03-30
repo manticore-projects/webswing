@@ -1,6 +1,5 @@
 package org.webswing.toolkit.api.url;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -55,15 +54,18 @@ public class WebswingUrlState {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (o == null || getClass() != o.getClass())
+    }
+    if (o == null || getClass() != o.getClass()) {
       return false;
+    }
 
     WebswingUrlState that = (WebswingUrlState) o;
 
-    if (path != null ? !path.equals(that.path) : that.path != null)
+    if (path != null ? !path.equals(that.path) : that.path != null) {
       return false;
+    }
     return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
   }
 

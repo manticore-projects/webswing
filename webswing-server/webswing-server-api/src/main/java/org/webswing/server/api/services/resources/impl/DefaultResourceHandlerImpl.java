@@ -1,12 +1,5 @@
 package org.webswing.server.api.services.resources.impl;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.PrimaryUrlHandler;
@@ -17,8 +10,13 @@ import org.webswing.server.api.services.resources.WebResourceProvider;
 import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.model.exception.WsException;
-
 import tools.jackson.databind.json.JsonMapper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 
@@ -34,7 +32,7 @@ public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
 
   @Override
   protected LookupResult lookupNoCache(HttpServletRequest req, String path) {
-    if (path.equals("/manifest.json")) {
+    if ("/manifest.json".equals(path)) {
       return new ManifestResult(parent);
     }
 

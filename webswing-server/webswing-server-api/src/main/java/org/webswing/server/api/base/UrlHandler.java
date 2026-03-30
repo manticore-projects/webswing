@@ -1,13 +1,13 @@
 package org.webswing.server.api.base;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.webswing.server.api.services.security.login.SecuredPathHandler;
 import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.common.service.security.AbstractWebswingUser;
 import org.webswing.server.model.exception.WsException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UrlHandler {
 

@@ -1,12 +1,11 @@
 package com.sun.prism.web;
 
-import java.nio.Buffer;
-
-import org.webswing.javafx.toolkit.WebsinwgFxToolkitFactory;
-
 import com.sun.glass.ui.Screen;
 import com.sun.prism.Graphics;
 import com.sun.prism.RTTexture;
+import org.webswing.javafx.toolkit.WebsinwgFxToolkitFactory;
+
+import java.nio.Buffer;
 
 public class WebRTTextureWrapper extends WebTextureWrapper implements RTTexture {
   private final RTTexture original;

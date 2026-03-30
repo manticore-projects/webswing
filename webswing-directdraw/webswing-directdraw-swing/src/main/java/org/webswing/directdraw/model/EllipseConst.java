@@ -1,9 +1,9 @@
 package org.webswing.directdraw.model;
 
-import java.awt.geom.Ellipse2D;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.EllipseProto;
+
+import java.awt.geom.Ellipse2D;
 
 public class EllipseConst extends MutableDrawConstantHolder<Ellipse2D, EllipseProto> {
 

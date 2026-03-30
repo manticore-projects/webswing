@@ -1,12 +1,6 @@
 package org.webswing.server.common.service.security.impl;
 
-import java.util.concurrent.ExecutionException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.google.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +9,11 @@ import org.webswing.server.common.service.security.SecurableService;
 import org.webswing.server.common.service.security.SecurityManagerService;
 import org.webswing.server.common.util.ServerUtil;
 
-import com.google.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.concurrent.ExecutionException;
 
 @Singleton
 public class SecurityManagerServiceImpl implements SecurityManagerService {

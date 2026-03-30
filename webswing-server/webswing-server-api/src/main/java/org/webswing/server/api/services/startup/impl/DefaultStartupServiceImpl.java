@@ -1,15 +1,14 @@
 package org.webswing.server.api.services.startup.impl;
 
-import java.util.Set;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.api.base.WebswingService;
 import org.webswing.server.api.services.startup.StartupService;
 import org.webswing.server.model.exception.WsInitException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import java.util.Set;
 
 @Singleton
 public class DefaultStartupServiceImpl implements StartupService {

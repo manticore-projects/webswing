@@ -1,10 +1,10 @@
 package org.webswing.model.adminconsole.out;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.MsgOut;
 import org.webswing.model.SyncMsg;
+
+import java.io.Serial;
+import java.util.List;
 
 public class MetaMsgOut implements SyncMsg, MsgOut {
 

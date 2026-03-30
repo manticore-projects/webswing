@@ -1,11 +1,10 @@
 package org.webswing.toolkit.api.component;
 
-import javax.swing.JPanel;
-
 import org.webswing.toolkit.api.action.WebWindow;
-
-import java.io.Serial;
 import org.webswing.toolkit.api.action.WebWindowActionListener;
+
+import javax.swing.JPanel;
+import java.io.Serial;
 
 public abstract class HtmlPanel extends JPanel implements WebWindow {
 

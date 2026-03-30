@@ -1,13 +1,6 @@
 package org.webswing.toolkit.util;
 
-import org.webswing.ext.services.DataStoreService;
-import org.webswing.ext.services.DirectDrawService;
-import org.webswing.ext.services.ImageService;
-import org.webswing.ext.services.JsLinkService;
-import org.webswing.ext.services.PdfService;
-import org.webswing.ext.services.ServerConnectionService;
-import org.webswing.ext.services.SwingClassLoaderFactoryService;
-import org.webswing.ext.services.ToolkitFXService;
+import org.webswing.ext.services.*;
 import org.webswing.util.AppLogger;
 
 public class Services {
@@ -100,5 +93,7 @@ public class Services {
   public static void initializeToolkitFXService(ToolkitFXService toolkitFXService) {
     Services.toolkitFXService = toolkitFXService;
   }
+
+  private Services() {}
 
 }

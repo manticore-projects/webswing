@@ -1,8 +1,8 @@
 package org.webswing.server.api.services.swinginstance.holder;
 
-import java.util.List;
-
 import org.webswing.server.api.services.swinginstance.ConnectedSwingInstance;
+
+import java.util.List;
 
 public interface SwingInstanceHolder {
 

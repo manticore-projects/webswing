@@ -1,11 +1,11 @@
 package org.webswing.directdraw.model;
 
-import java.awt.Font;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.FontProto;
 import org.webswing.directdraw.proto.Directdraw.FontProto.StyleProto;
 import org.webswing.directdraw.util.DirectDrawUtils;
+
+import java.awt.Font;
 
 public class FontConst extends ImmutableDrawConstantHolder<Font> {
 

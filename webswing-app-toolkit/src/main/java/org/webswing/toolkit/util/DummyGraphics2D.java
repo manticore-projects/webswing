@@ -2,23 +2,7 @@
 // Modification to original: merged with AbstractVectorGraphicsIO
 package org.webswing.toolkit.util;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Paint;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
@@ -44,13 +28,13 @@ public class DummyGraphics2D extends Graphics2D {
 
   private Font currentFont;
 
-  private RenderingHints hints;
+  private final RenderingHints hints;
 
   private Composite currentComposite;
 
   private Shape userClip;
 
-  private AffineTransform currentTransform;
+  private final AffineTransform currentTransform;
 
   public DummyGraphics2D() {
 
@@ -266,14 +250,15 @@ public class DummyGraphics2D extends Graphics2D {
   @Override
   public Rectangle getClipBounds() {
     Shape clip = getClip();
-    return (clip != null) ? getClip().getBounds() : null;
+    return clip != null ? getClip().getBounds() : null;
   }
 
   @Override
   public Rectangle getClipBounds(Rectangle r) {
     Rectangle bounds = getClipBounds();
-    if (bounds != null)
+    if (bounds != null) {
       r.setBounds(bounds);
+    }
     return r;
   }
 
@@ -312,11 +297,13 @@ public class DummyGraphics2D extends Graphics2D {
 
   @Override
   public void setColor(Color c) {
-    if (c == null)
+    if (c == null) {
       return;
+    }
 
-    if (c.equals(getPaint()))
+    if (c.equals(getPaint())) {
       return;
+    }
 
     currentColor = c;
     currentPaint = c;
@@ -324,14 +311,17 @@ public class DummyGraphics2D extends Graphics2D {
 
   @Override
   public void setPaint(Paint paint) {
-    if (paint == null)
+    if (paint == null) {
       return;
+    }
 
-    if (paint.equals(getPaint()))
+    if (paint.equals(getPaint())) {
       return;
+    }
 
-    if (paint instanceof Color color)
+    if (paint instanceof Color color) {
       currentColor = color;
+    }
 
     currentPaint = paint;
   }
@@ -377,8 +367,9 @@ public class DummyGraphics2D extends Graphics2D {
   @Override
   public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) {
     // extra protection, failed on under MacOS X 10.2.6, jdk 1.4.1_01-39/14
-    if ((hintKey == null) || (hintValue == null))
+    if ((hintKey == null) || (hintValue == null)) {
       return;
+    }
     hints.put(hintKey, hintValue);
   }
 

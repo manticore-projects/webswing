@@ -1,62 +1,10 @@
 package org.webswing.dispatch;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.SecondaryLoop;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-
 import org.webswing.Constants;
 import org.webswing.audio.AudioClip;
-import org.webswing.model.app.out.AppToServerFrameMsgOut;
-import org.webswing.model.app.out.ExitMsgOut;
-import org.webswing.model.app.out.JvmStatsMsgOut;
-import org.webswing.model.app.out.SessionDataMsgOut;
-import org.webswing.model.app.out.ThreadDumpMsgOut;
-import org.webswing.model.appframe.out.AccessibilityMsgOut;
-import org.webswing.model.appframe.out.ActionEventMsgOut;
-import org.webswing.model.appframe.out.AppFrameMsgOut;
-import org.webswing.model.appframe.out.AudioEventMsgOut;
-import org.webswing.model.appframe.out.CopyEventMsgOut;
-import org.webswing.model.appframe.out.CursorChangeEventMsgOut;
-import org.webswing.model.appframe.out.FileDialogEventMsgOut;
-import org.webswing.model.appframe.out.FocusEventMsgOut;
-import org.webswing.model.appframe.out.LinkActionMsgOut;
+import org.webswing.model.app.out.*;
+import org.webswing.model.appframe.out.*;
 import org.webswing.model.appframe.out.LinkActionMsgOut.LinkActionType;
-import org.webswing.model.appframe.out.PasteRequestMsgOut;
-import org.webswing.model.appframe.out.SimpleEventMsgOut;
-import org.webswing.model.appframe.out.WindowMsgOut;
 import org.webswing.toolkit.WebCursor;
 import org.webswing.toolkit.WebToolkit;
 import org.webswing.toolkit.WebWindowPeer;
@@ -71,6 +19,29 @@ import org.webswing.util.AppLogger;
 import org.webswing.util.CpuMonitor;
 import org.webswing.util.NamedThreadFactory;
 
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class AbstractPaintDispatcher implements PaintDispatcher {
   private static final long AUDIO_PLAYBACK_TIMEOUT =
       Long.getLong(Constants.AUDIO_PLAYBACK_TIMEOUT, Constants.AUDIO_PLAYBACK_TIMEOUT_DEFAULT);
@@ -78,7 +49,7 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
   private volatile Map<String, Set<Rectangle>> areasToUpdate = new HashMap<>();
   private volatile FocusEventMsgOut focusEvent;
   private volatile AccessibilityMsgOut accessible;
-  private AtomicBoolean clientReadyToReceive = new AtomicBoolean(true);
+  private final AtomicBoolean clientReadyToReceive = new AtomicBoolean(true);
   private final Long ackTimeout = Long.getLong(Constants.PAINT_ACK_TIMEOUT, 5000);
   private long lastReadyStateTime;
   private JFileChooser fileChooserDialog;
@@ -86,18 +57,19 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
   private ScheduledExecutorService executorService;
   private ScheduledExecutorService audioChecker;
 
-  private Object accessibilityLock = new Object();
+  private final Object accessibilityLock = new Object();
   private boolean accessibilityUpdateScheduled;
   private Component accessibilityComponent;
   private Integer accessibilityX;
   private Integer accessibilityY;
 
-  private WeakHashMap<Window, WeakReference<JFileChooser>> registeredFileChooserWindows =
+  private final WeakHashMap<Window, WeakReference<JFileChooser>> registeredFileChooserWindows =
       new WeakHashMap<>();
-  private FileChooserShowingListener fileChooserVisibilityListener =
+  private final FileChooserShowingListener fileChooserVisibilityListener =
       new FileChooserShowingListener();
 
-  private WeakHashMap<String, WeakReference<AudioClip>> registeredAudioClips = new WeakHashMap<>();
+  private final WeakHashMap<String, WeakReference<AudioClip>> registeredAudioClips =
+      new WeakHashMap<>();
   private SecondaryLoop clipboardDialogLoop;
 
   public AbstractPaintDispatcher() {
@@ -424,7 +396,7 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
       AppToServerFrameMsgOut msgOut = new AppToServerFrameMsgOut();
       String extension = getFileExtension(file.getName());
       LinkActionType actionType =
-          preview && extension.equalsIgnoreCase(".pdf") ? LinkActionType.print
+          preview && ".pdf".equalsIgnoreCase(extension) ? LinkActionType.print
               : LinkActionType.file;
 
       AppFrameMsgOut frame = new AppFrameMsgOut();

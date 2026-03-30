@@ -1,10 +1,10 @@
 package org.webswing.model.appframe.out;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.MsgOut;
 import org.webswing.model.SyncMsg;
+
+import java.io.Serial;
+import java.util.List;
 
 public class JsEvalRequestMsgOut implements MsgOut, SyncMsg {
 

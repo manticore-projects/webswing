@@ -1,29 +1,6 @@
 package org.webswing.toolkit.util;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.Serial;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.webswing.toolkit.WebPrintService;
 
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -32,36 +9,21 @@ import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.Size2DSyntax;
-import javax.print.attribute.standard.Media;
-import javax.print.attribute.standard.MediaPrintableArea;
-import javax.print.attribute.standard.MediaSize;
-import javax.print.attribute.standard.MediaSizeName;
-import javax.print.attribute.standard.OrientationRequested;
-import javax.print.attribute.standard.PageRanges;
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import javax.print.attribute.standard.*;
+import javax.swing.*;
 import javax.swing.text.NumberFormatter;
-
-import org.webswing.toolkit.WebPrintService;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serial;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.List;
 
 public class WebPrintDialog extends JDialog {
 
   @Serial
   private static final long serialVersionUID = 7094056515358259815L;
-  private static ResourceBundle messages =
+  private static final ResourceBundle messages =
       ResourceBundle.getBundle("org.webswing.toolkit.util.WebPrintDialogResources");
   private JButton cancel;
   private JButton approve;
@@ -70,11 +32,11 @@ public class WebPrintDialog extends JDialog {
   private MediaPanel mediaPanel;
   private MarginsPanel marginsPanel;
   private PrintRangePanel rangePanel;
-  private PrintService[] services;
-  private int defaultServiceIndex;
+  private final PrintService[] services;
+  private final int defaultServiceIndex;
   private PrintService service;
-  private PrintRequestAttributeSet asCurrent;
-  private DocFlavor docFlavor;
+  private final PrintRequestAttributeSet asCurrent;
+  private final DocFlavor docFlavor;
 
   public WebPrintDialog(PrintService[] services, int defaultServiceIndex,
       PrintRequestAttributeSet as, DocFlavor docFlavor) {
@@ -342,11 +304,11 @@ public class WebPrintDialog extends JDialog {
             service.getSupportedAttributeValues(Media.class, docFlavor, asCurrent);
         Media[] mediaArray;
         Media media;
-        if ((mediaArrayObject instanceof Media[] media1s)) {
+        if (mediaArrayObject instanceof Media[] media1s) {
           mediaArray = media1s;
           for (int i = 0; i < mediaArray.length; i++) {
             media = mediaArray[i];
-            if ((media instanceof MediaSizeName)) {
+            if (media instanceof MediaSizeName) {
               cbSize.addItem(getMediaName(((Media) media).toString()));
               allMedia.add((Media) media);
             }
@@ -419,13 +381,25 @@ public class WebPrintDialog extends JDialog {
     @Serial
     private static final long serialVersionUID = 6865833608103747234L;
     private final String strTitle = getMsg("border.margins");
-    private JFormattedTextField leftMargin, rightMargin, topMargin, bottomMargin;
-    private JLabel lblLeft, lblRight, lblTop, lblBottom;
+    private JFormattedTextField leftMargin;
+    private JFormattedTextField rightMargin;
+    private JFormattedTextField topMargin;
+    private JFormattedTextField bottomMargin;
+    private JLabel lblLeft;
+    private JLabel lblRight;
+    private JLabel lblTop;
+    private JLabel lblBottom;
     private int units = MediaPrintableArea.MM;
     // storage for the last margin values calculated, -ve is uninitialised
-    private float lmVal = -1f, rmVal = -1f, tmVal = -1f, bmVal = -1f;
+    private float lmVal = -1f;
+    private float rmVal = -1f;
+    private float tmVal = -1f;
+    private float bmVal = -1f;
     // storage for margins as objects mapped into orientation for display
-    private Float lmObj, rmObj, tmObj, bmObj;
+    private Float lmObj;
+    private Float rmObj;
+    private Float tmObj;
+    private Float bmObj;
 
     public MarginsPanel() {
       super();
@@ -443,7 +417,7 @@ public class WebPrintDialog extends JDialog {
       String unitsKey = "label.millimetres";
       String defaultCountry = Locale.getDefault().getCountry();
       if (defaultCountry != null
-          && (defaultCountry.equals("") || defaultCountry.equals(Locale.US.getCountry())
+          && ("".equals(defaultCountry) || defaultCountry.equals(Locale.US.getCountry())
               || defaultCountry.equals(Locale.CANADA.getCountry()))) {
         unitsKey = "label.inches";
         units = MediaPrintableArea.INCH;
@@ -753,7 +727,8 @@ public class WebPrintDialog extends JDialog {
         float wid = mediaSize.getX(MediaPrintableArea.INCH);
         float hgt = mediaSize.getY(MediaPrintableArea.INCH);
         float maxMarginRatio = 5f;
-        float xMgn, yMgn;
+        float xMgn;
+        float yMgn;
         if (wid > maxMarginRatio) {
           xMgn = 1f;
         } else {
@@ -807,7 +782,7 @@ public class WebPrintDialog extends JDialog {
             // try to centre the printable area.
             pax = (wid - paw) / 2f;
           } else {
-            pax = (lmVal >= paxMax) ? lmVal : paxMax;
+            pax = lmVal >= paxMax ? lmVal : paxMax;
             paw = wid - pax - rmVal;
           }
           if (tmVal + bmVal > hgt) {
@@ -816,7 +791,7 @@ public class WebPrintDialog extends JDialog {
             }
             pay = (hgt - pah) / 2f;
           } else {
-            pay = (tmVal >= payMax) ? tmVal : payMax;
+            pay = tmVal >= payMax ? tmVal : payMax;
             pah = hgt - pay - bmVal;
           }
         }
@@ -913,8 +888,10 @@ public class WebPrintDialog extends JDialog {
     private static final long serialVersionUID = 2524487233256169427L;
     private final String strTitle = getMsg("border.printrange");
     private final PageRanges prAll = new PageRanges(1, Integer.MAX_VALUE);
-    private JRadioButton rbAll, rbPages;
-    private JFormattedTextField tfRangeFrom, tfRangeTo;
+    private JRadioButton rbAll;
+    private JRadioButton rbPages;
+    private JFormattedTextField tfRangeFrom;
+    private JFormattedTextField tfRangeTo;
     private JLabel lblRangeTo;
     private boolean prSupported;
 
@@ -1028,7 +1005,7 @@ public class WebPrintDialog extends JDialog {
     }
 
     private void setupRangeWidgets() {
-      boolean rangeEnabled = (rbPages.isSelected() && prSupported);
+      boolean rangeEnabled = rbPages.isSelected() && prSupported;
       tfRangeFrom.setEnabled(rangeEnabled);
       tfRangeTo.setEnabled(rangeEnabled);
       lblRangeTo.setEnabled(rangeEnabled);

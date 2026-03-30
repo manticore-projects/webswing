@@ -5,11 +5,8 @@ import org.junit.Test;
 import org.webswing.Constants;
 import org.webswing.classloader.ClassModificationRegister;
 
-import javax.script.ScriptException;
-
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ClassModificationRegisterTest {

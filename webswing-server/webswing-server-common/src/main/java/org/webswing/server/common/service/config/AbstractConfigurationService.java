@@ -1,9 +1,5 @@
 package org.webswing.server.common.service.config;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +9,15 @@ import org.webswing.server.common.model.meta.MetaObject;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.model.exception.WsException;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public abstract class AbstractConfigurationService<T>
     implements ConfigurationService<T>, ConfigurationUpdateHandler<T> {
   private static final Logger log = LoggerFactory.getLogger(AbstractConfigurationService.class);
 
-  private List<ConfigurationChangeListener<T>> changeListeners = new CopyOnWriteArrayList<>();
+  private final List<ConfigurationChangeListener<T>> changeListeners = new CopyOnWriteArrayList<>();
 
   protected abstract ConfigurationProvider<T> getProvider();
 

@@ -1,49 +1,34 @@
 package org.webswing.server.common.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import java.security.SecureRandom;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.webswing.Constants;
-import org.webswing.server.common.model.security.AbstractWebswingUserProto;
-import org.webswing.server.common.model.security.MapProto;
-import org.webswing.server.common.model.security.WebswingAction;
-import org.webswing.server.common.model.security.WebswingLoginSessionTokenClaimProto;
-import org.webswing.server.common.model.security.WebswingTokenClaimProto;
-import org.webswing.server.common.service.security.AbstractWebswingUser;
-import org.webswing.server.common.service.security.WebswingLoginSessionTokenClaim;
-import org.webswing.server.common.service.security.WebswingTokenClaim;
-
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.json.JsonMapper;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.webswing.Constants;
+import org.webswing.server.common.model.security.*;
+import org.webswing.server.common.service.security.AbstractWebswingUser;
+import org.webswing.server.common.service.security.WebswingLoginSessionTokenClaim;
+import org.webswing.server.common.service.security.WebswingTokenClaim;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class JwtUtil {
 
@@ -537,9 +522,12 @@ public class JwtUtil {
    * Sanitize a string for safe inclusion in log messages.
    */
   private static String sanitizeForLog(String input) {
-    if (input == null)
+    if (input == null) {
       return "null";
+    }
     return input.replaceAll("[\\r\\n\\t]", "_");
   }
+
+  private JwtUtil() {}
 
 }

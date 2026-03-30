@@ -1,26 +1,15 @@
 package org.webswing.server.common.service.url.impl;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
-import org.webswing.server.common.service.url.WebSocketUrlLoader;
-import org.webswing.server.common.service.url.WebSocketUrlLoaderEvent;
-import org.webswing.server.common.service.url.WebSocketUrlLoaderListener;
-import org.webswing.server.common.service.url.WebSocketUrlLoaderService;
-import org.webswing.server.common.service.url.WebSocketUrlLoaderType;
+import org.webswing.server.common.service.url.*;
+
+import java.io.File;
+import java.net.URI;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class WebSocketUrlLoaderServiceImpl implements WebSocketUrlLoaderService {
 
@@ -30,11 +19,11 @@ public class WebSocketUrlLoaderServiceImpl implements WebSocketUrlLoaderService 
   private long reloadInterval;
   private WebSocketUrlLoader loader;
 
-  private List<WebSocketUrlLoaderListener> listeners = new ArrayList<>();
+  private final List<WebSocketUrlLoaderListener> listeners = new ArrayList<>();
 
   private final Set<String> lastValue = Collections.synchronizedSet(new HashSet<>());
 
-  private Timer reloadTimer = new Timer("Admin - Websocket URL Reloader", true);
+  private final Timer reloadTimer = new Timer("Admin - Websocket URL Reloader", true);
 
   public WebSocketUrlLoaderServiceImpl() {}
 

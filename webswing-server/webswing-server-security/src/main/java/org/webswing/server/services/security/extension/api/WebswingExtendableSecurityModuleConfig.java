@@ -1,18 +1,12 @@
 package org.webswing.server.services.security.extension.api;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-
-import org.webswing.server.common.model.meta.ConfigField;
-import org.webswing.server.common.model.meta.ConfigFieldDiscriminator;
-import org.webswing.server.common.model.meta.ConfigFieldPresets;
-import org.webswing.server.common.model.meta.ConfigGroup;
-import org.webswing.server.common.model.meta.ConfigType;
-import org.webswing.server.common.model.meta.MetaField;
-import org.webswing.server.common.model.meta.MetadataGenerator;
+import org.webswing.server.common.model.meta.*;
 import org.webswing.server.common.model.meta.ConfigFieldEditorType.EditorType;
 import org.webswing.server.services.security.api.WebswingSecurityModuleConfig;
 import org.webswing.server.services.security.extension.api.WebswingExtendableSecurityModuleConfig.ExtensionMetadataGenerator;
+
+import java.util.LinkedHashSet;
+import java.util.List;
 
 @ConfigType(metadataGenerator = ExtensionMetadataGenerator.class)
 public interface WebswingExtendableSecurityModuleConfig extends WebswingSecurityModuleConfig {

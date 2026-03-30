@@ -1,13 +1,12 @@
 package org.webswing.ext.services;
 
-import java.lang.reflect.Method;
-
+import netscape.javascript.JSException;
 import org.webswing.model.appframe.in.JavaEvalRequestMsgIn;
 import org.webswing.model.appframe.in.JsParamMsgIn;
 import org.webswing.model.appframe.out.JsParamMsgOut;
 import org.webswing.model.appframe.out.JsResultMsgOut;
 
-import netscape.javascript.JSException;
+import java.lang.reflect.Method;
 
 public interface JsLinkService {
 

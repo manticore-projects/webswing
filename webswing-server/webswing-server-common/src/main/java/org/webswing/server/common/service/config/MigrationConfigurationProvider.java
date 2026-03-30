@@ -1,16 +1,15 @@
 package org.webswing.server.common.service.config;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.server.model.exception.WsInitException;
 
-import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public abstract class MigrationConfigurationProvider<T> extends AbstractConfigurationProvider<T> {
 

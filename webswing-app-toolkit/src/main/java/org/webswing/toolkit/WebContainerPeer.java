@@ -1,10 +1,10 @@
 package org.webswing.toolkit;
 
+import org.webswing.toolkit.util.Services;
+
 import java.awt.Container;
 import java.awt.Insets;
 import java.awt.peer.ContainerPeer;
-
-import org.webswing.toolkit.util.Services;
 
 abstract public class WebContainerPeer extends WebComponentPeer implements ContainerPeer {
 

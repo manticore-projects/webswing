@@ -1,42 +1,28 @@
 package org.webswing.javafx.toolkit;
 
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.JComponent;
-
+import javafx.embed.swing.JFXPanel;
+import javafx.embed.swing.SwingNode;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.webswing.ext.services.ToolkitFXService;
 import org.webswing.javafx.toolkit.adaper.WindowAdapter;
 import org.webswing.model.appframe.out.ComponentTreeMsgOut;
 import org.webswing.toolkit.util.ToolkitUtil;
 import org.webswing.util.AppLogger;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.embed.swing.SwingNode;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextInputControl;
-import javafx.scene.control.ToggleButton;
-import javafx.stage.Stage;
+import javax.swing.JComponent;
+import java.awt.Window;
+import java.util.*;
 
 public class ToolkitFXServiceImpl implements ToolkitFXService {
 
   private static ToolkitFXServiceImpl impl;
 
-  private Set<Stage> stages = Collections.synchronizedSet(new HashSet<>());
-  private List<String> ignoreChildren =
+  private final Set<Stage> stages = Collections.synchronizedSet(new HashSet<>());
+  private final List<String> ignoreChildren =
       Arrays.asList("Button", "CheckBox", "ChoiceBox", "ColorPicker", "ComboBox", "DatePicker",
           "Label", "PasswordField", "ProgressBar", "RadioButton", "Slider", "Spinner",
           "SplitMenuButton", "TextArea", "TextField", "ToggleButton");

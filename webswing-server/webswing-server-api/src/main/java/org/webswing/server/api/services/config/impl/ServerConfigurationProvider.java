@@ -1,15 +1,15 @@
 package org.webswing.server.api.services.config.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.webswing.server.common.model.SecuredPathConfig;
 import org.webswing.server.common.service.config.ConfigurationUpdateHandler;
 import org.webswing.server.common.service.config.MigrationConfigurationProvider;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.common.util.ConfigUtil;
 import org.webswing.server.model.exception.WsInitException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ServerConfigurationProvider extends MigrationConfigurationProvider<SecuredPathConfig> {
 
@@ -64,10 +64,10 @@ public class ServerConfigurationProvider extends MigrationConfigurationProvider<
     if (originalConfiguration.get(path) != null) { // original configuration is null when this is a
                                                    // new app config that is being created
       config.put("swingConfig",
-          (((Map<String, Object>) originalConfiguration.get(path)).get("swingConfig"))); // put
-                                                                                         // removed
-                                                                                         // swingConfig
-                                                                                         // back
+          ((Map<String, Object>) originalConfiguration.get(path)).get("swingConfig")); // put
+                                                                                       // removed
+                                                                                       // swingConfig
+                                                                                       // back
     }
     super.saveConfiguration(path, config, reload);
   }

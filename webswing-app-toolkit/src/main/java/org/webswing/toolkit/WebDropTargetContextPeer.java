@@ -1,22 +1,22 @@
 package org.webswing.toolkit;
 
-import java.awt.Component;
-import java.awt.Window;
-import java.io.IOException;
-
 import org.webswing.toolkit.util.Util;
-
 import sun.awt.PeerEvent;
 import sun.awt.SunToolkit;
 import sun.awt.dnd.SunDropTargetContextPeer;
 import sun.awt.dnd.SunDropTargetEvent;
+
+import java.awt.Component;
+import java.awt.Window;
+import java.io.IOException;
 
 @SuppressWarnings("restriction")
 public class WebDropTargetContextPeer extends SunDropTargetContextPeer {
 
   private WebDragSourceContextPeer dragSource;
 
-  private int dropx, dropy;
+  private int dropx;
+  private int dropy;
   private Window dropWindow;
 
   public static WebDropTargetContextPeer getWebDropTargetContextPeer() {

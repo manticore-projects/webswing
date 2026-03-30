@@ -21,7 +21,7 @@ public class CheckSerializedSize extends OutputStream {
     }
   }
 
-  private long nBytes = 0;
+  private long nBytes;
 
   private CheckSerializedSize() {}
 

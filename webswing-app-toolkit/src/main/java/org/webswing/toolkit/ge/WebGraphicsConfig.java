@@ -1,20 +1,14 @@
 package org.webswing.toolkit.ge;
 
-import java.awt.AWTException;
-import java.awt.Component;
-import java.awt.GraphicsDevice;
-import java.awt.Image;
-import java.awt.ImageCapabilities;
-import java.awt.Rectangle;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import sun.awt.image.OffScreenImage;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.VolatileImage;
 import java.awt.image.WritableRaster;
-
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-
-import sun.awt.image.OffScreenImage;
 
 @SuppressWarnings("restriction")
 public class WebGraphicsConfig extends BufferedImageGraphicsConfig {

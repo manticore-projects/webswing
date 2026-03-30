@@ -1,12 +1,12 @@
 package org.webswing.toolkit.util;
 
+import org.webswing.model.appframe.out.ComponentTreeMsgOut;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.webswing.model.appframe.out.ComponentTreeMsgOut;
 
 public class ToolkitUtil {
 
@@ -71,7 +71,7 @@ public class ToolkitUtil {
     String cType = getComponentType(c);
     ComponentTreeMsgOut msg = ComponentTreeMsgOut.fromComponent(c, cType);
 
-    if (cType.equalsIgnoreCase("JFXPanel")) {
+    if ("JFXPanel".equalsIgnoreCase(cType)) {
       msg.setComponents(getNodeTree(c));
     } else if (c instanceof Container container) {
       synchronized (c.getTreeLock()) {
@@ -86,5 +86,7 @@ public class ToolkitUtil {
 
     return msg;
   }
+
+  private ToolkitUtil() {}
 
 }

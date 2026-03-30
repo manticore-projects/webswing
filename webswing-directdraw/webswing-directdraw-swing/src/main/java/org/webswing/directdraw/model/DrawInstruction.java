@@ -1,12 +1,12 @@
 package org.webswing.directdraw.model;
 
-import java.awt.image.BufferedImage;
-import java.util.Iterator;
-
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.proto.Directdraw.DrawInstructionProto;
 import org.webswing.directdraw.proto.Directdraw.DrawInstructionProto.InstructionProto;
 import org.webswing.directdraw.toolkit.WebImage;
+
+import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
 public class DrawInstruction implements Iterable<DrawConstant<?>> {
 

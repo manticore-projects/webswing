@@ -8,7 +8,7 @@ public enum BuiltInModules {
   INHERITED(null), NONE(AnonymSecurityModule.class.getName()), EMBEDDED(
       EmbededSecurityModule.class.getName()), SHIRO(ShiroSecurityModule.class.getName());
 
-  private String type;
+  private final String type;
 
   private BuiltInModules(String type) {
     this.type = type;

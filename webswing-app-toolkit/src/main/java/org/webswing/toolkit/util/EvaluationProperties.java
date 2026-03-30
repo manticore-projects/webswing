@@ -2,13 +2,13 @@ package org.webswing.toolkit.util;
 
 public class EvaluationProperties {
 
-  private boolean enabled;
-  private String mainText;
-  private String linkText;
-  private String linkUrl;
-  private long timeout;
-  private String dismissText;
-  private int height;
+  private final boolean enabled;
+  private final String mainText;
+  private final String linkText;
+  private final String linkUrl;
+  private final long timeout;
+  private final String dismissText;
+  private final int height;
 
   public EvaluationProperties(boolean enabled, String mainText, String linkText, String linkUrl,
       long timeout, String dismissText, int height) {

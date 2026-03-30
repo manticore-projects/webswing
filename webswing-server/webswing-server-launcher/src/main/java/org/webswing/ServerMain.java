@@ -1,10 +1,8 @@
 package org.webswing;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.eclipse.jetty.compression.server.CompressionHandler;
+// Jetty 12 EE8
+import org.eclipse.jetty.ee8.webapp.WebAppContext;
 // Jetty 12 core
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -14,15 +12,14 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ErrorHandler;
-import org.eclipse.jetty.compression.server.CompressionHandler;
-import org.eclipse.jetty.compression.server.CompressionConfig;
 import org.eclipse.jetty.util.StringUtil;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-
-// Jetty 12 EE8
-import org.eclipse.jetty.ee8.webapp.WebAppContext;
-
 import org.webswing.util.AppLogger;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerMain {
 

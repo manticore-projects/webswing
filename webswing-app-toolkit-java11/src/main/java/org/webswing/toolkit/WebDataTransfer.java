@@ -1,12 +1,12 @@
 package org.webswing.toolkit;
 
+import sun.awt.datatransfer.DataTransferer;
+import sun.awt.datatransfer.ToolkitThreadBlockedHandler;
+
 import java.awt.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import sun.awt.datatransfer.DataTransferer;
-import sun.awt.datatransfer.ToolkitThreadBlockedHandler;
 
 @SuppressWarnings("restriction")
 public class WebDataTransfer extends DataTransferer {

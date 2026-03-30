@@ -46,4 +46,6 @@ public class SecurityUtil {
     subject.setAttribute(attributeName, value);
   }
 
+  private SecurityUtil() {}
+
 }

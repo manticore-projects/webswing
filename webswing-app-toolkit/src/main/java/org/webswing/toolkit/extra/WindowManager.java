@@ -1,18 +1,5 @@
 package org.webswing.toolkit.extra;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
 import org.webswing.common.WindowActionType;
 import org.webswing.dispatch.WebPaintDispatcher;
 import org.webswing.model.appframe.out.AccessibilityMsgOut;
@@ -21,12 +8,20 @@ import org.webswing.toolkit.FocusEventCause;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 
+import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @SuppressWarnings("restriction")
 public class WindowManager {
 
-  private static WindowManager singleton = null;
+  private static WindowManager singleton;
   protected WindowHierarchyTree zorder = new WindowHierarchyTree();
-  protected Window activeWindow = null;
+  protected Window activeWindow;
   private WindowEventHandler eventhandler = new WindowEventHandler();
   private String currentCursor = CursorChangeEventMsgOut.DEFAULT_CURSOR;
 
@@ -87,14 +82,7 @@ public class WindowManager {
     }
   }
 
-  public void bringToBack(Window w) {
-    synchronized (WebPaintDispatcher.webPaintLock) {
-      // w.setAlwaysOnTop(false);
-      // removeWindow(w);
-      // zorder.add(w);
-      // w.repaint();
-    }
-  }
+  public void bringToBack(Window w) {}
 
   public Window getActiveWindow() {
     return activeWindow;

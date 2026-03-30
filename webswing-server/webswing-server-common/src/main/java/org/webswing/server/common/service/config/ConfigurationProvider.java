@@ -1,11 +1,11 @@
 package org.webswing.server.common.service.config;
 
-import java.util.List;
-import java.util.Map;
-
 import org.webswing.server.common.model.meta.ConfigContext;
 import org.webswing.server.common.model.meta.MetaObject;
 import org.webswing.server.model.exception.WsException;
+
+import java.util.List;
+import java.util.Map;
 
 public interface ConfigurationProvider<T> {
 

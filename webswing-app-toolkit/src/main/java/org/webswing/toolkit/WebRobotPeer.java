@@ -1,20 +1,5 @@
 package org.webswing.toolkit;
 
-import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.peer.RobotPeer;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.UUID;
-
 import org.webswing.model.SyncObjectResponse;
 import org.webswing.model.app.out.AppToServerFrameMsgOut;
 import org.webswing.model.appframe.in.AppFrameMsgIn;
@@ -26,6 +11,16 @@ import org.webswing.model.appframe.out.PixelsAreaRequestMsgOut;
 import org.webswing.toolkit.util.Services;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.peer.RobotPeer;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.UUID;
 
 public class WebRobotPeer implements RobotPeer {
 
@@ -123,7 +118,7 @@ public class WebRobotPeer implements RobotPeer {
     kme.setAlt(isAlt());
     kme.setCtrl(isCtrl());
     kme.setKeycode(keycode);
-    int character = (!isShift() && (keycode >= 65 && keycode <= 90)) ? keycode + 32 : keycode;
+    int character = !isShift() && (keycode >= 65 && keycode <= 90) ? keycode + 32 : keycode;
     kme.setCharacter(character);
     InputEventMsgIn input = new InputEventMsgIn();
     input.setKey(kme);

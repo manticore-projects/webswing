@@ -1,11 +1,8 @@
 package org.webswing.server.api.model;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 
 public class ManifestIcons {
@@ -107,4 +104,3 @@ public class ManifestIcons {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -1,11 +1,5 @@
 package org.webswing.toolkit.api;
 
-import java.awt.Container;
-import java.awt.Window;
-
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-
 import org.webswing.toolkit.api.action.WebActionListener;
 import org.webswing.toolkit.api.action.WebWindow;
 import org.webswing.toolkit.api.clipboard.BrowserTransferable;
@@ -17,6 +11,11 @@ import org.webswing.toolkit.api.security.WebswingUser;
 import org.webswing.toolkit.api.security.WebswingUserListener;
 import org.webswing.toolkit.api.url.WebswingUrlState;
 import org.webswing.toolkit.api.url.WebswingUrlStateChangeListener;
+
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import java.awt.Container;
+import java.awt.Window;
 
 /**
  * Webswing API used by Swing application for easy integration.

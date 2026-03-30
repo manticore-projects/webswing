@@ -1,10 +1,10 @@
 package org.webswing.model.common.in;
 
-import java.io.Serial;
-import java.util.List;
-
 import org.webswing.model.CommonMsg;
 import org.webswing.model.MsgIn;
+
+import java.io.Serial;
+import java.util.List;
 
 public class ConnectionHandshakeMsgIn implements MsgIn, CommonMsg {
 

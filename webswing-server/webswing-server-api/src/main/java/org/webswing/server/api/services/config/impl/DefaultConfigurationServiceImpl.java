@@ -1,7 +1,7 @@
 package org.webswing.server.api.services.config.impl;
 
-import java.lang.reflect.Constructor;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
@@ -13,8 +13,7 @@ import org.webswing.server.common.service.config.ConfigurationProvider;
 import org.webswing.server.common.service.config.ConfigurationUpdateHandler;
 import org.webswing.server.model.exception.WsInitException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import java.lang.reflect.Constructor;
 
 @Singleton
 public class DefaultConfigurationServiceImpl extends AbstractConfigurationService<SecuredPathConfig>

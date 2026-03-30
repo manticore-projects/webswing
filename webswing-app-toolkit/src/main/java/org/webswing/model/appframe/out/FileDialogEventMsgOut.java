@@ -1,13 +1,12 @@
 package org.webswing.model.appframe.out;
 
+import org.webswing.model.MsgOut;
+import org.webswing.toolkit.api.file.WebswingFileChooserUtil;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.webswing.model.MsgOut;
-
 import java.io.Serial;
-import org.webswing.toolkit.api.file.WebswingFileChooserUtil;
 
 public class FileDialogEventMsgOut implements MsgOut {
 
@@ -59,8 +58,9 @@ public class FileDialogEventMsgOut implements MsgOut {
         }
       }
     }
-    if (filter.length() > 2)
+    if (filter.length() > 2) {
       filter = filter.substring(0, filter.length() - 2);
+    }
   }
 
   public FileDialogEventType getEventType() {

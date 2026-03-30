@@ -1,6 +1,7 @@
 package org.webswing.dev.server;
 
 import main.Main;
+import org.webswing.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,18 +12,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.webswing.Constants;
-
 public class InteractiveServerLauncher {
 
-  private static Map<String, Watcher> watcherMap = new HashMap<>();
+  private static final Map<String, Watcher> watcherMap = new HashMap<>();
 
   public static void main(String[] args) {
     boolean firstRun = true;
     String defaultExampleFolderName = "default-all-apps";
 
     final String[] newArgs;
-    if (args.length > 1 && args[0].equals("-example")) {
+    if (args.length > 1 && "-example".equals(args[0])) {
       defaultExampleFolderName = args[1];
       newArgs = Arrays.copyOfRange(args, 2, args.length);
     } else {

@@ -56,4 +56,7 @@ public class PlatformGraphicsInfo {
             throw new AWTError("Could not create toolkit: " + toolkitName + " - " + e);
         }
     }
+
+    private PlatformGraphicsInfo() {
+    }
 }

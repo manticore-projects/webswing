@@ -1,5 +1,13 @@
 package org.webswing.special;
 
+import org.webswing.SwingMain;
+import org.webswing.toolkit.WebPrinterJobWrapper;
+import org.webswing.util.AppLogger;
+
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.attribute.AttributeSet;
+import javax.swing.JDesktopPane;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,16 +18,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
-import javax.print.DocFlavor;
-import javax.print.PrintService;
-import javax.print.attribute.AttributeSet;
-import javax.swing.JDesktopPane;
-
-import org.webswing.SwingMain;
-import org.webswing.toolkit.WebPrintService;
-import org.webswing.toolkit.WebPrinterJobWrapper;
-import org.webswing.util.AppLogger;
 
 public class RedirectedMethods {
 
@@ -92,4 +90,6 @@ public class RedirectedMethods {
   public static PrintService[] lookupPrintServices(DocFlavor flavor, AttributeSet attributes) {
     return WebPrinterJobWrapper.wrappedLookupPrintServices(flavor, attributes);
   }
+
+  private RedirectedMethods() {}
 }

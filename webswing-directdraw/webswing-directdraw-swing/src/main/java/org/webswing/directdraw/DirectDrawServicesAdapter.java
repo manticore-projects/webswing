@@ -1,5 +1,9 @@
 package org.webswing.directdraw;
 
+import org.apache.commons.codec.binary.Base64;
+import org.webswing.directdraw.util.ImageConsumerAdapter;
+
+import javax.imageio.ImageIO;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -8,17 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
-import org.webswing.directdraw.util.ImageConsumerAdapter;
 
 public class DirectDrawServicesAdapter {
 

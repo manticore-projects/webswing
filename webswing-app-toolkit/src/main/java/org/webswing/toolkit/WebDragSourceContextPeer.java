@@ -1,12 +1,12 @@
 package org.webswing.toolkit;
 
+import org.webswing.toolkit.util.Util;
+
 import java.awt.Cursor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.InvalidDnDOperationException;
 import java.util.Map;
-
-import org.webswing.toolkit.util.Util;
 
 @SuppressWarnings("restriction")
 public class WebDragSourceContextPeer extends sun.awt.dnd.SunDragSourceContextPeer {

@@ -1,5 +1,13 @@
 package org.webswing.dispatch;
 
+import org.webswing.Constants;
+import org.webswing.toolkit.api.lifecycle.ShutdownReason;
+import org.webswing.toolkit.util.Services;
+import org.webswing.toolkit.util.Util;
+import org.webswing.util.AppLogger;
+import org.webswing.util.NamedThreadFactory;
+
+import javax.swing.SwingUtilities;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,15 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.swing.SwingUtilities;
-
-import org.webswing.Constants;
-import org.webswing.toolkit.api.lifecycle.ShutdownReason;
-import org.webswing.toolkit.util.Services;
-import org.webswing.toolkit.util.Util;
-import org.webswing.util.AppLogger;
-import org.webswing.util.NamedThreadFactory;
-
 public class WebSessionWatchdog implements SessionWatchdog {
 
   private static final long LAST_HEARTBEAT_BEFORE_SHUTDOWN = Long.getLong(
@@ -30,15 +29,15 @@ public class WebSessionWatchdog implements SessionWatchdog {
   private static final int EDT_TIMEOUT_SECONDS =
       Integer.getInteger(Constants.EDT_TIMEOUT_SECONDS, Constants.EDT_TIMEOUT_SECONDS_DEFAULT);
 
-  private ScheduledExecutorService exitScheduler = Executors.newSingleThreadScheduledExecutor(
+  private final ScheduledExecutorService exitScheduler = Executors.newSingleThreadScheduledExecutor(
       NamedThreadFactory.getInstance("Webswing Shutdown scheduler"));
 
   private final Object delayedShutdownScheduleLock = new Object();
   private ScheduledFuture<?> delayedShutdownFuture;
   private boolean schedulingShutdown;
-  private AtomicBoolean watchHeartbeat = new AtomicBoolean(true);
-  private AtomicBoolean terminated = new AtomicBoolean(false);
-  private AtomicLong lastHeartbeat = new AtomicLong(System.currentTimeMillis());
+  private final AtomicBoolean watchHeartbeat = new AtomicBoolean(true);
+  private final AtomicBoolean terminated = new AtomicBoolean(false);
+  private final AtomicLong lastHeartbeat = new AtomicLong(System.currentTimeMillis());
 
   public WebSessionWatchdog() {
     // if shutdown is scheduled, we ignore the timeout setting
@@ -50,7 +49,7 @@ public class WebSessionWatchdog implements SessionWatchdog {
     // only call once
     // if value is not reset after 10 seconds - EDT is stuck
     Runnable watchdog = new Runnable() {
-      boolean exitDumpCreated = false;
+      boolean exitDumpCreated;
       AtomicInteger pingEventDispatchThread = new AtomicInteger(0);
 
       @Override
@@ -101,7 +100,7 @@ public class WebSessionWatchdog implements SessionWatchdog {
             long diff = System.currentTimeMillis() - lastTstp;
             int timeoutMs = timeoutSec * 1000;
             timeoutMs = Math.max(1000, timeoutMs);
-            if ((diff / 1000 > 10)) {
+            if (diff / 1000 > 10) {
               String msg = timeoutIfInactive ? "User" : "Session";
               if ((diff / 1000) % 60 == 0) {
                 AppLogger.warn(msg + " inactive for " + diff / 1000 + " seconds."
@@ -171,7 +170,7 @@ public class WebSessionWatchdog implements SessionWatchdog {
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
         String line = null;
         while ((line = reader.readLine()) != null) {
-          if (line.equalsIgnoreCase("ping")) {
+          if ("ping".equalsIgnoreCase(line)) {
             lastHeartbeat.set(System.currentTimeMillis());
           }
           if (line.startsWith("reconnect")) {

@@ -1,27 +1,21 @@
 package org.webswing.dispatch;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.RepaintManager;
-
 import org.webswing.audio.AudioClip;
 import org.webswing.model.appframe.out.AccessibilityMsgOut;
 import org.webswing.model.appframe.out.FocusEventMsgOut;
 import org.webswing.toolkit.api.clipboard.PasteRequestContext;
 import org.webswing.toolkit.api.clipboard.WebswingClipboardData;
 import org.webswing.toolkit.api.component.HtmlPanel;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.RepaintManager;
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 public interface PaintDispatcher {
 
