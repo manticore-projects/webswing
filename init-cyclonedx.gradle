@@ -1,0 +1,14 @@
+// ./gradlew --init-script init-cyclonedx.gradle cyclonedxBom
+
+initscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'org.cyclonedx.bom:org.cyclonedx.bom.gradle.plugin:3.2.2'
+    }
+}
+
+allprojects {
+    apply plugin: org.cyclonedx.gradle.CyclonedxPlugin
+}

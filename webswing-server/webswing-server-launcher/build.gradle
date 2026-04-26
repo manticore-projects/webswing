@@ -18,6 +18,8 @@ dependencies {
 
     implementation 'org.eclipse.jetty.compression:jetty-compression-server:12.1.+'
     runtimeOnly 'org.eclipse.jetty.compression:jetty-compression-gzip:12.1.+'
+
+    implementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
 }
 
 jar {
