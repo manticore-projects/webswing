@@ -71,8 +71,8 @@ public class SessionRecordingPlayback {
         openStream.close();
       }
       openStream = dataStore.readData(WebswingDataStoreType.recording.name(), fileName);
-      readInt(openStream);// version
-      readObject(openStream);// header
+      readInt(openStream); // version
+      readObject(openStream); // header
     } catch (Exception e) {
       log.error("Failed to reset recording file. ", e);
     }
@@ -131,7 +131,7 @@ public class SessionRecordingPlayback {
       );
 
   private static Object readObject(InputStream fis) throws IOException {
-    readInt(fis);// delay
+    readInt(fis); // delay
     Integer headerLength = readInt(fis);
     if (headerLength == null || headerLength <= 0 || headerLength > MAX_OBJECT_HEADER_SIZE) {
       throw new IOException("Invalid object header length: " + headerLength);

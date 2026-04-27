@@ -392,9 +392,9 @@ public class GlobalUrlHandler extends PrimaryUrlHandler
       Map<String, Object> config = new HashMap<>();
       config.put("enabled", false);
       try {
-        configService.setConfiguration(path, config);// first create with enabled:false to prevent
-                                                     // initiation
-        configService.setConfiguration(path, null);// once exists,
+        configService.setConfiguration(path, config); // first create with enabled:false to prevent
+                                                      // initiation
+        configService.setConfiguration(path, null); // once exists,
       } catch (Exception e) {
         log.error("Unable to Create App '{}'!", path, e);
       }

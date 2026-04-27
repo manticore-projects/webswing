@@ -20,7 +20,7 @@ import java.util.List;
 @SuppressWarnings("restriction")
 public class DirectDrawUtils {
 
-  public static final Map<String, String> webFonts = Map.of("Dialog", "sans-serif", "DialogInput",
+  public static final Map<String, String> WEB_FONTS = Map.of("Dialog", "sans-serif", "DialogInput",
       "monospace", "Serif", "serif", "SansSerif", "sans-serif", "Monospaced", "monospace");
   private static final String DELIMITER = "|";
   private static SunGraphics2D sgHelper;
@@ -118,7 +118,7 @@ public class DirectDrawUtils {
           if (hints.rightVisible) {
             idxMin = idx + 1;
           } else {
-            return s.length();// invalid option
+            return s.length(); // invalid option
           }
         }
       }
@@ -146,7 +146,7 @@ public class DirectDrawUtils {
           if (hints.leftVisible) {
             idxMax = idx - 1;
           } else {
-            return s.length();// invalid option
+            return s.length(); // invalid option
           }
         }
       }
@@ -171,8 +171,9 @@ public class DirectDrawUtils {
     }
 
     double wI = fm.stringWidth(txtI);
-    wI = wI == 0 ? 0.0001 : wI;// clip.contains always returns false if wI is 0 (causing accent thai
-                               // chars not render on top of last char)
+    wI = wI == 0 ? 0.0001 : wI; // clip.contains always returns false if wI is 0 (causing accent
+                                // thai
+                                // chars not render on top of last char)
     double xI = xL + wL;
     if (clip.contains(xI, y, wI, h) || clip.intersects(xI, y, wI, h)) {
       result.indexVisible = true;
@@ -373,7 +374,7 @@ public class DirectDrawUtils {
         return fileName;
       }
     } else {
-      return DirectDrawUtils.webFonts.get(font.getFamily());
+      return DirectDrawUtils.WEB_FONTS.get(font.getFamily());
     }
   }
 

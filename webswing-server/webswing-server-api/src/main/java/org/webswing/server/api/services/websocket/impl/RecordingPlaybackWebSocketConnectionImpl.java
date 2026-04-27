@@ -127,10 +127,10 @@ public class RecordingPlaybackWebSocketConnectionImpl extends AbstractWebSocketC
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
       log.info("Websocket closed for recording playback, session [{}]{}", session.getId(),
-          (closeReason != null
+          closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
-              : ""));
+              : "");
     }
     if (playback != null) {
       playback.close();
@@ -140,7 +140,7 @@ public class RecordingPlaybackWebSocketConnectionImpl extends AbstractWebSocketC
   @OnError
   public void onError(Session session, Throwable t) {
     log.error("Websocket error from recording playback connection, session [{}]! {}",
-        (session == null ? null : session.getId()), t.getMessage());
+        session == null ? null : session.getId(), t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -161,7 +161,7 @@ public class RecordingPlaybackWebSocketConnectionImpl extends AbstractWebSocketC
       super.sendMessage(encoded);
     } catch (IOException e) {
       log.error("Failed to send playback msg to browser, session [{}]! {}",
-          (session == null ? null : session.getId()), e.getMessage());
+          session == null ? null : session.getId(), e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }

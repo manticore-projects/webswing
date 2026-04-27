@@ -51,35 +51,8 @@ public class WebImage extends Image {
 
     SurfaceManager.setManager(this, new SurfaceManager() {
 
-      // java 1.6
-      public SurfaceData getSourceSurfaceData(sun.java2d.SurfaceData s,
-          sun.java2d.loops.CompositeType c, Color color, boolean b) {
-        BufferedImage snapshot = WebImage.this.getSnapshot();
-        SurfaceManager m = SurfaceManager.getManager(snapshot);
-        try {
-          return (SurfaceData) m.getClass()
-              .getDeclaredMethod("getSourceSurfaceData", sun.java2d.SurfaceData.class,
-                  sun.java2d.loops.CompositeType.class, Color.class, Boolean.TYPE)
-              .invoke(m, s, c, color, b);
-        } catch (Exception e) {
-          e.printStackTrace();
-          return null;
-        }
-      }
-
-      // java 1.6
-      public SurfaceData getDestSurfaceData() {
-        BufferedImage snapshot = WebImage.this.getSnapshot();
-        SurfaceManager m = SurfaceManager.getManager(snapshot);
-        try {
-          return (SurfaceData) m.getClass().getDeclaredMethod("getDestSurfaceData").invoke(m);
-        } catch (Exception e) {
-          e.printStackTrace();
-          return null;
-        }
-      }
-
-      public SurfaceData getPrimarySurfaceData() {// java 1.7
+      @Override
+      public SurfaceData getPrimarySurfaceData() {
         BufferedImage snapshot = WebImage.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {
@@ -90,7 +63,8 @@ public class WebImage extends Image {
         }
       }
 
-      public SurfaceData restoreContents() {// java 1.7
+      @Override
+      public SurfaceData restoreContents() {
         BufferedImage snapshot = WebImage.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {
@@ -278,7 +252,7 @@ public class WebImage extends Image {
       for (DrawConstant<?> cons : instruction) {
         if (cons instanceof CompositeDrawConstantHolder<?> composite) {
           composite.expandAndCacheConstants(constProtos, constantPool);
-        } else if (!(cons instanceof IntegerConst) && cons != DrawConstant.nullConst) {
+        } else if (!(cons instanceof IntegerConst) && cons != DrawConstant.NULL_CONST) {
           int id = constantPool.addToCache(constProtos, cons);
           cons.setId(id);
         }

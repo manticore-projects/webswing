@@ -33,8 +33,8 @@ public class DirectDrawUtilsTest {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// merged in one graphics
-                                                                     // create
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // merged in one graphics
+                                                                      // create
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.setPaint(Color.black));
@@ -44,9 +44,9 @@ public class DirectDrawUtilsTest {
     inst.add(f.setStroke(new BasicStroke(1)));
     inst.add(f.setStroke(new BasicStroke(2)));
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
-    inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));// ignored
+    inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10))); // ignored
     inst.add(f.setPaint(Color.black));
     inst.add(f.setComposite(AlphaComposite.Dst));
     inst.add(f.setStroke(new BasicStroke(1)));
@@ -65,7 +65,7 @@ public class DirectDrawUtilsTest {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// ignored because not used
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // ignored because not used
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.setPaint(Color.black));
@@ -75,16 +75,16 @@ public class DirectDrawUtilsTest {
     inst.add(f.setStroke(new BasicStroke(1)));
     inst.add(f.setStroke(new BasicStroke(2)));
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// merged in one graphics
-                                                                     // create
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // merged in one graphics
+                                                                      // create
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.setPaint(Color.blue));
     inst.add(f.setComposite(AlphaComposite.Dst));
     inst.add(f.setStroke(new BasicStroke(2)));
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// ingored
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // ingored
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.setPaint(Color.black));
     inst.add(f.setComposite(AlphaComposite.Dst));
@@ -104,15 +104,15 @@ public class DirectDrawUtilsTest {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// graphics
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // graphics
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     inst.add(f.setPaint(new TexturePaint(new BufferedImage(10, 10, BufferedImage.TYPE_3BYTE_BGR),
-        new Rectangle())));// merged
+        new Rectangle()))); // merged
     inst.add(f.setPaint(Color.green));
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
     assertEquals("Count not valid", 4, inst.size());
@@ -124,14 +124,14 @@ public class DirectDrawUtilsTest {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// graphics
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // graphics
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 60)));
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
     assertEquals("Count not valid", 4, inst.size());
@@ -144,14 +144,14 @@ public class DirectDrawUtilsTest {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics()));// graphics
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // graphics
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     inst.add(f.setComposite(AlphaComposite.Dst));
     inst.add(f.setComposite(AlphaComposite.SrcAtop));
 
-    inst.add(f.draw(new Rectangle(), null));// draw
+    inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
     assertEquals("Count not valid", 4, inst.size());

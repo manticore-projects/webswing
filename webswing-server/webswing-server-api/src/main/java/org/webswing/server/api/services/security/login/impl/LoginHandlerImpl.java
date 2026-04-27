@@ -32,7 +32,7 @@ public class LoginHandlerImpl extends AbstractUrlHandler implements LoginHandler
     handleCorsHeaders(req, res);
     try {
       if ("OPTIONS".equals(req.getMethod())) {
-        return true;// cors preflight, don't forward to security module
+        return true; // cors preflight, don't forward to security module
       }
       WebswingSecuritySubject.get().initLoginSession(req);
       login(req, res);

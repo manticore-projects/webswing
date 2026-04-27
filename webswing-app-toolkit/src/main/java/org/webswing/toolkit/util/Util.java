@@ -47,9 +47,6 @@ import java.util.List;
 
 public class Util {
 
-  private static final boolean evaluation;
-  private static EvaluationProperties evaluationProps;
-
   public static byte[] convertCursor(BufferedImage img, int x, int y) {
     try {
       return convertToIco(img, x, y);
@@ -126,31 +123,7 @@ public class Util {
     try (InputStream is = cl.getResourceAsStream("toolkit.properties")) {
       evalProps.load(is);
     } catch (Exception e) {
-      // ignore this exception, the file is not present in non-evaluation version
-    }
-
-    evaluation = Boolean.parseBoolean(evalProps.getProperty("webswing.evaluation", "false"));
-
-    long evaluationTimeout = 0;
-    try {
-      evaluationTimeout = Long.parseLong(evalProps.getProperty("webswing.evaluation.timeout", "0"));
-    } catch (NumberFormatException e) {
-      // ignore
-    }
-
-    int height = 70;
-    try {
-      height = Integer.parseInt(evalProps.getProperty("webswing.evaluation.height", "70"));
-    } catch (NumberFormatException e) {
-      // ignore
-    }
-
-    if (evaluation) {
-      evaluationProps = new EvaluationProperties(evaluation,
-          evalProps.getProperty("webswing.evaluation.mainText"),
-          evalProps.getProperty("webswing.evaluation.linkText"),
-          evalProps.getProperty("webswing.evaluation.linkUrl"), evaluationTimeout,
-          evalProps.getProperty("webswing.evaluation.dismissText"), height);
+      // ignore this exception, the file is not present in non-EVALUATION version
     }
   }
 
@@ -311,7 +284,7 @@ public class Util {
 
   public static Window[] getAllWindows() {
     List<Window> windows = new ArrayList<>(Arrays.asList(Window.getWindows()));
-    for (Iterator<Window> i = windows.iterator(); i.hasNext(); ) {
+    for (Iterator<Window> i = windows.iterator(); i.hasNext();) {
       Window w = i.next();
       if (w.getClass().getName().contains("JLightweightFrame")) {
         i.remove();
@@ -325,9 +298,9 @@ public class Util {
     for (WindowMsgOut window : json.getWindows()) {
       WebWindowPeer w = findWindowPeerById(window.getId());
       if (WebToolkit.BACKGROUND_WINDOW_ID.equals(window.getId())) {
-        windowImages.put(window.getId(), new HashMap<Integer, BufferedImage>());// background image
-                                                                                // is handled on
-                                                                                // client
+        windowImages.put(window.getId(), new HashMap<Integer, BufferedImage>()); // background image
+                                                                                 // is handled on
+                                                                                 // client
       } else {
         Map<Integer, BufferedImage> imageMap = new HashMap<Integer, BufferedImage>();
         for (int i = 0; i < window.getContent().size(); i++) {
@@ -866,8 +839,8 @@ public class Util {
   }
 
   public static void resetWindowsGC(int width, int height) {
-    List<Window> windows = new ArrayList<Window>(Arrays.asList(Window.getWindows()));// to avoid
-                                                                                     // concurent-modification-exception
+    List<Window> windows = new ArrayList<Window>(Arrays.asList(Window.getWindows())); // to avoid
+                                                                                      // concurent-modification-exception
     for (Window w : windows) {
       try {
         Class<?> windowClazz = w.getClass();
@@ -1262,11 +1235,7 @@ public class Util {
             sb.append("\t-  blocked on ").append(ti.getLockInfo());
             sb.append('\n');
             break;
-          case WAITING:
-            sb.append("\t-  waiting on ").append(ti.getLockInfo());
-            sb.append('\n');
-            break;
-          case TIMED_WAITING:
+          case WAITING, TIMED_WAITING:
             sb.append("\t-  waiting on ").append(ti.getLockInfo());
             sb.append('\n');
             break;
@@ -1339,14 +1308,6 @@ public class Util {
 
   public static String getDataStoreConfigString() {
     return System.getProperty(Constants.SWING_START_SYS_PROP_DATA_STORE_CONFIG);
-  }
-
-  public static boolean isEvaluation() {
-    return evaluation;
-  }
-
-  public static EvaluationProperties getEvaluationProps() {
-    return evaluationProps;
   }
 
   public static Thread async(Runnable runnable) {

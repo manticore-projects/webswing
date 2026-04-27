@@ -77,6 +77,12 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
   private MirrorWebSocketConnection mirroredWebConnection;
   private ApplicationWebSocketConnection appConnection;
 
+  // Stable lock objects for synchronizing access to the mutable connection fields above.
+  // Synchronizing on the connection fields themselves is futile because they are reassigned —
+  // see SpotBugs ML_SYNC_ON_UPDATED_FIELD.
+  private final Object webConnectionLock = new Object();
+  private final Object mirroredWebConnectionLock = new Object();
+
   private MirroringStatusEnum mirroringStatus = MirroringStatusEnum.NOT_MIRRORING;
   private Runnable doAfterMirroringAccepted;
 
@@ -124,7 +130,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
     sendConnectionInfo();
 
     if (reconnect && webConnection != null) {
-      synchronized (webConnection) {
+      synchronized (webConnectionLock) {
         // FIXME is this ok ?
         // send continue old session, because this is sent if we hit the same server on refresh
         sendDirectMessageToBrowser(webConnection,
@@ -178,7 +184,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
       disconnectMirroredWebSession(true);
     } else if (Constants.APP_WEBSOCKET_CLOSE_REASON_RECONNECT.equals(reason)) {
       if (this.webConnection != null) {
-        synchronized (webConnection) {
+        synchronized (webConnectionLock) {
           // session stolen
           sendDirectMessageToBrowser(this.webConnection,
               SimpleEventMsgOut.sessionStolenNotification.buildMsgOut());
@@ -197,7 +203,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
     if (this.webConnection != null && config.isAllowStealSession()) {
       // steal session
-      synchronized (this.webConnection) {
+      synchronized (webConnectionLock) {
         sendDirectMessageToBrowser(this.webConnection,
             SimpleEventMsgOut.sessionStolenNotification.buildMsgOut());
         disconnectPrimaryWebSession("Session stolen.");
@@ -217,7 +223,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
   private void disconnectPrimaryWebSession(String reason) {
     if (this.webConnection != null) {
-      synchronized (webConnection) {
+      synchronized (webConnectionLock) {
         notifyUserDisconnected(); // this uses webConnection
         this.lastConnection = this.webConnection.getUserInfo();
         this.lastConnection.setDisconnected();
@@ -236,7 +242,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
     }
 
     if (this.mirroredWebConnection != null) {
-      synchronized (this.mirroredWebConnection) {
+      synchronized (mirroredWebConnectionLock) {
         sendDirectMessageToBrowser(this.mirroredWebConnection,
             SimpleEventMsgOut.sessionStolenNotification.buildMsgOut());
       }
@@ -394,7 +400,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
   @Override
   public void handleBrowserMirrorMessage(byte[] frame) {
     if (mirroredWebConnection != null) {
-      synchronized (mirroredWebConnection) {
+      synchronized (mirroredWebConnectionLock) {
         if (mirroringStatus == MirroringStatusEnum.MIRRORING) {
           mirroredWebConnection.handleBrowserMirrorMessage(frame);
         }
@@ -406,12 +412,12 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
   private void closeBrowserConnections() {
     if (webConnection != null) {
-      synchronized (webConnection) {
+      synchronized (webConnectionLock) {
         webConnection.disconnect("Application disconnected!");
       }
     }
     if (mirroredWebConnection != null) {
-      synchronized (mirroredWebConnection) {
+      synchronized (mirroredWebConnectionLock) {
         mirroredWebConnection.disconnect("Application disconnected!");
       }
     }
@@ -450,14 +456,14 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
 
   public boolean sendMessageToBrowser(ServerToBrowserFrameMsgOut msgOut) {
     if (webConnection != null) {
-      synchronized (webConnection) {
+      synchronized (webConnectionLock) {
         if (webConnection.isConnected()) {
           webConnection.sendMessage(msgOut);
         }
       }
     }
     if (mirroredWebConnection != null) {
-      synchronized (mirroredWebConnection) {
+      synchronized (mirroredWebConnectionLock) {
         if (mirroredWebConnection.isConnected()) {
           if (mirroringStatus == MirroringStatusEnum.MIRRORING) {
             mirroredWebConnection.sendMessage(msgOut);
@@ -666,7 +672,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
     poolConnector.notifyUserConnected(this);
 
     if (webConnection != null) {
-      synchronized (webConnection) {
+      synchronized (webConnectionLock) {
         // this should be always true
         webConnection.instanceConnected(this);
       }
@@ -685,7 +691,7 @@ public class SwingInstanceImpl implements Serializable, ConnectedSwingInstance {
         new ConnectionInfoMsgOut(System.getProperty(Constants.WEBSWING_SERVER_ID),
             appConnection.getSessionPoolId(), config.isAutoLogout()));
 
-    synchronized (webConnection) {
+    synchronized (webConnectionLock) {
       if (webConnection.isConnected()) {
         webConnection.sendMessage(msgOut);
       }

@@ -27,7 +27,7 @@
     <module name="WhitespaceAfter" />
 
     <module name="NeedBraces" />
-    <module name="UnnecessaryParentheses" />
+<!--    <module name="UnnecessaryParentheses" />-->
     <module name="LeftCurly" />
     <module name="RightCurly" />
 

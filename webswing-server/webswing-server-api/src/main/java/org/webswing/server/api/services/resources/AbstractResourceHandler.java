@@ -216,8 +216,8 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
       return new ErrorResult(HttpServletResponse.SC_NOT_FOUND, "Forbidden");
     }
 
-    URL url = webResourceProvider.getWebResource(path + "/index.html");// check if this is folder
-                                                                       // with default index
+    URL url = webResourceProvider.getWebResource(path + "/index.html"); // check if this is folder
+                                                                        // with default index
     if (url != null && !req.getPathInfo().endsWith("/")) {
       return new RedirectResult(path + "/");
     }
@@ -316,7 +316,7 @@ public abstract class AbstractResourceHandler extends AbstractUrlHandler
     }
 
     StringBuilder normalized = new StringBuilder("/");
-    for (Iterator<String> it = stack.iterator(); it.hasNext(); ) {
+    for (Iterator<String> it = stack.iterator(); it.hasNext();) {
       normalized.append(it.next());
       if (it.hasNext()) {
         normalized.append("/");

@@ -8,8 +8,8 @@ import java.awt.geom.PathIterator;
 
 public class ZigzagStroke implements Stroke {
 
-  private float amplitude = 10.0f;
-  private float wavelength = 10.0f;
+  private float amplitude = 10.0F;
+  private float wavelength = 10.0F;
   private final Stroke stroke;
   private static final float FLATNESS = 1;
 

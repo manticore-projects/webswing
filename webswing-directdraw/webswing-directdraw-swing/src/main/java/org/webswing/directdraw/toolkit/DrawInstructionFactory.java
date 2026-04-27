@@ -24,11 +24,11 @@ public class DrawInstructionFactory {
 
   public DrawInstruction drawFallback(Shape s) {
     return new DrawInstruction(InstructionProto.DRAW, new FallbackConstant<Shape>(ctx, s),
-        DrawConstant.nullConst);
+        DrawConstant.NULL_CONST);
   }
 
   public DrawInstruction clipFallback(Shape clip) {
-    return new DrawInstruction(InstructionProto.DRAW, DrawConstant.nullConst,
+    return new DrawInstruction(InstructionProto.DRAW, DrawConstant.NULL_CONST,
         new FallbackConstant<Shape>(ctx, clip));
   }
 
@@ -39,11 +39,11 @@ public class DrawInstructionFactory {
   public DrawInstruction drawImage(BufferedImage image, AffineTransform transform, Rectangle2D crop,
       Color bgcolor, Shape clip) {
     DrawConstant<?> transformConst =
-        transform != null ? new TransformConst(ctx, transform) : DrawConstant.nullConst;
+        transform != null ? new TransformConst(ctx, transform) : DrawConstant.NULL_CONST;
     DrawConstant<?> cropConst =
-        crop != null ? new RectangleConst(ctx, crop) : DrawConstant.nullConst;
+        crop != null ? new RectangleConst(ctx, crop) : DrawConstant.NULL_CONST;
     DrawConstant<?> bgConst =
-        bgcolor != null ? new ColorConst(ctx, bgcolor) : DrawConstant.nullConst;
+        bgcolor != null ? new ColorConst(ctx, bgcolor) : DrawConstant.NULL_CONST;
     return new DrawInstruction(InstructionProto.DRAW_IMAGE, new ImageConst(ctx, image),
         transformConst, cropConst, bgConst, toPathConst(clip));
   }
@@ -51,11 +51,11 @@ public class DrawInstructionFactory {
   public DrawInstruction drawWebImage(WebImage image, AffineTransform transform, Rectangle2D crop,
       Color bgcolor, Shape clip) {
     DrawConstant<?> transformConst =
-        transform != null ? new TransformConst(ctx, transform) : DrawConstant.nullConst;
+        transform != null ? new TransformConst(ctx, transform) : DrawConstant.NULL_CONST;
     DrawConstant<?> cropConst =
-        crop != null ? new RectangleConst(ctx, crop) : DrawConstant.nullConst;
+        crop != null ? new RectangleConst(ctx, crop) : DrawConstant.NULL_CONST;
     DrawConstant<?> bgConst =
-        bgcolor != null ? new ColorConst(ctx, bgcolor) : DrawConstant.nullConst;
+        bgcolor != null ? new ColorConst(ctx, bgcolor) : DrawConstant.NULL_CONST;
     return new DrawInstruction(image, transformConst, cropConst, bgConst, toPathConst(clip));
   }
 
@@ -97,15 +97,15 @@ public class DrawInstructionFactory {
     DrawConstant<?> compositeConst = new CompositeConst(ctx, g.getComposite());
     DrawConstant<?> strokeConst =
         g.getStroke() instanceof BasicStroke ? new StrokeConst(ctx, (BasicStroke) g.getStroke())
-            : DrawConstant.nullConst;
+            : DrawConstant.NULL_CONST;
     DrawConstant<?> paintConst;
     try {
       paintConst = getPaintConstant(g.getPaint());
     } catch (UnsupportedOperationException e) {
-      paintConst = DrawConstant.nullConst;
+      paintConst = DrawConstant.NULL_CONST;
     }
     DrawConstant<?> fontConst =
-        ctx.requestFont(g.getFont()) ? new FontConst(ctx, g.getFont()) : DrawConstant.nullConst;
+        ctx.requestFont(g.getFont()) ? new FontConst(ctx, g.getFont()) : DrawConstant.NULL_CONST;
     return createGraphics(id, transformConst, strokeConst, compositeConst, paintConst, fontConst);
   }
 
@@ -161,7 +161,7 @@ public class DrawInstructionFactory {
 
   private DrawConstant<?> toPathConst(Shape s) {
     if (s == null) {
-      return DrawConstant.nullConst;
+      return DrawConstant.NULL_CONST;
     }
     if (s instanceof Rectangle2D rectangle2D1) {
       return new RectangleConst(ctx, rectangle2D1);

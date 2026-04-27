@@ -236,10 +236,10 @@ public class WindowHierarchyTree {
 
   @SuppressWarnings("unchecked")
   protected Window getVisibleWindowOnPosition(int x, int y) {
-    List<WindowHierarchyNode> clonedZOrder = (List<WindowHierarchyNode>) zOrder.clone();// to avoid
-                                                                                        // concurrent
-                                                                                        // modification
-                                                                                        // exception
+    List<WindowHierarchyNode> clonedZOrder = (List<WindowHierarchyNode>) zOrder.clone(); // to avoid
+                                                                                         // concurrent
+                                                                                         // modification
+                                                                                         // exception
     for (WindowHierarchyNode w : clonedZOrder) {
       if (w.getW().getBounds().contains(x, y)) {
         return w.getW();

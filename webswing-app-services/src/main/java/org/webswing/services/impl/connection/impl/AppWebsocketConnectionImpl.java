@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ClientEndpoint
 public class AppWebsocketConnectionImpl implements ServerConnection {
 
-  private static int MAX_RECONNECT_RETRIES = 5;
+  private static int maxReconnectRetries = 5;
   private static int maxMessageSize = Integer.getInteger(Constants.WEBSOCKET_MESSAGE_SIZE,
       Constants.WEBSOCKET_MESSAGE_SIZE_DEFAULT_VALUE);
   private static long messageTimeout = Long.getLong(Constants.WEBSOCKET_MESSAGE_TIMEOUT,
@@ -151,7 +151,7 @@ public class AppWebsocketConnectionImpl implements ServerConnection {
   }
 
   private void scheduleReconnect(int retry) {
-    if (retry >= MAX_RECONNECT_RETRIES) {
+    if (retry >= maxReconnectRetries) {
       return;
     }
 

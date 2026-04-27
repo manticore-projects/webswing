@@ -43,12 +43,12 @@ public class WebPrinterJob extends PrinterJob {
 
   @Override
   public boolean printDialog() throws HeadlessException {
-    return true;// implemented in WebPrinterJobWrapper
+    return true; // implemented in WebPrinterJobWrapper
   }
 
   @Override
   public PageFormat pageDialog(PageFormat page) throws HeadlessException {
-    return page;// implemented in WebPrinterJobWrapper
+    return page; // implemented in WebPrinterJobWrapper
   }
 
   @Override
@@ -67,7 +67,7 @@ public class WebPrinterJob extends PrinterJob {
 
   @Override
   public PageFormat validatePage(PageFormat page) {
-    return page;// implemented in WebPrinterJobWrapper
+    return page; // implemented in WebPrinterJobWrapper
   }
 
   @Override

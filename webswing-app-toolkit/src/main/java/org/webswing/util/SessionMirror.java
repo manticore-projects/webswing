@@ -58,7 +58,7 @@ public class SessionMirror {
       return;
     }
 
-    Object[] approvalDialogButtons = new Object[]{
+    Object[] approvalDialogButtons = new Object[] {
         System.getProperty(Constants.SWING_START_SYS_PROP_MIRRORING_ALLOW_BUTTON,
             Constants.SWING_START_SYS_PROP_MIRRORING_ALLOW_BUTTON_DEFAULT),
         System.getProperty(Constants.SWING_START_SYS_PROP_MIRRORING_DENY_BUTTON,

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.webswing.Constants;
 import org.webswing.server.common.model.DesktopLauncherConfig;
 import org.webswing.server.common.model.SwingConfig.DockMode;
-import org.webswing.server.common.model.SwingConfig.LauncherType;
 import org.webswing.server.common.service.swingprocess.ProcessStartupParams;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.common.util.FontUtils;

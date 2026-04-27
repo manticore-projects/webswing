@@ -35,14 +35,12 @@ ext.createRegenerateProtoTask = { String protoDir, outputDirs ->
     def dirs = outputDirs instanceof List ? outputDirs : [outputDirs]
     def protoDirFile = project.file(protoDir)
 
-    tasks.register('regenerateProto', Exec) {
+    tasks.register('regenerateProto') {
         description = 'Regenerate protobuf Java sources (manual, then commit results)'
         group = 'protobuf'
-
-        doFirst {
+        doLast {
             def protocFile = configurations.protoc.singleFile
             protocFile.setExecutable(true)
-
             dirs.each { outDir ->
                 project.exec {
                     executable protocFile.absolutePath

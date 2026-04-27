@@ -63,7 +63,7 @@ public class DirectDraw {
       return true;
     } else {
       // use native rendering for logical fonts even if not set up in font config
-      return DirectDrawUtils.webFonts.containsKey(font.getFamily());
+      return DirectDrawUtils.WEB_FONTS.containsKey(font.getFamily());
     }
   }
 

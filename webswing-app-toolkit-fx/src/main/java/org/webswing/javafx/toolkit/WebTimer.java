@@ -39,7 +39,9 @@ public class WebTimer extends Timer {
     }
   }
 
+  @SuppressWarnings({"PMD.MethodNamingConventions"})
   protected void _pause(long timer) {}
 
+  @SuppressWarnings({"PMD.MethodNamingConventions"})
   protected void _resume(long timer) {}
 }

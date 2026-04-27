@@ -25,22 +25,23 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
   public void expandAndCacheConstants(List<DrawConstantProto> protos, DrawConstantPool cache) {
     char[] chars = new char[value.string.length()];
     value.string.getChars(0, value.string.length(), chars, 0);
-    int[] pts = new int[2 * chars.length];// (x,y) location per char
+    int[] pts = new int[2 * chars.length]; // (x,y) location per char
     int minX = 0;
     int minY = 0;
     int maxX = 0;
-    int maxY = 0;// size of drawing area
+    int maxY = 0; // size of drawing area
     int[] ids = new int[2 + chars.length]; // address of the drawing area size + address of
                                            // locations constant + address of glyph constant per
                                            // char
     FontInfo fontInfo = DirectDrawUtils.getFontInfo(value.font);
-    String fontDescriptor = get(DirectDrawUtils.fontInfoDescriptor(value.font, fontInfo));// font
-                                                                                          // description
-                                                                                          // to use
-                                                                                          // as part
-                                                                                          // of key
-                                                                                          // in
-                                                                                          // cache
+    String fontDescriptor = get(DirectDrawUtils.fontInfoDescriptor(value.font, fontInfo)); // font
+                                                                                           // description
+                                                                                           // to use
+                                                                                           // as
+                                                                                           // part
+                                                                                           // of key
+                                                                                           // in
+                                                                                           // cache
     GlyphList gl = GlyphList.getInstance();
     try {
       gl.setFromString(fontInfo, value.string, (float) value.x, (float) value.y);
@@ -51,8 +52,8 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
         gl.setGlyphIndex(i);
         // add location of char i
         int metrics[] = gl.getMetrics();
-        pts[i * 2] = metrics[0];// x
-        pts[i * 2 + 1] = metrics[1];// y
+        pts[i * 2] = metrics[0]; // x
+        pts[i * 2 + 1] = metrics[1]; // y
         minX = Math.min(minX, metrics[0]);
         minY = Math.min(minY, metrics[1]);
         maxX = Math.max(maxX, metrics[0] + metrics[2]);
@@ -64,13 +65,13 @@ public class GlyphListConst extends CompositeDrawConstantHolder<StringConstValue
       }
       // create a points proto for size of drawing area and store to cache:
       PointsConst size =
-          new PointsConst(getContext(), new int[]{minX, minY, maxX - minX, maxY - minY});
+          new PointsConst(getContext(), new int[] {minX, minY, maxX - minX, maxY - minY});
       int sizeId = cache.addToCache(protos, size);
       ids[0] = sizeId;
       // create a points proto for x,y locations and store to cache:
       for (int i = 0; i < chars.length; i++) {
-        pts[i * 2] = pts[i * 2] - minX;// x
-        pts[i * 2 + 1] = pts[i * 2 + 1] - minY;// y
+        pts[i * 2] = pts[i * 2] - minX; // x
+        pts[i * 2 + 1] = pts[i * 2 + 1] - minY; // y
       }
       PointsConst points = new PointsConst(getContext(), pts);
       int id = cache.addToCache(protos, points);

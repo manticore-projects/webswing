@@ -203,7 +203,7 @@ public class SessionRecorder {
       return;
     }
 
-    Object[] approvalDialogButtons = new Object[]{
+    Object[] approvalDialogButtons = new Object[] {
         System.getProperty(Constants.SWING_START_SYS_PROP_RECORDING_ALLOW_BUTTON,
             Constants.SWING_START_SYS_PROP_RECORDING_ALLOW_BUTTON_DEFAULT),
         System.getProperty(Constants.SWING_START_SYS_PROP_RECORDING_DENY_BUTTON,

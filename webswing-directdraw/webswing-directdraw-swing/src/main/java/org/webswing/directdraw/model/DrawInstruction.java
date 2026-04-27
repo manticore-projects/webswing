@@ -82,7 +82,7 @@ public class DrawInstruction implements Iterable<DrawConstant<?>> {
     for (DrawConstant<?> c : args) {
       if (c instanceof CompositeDrawConstantHolder<?> holder) {
         result += holder.getExpandedConstantCount();
-      } else if (!(c instanceof IntegerConst) && c != DrawConstant.nullConst) {
+      } else if (!(c instanceof IntegerConst) && c != DrawConstant.NULL_CONST) {
         result++;
       }
     }

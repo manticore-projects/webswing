@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public abstract class AbstractVectorGraphics extends Graphics2D {
 
-  private static final Font defaultFont = new Font("Dialog", 0, 12);
+  private static final Font DEFAULT_FONT = new Font("Dialog", 0, 12);
 
   private Dimension size;
 
@@ -153,7 +153,7 @@ public abstract class AbstractVectorGraphics extends Graphics2D {
   @Override
   public Font getFont() {
     if (currentFont == null) {
-      return defaultFont;
+      return DEFAULT_FONT;
     }
     return currentFont;
   }

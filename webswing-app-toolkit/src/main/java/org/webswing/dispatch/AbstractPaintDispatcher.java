@@ -116,19 +116,19 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
   public void notifyScreenSizeChanged(int oldWidht, int oldHeight, int screenWidth,
       int screenHeight) {
     clientReadyToReceive();
-    Util.resetWindowsPosition(oldWidht, oldHeight);// in case windows moved out of screen by
-                                                   // resizing screen.
+    Util.resetWindowsPosition(oldWidht, oldHeight); // in case windows moved out of screen by
+                                                    // resizing screen.
     notifyWindowRepaintAll();
   }
 
   public void notifyWindowDecorationUpdated(String guid, Rectangle bounds, Insets insets) {
     if (insets != null && bounds != null) {
-      addDirtyArea(guid, new Rectangle(0, 0, bounds.width, insets.top));// top
-      addDirtyArea(guid, new Rectangle(0, 0, insets.left, bounds.height));// left
+      addDirtyArea(guid, new Rectangle(0, 0, bounds.width, insets.top)); // top
+      addDirtyArea(guid, new Rectangle(0, 0, insets.left, bounds.height)); // left
       addDirtyArea(guid,
-          new Rectangle(bounds.width - insets.right, 0, insets.right, bounds.height));// right
+          new Rectangle(bounds.width - insets.right, 0, insets.right, bounds.height)); // right
       addDirtyArea(guid,
-          new Rectangle(0, bounds.height - insets.bottom, bounds.width, insets.bottom));// bottom
+          new Rectangle(0, bounds.height - insets.bottom, bounds.width, insets.bottom)); // bottom
     }
   }
 
@@ -366,7 +366,7 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
       File[] selected = getFileChooserDialog().getSelectedFiles();
       if ((selected == null || selected.length == 0)
           && getFileChooserDialog().getSelectedFile() != null) {
-        selected = new File[]{getFileChooserDialog().getSelectedFile()};
+        selected = new File[] {getFileChooserDialog().getSelectedFile()};
       }
       if (selected != null) {
         for (File f : selected) {
@@ -1008,11 +1008,11 @@ public abstract class AbstractPaintDispatcher implements PaintDispatcher {
     if (parent != null) {
       this.registeredFileChooserWindows.put(parent, new WeakReference<>(chooser));
       if (chooser != null) {
-        chooser.removeComponentListener(fileChooserVisibilityListener);// prevent having double
-                                                                       // listener
+        chooser.removeComponentListener(fileChooserVisibilityListener); // prevent having double
+                                                                        // listener
         chooser.addComponentListener(fileChooserVisibilityListener);
-        chooser.removeHierarchyListener(fileChooserVisibilityListener);// prevent having double
-                                                                       // listener
+        chooser.removeHierarchyListener(fileChooserVisibilityListener); // prevent having double
+                                                                        // listener
         chooser.addHierarchyListener(fileChooserVisibilityListener);
       }
     }

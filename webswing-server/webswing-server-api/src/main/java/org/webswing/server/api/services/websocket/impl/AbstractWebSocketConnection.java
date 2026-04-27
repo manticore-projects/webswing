@@ -99,6 +99,7 @@ public abstract class AbstractWebSocketConnection implements WebSocketConnection
     ByteBuffer buffer = pongMessage.getApplicationData();
     if (buffer == null) {
       log.warn("Empty pong message received for session [{}]!", session.getId());
+      return;
     }
     byte[] bytes = new byte[buffer.remaining()];
     buffer.get(bytes);

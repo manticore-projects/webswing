@@ -726,7 +726,7 @@ public class WebPrintDialog extends JDialog {
 
         float wid = mediaSize.getX(MediaPrintableArea.INCH);
         float hgt = mediaSize.getY(MediaPrintableArea.INCH);
-        float maxMarginRatio = 5f;
+        float maxMarginRatio = 5F;
         float xMgn;
         float yMgn;
         if (wid > maxMarginRatio) {
@@ -1089,7 +1089,7 @@ public class WebPrintDialog extends JDialog {
     // new WebPrintDialog(new PrintService[] { WebPrintService.getService() }, 0, new
     // HashPrintRequestAttributeSet(), null).setVisible(true);
     new WebPrintDialog(
-        new PrintService[]{WebPrintService.getService(),
+        new PrintService[] {WebPrintService.getService(),
             PrintServiceLookup.lookupDefaultPrintService()},
         0, new HashPrintRequestAttributeSet(), null).setVisible(true);
     // new WebPrintDialog(PrintServiceLookup.lookupPrintServices(null,null), 0, new

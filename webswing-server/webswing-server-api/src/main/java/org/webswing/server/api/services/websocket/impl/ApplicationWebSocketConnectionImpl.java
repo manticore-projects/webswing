@@ -108,10 +108,10 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
       log.info("Websocket closed to app, instance [{}]{}", instanceId,
-          (closeReason != null
+          closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
-              : ""));
+              : "");
     }
     if (instance != null) {
       instance.applicationDisconnected(closeReason.getReasonPhrase());
@@ -122,7 +122,7 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
   public void onError(Session session, Throwable t) {
     log.error(
         "Websocket error from app connection, session [{}], instanceId [{}], sessionPool [{}] {}",
-        (session == null ? null : session.getId()), instanceId, sessionPoolId, t.getMessage());
+        session == null ? null : session.getId(), instanceId, sessionPoolId, t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -138,7 +138,7 @@ public class ApplicationWebSocketConnectionImpl extends AbstractWebSocketConnect
     } catch (IOException e) {
       log.error(
           "Failed to send msg to application, session [{}], instanceId [{}], sessionPool [{}] {}",
-          (session == null ? null : session.getId()), instanceId, sessionPoolId, e.getMessage());
+          session == null ? null : session.getId(), instanceId, sessionPoolId, e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }

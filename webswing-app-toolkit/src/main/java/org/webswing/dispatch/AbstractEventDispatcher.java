@@ -56,19 +56,19 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
       new HashMap<Integer, Integer>();
 
   static {
-    CONVERTED_KEY_CODES.put(45, KeyEvent.VK_INSERT);// Insert 155
-    CONVERTED_KEY_CODES.put(46, KeyEvent.VK_DELETE);// Delete 127
-    CONVERTED_KEY_CODES.put(93, KeyEvent.VK_CONTEXT_MENU);// Context Menu 525
-    CONVERTED_KEY_CODES.put(189, KeyEvent.VK_MINUS);// Minus 45
-    CONVERTED_KEY_CODES.put(187, KeyEvent.VK_EQUALS);// Equals 61
-    CONVERTED_KEY_CODES.put(219, KeyEvent.VK_OPEN_BRACKET);// Open Bracket 91
-    CONVERTED_KEY_CODES.put(221, KeyEvent.VK_CLOSE_BRACKET);// Close Bracket 93
-    CONVERTED_KEY_CODES.put(186, KeyEvent.VK_SEMICOLON);// Semicolon 59
-    CONVERTED_KEY_CODES.put(220, KeyEvent.VK_BACK_SLASH);// Back Slash 92
-    CONVERTED_KEY_CODES.put(226, KeyEvent.VK_BACK_SLASH);// Back Slash 92
-    CONVERTED_KEY_CODES.put(188, KeyEvent.VK_COMMA);// Comma 44
-    CONVERTED_KEY_CODES.put(190, KeyEvent.VK_PERIOD);// Period 46
-    CONVERTED_KEY_CODES.put(191, KeyEvent.VK_SLASH);// Slash 47
+    CONVERTED_KEY_CODES.put(45, KeyEvent.VK_INSERT); // Insert 155
+    CONVERTED_KEY_CODES.put(46, KeyEvent.VK_DELETE); // Delete 127
+    CONVERTED_KEY_CODES.put(93, KeyEvent.VK_CONTEXT_MENU); // Context Menu 525
+    CONVERTED_KEY_CODES.put(189, KeyEvent.VK_MINUS); // Minus 45
+    CONVERTED_KEY_CODES.put(187, KeyEvent.VK_EQUALS); // Equals 61
+    CONVERTED_KEY_CODES.put(219, KeyEvent.VK_OPEN_BRACKET); // Open Bracket 91
+    CONVERTED_KEY_CODES.put(221, KeyEvent.VK_CLOSE_BRACKET); // Close Bracket 93
+    CONVERTED_KEY_CODES.put(186, KeyEvent.VK_SEMICOLON); // Semicolon 59
+    CONVERTED_KEY_CODES.put(220, KeyEvent.VK_BACK_SLASH); // Back Slash 92
+    CONVERTED_KEY_CODES.put(226, KeyEvent.VK_BACK_SLASH); // Back Slash 92
+    CONVERTED_KEY_CODES.put(188, KeyEvent.VK_COMMA); // Comma 44
+    CONVERTED_KEY_CODES.put(190, KeyEvent.VK_PERIOD); // Period 46
+    CONVERTED_KEY_CODES.put(191, KeyEvent.VK_SLASH); // Slash 47
   }
 
   public AbstractEventDispatcher() {
@@ -207,7 +207,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     KeyboardEventMsgIn event = new KeyboardEventMsgIn();
     event.setType(KeyboardEventMsgIn.KeyEventType.keydown);
     event.setCharacter(KeyEvent.VK_V);
-    event.setKeycode(KeyEvent.VK_V);// 'v'
+    event.setKeycode(KeyEvent.VK_V); // 'v'
     event.setCtrl(true);
     event.setShift(special);
     dispatchKeyboardEvent(event);
@@ -230,7 +230,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     KeyboardEventMsgIn event = new KeyboardEventMsgIn();
     event.setType(KeyboardEventMsgIn.KeyEventType.keydown);
     event.setCharacter(KeyEvent.VK_X);
-    event.setKeycode(KeyEvent.VK_X);// 'x'
+    event.setKeycode(KeyEvent.VK_X); // 'x'
     event.setCtrl(true);
     dispatchKeyboardEvent(event);
     event.setType(KeyboardEventMsgIn.KeyEventType.keyup);
@@ -253,7 +253,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
       boolean relatedToPreviousEvent) {
     Window w = (Window) (c instanceof Window ? c : SwingUtilities.windowForComponent(c));
     if (w.isEnabled()) {
-      w.setCursor(w.getCursor());// force cursor update
+      w.setCursor(w.getCursor()); // force cursor update
       Util.getWebToolkit().getPaintDispatcher().notifyAccessibilityInfoUpdate(c, e.getXOnScreen(),
           e.getYOnScreen());
       if ((!relatedToPreviousEvent && Util.isWindowDecorationEvent(w, e))

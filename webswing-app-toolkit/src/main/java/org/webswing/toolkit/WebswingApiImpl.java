@@ -255,7 +255,7 @@ public class WebswingApiImpl implements WebswingApi {
           Iterator<String> i = params.iterator();
           String path = URLDecoder.decode(i.next(), "UTF-8");
           Map<String, String> parameters = new LinkedHashMap<String, String>();
-          for (; i.hasNext(); ) {
+          for (; i.hasNext();) {
             String param = i.next();
             String key = URLDecoder.decode(param, "UTF-8");
             String value = null;

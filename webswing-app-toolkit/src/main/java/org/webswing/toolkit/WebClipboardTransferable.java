@@ -60,7 +60,7 @@ public class WebClipboardTransferable implements BrowserTransferable {
   }
 
   public DataFlavor[] getTransferDataFlavors() {
-    return new DataFlavor[]{DataFlavor.imageFlavor, DataFlavor.stringFlavor,
+    return new DataFlavor[] {DataFlavor.imageFlavor, DataFlavor.stringFlavor,
         WebClipboard.HTML_FLAVOR};
   }
 

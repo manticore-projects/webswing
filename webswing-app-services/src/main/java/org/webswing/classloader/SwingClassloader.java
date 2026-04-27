@@ -287,14 +287,14 @@ public class SwingClassloader extends URLClassLoader {
                                                                                    // synchronized
                                                                                    // thus
                                                                                    // thread-safe
-  private String[] ignored_packages;
+  private String[] ignoredPackages;
   private ClassModificationRegister modRegister = new ClassModificationRegister();
   private ClassLoaderRepository repository;
   private final FallbackURLClassLoader repoClassLoader;
 
   public SwingClassloader(URL[] classpath, ClassLoader parent) {
-    super(new URL[]{}, parent);
-    this.ignored_packages = new String[]{"org.webswing.special.", "org.webswing.model.",
+    super(new URL[] {}, parent);
+    this.ignoredPackages = new String[] {"org.webswing.special.", "org.webswing.model.",
         "org.webswing.toolkit.", "netscape.javascript."};
     this.repoClassLoader = new FallbackURLClassLoader(classpath);
 
@@ -320,8 +320,8 @@ public class SwingClassloader extends URLClassLoader {
        * Third try: Load ignored packages outside SwingClassloader
        */
       if (cl == null) {
-        for (int i = 0; i < ignored_packages.length; i++) {
-          if (class_name.startsWith(ignored_packages[i])) {
+        for (int i = 0; i < ignoredPackages.length; i++) {
+          if (class_name.startsWith(ignoredPackages[i])) {
             cl = getParent().loadClass(class_name);
             break;
           }
@@ -366,7 +366,7 @@ public class SwingClassloader extends URLClassLoader {
   protected JavaClass modifyClass(JavaClass clazz) {
 
     // do not modify classes placed in this list
-    if (ClassLoaderUtil.isInPackage(clazz.getPackageName(), new String[]{"org.webswing"})) {
+    if (ClassLoaderUtil.isInPackage(clazz.getPackageName(), new String[] {"org.webswing"})) {
       return clazz;
     }
 
@@ -628,7 +628,7 @@ public class SwingClassloader extends URLClassLoader {
           : classFilePath;
       CodeSource source = null;
       try {
-        source = new CodeSource(new URL(classFilePath), new Certificate[]{});
+        source = new CodeSource(new URL(classFilePath), new Certificate[] {});
       } catch (MalformedURLException e) {
         AppLogger.fatal("Exception resolving code source:", e);
         // should not happen

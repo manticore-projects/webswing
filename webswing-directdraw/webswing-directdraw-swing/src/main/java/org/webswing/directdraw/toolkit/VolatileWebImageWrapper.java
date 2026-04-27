@@ -3,7 +3,6 @@ package org.webswing.directdraw.toolkit;
 import sun.awt.image.SurfaceManager;
 import sun.java2d.SurfaceData;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.ImageCapabilities;
@@ -22,37 +21,8 @@ public class VolatileWebImageWrapper extends VolatileImage {
     this.caps = caps;
     SurfaceManager.setManager(this, new SurfaceManager() {
 
-      @SuppressWarnings("unused")
-      // java 1.6
-      public SurfaceData getSourceSurfaceData(sun.java2d.SurfaceData s,
-          sun.java2d.loops.CompositeType c, Color color, boolean b) {
-        BufferedImage snapshot = VolatileWebImageWrapper.this.getSnapshot();
-        SurfaceManager m = SurfaceManager.getManager(snapshot);
-        try {
-          return (SurfaceData) m.getClass()
-              .getDeclaredMethod("getSourceSurfaceData", sun.java2d.SurfaceData.class,
-                  sun.java2d.loops.CompositeType.class, Color.class, Boolean.TYPE)
-              .invoke(m, s, c, color, b);
-        } catch (Exception e) {
-          e.printStackTrace();
-          return null;
-        }
-      }
-
-      @SuppressWarnings("unused")
-      // java 1.6
-      public SurfaceData getDestSurfaceData() {
-        BufferedImage snapshot = VolatileWebImageWrapper.this.getSnapshot();
-        SurfaceManager m = SurfaceManager.getManager(snapshot);
-        try {
-          return (SurfaceData) m.getClass().getDeclaredMethod("getDestSurfaceData").invoke(m);
-        } catch (Exception e) {
-          e.printStackTrace();
-          return null;
-        }
-      }
-
-      public SurfaceData getPrimarySurfaceData() {// java 1.7
+      @Override
+      public SurfaceData getPrimarySurfaceData() {
         BufferedImage snapshot = VolatileWebImageWrapper.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {
@@ -63,7 +33,8 @@ public class VolatileWebImageWrapper extends VolatileImage {
         }
       }
 
-      public SurfaceData restoreContents() {// java 1.7
+      @Override
+      public SurfaceData restoreContents() {
         BufferedImage snapshot = VolatileWebImageWrapper.this.getSnapshot();
         SurfaceManager m = SurfaceManager.getManager(snapshot);
         try {

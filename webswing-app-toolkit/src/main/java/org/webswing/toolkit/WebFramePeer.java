@@ -45,7 +45,7 @@ abstract public class WebFramePeer extends WebWindowPeer implements FramePeer {
   @Override
   public void show() {
     super.show();
-    setState(state);// maximize if necessary
+    setState(state); // maximize if necessary
   }
 
 }

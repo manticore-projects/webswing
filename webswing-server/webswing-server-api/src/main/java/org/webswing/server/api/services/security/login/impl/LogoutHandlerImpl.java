@@ -37,7 +37,7 @@ public class LogoutHandlerImpl extends AbstractUrlHandler implements LogoutHandl
     AbstractWebswingUser user;
     try {
       if ("OPTIONS".equals(req.getMethod())) {
-        return true;// cors preflight, don't forward to security module
+        return true; // cors preflight, don't forward to security module
       }
       user = logout(req, res);
     } catch (Exception e) {

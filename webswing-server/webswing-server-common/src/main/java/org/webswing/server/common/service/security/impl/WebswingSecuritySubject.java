@@ -134,8 +134,7 @@ public class WebswingSecuritySubject {
         return;
       }
 
-      String loginSessionClaim =
-          (String) claims.get(Constants.JWT_CLAIM_WEBSWING_LOGIN_SESSION);
+      String loginSessionClaim = (String) claims.get(Constants.JWT_CLAIM_WEBSWING_LOGIN_SESSION);
 
       if (StringUtils.isBlank(loginSessionClaim)) {
         return;

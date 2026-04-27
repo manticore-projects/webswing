@@ -1,6 +1,5 @@
 package org.webswing.server.api.base;
 
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class PrimaryUrlHandler extends AbstractUrlHandler
     implements SecuredPathHandler, SecurityContext, DataStoreHandler {
@@ -61,9 +61,9 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
       ConfigurationService<SecuredPathConfig> configService) {
     super(parent);
     this.securityModuleFactory = securityModuleFactory;
-    this.securityModule = securityModuleFactory.createNoAccess(null, this, null);// no access until
-                                                                                 // real SM is
-                                                                                 // initialized
+    this.securityModule = securityModuleFactory.createNoAccess(null, this, null); // no access until
+                                                                                  // real SM is
+                                                                                  // initialized
     this.varSubs = VariableSubstitutor.basic();
     this.configService = configService;
   }
@@ -156,9 +156,10 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
         securityModule.destroy();
       }
     } finally {
-      this.securityModule = securityModuleFactory.createNoAccess(null, this, null);// no access
-                                                                                   // until real SM
-                                                                                   // is initialized
+      this.securityModule = securityModuleFactory.createNoAccess(null, this, null); // no access
+                                                                                    // until real SM
+                                                                                    // is
+                                                                                    // initialized
     }
     status.setStatus(StatusEnum.STOPPED);
   }
@@ -238,7 +239,7 @@ public abstract class PrimaryUrlHandler extends AbstractUrlHandler
   private boolean isRootPathWithoutSlash(HttpServletRequest req) {
     boolean isRootPathWithoutSlash =
         (ServerApiUtil.getContextPath(getServletContext()) + req.getPathInfo())
-            .equals(getFullPathMapping());// path has to end with '/'
+            .equals(getFullPathMapping()); // path has to end with '/'
     return req.getPathInfo() == null || isRootPathWithoutSlash;
   }
 

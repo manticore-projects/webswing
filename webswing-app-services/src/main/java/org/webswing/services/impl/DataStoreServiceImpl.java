@@ -133,7 +133,7 @@ public class DataStoreServiceImpl implements DataStoreService {
       if (fd.file != null) {
         writeFileToDataStore(fd.id, fd.file);
       } else if (fd.data != null) {
-        writeDataToDataStore(fd.id, fd.data);// fd.data = null
+        writeDataToDataStore(fd.id, fd.data); // fd.data = null
       }
     }
 

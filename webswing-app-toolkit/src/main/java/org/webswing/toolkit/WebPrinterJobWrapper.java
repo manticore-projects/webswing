@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import java.awt.AWTError;
 import java.awt.HeadlessException;
 import java.awt.print.*;
+import java.util.Objects;
 
 public class WebPrinterJobWrapper extends PrinterJob {
   public static final int DPI = 72;
@@ -97,11 +98,8 @@ public class WebPrinterJobWrapper extends PrinterJob {
   }
 
   public boolean printDialog(PrintRequestAttributeSet attributes) throws HeadlessException {
-    if (attributes == null) {
-      throw new NullPointerException("attributes");
-    } else {
-      this.attribs.addAll(attributes);
-    }
+    Objects.requireNonNull(attributes, "attributes");
+    this.attribs.addAll(attributes);
     boolean result = printDialog();
     attributes.addAll(attribs);
     return result;
@@ -116,9 +114,7 @@ public class WebPrinterJobWrapper extends PrinterJob {
 
   public PageFormat pageDialog(PrintRequestAttributeSet attributes) throws HeadlessException {
 
-    if (attributes == null) {
-      throw new NullPointerException("attributes");
-    }
+    Objects.requireNonNull(attributes, "attributes");
     this.attribs.addAll(attributes);
     printDialog();
     return toPageFormat(attribs);
@@ -241,11 +237,11 @@ public class WebPrinterJobWrapper extends PrinterJob {
       AttributeSet attributes) {
     String delegateClass = System.getProperty(Constants.PRINTER_JOB_CLASS, null);
     if (delegateClass.equals(WebPrinterJob.class.getCanonicalName())) {
-      return new PrintService[]{WebPrintService.getService()};
+      return new PrintService[] {WebPrintService.getService()};
     } else {
       PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, attributes);
       if (services == null) {
-        services = new PrintService[]{};
+        services = new PrintService[] {};
       }
       return services;
     }

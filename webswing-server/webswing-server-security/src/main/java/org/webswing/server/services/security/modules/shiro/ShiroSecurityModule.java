@@ -212,9 +212,9 @@ public class ShiroSecurityModule
 
   private List<String> getDefaultRoles() {
     List<String> defaults = new ArrayList<>();
-    for (String a : new String[]{"IFRSBOX", "ETLBOX", "RISKBOX", "PROFITBOX", "IMPALA",
+    for (String a : new String[] {"IFRSBOX", "ETLBOX", "RISKBOX", "PROFITBOX", "IMPALA",
         "ALMBOX"}) {
-      for (String r : new String[]{"OFFICER", "MANAGER", "ADMIN", "OPERATOR", "REPORTER",
+      for (String r : new String[] {"OFFICER", "MANAGER", "ADMIN", "OPERATOR", "REPORTER",
           "AUDITOR", "GUEST"}) {
         defaults.add(a + "_" + r);
       }

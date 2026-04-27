@@ -23,11 +23,6 @@ public abstract class AbstractUserPasswordSecurityModule<T extends WebswingExten
     super(config);
   }
 
-  @Override
-  public void init() {
-    super.init();
-  }
-
   public String getPartialTemplateName() {
     return "loginPartial.html";
   }

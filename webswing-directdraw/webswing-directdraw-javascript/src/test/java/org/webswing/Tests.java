@@ -21,22 +21,22 @@ public class Tests {
     }
     g.setColor(Color.red);
     g.setStroke(new BasicStroke(7, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 2.5f,
-        new float[]{3, 15, 40, 15}, 10));
-    g.drawPolyline(new int[]{20, 20, 100, 100}, new int[]{5, 50, 50, 95}, 4);
+        new float[] {3, 15, 40, 15}, 10));
+    g.drawPolyline(new int[] {20, 20, 100, 100}, new int[] {5, 50, 50, 95}, 4);
     g.setColor(Color.green);
     g.setStroke(new BasicStroke(7, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.5f,
-        new float[]{3, 15, 40, 15}, 50));
-    g.drawPolyline(new int[]{120, 120, 200, 200}, new int[]{5, 50, 50, 95}, 4);
+        new float[] {3, 15, 40, 15}, 50));
+    g.drawPolyline(new int[] {120, 120, 200, 200}, new int[] {5, 50, 50, 95}, 4);
     g.setColor(Color.blue);
     g.setStroke(new BasicStroke(7, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 2.5f,
-        new float[]{3, 15, 40, 15}, 100));
-    g.drawPolyline(new int[]{220, 220, 300, 300}, new int[]{5, 50, 50, 95}, 4);
+        new float[] {3, 15, 40, 15}, 100));
+    g.drawPolyline(new int[] {220, 220, 300, 300}, new int[] {5, 50, 50, 95}, 4);
 
     g.setColor(Color.green);
     g.setStroke(new BasicStroke(7, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.5f));
-    g.drawPolyline(new int[]{320, 320, 340, 340}, new int[]{20, 80, 20, 80}, 4);
+    g.drawPolyline(new int[] {320, 320, 340, 340}, new int[] {20, 80, 20, 80}, 4);
     g.setStroke(new BasicStroke(7, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f));
-    g.drawPolyline(new int[]{360, 360, 380, 380}, new int[]{20, 80, 20, 80}, 4);
+    g.drawPolyline(new int[] {360, 360, 380, 380}, new int[] {20, 80, 20, 80}, 4);
 
     g.setStroke(new ZigzagStroke(
         new BasicStroke(7, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f), 10, 5));
@@ -113,8 +113,8 @@ public class Tests {
     g.setPaint(new TexturePaint(image, new Rectangle2D.Double(50, 50, 48, 48)));
     g.fill(new RoundRectangle2D.Double(0, 0, 200, 100, 40, 40));
     g.setStroke(new BasicStroke(17, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 2.5f,
-        new float[]{3, 20, 40, 20}, 10));
-    g.drawPolyline(new int[]{220, 270, 320, 370, 420, 470}, new int[]{5, 95, 5, 95, 5, 95}, 6);
+        new float[] {3, 20, 40, 20}, 10));
+    g.drawPolyline(new int[] {220, 270, 320, 370, 420, 470}, new int[] {5, 95, 5, 95, 5, 95}, 6);
     return true;
   }
 
@@ -128,8 +128,8 @@ public class Tests {
     g.fillRect(0, 0, 100, 100);
     g.setColor(Color.BLACK);
     g.drawRect(0, 0, 100, 100);
-    float[] fractions = new float[]{0f, 0.5f, 1f};
-    Color[] colors = new Color[]{Color.BLUE, Color.green, Color.yellow};
+    float[] fractions = new float[] {0f, 0.5f, 1f};
+    Color[] colors = new Color[] {Color.BLUE, Color.green, Color.yellow};
     g.setPaint(new LinearGradientPaint(new Point2D.Float(200, 100), new Point2D.Float(150, 50),
         fractions, colors, CycleMethod.REFLECT));
     g.fillRect(100, 0, 100, 100);
@@ -153,8 +153,8 @@ public class Tests {
     if (repeat != 0) {
       return false;
     }
-    float[] fractions = new float[]{0, 0.5f, 1};
-    Color[] colors = new Color[]{Color.white, Color.red, Color.black};
+    float[] fractions = new float[] {0, 0.5f, 1};
+    Color[] colors = new Color[] {Color.white, Color.red, Color.black};
     g.setPaint(new RadialGradientPaint(new Point2D.Float(25, 25), 25, fractions, colors));
     g.fillOval(0, 0, 50, 50);
     g.setPaint(new RadialGradientPaint(new Point2D.Float(25, 75), 25, new Point2D.Float(50, 100),
@@ -915,8 +915,8 @@ public class Tests {
     g.setPaint(new CustomPaint());
     g.fill(new RoundRectangle2D.Double(0, 0, 200, 100, 40, 40));
     g.setStroke(new BasicStroke(17, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 2.5f,
-        new float[]{3, 20, 40, 20}, 10));
-    g.drawPolyline(new int[]{220, 270, 320, 370, 420, 470}, new int[]{5, 95, 5, 95, 5, 95}, 6);
+        new float[] {3, 20, 40, 20}, 10));
+    g.drawPolyline(new int[] {220, 270, 320, 370, 420, 470}, new int[] {5, 95, 5, 95, 5, 95}, 6);
 
     return true;
   }
@@ -978,7 +978,7 @@ public class Tests {
       g.drawLine(0, i * 3, i * 3, 0);
     }
     g.setTransform(new AffineTransform(1, 0, 0, 1, 0, 0));
-    g.copyArea(0, 0, 1, 1, 1, 1);// cancels the fallback
+    g.copyArea(0, 0, 1, 1, 1, 1); // cancels the fallback
     g.setTransform(new AffineTransform(1.1, 0.001, -0.001, 1.1, 2, 2));
     for (int i = 100; i < 130; i++) {
       g.drawLine(0, i * 3, i * 3, 0);

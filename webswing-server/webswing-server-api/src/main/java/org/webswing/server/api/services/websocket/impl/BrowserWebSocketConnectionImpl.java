@@ -161,10 +161,10 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
   public void onClose(Session session, CloseReason closeReason) {
     if (session != null) {
       log.info("Websocket to browser closed, session [{}]{}", session.getId(),
-          (closeReason != null
+          closeReason != null
               ? ", close code [" + closeReason.getCloseCode().getCode() + "], reason ["
                   + closeReason.getReasonPhrase() + "]!"
-              : ""));
+              : "");
       if (instance != null) {
         instance.browserDisconnected(session.getId());
       }
@@ -178,8 +178,8 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
   @OnError
   public void onError(Session session, Throwable t) {
     log.error("Websocket error from browser connection, session [{}], instanceId [{}] {}",
-        (session == null ? null : session.getId()),
-        (instance == null ? null : instance.getInstanceId()), t.getMessage());
+        session == null ? null : session.getId(),
+        instance == null ? null : instance.getInstanceId(), t.getMessage());
     log.debug(t.getMessage(), t);
   }
 
@@ -190,7 +190,7 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
         session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, reason));
       } catch (IOException e) {
         log.error("Failed to disconnect browser connection, session [{}], instanceId [{}] {}",
-            session.getId(), (instance == null ? null : instance.getInstanceId()), e.getMessage());
+            session.getId(), instance == null ? null : instance.getInstanceId(), e.getMessage());
         log.debug(e.getMessage(), e);
       }
     }
@@ -221,8 +221,8 @@ public class BrowserWebSocketConnectionImpl extends AbstractWebSocketConnection
           StatisticsLogger.OUTBOUND_SIZE_METRIC, encoded.length);
     } catch (IOException e) {
       log.error("Failed to send msg to browser, session [{}], instanceId [{}] {}",
-          (session == null ? null : session.getId()),
-          (instance == null ? null : instance.getInstanceId()), e.getMessage());
+          session == null ? null : session.getId(),
+          instance == null ? null : instance.getInstanceId(), e.getMessage());
       log.debug(e.getMessage(), e);
     }
   }

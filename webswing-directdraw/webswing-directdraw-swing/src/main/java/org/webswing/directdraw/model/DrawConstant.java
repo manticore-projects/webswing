@@ -7,19 +7,19 @@ import java.util.WeakHashMap;
 
 public abstract class DrawConstant<T> {
 
-  private static final WeakHashMap<Object, WeakReference<Object>> flyweightRegister =
-      new WeakHashMap<Object, WeakReference<Object>>();
+  private static final WeakHashMap<Object, WeakReference<Object>> FLYWEIGHT_REGISTER =
+      new WeakHashMap<>();
 
   @SuppressWarnings("unchecked")
   protected static <T> T get(T object) {
-    if (!flyweightRegister.containsKey(object)) {
-      flyweightRegister.put(object, new WeakReference<Object>(object));
+    if (!FLYWEIGHT_REGISTER.containsKey(object)) {
+      FLYWEIGHT_REGISTER.put(object, new WeakReference<Object>(object));
       return object;
     }
-    return (T) flyweightRegister.get(object).get();
+    return (T) FLYWEIGHT_REGISTER.get(object).get();
   }
 
-  public static final NullConst nullConst = new NullConst();
+  public static final NullConst NULL_CONST = new NullConst();
 
   private DirectDraw context;
 

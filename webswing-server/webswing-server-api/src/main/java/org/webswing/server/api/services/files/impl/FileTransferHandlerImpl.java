@@ -12,7 +12,9 @@ import org.webswing.server.common.model.security.WebswingAction;
 import org.webswing.server.common.service.security.impl.WebswingSecuritySubject;
 import org.webswing.server.model.exception.WsException;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +29,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -36,7 +38,6 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
   private static final Logger log = LoggerFactory.getLogger(FileTransferHandlerImpl.class);
   private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
   private static final String HMAC_ALGORITHM = "HmacSHA256";
-
   private final AppPathHandler manager;
 
   /**
@@ -49,11 +50,14 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
   public FileTransferHandlerImpl(AppPathHandler parent) {
     super(parent);
     this.manager = parent;
-
-    // Generate a random HMAC key at startup
-    SecureRandom sr = new SecureRandom();
-    this.hmacKey = new byte[32];
-    sr.nextBytes(this.hmacKey);
+    try {
+      KeyGenerator keyGen = KeyGenerator.getInstance(HMAC_ALGORITHM);
+      keyGen.init(256);
+      SecretKey key = keyGen.generateKey();
+      this.hmacKey = key.getEncoded();
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("HMAC algorithm not available: " + HMAC_ALGORITHM, e);
+    }
   }
 
   @Override

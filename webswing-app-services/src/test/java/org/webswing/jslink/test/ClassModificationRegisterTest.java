@@ -36,7 +36,7 @@ public class ClassModificationRegisterTest {
     assertTrue(r.canSkipModification("class1") == false);
     assertTrue(r.canSkipModification("class2") == true);
     assertTrue(r.canSkipModification("class3") == true);
-    r.notifyClassLoaded("class2");// removes the reference from set
+    r.notifyClassLoaded("class2"); // removes the reference from set
     assertTrue(r.canSkipModification("class1") == false);
     assertTrue(r.canSkipModification("class2") == false);
     assertTrue(r.canSkipModification("class3") == true);

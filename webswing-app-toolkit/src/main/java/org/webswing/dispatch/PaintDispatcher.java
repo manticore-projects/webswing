@@ -21,18 +21,18 @@ public interface PaintDispatcher {
 
   Object webPaintLock = new Object();
 
-  void clientReadyToReceive();// paint ack received from JS
+  void clientReadyToReceive(); // paint ack received from JS
 
   RepaintManager getDefaultRepaintManager();
 
-  void notifyWindowAreaRepainted(String guid, Rectangle repaintedArea);// area has been repainted
+  void notifyWindowAreaRepainted(String guid, Rectangle repaintedArea); // area has been repainted
 
-  void notifyWindowAreaVisible(String guid, Rectangle visibleArea);// area became visible in window
-                                                                   // manager
+  void notifyWindowAreaVisible(String guid, Rectangle visibleArea); // area became visible in window
+                                                                    // manager
 
-  void notifyWindowBoundsChanged(String guid, Rectangle newBounds);// window resized
+  void notifyWindowBoundsChanged(String guid, Rectangle newBounds); // window resized
 
-  void notifyWindowClosed(String guid);// window closed
+  void notifyWindowClosed(String guid); // window closed
 
   void notifyWindowActivated(Window activeWindow);
 
@@ -98,7 +98,7 @@ public interface PaintDispatcher {
 
   void notifyApplicationExiting(int waitBeforeKill);
 
-  void notifyComponentTreeRequested();// test tool
+  void notifyComponentTreeRequested(); // test tool
 
   void notifyActionEvent(String windowId, String actionName, String data, byte[] binaryData);
 

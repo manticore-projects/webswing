@@ -11,7 +11,6 @@ import org.webswing.toolkit.api.lifecycle.ShutdownReason;
 import org.webswing.toolkit.extra.WindowManager;
 import org.webswing.toolkit.ge.WebGraphicsConfig;
 import org.webswing.toolkit.listener.WebToolkitStartupListener;
-import org.webswing.toolkit.util.EvaluationProperties;
 import org.webswing.toolkit.util.Util;
 import org.webswing.util.AppLogger;
 import org.webswing.util.NamedThreadFactory;
@@ -23,9 +22,6 @@ import sun.java2d.SurfaceData;
 import sun.print.PrintJob2D;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.AWTException;
-import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxMenuItem;
@@ -45,7 +41,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.JobAttributes;
 import java.awt.KeyboardFocusManager;
 import java.awt.Label;
@@ -70,8 +65,6 @@ import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.dnd.*;
 import java.awt.dnd.peer.DragSourceContextPeer;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.font.TextAttribute;
 import java.awt.im.InputMethodHighlight;
@@ -82,14 +75,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -101,7 +91,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
   public static final String BACKGROUND_WINDOW_ID = "BG";
   private static final int DEFAULT_SCREEN_RESOLUTION =
       Integer.getInteger("webswing.screenResolution", 96);
-  private static Object TREELOCK;
+  private static Object treelock;
 
   private EventDispatcher eventDispatcher;
   private PaintDispatcher paintDispatcher;
@@ -544,7 +534,7 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
     }
 
 
-    System.setProperty("swing.disablevistaanimation", "true");// See:com.sun.java.swing.plaf.windows.AnimationController.VISTA_ANIMATION_DISABLED
+    System.setProperty("swing.disablevistaanimation", "true"); // See:com.sun.java.swing.plaf.windows.AnimationController.VISTA_ANIMATION_DISABLED
 
     int repaintInterval = 400;
     UIManager.put("ProgressBar.repaintInterval", repaintInterval);
@@ -984,10 +974,10 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
   }
 
   public Object getTreeLock() {
-    if (TREELOCK == null) {
-      TREELOCK = new JPanel().getTreeLock();
+    if (treelock == null) {
+      treelock = new JPanel().getTreeLock();
     }
-    return TREELOCK;
+    return treelock;
   }
 
   @Override
@@ -1022,137 +1012,4 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
         String.valueOf(enabled));
     getPaintDispatcher().notifySessionDataChanged();
   }
-
-  public void showEvaluationWindow() {
-    EvaluationProperties props = Util.getEvaluationProps();
-
-    long timeout = props.getTimeout();
-    String url = props.getLinkUrl();
-    boolean hasUrl = url != null && !url.trim().isEmpty();
-    boolean hasDismissText =
-        props.getDismissText() != null && !props.getDismissText().trim().isEmpty();
-
-    JFrame evalWin = new JFrame();
-    evalWin.setAlwaysOnTop(true);
-    evalWin.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    evalWin.setSize(getDefaultToolkit().getScreenSize().width, props.getHeight());
-    evalWin.setLocation(0, 0);
-    evalWin.setUndecorated(true);
-    evalWin.getContentPane().setBackground(new Color(247, 215, 218));
-    evalWin.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.RED));
-
-    Timer resizeTimer = new Timer(true);
-    resizeTimer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        evalWin.setSize(getDefaultToolkit().getScreenSize().width, props.getHeight());
-      }
-    }, 250, 250);
-
-    JLabel label = new JLabel(props.getMainText());
-    label.setHorizontalAlignment(JLabel.CENTER);
-    label.setFont(label.getFont().deriveFont(16f));
-    label.setForeground(new Color(102, 38, 48));
-
-    JLabel counter = new JLabel();
-    counter.setHorizontalAlignment(JLabel.CENTER);
-    counter.setText(TimeUnit.MILLISECONDS.toSeconds(timeout) + "");
-    counter.setFont(label.getFont().deriveFont(20f));
-    counter.setForeground(new Color(102, 38, 48));
-
-    JPanel leftPanel = new JPanel();
-    leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
-    leftPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
-    leftPanel.setOpaque(false);
-    leftPanel.add(label);
-
-    JPanel rightPanel = new JPanel();
-    rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
-    rightPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
-    rightPanel.setOpaque(false);
-    rightPanel.add(counter);
-
-    if (hasUrl) {
-      JButton linkButton = new JButton();
-      linkButton.setText(props.getLinkText());
-      linkButton.setHorizontalAlignment(SwingConstants.LEFT);
-      linkButton.setFont(label.getFont().deriveFont(16f));
-      linkButton.setForeground(new Color(102, 38, 48));
-      linkButton.setBorderPainted(false);
-      linkButton.setMargin(new Insets(0, 5, 0, 5));
-      linkButton.setOpaque(false);
-      linkButton.setContentAreaFilled(false);
-      linkButton.setFocusPainted(false);
-      linkButton.setToolTipText(url);
-      linkButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      linkButton.addActionListener(event -> {
-        if (Desktop.isDesktopSupported()) {
-          try {
-            URI targetUri = URI.create(url);
-            // Only allow http/https schemes to prevent file:// or other protocol abuse
-            String scheme = targetUri.getScheme();
-            if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
-              Desktop.getDesktop().browse(targetUri);
-            }
-          } catch (Exception e) {
-            // ignore
-          }
-        }
-      });
-
-      leftPanel.add(linkButton);
-    }
-
-    JButton dismissButton = new JButton();
-
-    if (hasDismissText) {
-      dismissButton.setText(props.getDismissText());
-      dismissButton.setHorizontalAlignment(SwingConstants.LEFT);
-      dismissButton.setFont(label.getFont().deriveFont(16f));
-      dismissButton.setForeground(new Color(102, 38, 48));
-      dismissButton.setBorderPainted(false);
-      dismissButton.setMargin(new Insets(0, 5, 0, 5));
-      dismissButton.setOpaque(false);
-      dismissButton.setContentAreaFilled(false);
-      dismissButton.setFocusPainted(false);
-      dismissButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      dismissButton.addActionListener(event -> {
-        evalWin.dispose();
-        resizeTimer.cancel();
-      });
-      dismissButton.setVisible(false);
-
-      rightPanel.add(dismissButton);
-    }
-
-    evalWin.getContentPane().setLayout(new BorderLayout());
-    evalWin.getContentPane().add(leftPanel, BorderLayout.WEST);
-    evalWin.getContentPane().add(rightPanel, BorderLayout.EAST);
-
-    evalWin.addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentShown(ComponentEvent e) {
-        long end = System.currentTimeMillis() + timeout;
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-          @Override
-          public void run() {
-            counter.setText(
-                (TimeUnit.MILLISECONDS.toSeconds(end - System.currentTimeMillis()) + 1) + "");
-
-            if (System.currentTimeMillis() > end) {
-              timer.cancel();
-              counter.setVisible(false);
-              if (hasDismissText) {
-                dismissButton.setVisible(true);
-              }
-            }
-          }
-        }, 250, 250);
-      }
-    });
-
-    evalWin.setVisible(true);
-  }
-
 }

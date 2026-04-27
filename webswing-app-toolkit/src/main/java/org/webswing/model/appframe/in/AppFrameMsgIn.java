@@ -14,8 +14,8 @@ public class AppFrameMsgIn implements MsgIn {
   private CopyEventMsgIn copy;
   private UploadEventMsgIn upload;
   private FilesSelectedEventMsgIn selected;
-  private JsResultMsgIn jsResponse;// java2js call return value
-  private JavaEvalRequestMsgIn javaRequest;// js2java call
+  private JsResultMsgIn jsResponse; // java2js call return value
+  private JavaEvalRequestMsgIn javaRequest; // js2java call
   private PixelsAreaResponseMsgIn pixelsResponse; // WebRobotPeer
   private WindowEventMsgIn window;
   private AudioEventMsgIn audio;

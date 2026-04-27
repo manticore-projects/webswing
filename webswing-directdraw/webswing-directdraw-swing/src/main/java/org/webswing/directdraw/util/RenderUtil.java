@@ -54,17 +54,15 @@ public class RenderUtil {
         case GRAPHICS_CREATE:
           currentGraphics = iprtGraphicsCreate(result, di, map, hints);
           break;
-        case GRAPHICS_DISPOSE: {
+        case GRAPHICS_DISPOSE:
           Graphics2D graphics = map.remove(getValue(0, di, Integer.class));
           if (graphics != null) {
             graphics.dispose();
           }
           break;
-        }
-        case GRAPHICS_SWITCH: {
+        case GRAPHICS_SWITCH:
           currentGraphics = map.get(getValue(0, di, Integer.class));
           break;
-        }
         case FILL:
           iprtFill(currentGraphics, di);
           break;
@@ -194,10 +192,10 @@ public class RenderUtil {
   }
 
   private static void iprtDraw(Graphics2D g, DrawInstruction di) {
-    if (di.getArg(1) != DrawConstant.nullConst) {
+    if (di.getArg(1) != DrawConstant.NULL_CONST) {
       g.setClip(getShape(1, di));
     }
-    if (di.getArg(0) != DrawConstant.nullConst) {
+    if (di.getArg(0) != DrawConstant.NULL_CONST) {
       g.draw(getShape(0, di));
     }
   }

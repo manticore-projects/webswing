@@ -112,7 +112,7 @@ public class DefaultResourceHandlerImpl extends AbstractResourceHandler {
       manifest.setShortName(manifest.getName());
       ManifestIcons icon = new ManifestIcons();
       icon.setSrc(handler.getFullPathMapping() + "/rest/appicon");
-      icon.setSizes("256x256");// this is just a hardcoded value, not real size
+      icon.setSizes("256x256"); // this is just a hardcoded value, not real size
       manifest.setIcons(List.of(icon));
       manifest.setStartUrl(handler.getFullPathMapping());
       manifest.setScope(handler.getFullPathMapping());

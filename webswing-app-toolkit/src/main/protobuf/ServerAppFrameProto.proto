@@ -1,5 +1,6 @@
 syntax = "proto2";
 option java_package = "org.webswing.model.app.proto";
+package app;
 
 import 'CommonProto.proto';
 

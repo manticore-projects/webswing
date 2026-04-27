@@ -23,30 +23,29 @@ import java.util.concurrent.TimeoutException;
 
 public class WebJSObject extends JSObject {
 
-  private static final Map<String, WeakReference<JSObjectMsgIn>> jsGarbageCollectionMap =
-      new HashMap<String, WeakReference<JSObjectMsgIn>>();
-  private static final WeakValueHashMap<String, Object> javaReferences =
-      new WeakValueHashMap<String, Object>();
-  private static final boolean jsLinkAllowed =
+  private static final Map<String, WeakReference<JSObjectMsgIn>> JS_GARBAGE_COLLECTION_MAP =
+      new HashMap<>();
+  private static final WeakValueHashMap<String, Object> JAVA_REFERENCES = new WeakValueHashMap<>();
+  private static final boolean JS_LINK_ALLOWED =
       Boolean.getBoolean(Constants.SWING_START_SYS_PROP_ALLOW_JSLINK);
-  private static final String jsLinkWhitelistProp =
+  private static final String JS_LINK_WHITELIST_PROP =
       System.getProperty(Constants.SWING_START_SYS_PROP_JSLINK_WHITELIST, "");
-  private static List<String> jsLinkWhitelist;
-  private static final ScheduledExecutorService javaEvalThread =
+  private static List<String> JS_LINK_WHITE_LIST;
+  private static final ScheduledExecutorService JAVA_EVAL_THREAD =
       Executors.newSingleThreadScheduledExecutor(
           NamedThreadFactory.getInstance("Webswing JsLink Processor"));
   private final JSObjectMsgIn jsThis;
 
   static {
-    jsLinkWhitelist = new ArrayList<>();
-    jsLinkWhitelist = Arrays.asList(jsLinkWhitelistProp.split(","));
+    JS_LINK_WHITE_LIST = Arrays.asList(JS_LINK_WHITELIST_PROP.split(","));
   }
 
   public WebJSObject(JSObjectMsgIn jsThis) {
     this.jsThis = jsThis;
     if (jsThis != null) {
-      synchronized (jsGarbageCollectionMap) {
-        jsGarbageCollectionMap.put(jsThis.getId() + "", new WeakReference<JSObjectMsgIn>(jsThis));
+      synchronized (JS_GARBAGE_COLLECTION_MAP) {
+        JS_GARBAGE_COLLECTION_MAP.put(jsThis.getId() + "",
+            new WeakReference<JSObjectMsgIn>(jsThis));
       }
     }
   }
@@ -112,10 +111,10 @@ public class WebJSObject extends JSObject {
 
   public static List<String> getGarbage() {
     ArrayList<String> result = new ArrayList<String>();
-    synchronized (jsGarbageCollectionMap) {
-      for (Iterator<String> i = jsGarbageCollectionMap.keySet().iterator(); i.hasNext(); ) {
+    synchronized (JS_GARBAGE_COLLECTION_MAP) {
+      for (Iterator<String> i = JS_GARBAGE_COLLECTION_MAP.keySet().iterator(); i.hasNext();) {
         String key = i.next();
-        if (jsGarbageCollectionMap.get(key).isEnqueued()) {
+        if (JS_GARBAGE_COLLECTION_MAP.get(key).isEnqueued()) {
           result.add(key);
           i.remove();
         }
@@ -133,36 +132,36 @@ public class WebJSObject extends JSObject {
   }
 
   public static String createJavaReference(Object arg, String newId) {
-    if (javaReferences.containsValue(arg)) {
+    if (JAVA_REFERENCES.containsValue(arg)) {
       String id = null;
-      for (String key : javaReferences.keySet()) {
-        if (javaReferences.get(key) == arg) {
+      for (String key : JAVA_REFERENCES.keySet()) {
+        if (JAVA_REFERENCES.get(key) == arg) {
           id = key;
         }
       }
       return id;
     } else {
       String id = newId;
-      javaReferences.put(id, arg);
+      JAVA_REFERENCES.put(id, arg);
       return id;
     }
   }
 
   public static Object getJavaReference(String id) {
-    Object o = javaReferences.get(id);
+    Object o = JAVA_REFERENCES.get(id);
     return o;
   }
 
   public static Future<?> evaluateJava(final JavaEvalRequestMsgIn javaReq) {
-    return javaEvalThread.submit(new Runnable() {
+    return JAVA_EVAL_THREAD.submit(new Runnable() {
       @Override
       public void run() {
         AppToServerFrameMsgOut msgOut = new AppToServerFrameMsgOut();
         AppFrameMsgOut frame;
 
-        if (jsLinkAllowed) {
-          Object javaRef = javaReferences.get(javaReq.getObjectId());
-          frame = JsLinkUtil.callMatchingMethod(javaReq, javaRef, jsLinkWhitelist);
+        if (JS_LINK_ALLOWED) {
+          Object javaRef = JAVA_REFERENCES.get(javaReq.getObjectId());
+          frame = JsLinkUtil.callMatchingMethod(javaReq, javaRef, JS_LINK_WHITE_LIST);
         } else {
           frame = JsLinkUtil.getErrorResponse(javaReq.getCorrelationId(),
               "JsLink is not allowed for this application. Set the 'allowJsLink' to true in webswing.config to enable it.");
