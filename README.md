@@ -36,7 +36,7 @@ This edition is based on the **last open-source release (v20.2.5)** of WebSwing,
 
 ---
 
-## ✦ What's New
+## What's New
 
 ### JDK Compatibility
 
@@ -65,6 +65,7 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 - **SVG Application Icons**
 - better server start scripts supporting SSL certificate registration and WAR version numbers
 - Deduplication of the java libraries in the WAR file, reducing the size drastically
+- **Network resilience** for flaky corporate VPNs (Netskope, Zscaler) — HTTP/2 via ALPN, Conscrypt TLS (tolerates underscored SNI hostnames), per-socket TCP keepalive, 5-minute idle timeouts, TLS session resumption, tuned thread pool with `LowResourceMonitor`
 
 ### Build & Runtime Modernization
 
@@ -97,7 +98,7 @@ This fork implements defence-in-depth for deployment at regulated financial inst
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -132,7 +133,7 @@ open http://localhost:8080
 
 ---
 
-## 🔨 Build Instructions
+## Build Instructions
 
 ### Prerequisites
 
@@ -174,45 +175,17 @@ cd /opt/webswing && ./run.sh start
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Browser                              │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  HTML5 Canvas  ◄──── WebSocket ────►  Event Capture   │  │
-│  └───────────────────────────────────────────────────────┘  │
-└─────────────────────────────────┬───────────────────────────┘
-                                  │
-                    ┌─────────────▼──────────-───┐
-                    │     WebSwing Server        │
-                    │    (Jetty 12 / Servlet)    │
-                    │                            │
-                    │  ┌──────────────────────┐  │
-                    │  │  Session Manager     │  │
-                    │  │  Security (Shiro)    │  │
-                    │  │  WebSocket Handler   │  │
-                    │  └──────────┬───────────┘  │
-                    └─────────────┼──────────────┘
-                                  │ spawns
-                    ┌─────────────▼─────────-────┐
-                    │     Child JVM Process      │
-                    │                            │
-                    │  ┌──────────────────────┐  │
-                    │  │  WebToolkit (AWT)    │  │
-                    │  │  DirectDraw Pipeline │  │
-                    │  │  Font Renderer       │  │
-                    │  │  ──────────────────  │  │
-                    │  │  Your Swing App      │  │
-                    │  └──────────────────────┘  │
-                    └────────────────────────────┘
-```
+<p align="center">
+  <img src="architecture.svg" alt="WebSwing Lite Architecture" width="800"/>
+</p>
 
 **How it works:** The server intercepts Java2D `Graphics2D` paint operations in the child JVM, serializes them via Protocol Buffers, and streams them over WebSocket to the browser. The browser's JavaScript engine deserializes and replays the draw commands on an HTML5 Canvas. User input (mouse, keyboard) flows back over the same WebSocket.
 
 ---
 
-## 📦 Dependency Overview
+## Dependency Overview
 
 | Component | Version | Purpose |
 |-----------|---------|---------|

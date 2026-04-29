@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 690"
+     font-family="'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#ff420e"/>
+    </marker>
+    <linearGradient id="appGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff5f0"/>
+      <stop offset="100%" stop-color="#ffe8df"/>
+    </linearGradient>
+  </defs>
+
+  <!-- White background — readable on any README theme -->
+  <rect width="800" height="690" fill="#ffffff"/>
+
+  <!-- ========================== TIER 1: Browser ========================== -->
+  <rect x="42" y="32" width="720" height="160" rx="8" fill="#030146" opacity="0.07"/>
+  <rect x="40" y="30" width="720" height="160" rx="8" fill="#ffffff" stroke="#030146" stroke-width="1.5"/>
+  <path d="M40,38 Q40,30 48,30 L752,30 Q760,30 760,38 L760,62 L40,62 Z" fill="#030146"/>
+  <circle cx="60" cy="46" r="3" fill="#ff420e"/>
+  <text x="73" y="50" fill="#ffffff" font-size="13" font-weight="700" letter-spacing="1.5">BROWSER</text>
+  <text x="151" y="50" fill="#ffffff" font-size="12">Pure HTML5 · zero plugins · zero install</text>
+
+  <!-- Cards -->
+  <rect x="81" y="79" width="280" height="65" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="80" y="78" width="280" height="65" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="220" y="106" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">HTML5 Canvas</text>
+  <text x="220" y="126" fill="#6e6e8a" font-size="11" text-anchor="middle">replays Graphics2D draw commands</text>
+
+  <rect x="441" y="79" width="280" height="65" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="440" y="78" width="280" height="65" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="580" y="106" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">Event Capture</text>
+  <text x="580" y="126" fill="#6e6e8a" font-size="11" text-anchor="middle">mouse · keyboard · paste · IME</text>
+
+  <!-- JavaScript Runtime band — the engine driving both cards above -->
+  <rect x="80" y="153" width="640" height="28" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="100" y="171" fill="#ff420e" font-size="11" font-weight="700" letter-spacing="0.6">JS</text>
+  <text x="125" y="171" fill="#030146" font-size="11" font-weight="600">JavaScript Runtime</text>
+  <text x="246" y="171" fill="#6e6e8a" font-size="11" font-style="italic">· Protobuf decode · Canvas API · DOM event capture · WebSocket client</text>
+
+  <!-- WebSocket arrow + dual-format pill -->
+  <path d="M400,195 L400,249" stroke="#ff420e" stroke-width="2" fill="none"
+        marker-start="url(#arrowhead)" marker-end="url(#arrowhead)"/>
+  <rect x="416" y="212" width="148" height="22" rx="11" fill="#030146" opacity="0.10"/>
+  <rect x="415" y="213" width="148" height="22" rx="11" fill="#ff420e"/>
+  <text x="489" y="229" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.4">WebSocket · Protobuf</text>
+
+  <!-- ========================== TIER 2: Server ========================== -->
+  <rect x="42" y="257" width="720" height="160" rx="8" fill="#030146" opacity="0.07"/>
+  <rect x="40" y="255" width="720" height="160" rx="8" fill="#ffffff" stroke="#030146" stroke-width="1.5"/>
+  <path d="M40,263 Q40,255 48,255 L752,255 Q760,255 760,263 L760,287 L40,287 Z" fill="#030146"/>
+  <circle cx="60" cy="271" r="3" fill="#ff420e"/>
+  <text x="73" y="275" fill="#ffffff" font-size="13" font-weight="700" letter-spacing="1.5">WEBSWING SERVER</text>
+  <text x="227" y="275" fill="#ffffff" font-size="12">Jetty 12.1 · Conscrypt TLS · HTTP/2 via ALPN</text>
+
+  <rect x="71" y="306" width="220" height="95" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="70" y="305" width="220" height="95" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="180" y="334" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">Session Manager</text>
+  <text x="180" y="354" fill="#6e6e8a" font-size="11" text-anchor="middle">lifecycle · pooling</text>
+  <text x="180" y="372" fill="#6e6e8a" font-size="11" text-anchor="middle">child JVM orchestration</text>
+
+  <rect x="301" y="306" width="220" height="95" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="300" y="305" width="220" height="95" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="410" y="334" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">Security (Shiro)</text>
+  <text x="410" y="354" fill="#6e6e8a" font-size="11" text-anchor="middle">AD · LDAP · DB · 2FA</text>
+  <text x="410" y="372" fill="#6e6e8a" font-size="11" text-anchor="middle">hot-reload configuration</text>
+
+  <rect x="531" y="306" width="220" height="95" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="530" y="305" width="220" height="95" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="640" y="334" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">WebSocket Handler</text>
+  <text x="640" y="354" fill="#6e6e8a" font-size="11" text-anchor="middle">EE8 javax.websocket</text>
+  <text x="640" y="372" fill="#6e6e8a" font-size="11" text-anchor="middle">5-min idle · TCP keepalive</text>
+
+  <!-- spawns arrow + pill -->
+  <path d="M400,420 L400,464" stroke="#ff420e" stroke-width="2" fill="none"
+        stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
+  <rect x="416" y="431" width="62" height="22" rx="11" fill="#030146" opacity="0.10"/>
+  <rect x="415" y="432" width="62" height="22" rx="11" fill="#ff420e"/>
+  <text x="446" y="448" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.4">spawns</text>
+
+  <!-- ========================== TIER 3: Child JVM ========================== -->
+  <rect x="42" y="472" width="720" height="190" rx="8" fill="#030146" opacity="0.07"/>
+  <rect x="40" y="470" width="720" height="190" rx="8" fill="#ffffff" stroke="#030146" stroke-width="1.5"/>
+  <path d="M40,478 Q40,470 48,470 L752,470 Q760,470 760,478 L760,502 L40,502 Z" fill="#030146"/>
+  <circle cx="60" cy="486" r="3" fill="#ff420e"/>
+  <text x="73" y="490" fill="#ffffff" font-size="13" font-weight="700" letter-spacing="1.5">CHILD JVM PROCESS</text>
+  <text x="251" y="490" fill="#ffffff" font-size="12">one per session · fully isolated</text>
+
+  <rect x="71" y="521" width="220" height="65" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="70" y="520" width="220" height="65" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="180" y="548" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">WebToolkit (AWT)</text>
+  <text x="180" y="568" fill="#6e6e8a" font-size="11" text-anchor="middle">replaces native toolkit</text>
+
+  <rect x="301" y="521" width="220" height="65" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="300" y="520" width="220" height="65" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="410" y="548" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">DirectDraw Pipeline</text>
+  <text x="410" y="568" fill="#6e6e8a" font-size="11" text-anchor="middle">Graphics2D capture · Protobuf serialize</text>
+
+  <rect x="531" y="521" width="220" height="65" rx="5" fill="#030146" opacity="0.05"/>
+  <rect x="530" y="520" width="220" height="65" rx="5" fill="#fafafd" stroke="#030146" stroke-width="1"/>
+  <text x="640" y="548" fill="#030146" font-size="13" font-weight="600" text-anchor="middle">Font Renderer</text>
+  <text x="640" y="568" fill="#6e6e8a" font-size="11" text-anchor="middle">name + coords (no glyphs)</text>
+
+  <!-- Subtle divider between framework and user code -->
+  <line x1="80" y1="602" x2="720" y2="602" stroke="#030146" stroke-width="0.75"
+        stroke-dasharray="3,3" stroke-opacity="0.35"/>
+
+  <!-- Your Swing Application — visual anchor with peach gradient + orange border -->
+  <rect x="222" y="615" width="360" height="32" rx="5" fill="#030146" opacity="0.08"/>
+  <rect x="220" y="613" width="360" height="32" rx="5" fill="url(#appGrad)" stroke="#ff420e" stroke-width="2"/>
+  <text x="400" y="634" fill="#030146" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.6">YOUR SWING APPLICATION</text>
+</svg>
