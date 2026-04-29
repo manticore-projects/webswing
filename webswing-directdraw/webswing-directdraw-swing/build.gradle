@@ -3,7 +3,7 @@ apply plugin: 'webswing.protobuf-conventions'
 dependencies {
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
     implementation "commons-codec:commons-codec:${commonsCodecVersion}"
-    implementation 'org.apache.bcel:bcel:6.10.0'
+    implementation 'org.apache.bcel:bcel:+'
 }
 
 createRegenerateProtoTask('../src/proto/javascript', 'src/main/java')
