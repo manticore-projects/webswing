@@ -20,6 +20,14 @@ dependencies {
     runtimeOnly 'org.eclipse.jetty.compression:jetty-compression-gzip:12.1.+'
 
     implementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
+
+    // HTTP/2 + ALPN
+    implementation "org.eclipse.jetty.http2:jetty-http2-server:${jettyVersion}"
+    implementation "org.eclipse.jetty:jetty-alpn-server:${jettyVersion}"
+
+    // ALPN service provider for Conscrypt (otherwise ALPN goes through JSSE,
+    // which defeats the underscore-SNI fix you wired up)
+    implementation "org.eclipse.jetty:jetty-alpn-conscrypt-server:${jettyVersion}"
 }
 
 jar {
