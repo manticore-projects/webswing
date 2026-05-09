@@ -25,9 +25,11 @@ import org.webswing.server.common.service.security.AuthenticatedWebswingUser;
 import org.webswing.server.services.security.api.WebswingAuthenticationException;
 import org.webswing.server.services.security.modules.AbstractUserPasswordSecurityModule;
 
-import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -35,9 +37,6 @@ public class ShiroSecurityModule
     extends AbstractUserPasswordSecurityModule<ShiroSecurityModuleConfig> {
   private final static Logger log = LoggerFactory.getLogger(ShiroSecurityModule.class);
 
-  /* OLD ROLE STORAGE (Commented out)
-  private final TreeSet<String> definedRoles = new TreeSet<>();
-  */
 
   private volatile SecurityManager securityManager;
   private ShiroConfigMonitor configMonitor;
@@ -76,26 +75,17 @@ public class ShiroSecurityModule
 
   private void internalInit(String iniFileName) {
     try {
+      // Shiro 3 Ini.loadFromPath() routes through URI.toURL() and rejects schemeless paths.
+      // Load the InputStream directly to bypass Shiro's resource-prefix resolver.
       Ini ini = new Ini();
-      ini.loadFromPath(iniFileName);
+      try (InputStream is = Files.newInputStream(Path.of(iniFileName))) {
+        ini.load(is);
+      }
 
       // Modern Shiro Environment setup (Non-deprecated)
       Environment env = new BasicIniEnvironment(ini);
       SecurityManager newManager = env.getSecurityManager();
 
-      /* OLD [roles] SCRAPING LOGIC (Commented out)
-      
-      Section rolesSection = ini.getSection("roles");
-      synchronized (definedRoles) {
-          definedRoles.clear();
-          if (rolesSection != null) {
-              definedRoles.addAll(rolesSection.keySet());
-              log.info("INI file provided roles: {}", Arrays.deepToString(definedRoles.toArray()));
-          } else {
-              applyDefaultRoles();
-          }
-      }
-      */
 
       // Atomic swap for thread safety
       this.securityManager = newManager;
@@ -174,28 +164,6 @@ public class ShiroSecurityModule
         }
       }
 
-      /*
-      OLD ROLE CHECKING LOOP (Commented out)
-      
-      ArrayList<String> rolesToCheck;
-      synchronized (definedRoles) {
-          rolesToCheck = new ArrayList<>(definedRoles);
-      }
-      
-      for (Realm realm : ((RealmSecurityManager) currentMgr).getRealms()) {
-          if (realm instanceof AuthorizingRealm && realm.supports(token)) {
-              AuthorizingRealm authorizingRealm = (AuthorizingRealm) realm;
-              try {
-                  boolean[] results = authorizingRealm.hasRoles(principals, rolesToCheck);
-                  for (int j = 0; j < results.length; j++) {
-                      if (results[j]) authorizedRoles.add(rolesToCheck.get(j));
-                  }
-              } catch (Exception ex) {
-                  log.trace("Auth check failed against {}", realm.getName());
-              }
-          }
-      }
-      */
 
       // Apply default roles if no roles were discovered
       if (authorizedRoles.isEmpty()) {
@@ -226,11 +194,11 @@ public class ShiroSecurityModule
     if (path == null) {
       return null;
     }
-    String homePath = new File(System.getProperty("user.home")).toURI().getPath();
-    String resolved = path.replaceFirst("~", Matcher.quoteReplacement(homePath));
-    resolved = resolved.replaceFirst("\\$\\{" + Constants.ROOT_DIR_PATH + "}",
-        System.getProperty(Constants.ROOT_DIR_PATH, ""));
-    return resolved.replaceFirst("\\$\\{user.home}", Matcher.quoteReplacement(homePath));
+    String homePath = System.getProperty("user.home");
+    String rootPath = System.getProperty(Constants.ROOT_DIR_PATH, "");
+    return path.replaceFirst("^~", Matcher.quoteReplacement(homePath))
+        .replaceFirst("\\$\\{" + Constants.ROOT_DIR_PATH + "}", Matcher.quoteReplacement(rootPath))
+        .replaceFirst("\\$\\{user.home}", Matcher.quoteReplacement(homePath));
   }
 
   @Override
