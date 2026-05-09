@@ -1,11 +1,11 @@
 <div align="center">
 
-# WebSwing Lite 26.2
+# WebSwing Lite 26.3
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
 [![Build](https://img.shields.io/github/actions/workflow/status/manticore-projects/webswing/Gradle.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&label=Build)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
-[![Version](https://img.shields.io/badge/Version-26.2-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
+[![Version](https://img.shields.io/badge/Version-26.3-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
 [![JDK 17+](https://img.shields.io/badge/JDK-17%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Node.js 24](https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-red?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
@@ -75,7 +75,7 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 
 ### Performance
 
-- **SSE/AVX-optimized PNG encoding** via [fpng-java](https://manticore-projects.com/FPNG-Java/index.html) — hardware-accelerated image compression in the DirectDraw rendering pipeline
+- **SSE/AVX-optimized PNG encoding** via [zpng-java](https://manticore-projects.com/FPNG-Java/index.html) — hardware-accelerated image compression in the DirectDraw rendering pipeline
 - **Browser-side font rendering** — text is rendered as font names + coordinates instead of server-side glyph bitmaps, reducing WebSocket bandwidth by up to 80%
 - **GZIP/Brotli pre-compression** for all static assets (reducing the JS size from 5 MB to less than 1 MB), GZIP compression for all content (JSON)
 
@@ -111,9 +111,9 @@ This fork implements defence-in-depth for deployment at regulated financial inst
 
 ```bash
 # Download the latest release
-curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.2.zip
-unzip webswing-26.2.zip
-cd webswing-26.2
+curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.3.zip
+unzip webswing-26.3.zip
+cd webswing-26.3
 
 # Start the server
 ./run.sh start
@@ -164,7 +164,7 @@ cd webswing
 
 ```bash
 # Extract to your deployment directory
-unzip build/dist/webswing-26.2.zip -d /opt/webswing
+unzip build/dist/webswing-26.3.zip -d /opt/webswing
 
 # Configure your Swing application in webswing.config
 vim /opt/webswing/webswing.config
@@ -192,7 +192,7 @@ cd /opt/webswing && ./run.sh start
 | Jetty | 12.1.+  | Embedded HTTP/WebSocket server |
 | Jackson | 3.+     | JSON serialization |
 | Protocol Buffers | 3.+     | Binary wire format (DirectDraw) |
-| Apache Shiro | 1.13.0  | Authentication & authorization |
+| Apache Shiro | 3.+     | Authentication & authorization |
 | Guava | 33.+    | Core utilities |
 | Log4j 2 | 2.+     | Logging framework |
 | SLF4J | 2.+     | Logging facade |
