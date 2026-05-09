@@ -280,8 +280,6 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_DATA_STORE_CONFIG,
           startupParams.getDataStoreConfig());
 
-      processConfig.addProperty(Constants.SWING_START_SYS_PROP_THEME,
-          startupParams.getSubs().replace(startupParams.getAppConfig().getTheme()));
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_ISOLATED_FS,
           startupParams.getAppConfig().isIsolatedFs());
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_TRANSFER_DIR,

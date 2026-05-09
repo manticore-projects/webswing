@@ -17,10 +17,9 @@ dependencies {
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "commons-codec:commons-codec:${commonsCodecVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
-    implementation 'org.apache.bcel:bcel:6.10.0'
+    implementation 'org.apache.bcel:bcel:+'
     implementation "com.google.guava:guava:${guavaVersion}"
-    implementation 'com.manticore-projects.tools:fpng-java:+'
-    implementation 'com.manticore-projects.tools:fpnge-java:+'
+    implementation 'com.manticore-projects.tools:zpng-java:+'
     implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
     implementation 'at.yawk.lz4:lz4-java:+'
 

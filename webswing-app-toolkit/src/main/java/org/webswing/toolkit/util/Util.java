@@ -169,7 +169,7 @@ public class Util {
 
   public static void savePngImage(BufferedImage imageContent, String name) {
     try {
-      OutputStream os = new FileOutputStream(new File(name));
+      OutputStream os = new FileOutputStream(name);
       ImageOutputStream ios = ImageIO.createImageOutputStream(os);
       ImageIO.write(imageContent, "png", ios);
       ios.close();

@@ -34,14 +34,6 @@ public interface SwingConfig extends Config {
   @ConfigFieldDefaultValueString("${user.dir}")
   public String getHomeDir();
 
-  @ConfigField(tab = ConfigGroup.General, label = "Theme",
-      description = "Select one of the default window decoration themes or a enter path to a XFWM4 theme folder.")
-  @ConfigFieldVariables(VariableSetName.SwingInstance)
-  @ConfigFieldDefaultValueString("Murrine")
-  @ConfigFieldPresets({"Murrine", "Agualemon", "Sassandra", "Therapy", "Totem", "Vertex",
-      "Vertex-Light"})
-  public String getTheme();
-
   @ConfigField(tab = ConfigGroup.General, label = "Fonts",
       description = "Customize logical font mappings and define physical fonts available to application. These fonts (TTF only) will be used for DirectDraw as native fonts. Key: name of font (ie. dialog|dialoginput|sansserif|serif|monospaced), Value: path to font file.")
   @ConfigFieldVariables(VariableSetName.SwingInstance)

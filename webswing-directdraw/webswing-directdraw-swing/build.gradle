@@ -4,6 +4,7 @@ dependencies {
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
     implementation "commons-codec:commons-codec:${commonsCodecVersion}"
     implementation 'org.apache.bcel:bcel:+'
+    implementation("com.manticore-projects.tools:zpng-java:+")
 }
 
 createRegenerateProtoTask('../src/proto/javascript', 'src/main/java')

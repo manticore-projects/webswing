@@ -2,6 +2,7 @@ apply plugin: 'webswing.node-conventions'
 
 dependencies {
     implementation project(':webswing-directdraw:webswing-directdraw-swing')
+    testImplementation("com.manticore-projects.tools:zpng-java:+")
     testImplementation project(':webswing-app-services')
     testImplementation project(':webswing-app-toolkit')
     testImplementation "tools.jackson.core:jackson-databind:${jacksonVersion}"

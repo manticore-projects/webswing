@@ -1,5 +1,6 @@
 package org.webswing.services.impl;
 
+import com.manticore.tools.ZPNG;
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.common.WindowDecoratorTheme;
 import org.webswing.ext.services.ImageService;
@@ -13,22 +14,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.manticore.tools.FPNGE;
-import com.manticore.tools.FPNGEncoder;
-
 public class ImageServiceImpl implements ImageService {
 
   private static ImageServiceImpl impl;
   private WindowDecoratorTheme windowDecorationTheme;
 
-  // find out if to use AVX or SSE encoder
-  private static final boolean HAS_AVX2;
-  static {
-    FPNGEncoder.ENCODER.fpng_init();
-    HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
-
-    AppLogger.info(HAS_AVX2 ? "Can use the AVX2 PNG encoder." : "Will use the SSE PNG encoder.");
-  }
 
   public static ImageServiceImpl getInstance() {
     if (impl == null) {
@@ -38,20 +28,17 @@ public class ImageServiceImpl implements ImageService {
   }
 
   public ImageServiceImpl() {
-    try {
-      ClassLoader currentContextClassLoader = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      IIORegistry.getDefaultInstance().registerApplicationClasspathSpis();
-      Thread.currentThread().setContextClassLoader(currentContextClassLoader);
-    } catch (Exception e) {
-      AppLogger.warn(
-          "ImageService:Library for fast image encoding not found. Download the library from http://objectplanet.com/pngencoder/");
-    }
+    ClassLoader currentContextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+    IIORegistry.getDefaultInstance().registerApplicationClasspathSpis();
+    Thread.currentThread().setContextClassLoader(currentContextClassLoader);
   }
 
   public byte[] getPngImage(BufferedImage image) {
-    byte[] result = HAS_AVX2 ? FPNGE.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2)
-        : FPNGEncoder.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
+    if (image == null) {
+      return null;
+    }
+    byte[] result = ZPNG.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
     return result;
   }
 

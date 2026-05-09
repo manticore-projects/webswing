@@ -1,5 +1,6 @@
 package org.webswing.directdraw;
 
+import com.manticore.tools.ZPNG;
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.directdraw.util.ImageConsumerAdapter;
 
@@ -24,14 +25,7 @@ public class DirectDrawServicesAdapter {
   private Map<String, String> fontFileMap;
 
   public byte[] getPngImage(BufferedImage imageContent) {
-    try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ImageIO.write(imageContent, "png", baos);
-      return baos.toByteArray();
-    } catch (IOException e) {
-      Logger.getAnonymousLogger().log(Level.SEVERE, "Failed to encode PNG image", e);
-      return new byte[0];
-    }
+    return ZPNG.encode(imageContent, imageContent.getColorModel().hasAlpha() ? 4 : 3, 2);
   }
 
   public long getSignature(byte[] data) {

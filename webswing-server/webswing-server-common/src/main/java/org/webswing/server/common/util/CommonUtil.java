@@ -30,8 +30,7 @@ import java.nio.file.PathMatcher;
 import java.security.ProtectionDomain;
 import java.util.*;
 
-import com.manticore.tools.FPNGE;
-import com.manticore.tools.FPNGEncoder;
+import com.manticore.tools.ZPNG;
 
 public class CommonUtil {
   public static final int bufferSize = 4 * 1024;
@@ -42,13 +41,6 @@ public class CommonUtil {
 
   /** Maximum icon dimension (pixels). Both SVG and PNG are scaled to fit. */
   private static final int MAX_ICON_SIZE = 112;
-
-  private static final boolean HAS_AVX2;
-  static {
-    FPNGEncoder.ENCODER.fpng_init();
-    HAS_AVX2 = FPNGEncoder.ENCODER.hasAVX2() != 0;
-    log.info(HAS_AVX2 ? "Using AVX2 PNG encoder" : "Using SSE PNG encoder");
-  }
 
   /**
    * Scale image down to fit within maxWidth × maxHeight, preserving aspect ratio. Returns the
@@ -200,16 +192,11 @@ public class CommonUtil {
     return scaleToFit(hires, width, height);
   }
 
-  /**
-   * Encode a BufferedImage as PNG using fpng-java (SIMD-accelerated). Uses AVX2 encoder when
-   * available, falls back to SSE.
-   */
   private static byte[] getPngImage(BufferedImage image) {
     if (image == null) {
       return null;
     }
-    int channels = image.getColorModel().hasAlpha() ? 4 : 3;
-    return HAS_AVX2 ? FPNGE.encode(image, channels, 2) : FPNGEncoder.encode(image, channels, 2);
+    return ZPNG.encode(image, image.getColorModel().hasAlpha() ? 4 : 3, 2);
   }
 
   public static File resolveFile(String name, String homeDir, VariableSubstitutor subs) {

@@ -17,9 +17,7 @@ dependencies {
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.google.inject:guice:${guiceVersion}"
     implementation 'com.github.weisj:jsvg:+'
-    implementation 'com.manticore-projects.tools:fpng-java:+'
-    implementation 'com.manticore-projects.tools:fpnge-java:+'
-
+    implementation 'com.manticore-projects.tools:zpng-java:+'
 }
 
 createRegenerateProtoTask('src/main/protobuf', 'src/main/java')

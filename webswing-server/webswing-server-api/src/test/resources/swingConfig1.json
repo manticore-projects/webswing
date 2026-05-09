@@ -30,7 +30,6 @@
 	    "vmArgs" : "-Xmx128m -DauthorizedUser=${user}",
 	    "classPathEntries" : [ "${user.dir}/demo/SwingSet3/SwingSet3.jar", "${user.dir}/demo/SwingSet3/lib/*.jar", "../Source/lib/groovy/*.jar", "c:/Data/jdk/jdk7/jre/lib/jfxrt.jar", "../Source/P6R2/*.jar", "lib" ],
 	    "homeDir" : "demo/SwingSet3/${user}",
-	    "theme" : "Murrine",
 	    "fontConfig" : { "test1" : "value1" },
 	    "maxClients" : 2,
 	    "sessionMode" : "CONTINUE_FOR_BROWSER",

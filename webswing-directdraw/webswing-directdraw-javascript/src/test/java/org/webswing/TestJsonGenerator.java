@@ -1,5 +1,6 @@
 package org.webswing;
 
+import com.manticore.tools.ZPNG;
 import org.apache.commons.codec.binary.Base64;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.toolkit.VolatileWebImageWrapper;
@@ -117,14 +118,7 @@ public class TestJsonGenerator {
   }
 
   public static byte[] getPngImage(BufferedImage imageContent) {
-    try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ImageIO.write(imageContent, "png", baos);
-      return baos.toByteArray();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return ZPNG.encode(imageContent, imageContent.getColorModel().hasAlpha() ? 4 : 3, 2);
   }
 
   public static String[] getTestMethods() {
