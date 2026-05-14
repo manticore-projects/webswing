@@ -31,3 +31,35 @@ docker-compose*.yml
 *.md
 .github/
 .semgrepignore
+
+# FIX (secret leakage): exclude credential and certificate files so they can
+# never be included in the build context — even accidentally.  A file that
+# never enters the context cannot be baked into an image layer.
+#
+# Environment / secrets
+.env
+*.env
+.env.*
+secrets/
+credentials/
+**/.secrets/
+
+# Private keys and certificates
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p7b
+*.p12
+*.pfx
+
+# Java keystores and truststores
+*.jks
+*.keystore
+*.truststore
+
+# Cloud / service credentials
+*.json.key
+gcloud-key*.json
+service-account*.json

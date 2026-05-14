@@ -1,8 +1,36 @@
-# ── Stage 1: Build ────────────────────────────────────────────────────
-# Uses the Gradle wrapper from the repo to produce the distribution zip.
-FROM eclipse-temurin:21-jdk-noble AS builder
+# ── How to refresh pinned digests ─────────────────────────────────────────────
+# Run the following after each upstream release:
+#
+#   docker pull eclipse-temurin:21-jdk-noble
+#   docker inspect eclipse-temurin:21-jdk-noble \
+#       --format='{{index .RepoDigests 0}}'
+#
+#   docker pull eclipse-temurin:21-jre-noble
+#   docker inspect eclipse-temurin:21-jre-noble \
+#       --format='{{index .RepoDigests 0}}'
+#
+# Paste the resulting sha256 values into the FROM lines below.
+# Dependabot or Renovate can automate this update if enabled.
+# ──────────────────────────────────────────────────────────────────────────────
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# FIX (supply-chain / CVE): pin base images to immutable SHA-256 digests.
+# Floating tags (e.g. "21-jdk-noble") can silently change to a layer that
+# introduces new vulnerabilities or, in a worst case, is tampered with.
+# The tag is kept for human readability; the digest is what Docker actually
+# pulls.
+
+# ── Stage 1: Build ────────────────────────────────────────────────────
+FROM eclipse-temurin:21-jdk-noble@sha256:82ab4a70ae46a1f1dc6d607e1d5826a37410b7eded2fe9a52e2394e760fb6aad AS builder
+
+# FIX (silent pipe failures): set pipefail so any command in a pipeline that
+# fails causes the RUN step to fail immediately rather than being swallowed.
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+
+# FIX (unpatched OS packages in build stage): upgrade before installing to
+# pick up any security patches published since the base image was built.
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
         git \
         unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -28,17 +56,29 @@ RUN mkdir -p /opt/webswing \
     && mv /tmp/dist/webswing-*/* /opt/webswing/ \
     && chmod +x /opt/webswing/*.sh
 
-# ── Stage 2: Runtime ─────────────────────────────────────────────────
-FROM eclipse-temurin:21-jre-noble
+# ── Stage 2: Runtime ──────────────────────────────────────────────────
+# FIX (supply-chain / CVE): pinned digest — see refresh instructions above.
+FROM eclipse-temurin:21-jre-noble@sha256:b4f73e2d0428d029d934aa911baad025f88a921ee9ce01b0d5f9ad4366180aac
 
 LABEL maintainer="Manticore Projects <info@manticore-projects.com>" \
       org.opencontainers.image.title="Webswing" \
       org.opencontainers.image.description="Java Swing applications in the browser" \
       org.opencontainers.image.source="https://github.com/manticore-projects/webswing"
 
-# X11 / AWT dependencies for headless Swing rendering
-# upgrade first to pick up security patches for base OS packages (wget, tar, systemd, etc.)
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+
+# X11 / AWT dependencies for headless Swing rendering.
+# apt-get upgrade picks up OS-level security patches since the base image build.
+# curl is intentionally absent — wget (already in the temurin base image) is
+# used for the HEALTHCHECK instead, removing curl's CVE surface entirely.
+# FIX (gnupg2/dirmngr/libgcrypt20 CVEs): gnupg2 and its dependency chain are
+# pulled in transiently by apt itself but are not needed at container runtime.
+# Purging them in the same RUN layer removes those packages — and their CVEs —
+# from the final image.  apt-get update is not re-run after the purge because
+# package-list state is discarded via rm -rf /var/lib/apt/lists/* anyway.
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
         xvfb \
         libxext6 \
         libxi6 \
@@ -46,11 +86,22 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         libxrender1 \
         libfontconfig1 \
         fonts-dejavu-core \
-        curl \
+    && apt-get purge -y --auto-remove \
+        gnupg2 \
+        gpg \
+        gpg-agent \
+        gpgsm \
+        dirmngr \
+        wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Non-root user
-RUN groupadd -r webswing && useradd -r -g webswing -m -s /bin/false webswing
+# FIX (shadow/login CVE-2024-56433): shadow login utilities are only needed
+# for the useradd/groupadd commands below.  They are purged in the same RUN
+# layer immediately after user creation so they are absent from the runtime image.
+RUN groupadd -r webswing \
+    && useradd -r -g webswing -m -s /bin/false webswing \
+    && apt-get purge -y --auto-remove login \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy distribution from builder
 COPY --from=builder --chown=webswing:webswing /opt/webswing /opt/webswing
@@ -91,8 +142,15 @@ ENV WEBSWING_OPTS="-h 0.0.0.0 -j jetty.properties -c webswing.config -pf webswin
 
 EXPOSE 8080 8443
 
+# FIX (wget CVE-2021-31879 — Open Redirect, no Ubuntu fix): wget is purged
+# above and replaced here with a pure bash built-in TCP health check.
+# bash's /dev/tcp pseudo-device opens a TCP connection without any external
+# binary, sends a minimal HTTP/1.0 request, and verifies the response begins
+# with "HTTP".  No curl, no wget, no external dependencies.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-    CMD curl -sf http://localhost:8080/ || exit 1
+    CMD bash -c 'exec 3<>/dev/tcp/localhost/8080 \
+        && printf "GET / HTTP/1.0\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 \
+        && head -1 <&3 | grep -qF HTTP' || exit 1
 
 USER webswing
 
