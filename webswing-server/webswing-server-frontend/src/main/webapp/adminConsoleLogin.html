@@ -4,6 +4,12 @@
 <head>
     <title>VBox Login</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <!--
+        FIX: Add a Content-Security-Policy consistent with index.html.
+        script-src 'self' blocks any injected external or inline scripts.
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none'; connect-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css"/>
@@ -11,120 +17,228 @@
 </head>
 
 <body>
-	<div class="webswing-element" data-webswing-instance="webswingInstance0">
-	    <div id="loading" class="ws-modal-container">
-	        <div class="ws-login">
-	            <div class="ws-login-content"><div class="ws-spinner"><div class="ws-spinner-dot-1"></div> <div class="ws-spinner-dot-2"></div></div></div>
-	        </div>
-	    </div>
-	</div>
-    <div id="adminConsoleErrorDialog" class="ws-modal-container" role="dialog" aria-labelledby="adminConsoleErrorDialog-title" aria-describedby="adminConsoleErrorDialog-description">
-	    <div class="ws-dialog">
-	        <div data-id="header" class="ws-header">
-	        	<h2 id="adminConsoleErrorDialog-title" class="ws-title">Error</h2>
-	        </div>
-	        <div class="ws-dialog-content">
-	        	<p id="adminConsoleErrorDialog-description">
-				</p>
-	        </div>
-	    </div>
-	</div>
-	
+<div class="webswing-element" data-webswing-instance="webswingInstance0">
+    <div id="loading" class="ws-modal-container">
+        <div class="ws-login">
+            <div class="ws-login-content">
+                <div class="ws-spinner">
+                    <div class="ws-spinner-dot-1"></div>
+                    <div class="ws-spinner-dot-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adminConsoleErrorDialog" class="ws-modal-container"
+     role="dialog"
+     aria-labelledby="adminConsoleErrorDialog-title"
+     aria-describedby="adminConsoleErrorDialog-description">
+    <div class="ws-dialog">
+        <div data-id="header" class="ws-header">
+            <h2 id="adminConsoleErrorDialog-title" class="ws-title">Error</h2>
+        </div>
+        <div class="ws-dialog-content">
+            <p id="adminConsoleErrorDialog-description"></p>
+        </div>
+    </div>
+</div>
+
 <script>
-    var baseUrl = getBaseUrl();
-    
-    var webswingInstance0 = {
-        options: {
-            autoStart: false,
-            connectionUrl: baseUrl,
-            securityToken: getParam('securityToken'),
-            realm: getParam('realm'),
-            adminConsoleLogin: true,
-            onReady: function(api) {
-            	getAdminLoginToken(function(data) {
-            		if (data) {
-            			var json = JSON.parse(data);
-            			if (json && json.accessId) {
-            				loadAdminConsoleUrl(function(adminConsoleUrl) {
-                        		if (!document.referrer || document.referrer.length == 0) {
-            	                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=unknown";
-                        		} else if (!adminConsoleUrl || adminConsoleUrl.length == 0) {
-            	                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=not_found";
-                    			/* } else if (adminConsoleUrl.indexOf("http") == 0 && document.referrer.indexOf("http") == 0 && adminConsoleUrl.indexOf(document.referrer) != 0) {
-            	                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=referrer"; */
-                    			} else if (document.referrer.indexOf("http://localhost:9004") == 0) {
-            		                window.location.href = "http://localhost:9004/admin/" + "login.html?accessId=" + json.accessId;
-                    			} else {
-            		                window.location.href = adminConsoleUrl + "login.html?accessId=" + json.accessId;
-                    			}
-                    		});
-            			}
-            		} else {
-            			console.error("Failed to get accessId!");
-            		}
-            	});
-            }
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns a validated same-origin base URL for this page.
+     * Throws if the current origin is not http/https.
+     */
+    function getBaseUrl() {
+        var origin   = window.location.origin;
+        var pathname = window.location.pathname;
+
+        if (!/^https?:\/\//.test(origin)) {
+            throw new Error("Unexpected origin scheme.");
+        }
+
+        var base = origin + pathname;
+        // Strip the filename so we get the directory.
+        base = base.replace(/adminConsoleLogin\.html([?#].*)?$/, "");
+        // Ensure trailing slash.
+        if (base.charAt(base.length - 1) !== "/") {
+            base = base + "/";
+        }
+        return base;
+    }
+
+    /**
+     * Reads a named query-string parameter from the current URL.
+     * Values are NOT injected into the DOM here, so URL-decoding is
+     * sufficient.  Apply additional encoding if you ever put them into
+     * HTML/href/script contexts.
+     */
+    function getParam(name) {
+        try {
+            return new URLSearchParams(window.location.search).get(name);
+        } catch (e) {
+            // IE11 fallback.
+            var safeName = name.replace(/[[\]]/g, "\\$&");
+            var results  = new RegExp("[?&]" + safeName + "=([^&#]*)").exec(window.location.search);
+            return results === null ? null : decodeURIComponent(results[1]);
         }
     }
-    
-    function getBaseUrl() {
-        var baseUrl = document.location.origin + document.location.pathname;
-        baseUrl = baseUrl.indexOf('adminConsoleLogin.html') > -1 ? baseUrl.split('adminConsoleLogin.html').join('') : baseUrl;
-        return baseUrl;
-    }
-    
-    function loadAdminConsoleUrl(callback) {
-    	var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                var data;
-                if (xmlhttp.status == 200) {
-                	data = xmlhttp.responseText;
-                } else if (xmlhttp.status == 401 || xmlhttp.status == 403) {
-                	// not authorized to get the url
-                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=unauthorized";
-                } else {
-                	// different problem
-                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=unknown";
-                }
-                if (callback) {
-                	(callback)(data);
-                }
+
+    /**
+     * FIX: Validate that a redirect target URL is either:
+     *   (a) same-origin as the current page, or
+     *   (b) the one known localhost dev port (9004).
+     * Any other target is rejected and replaced with the error page.
+     *
+     * This blocks open-redirect and XSS-via-location attacks.
+     */
+    function isTrustedRedirectUrl(url) {
+        try {
+            var parsed = new URL(url);
+            // Same-origin is always allowed.
+            if (parsed.origin === window.location.origin) {
+                return true;
             }
+            // Known dev-only exception.
+            if (parsed.origin === "http://localhost:9004") {
+                return true;
+            }
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Performs a redirect only after validating the target URL.
+     * Falls back to the generic error page on failure.
+     */
+    function safeRedirect(url) {
+        if (isTrustedRedirectUrl(url)) {
+            window.location.href = url;
+        } else {
+            console.error("Blocked untrusted redirect to:", url);
+            window.location.href = baseUrl + "adminConsoleLoginError.html?error=unknown";
+        }
+    }
+
+    // Initialise baseUrl once; abort the whole page if the origin is invalid.
+    var baseUrl;
+    try {
+        baseUrl = getBaseUrl();
+    } catch (e) {
+        console.error("Blocked page init: unexpected origin.", e);
+        document.body.textContent = "Security error: unexpected page origin.";
+        throw e;   // Halt script execution.
+    }
+
+    // -------------------------------------------------------------------------
+    // Webswing instance config
+    // -------------------------------------------------------------------------
+    var webswingInstance0 = {
+        options: {
+            autoStart:          false,
+            connectionUrl:      baseUrl,
+            securityToken:      getParam('securityToken'),
+            realm:              getParam('realm'),
+            adminConsoleLogin:  true,
+            onReady: function (api) {
+                getAdminLoginToken(function (data) {
+                    if (!data) {
+                        console.error("Failed to get accessId!");
+                        return;
+                    }
+
+                    var json;
+                    try {
+                        json = JSON.parse(data);
+                    } catch (e) {
+                        console.error("Invalid JSON from adminConsoleToken.", e);
+                        safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                        return;
+                    }
+
+                    if (!json || !json.accessId) {
+                        console.error("Missing accessId in token response.");
+                        safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                        return;
+                    }
+
+                    // FIX: encode the accessId before placing it in a URL to
+                    // prevent fragment/query injection.
+                    var encodedAccessId = encodeURIComponent(json.accessId);
+
+                    loadAdminConsoleUrl(function (adminConsoleUrl) {
+                        if (!document.referrer || document.referrer.length === 0) {
+                            safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                        } else if (!adminConsoleUrl || adminConsoleUrl.length === 0) {
+                            safeRedirect(baseUrl + "adminConsoleLoginError.html?error=not_found");
+                        } else if (document.referrer.indexOf("http://localhost:9004") === 0) {
+                            safeRedirect("http://localhost:9004/admin/login.html?accessId=" + encodedAccessId);
+                        } else {
+                            // FIX: validate adminConsoleUrl before redirecting.
+                            // It must be same-origin (or the dev localhost).
+                            if (!isTrustedRedirectUrl(adminConsoleUrl + "login.html")) {
+                                console.error("Blocked redirect to untrusted adminConsoleUrl:", adminConsoleUrl);
+                                safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                                return;
+                            }
+                            safeRedirect(adminConsoleUrl + "login.html?accessId=" + encodedAccessId);
+                        }
+                    });
+                });
+            }
+        }
+    };
+
+    // -------------------------------------------------------------------------
+    // XHR helpers
+    // -------------------------------------------------------------------------
+
+    function loadAdminConsoleUrl(callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState !== XMLHttpRequest.DONE) { return; }
+            var data;
+            if (xmlhttp.status === 200) {
+                data = xmlhttp.responseText;
+            } else if (xmlhttp.status === 401 || xmlhttp.status === 403) {
+                safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unauthorized");
+                return;
+            } else {
+                safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                return;
+            }
+            if (callback) { callback(data); }
         };
         xmlhttp.open("GET", baseUrl + "rest/adminConsoleUrl", true);
         xmlhttp.withCredentials = true;
         xmlhttp.send();
     }
-    
+
     function getAdminLoginToken(callback) {
-    	var xmlhttp = new XMLHttpRequest();
+        var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                var data;
-                if (xmlhttp.status == 200) {
-                	data = xmlhttp.responseText;
-                } else if (xmlhttp.status == 401 || xmlhttp.status == 403) {
-                	// not authorized to get the url
-                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=unauthorized";
-                } else {
-                	// different problem
-                	window.location.href = baseUrl + "adminConsoleLoginError.html?error=unknown";
-                }
-                if (callback) {
-                	(callback)(data);
-                }
+            if (xmlhttp.readyState !== XMLHttpRequest.DONE) { return; }
+            var data;
+            if (xmlhttp.status === 200) {
+                data = xmlhttp.responseText;
+            } else if (xmlhttp.status === 401 || xmlhttp.status === 403) {
+                safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unauthorized");
+                return;
+            } else {
+                safeRedirect(baseUrl + "adminConsoleLoginError.html?error=unknown");
+                return;
             }
+            if (callback) { callback(data); }
         };
         xmlhttp.open("GET", baseUrl + "rest/adminConsoleToken", true);
         xmlhttp.withCredentials = true;
         xmlhttp.send();
-    }
-
-    function getParam(name) {
-        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-        var results = new RegExp("[\\?&]" + name + "=([^&#]*)").exec(location.href);
-        return results == null ? null : decodeURIComponent(results[1]);
     }
 </script>
 
@@ -133,18 +247,30 @@
         var loader = function () {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                    var version = xmlhttp.status == 200 ? xmlhttp.responseText : "undefined";
-                    var script = document.createElement("script"),
-                        tag = document.getElementsByTagName("script")[0];
-                    script.src = baseUrl + "javascript/webswing-embed.js?version=" + version;
-                    tag.parentNode.insertBefore(script, tag);
-                }
+                if (xmlhttp.readyState !== XMLHttpRequest.DONE) { return; }
+
+                // FIX: allowlist-validate the version string before embedding
+                // it in a script src URL.  Only alphanumeric, dots, hyphens,
+                // and underscores are permitted (max 64 chars).
+                var rawVersion = xmlhttp.status === 200 ? xmlhttp.responseText.trim() : "";
+                var version    = /^[\w.\-]{1,64}$/.test(rawVersion) ? rawVersion : "undefined";
+
+                var script = document.createElement("script");
+                // FIX: encodeURIComponent as a second defensive layer.
+                script.src = baseUrl + "javascript/webswing-embed.js?version=" +
+                             encodeURIComponent(version);
+                var tag = document.getElementsByTagName("script")[0];
+                tag.parentNode.insertBefore(script, tag);
             };
             xmlhttp.open("GET", baseUrl + "rest/version", true);
             xmlhttp.send();
         };
-        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+
+        if (window.addEventListener) {
+            window.addEventListener("load", loader, false);
+        } else {
+            window.attachEvent("onload", loader);
+        }
     })(window, document);
 </script>
 </body>

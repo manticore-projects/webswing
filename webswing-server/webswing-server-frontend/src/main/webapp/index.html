@@ -4,7 +4,13 @@
 <head>
     <title>VBox</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta http-equiv="Content-Security-Policy" content="connect-src 'self' ws: wss: data:">
+    <!--
+        CSP: connect-src restricts XHR/WebSocket targets.
+        script-src 'self' prevents injection of external/inline scripts.
+        Remove 'unsafe-inline' from any future additions — use nonces instead.
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none'; connect-src 'self' ws: wss: data:; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css"/>
@@ -13,58 +19,128 @@
 </head>
 
 <body>
-	<div class="webswing-element" data-webswing-instance="webswingInstance0">
-	    <div id="loading" class="ws-modal-container">
-	        <div class="ws-login">
-	            <div  class="ws-login-content"><div class="ws-spinner"><div class="ws-spinner-dot-1"></div> <div class="ws-spinner-dot-2"></div></div></div>
-	        </div>
-	    </div>
-	</div>
-	
+<div class="webswing-element" data-webswing-instance="webswingInstance0">
+    <div id="loading" class="ws-modal-container">
+        <div class="ws-login">
+            <div class="ws-login-content">
+                <div class="ws-spinner">
+                    <div class="ws-spinner-dot-1"></div>
+                    <div class="ws-spinner-dot-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    var webswingInstance0 = {
-        options: {
-            autoStart: true,
-            args: getParam('args'),
-            recording: getParam('recording'),
-            debugPort: getParam('debugPort'),
-            recordingPlayback: getParam('recordingPlayback'),
-            securityToken: getParam('securityToken'),
-            realm: getParam('realm'),
-            debugLog: getParam('debugLog')
+    /**
+     * Returns a same-origin base URL derived from the current page location.
+     * Validated to ensure it never escapes the current origin.
+     */
+    function getSameOriginBaseUrl() {
+        // Only trust the parsed origin and pathname — never raw href.
+        var origin   = window.location.origin;
+        var pathname = window.location.pathname;
+
+        // Guard: origin must be http or https.
+        if (!/^https?:\/\//.test(origin)) {
+            throw new Error("Unexpected origin scheme.");
+        }
+
+        var base = origin + pathname;
+        // Ensure trailing slash so relative paths resolve correctly.
+        if (base.charAt(base.length - 1) !== "/") {
+            base = base + "/";
+        }
+        return base;
+    }
+
+    /**
+     * Reads a single named query-string parameter from the current URL.
+     * Returns null if the parameter is absent.
+     * NOTE: values are only passed to the Webswing JS API (not injected into
+     * the DOM), so URL-decoding is sufficient here.  If you ever place these
+     * values into innerHTML / script / href, apply further context-specific
+     * encoding at that point.
+     */
+    function getParam(name) {
+        // Use URLSearchParams when available (all modern browsers).
+        try {
+            return new URLSearchParams(window.location.search).get(name);
+        } catch (e) {
+            // IE11 fallback — keep the original regex but avoid eval paths.
+            var safeName = name.replace(/[[\]]/g, "\\$&");
+            var results  = new RegExp("[?&]" + safeName + "=([^&#]*)").exec(window.location.search);
+            return results === null ? null : decodeURIComponent(results[1]);
         }
     }
 
-    function getParam(name) {
-        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-        var results = new RegExp("[\\?&]" + name + "=([^&#]*)").exec(location.href);
-        return results == null ? null : decodeURIComponent(results[1]);
-    }
+    var webswingInstance0 = {
+        options: {
+            autoStart:         true,
+            args:              getParam('args'),
+            recording:         getParam('recording'),
+            debugPort:         getParam('debugPort'),
+            recordingPlayback: getParam('recordingPlayback'),
+            securityToken:     getParam('securityToken'),
+            realm:             getParam('realm'),
+            debugLog:          getParam('debugLog')
+        }
+    };
 </script>
 
 <script data-webswing-global-var="webswing">
     (function (window, document) {
         var loader = function () {
-            //fix for ie
+            // IE11 compat: synthesise origin if absent.
             if (!window.location.origin) {
-                window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                window.location.origin =
+                    window.location.protocol + "//" + window.location.hostname +
+                    (window.location.port ? ":" + window.location.port : "");
             }
-            var baseUrl = document.location.origin + document.location.pathname;
-            baseUrl = baseUrl.indexOf("/", baseUrl.length - 1) !== -1 ? baseUrl : (baseUrl + "/");
+
+            var baseUrl;
+            try {
+                baseUrl = getSameOriginBaseUrl();   // defined in the first <script> block
+            } catch (e) {
+                // Refuse to proceed if the origin looks wrong.
+                console.error("Blocked script load: unexpected origin.", e);
+                return;
+            }
+
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                    var version = xmlhttp.status == 200 ? xmlhttp.responseText : "undefined";
-                    var script = document.createElement("script"),
-                        tag = document.getElementsByTagName("script")[0];
-                    script.src = baseUrl + "javascript/webswing-embed.js?version=" + version;
-                    tag.parentNode.insertBefore(script, tag);
-                }
+                if (xmlhttp.readyState !== XMLHttpRequest.DONE) { return; }
+
+                // FIX: validate the version string before embedding it in a URL.
+                // Only alphanumeric chars, dots, hyphens, and underscores are
+                // accepted.  Anything else falls back to "undefined" so the
+                // server can handle cache-busting gracefully.
+                var rawVersion = xmlhttp.status === 200 ? xmlhttp.responseText.trim() : "";
+                var version    = /^[\w.\-]{1,64}$/.test(rawVersion) ? rawVersion : "undefined";
+
+                // FIX: use encodeURIComponent as a second layer of defence even
+                // after the allowlist check above.
+                var script = document.createElement("script");
+                script.src = baseUrl + "javascript/webswing-embed.js?version=" +
+                             encodeURIComponent(version);
+
+                // FIX: do NOT use innerHTML or document.write to inject the tag.
+                // insertBefore is safe because script.src (a reflected-string
+                // attribute) is set programmatically, not via innerHTML.
+                var tag = document.getElementsByTagName("script")[0];
+                tag.parentNode.insertBefore(script, tag);
             };
+
             xmlhttp.open("GET", baseUrl + "rest/version", true);
             xmlhttp.send();
         };
-        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+
+        if (window.addEventListener) {
+            window.addEventListener("load", loader, false);
+        } else {
+            window.attachEvent("onload", loader);
+        }
     })(window, document);
 </script>
 </body>
