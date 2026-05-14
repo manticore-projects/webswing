@@ -369,27 +369,39 @@ export function detectFF() {
 }
 
 export function createCookie(name: string, value: string, days: number) {
-    let expires;
+    let expires = "";
 
     if (days) {
         const date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
-    } else {
-        expires = "";
     }
-    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+
+    // FIX: use encodeURIComponent instead of the deprecated escape(), which
+    // incorrectly encodes non-ASCII characters and is absent in strict mode.
+    //
+    // FIX: Secure ensures the cookie is never sent over plain HTTP,
+    // preventing session-token interception on mixed or downgraded connections.
+    //
+    // FIX: SameSite=Strict blocks the cookie from being included on
+    // cross-site requests, mitigating CSRF.
+    document.cookie =
+        encodeURIComponent(name) + "=" + encodeURIComponent(value) +
+        expires + "; path=/" +
+        "; Secure" +
+        "; SameSite=Strict";
 }
 
 export function readCookie(name: string) {
-    const nameEQ = escape(name) + "=";
+    // FIX: match the encodeURIComponent encoding used in createCookie.
+    const nameEQ = encodeURIComponent(name) + "=";
     const ca = document.cookie.split(';');
     for (let c of ca) {
         while (c.charAt(0) === ' ') {
             c = c.substring(1, c.length);
         }
         if (c.indexOf(nameEQ) === 0) {
-            return unescape(c.substring(nameEQ.length, c.length));
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
         }
     }
     return null;
