@@ -121,16 +121,16 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
     String _runtimeName = System.getProperty("java.runtime.name", "");
     if (_javaVendor.contains("JetBrains") || _vmName.contains("JBR")
         || _runtimeName.contains("JBR")) {
-        AppLogger.error(  "\n╔══════════════════════════════════════════════════════════════════════╗"
-                                  + "\n║  INCOMPATIBLE JDK: JetBrains Runtime (JBR) is not supported.         ║"
-                                  + "\n║  Keyboard input WILL NOT work — all key events will be dropped.      ║"
-                                  + "\n║  Switch to Eclipse Temurin, Amazon Corretto, or standard OpenJDK.    ║"
-                                  + "\n║  JBR patches shouldNativelyFocusHeavyweight() and                    ║"
-                                  + "\n║  KeyboardFocusManager in ways incompatible with WebToolkit.          ║"
-                                  + "\n║  Detected: "
-                                  + (_vmName + " / " + _javaVendor + "                                      ")
-                                            .substring(0, 60) + "║"
-                                  + "\n╚══════════════════════════════════════════════════════════════════════╝");
+      AppLogger.error("\n╔══════════════════════════════════════════════════════════════════════╗"
+          + "\n║  INCOMPATIBLE JDK: JetBrains Runtime (JBR) is not supported.         ║"
+          + "\n║  Keyboard input WILL NOT work — all key events will be dropped.      ║"
+          + "\n║  Switch to Eclipse Temurin, Amazon Corretto, or standard OpenJDK.    ║"
+          + "\n║  JBR patches shouldNativelyFocusHeavyweight() and                    ║"
+          + "\n║  KeyboardFocusManager in ways incompatible with WebToolkit.          ║"
+          + "\n║  Detected: "
+          + (_vmName + " / " + _javaVendor + "                                      ").substring(0,
+              60)
+          + "║" + "\n╚══════════════════════════════════════════════════════════════════════╝");
     }
 
     try {
