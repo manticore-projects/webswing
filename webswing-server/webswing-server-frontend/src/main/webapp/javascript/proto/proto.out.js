@@ -65,7 +65,7 @@ $root.appFrameProtoOut = (function() {
             this.windowSwitchList = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -292,9 +292,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AppFrameMsgOutProto.decode = function decode(reader, length, error) {
+        AppFrameMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AppFrameMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -302,37 +306,37 @@ $root.appFrameProtoOut = (function() {
                     break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.decode(reader, reader.uint32());
+                        message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 2: {
-                        message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.decode(reader, reader.uint32());
+                        message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 3: {
-                        message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.decode(reader, reader.uint32());
+                        message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 4: {
-                        message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.decode(reader, reader.uint32());
+                        message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 5: {
-                        message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.decode(reader, reader.uint32());
+                        message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 6: {
-                        message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.decode(reader, reader.uint32());
+                        message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 7: {
                         if (!(message.windows && message.windows.length))
                             message.windows = [];
-                        message.windows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
+                        message.windows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 8: {
-                        message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32());
+                        message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 9: {
@@ -340,19 +344,19 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 10: {
-                        message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.decode(reader, reader.uint32());
+                        message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 11: {
-                        message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.decode(reader, reader.uint32());
+                        message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 12: {
-                        message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.decode(reader, reader.uint32());
+                        message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 13: {
-                        message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.decode(reader, reader.uint32());
+                        message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 14: {
@@ -368,13 +372,13 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 17: {
-                        message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.decode(reader, reader.uint32());
+                        message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 18: {
                         if (!(message.componentTree && message.componentTree.length))
                             message.componentTree = [];
-                        message.componentTree.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
+                        message.componentTree.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 19: {
@@ -382,7 +386,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 20: {
-                        message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.decode(reader, reader.uint32());
+                        message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 21: {
@@ -390,25 +394,25 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 22: {
-                        message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.decode(reader, reader.uint32());
+                        message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 23: {
-                        message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.decode(reader, reader.uint32());
+                        message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 24: {
                         if (!(message.windowSwitchList && message.windowSwitchList.length))
                             message.windowSwitchList = [];
-                        message.windowSwitchList.push($root.appFrameProtoOut.WindowSwitchMsgOutProto.decode(reader, reader.uint32()));
+                        message.windowSwitchList.push($root.appFrameProtoOut.WindowSwitchMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 25: {
-                        message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.decode(reader, reader.uint32());
+                        message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -423,39 +427,43 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.AppFrameMsgOutProto} AppFrameMsgOutProto
          */
-        AppFrameMsgOutProto.fromObject = function fromObject(object) {
+        AppFrameMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AppFrameMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.AppFrameMsgOutProto();
             if (object.startApplication != null) {
                 if (typeof object.startApplication !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.startApplication: object expected");
-                message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.fromObject(object.startApplication);
+                message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.fromObject(object.startApplication, long + 1);
             }
             if (object.linkAction != null) {
                 if (typeof object.linkAction !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.linkAction: object expected");
-                message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.fromObject(object.linkAction);
+                message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.fromObject(object.linkAction, long + 1);
             }
             if (object.moveAction != null) {
                 if (typeof object.moveAction !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.moveAction: object expected");
-                message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.fromObject(object.moveAction);
+                message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.fromObject(object.moveAction, long + 1);
             }
             if (object.copyEvent != null) {
                 if (typeof object.copyEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.copyEvent: object expected");
-                message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.fromObject(object.copyEvent);
+                message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.fromObject(object.copyEvent, long + 1);
             }
             if (object.pasteRequest != null) {
                 if (typeof object.pasteRequest !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.pasteRequest: object expected");
-                message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.fromObject(object.pasteRequest);
+                message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.fromObject(object.pasteRequest, long + 1);
             }
             if (object.fileDialogEvent != null) {
                 if (typeof object.fileDialogEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.fileDialogEvent: object expected");
-                message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.fromObject(object.fileDialogEvent);
+                message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.fromObject(object.fileDialogEvent, long + 1);
             }
             if (object.windows) {
                 if (!Array.isArray(object.windows))
@@ -464,13 +472,13 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.windows.length; ++i) {
                     if (typeof object.windows[i] !== "object")
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windows: object expected");
-                    message.windows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.windows[i]);
+                    message.windows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.windows[i], long + 1);
                 }
             }
             if (object.closedWindow != null) {
                 if (typeof object.closedWindow !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.closedWindow: object expected");
-                message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.closedWindow);
+                message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.closedWindow, long + 1);
             }
             switch (object.event) {
             default:
@@ -531,22 +539,22 @@ $root.appFrameProtoOut = (function() {
             if (object.jsRequest != null) {
                 if (typeof object.jsRequest !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.jsRequest: object expected");
-                message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.fromObject(object.jsRequest);
+                message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.fromObject(object.jsRequest, long + 1);
             }
             if (object.javaResponse != null) {
                 if (typeof object.javaResponse !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.javaResponse: object expected");
-                message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.fromObject(object.javaResponse);
+                message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.fromObject(object.javaResponse, long + 1);
             }
             if (object.pixelsRequest != null) {
                 if (typeof object.pixelsRequest !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.pixelsRequest: object expected");
-                message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.fromObject(object.pixelsRequest);
+                message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.fromObject(object.pixelsRequest, long + 1);
             }
             if (object.playback != null) {
                 if (typeof object.playback !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.playback: object expected");
-                message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.fromObject(object.playback);
+                message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.fromObject(object.playback, long + 1);
             }
             if (object.instanceId != null)
                 message.instanceId = String(object.instanceId);
@@ -557,7 +565,7 @@ $root.appFrameProtoOut = (function() {
             if (object.focusEvent != null) {
                 if (typeof object.focusEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.focusEvent: object expected");
-                message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.fromObject(object.focusEvent);
+                message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.fromObject(object.focusEvent, long + 1);
             }
             if (object.componentTree) {
                 if (!Array.isArray(object.componentTree))
@@ -566,7 +574,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.componentTree.length; ++i) {
                     if (typeof object.componentTree[i] !== "object")
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.componentTree: object expected");
-                    message.componentTree[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.componentTree[i]);
+                    message.componentTree[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.componentTree[i], long + 1);
                 }
             }
             if (object.directDraw != null)
@@ -574,19 +582,19 @@ $root.appFrameProtoOut = (function() {
             if (object.actionEvent != null) {
                 if (typeof object.actionEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.actionEvent: object expected");
-                message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.fromObject(object.actionEvent);
+                message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.fromObject(object.actionEvent, long + 1);
             }
             if (object.compositingWM != null)
                 message.compositingWM = Boolean(object.compositingWM);
             if (object.audioEvent != null) {
                 if (typeof object.audioEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.audioEvent: object expected");
-                message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.fromObject(object.audioEvent);
+                message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.fromObject(object.audioEvent, long + 1);
             }
             if (object.accessible != null) {
                 if (typeof object.accessible !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.accessible: object expected");
-                message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.fromObject(object.accessible);
+                message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.fromObject(object.accessible, long + 1);
             }
             if (object.windowSwitchList) {
                 if (!Array.isArray(object.windowSwitchList))
@@ -595,13 +603,13 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.windowSwitchList.length; ++i) {
                     if (typeof object.windowSwitchList[i] !== "object")
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windowSwitchList: object expected");
-                    message.windowSwitchList[i] = $root.appFrameProtoOut.WindowSwitchMsgOutProto.fromObject(object.windowSwitchList[i]);
+                    message.windowSwitchList[i] = $root.appFrameProtoOut.WindowSwitchMsgOutProto.fromObject(object.windowSwitchList[i], long + 1);
                 }
             }
             if (object.cursorChangeEvent != null) {
                 if (typeof object.cursorChangeEvent !== "object")
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.cursorChangeEvent: object expected");
-                message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.fromObject(object.cursorChangeEvent);
+                message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.fromObject(object.cursorChangeEvent, long + 1);
             }
             return message;
         };
@@ -789,7 +797,7 @@ $root.appFrameProtoOut = (function() {
             this.hierarchy = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1048,9 +1056,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AccessibilityMsgOutProto.decode = function decode(reader, length, error) {
+        AccessibilityMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AccessibilityMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -1174,11 +1186,11 @@ $root.appFrameProtoOut = (function() {
                 case 29: {
                         if (!(message.hierarchy && message.hierarchy.length))
                             message.hierarchy = [];
-                        message.hierarchy.push($root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.decode(reader, reader.uint32()));
+                        message.hierarchy.push($root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1193,9 +1205,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.AccessibilityMsgOutProto} AccessibilityMsgOutProto
          */
-        AccessibilityMsgOutProto.fromObject = function fromObject(object) {
+        AccessibilityMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AccessibilityMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.AccessibilityMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -1265,7 +1281,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.hierarchy.length; ++i) {
                     if (typeof object.hierarchy[i] !== "object")
                         throw TypeError(".appFrameProtoOut.AccessibilityMsgOutProto.hierarchy: object expected");
-                    message.hierarchy[i] = $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.fromObject(object.hierarchy[i]);
+                    message.hierarchy[i] = $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.fromObject(object.hierarchy[i], long + 1);
                 }
             }
             return message;
@@ -1437,7 +1453,7 @@ $root.appFrameProtoOut = (function() {
         function AccessibilityHierarchyMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1504,9 +1520,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AccessibilityHierarchyMsgOutProto.decode = function decode(reader, length, error) {
+        AccessibilityHierarchyMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -1534,7 +1554,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1549,9 +1569,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.AccessibilityHierarchyMsgOutProto} AccessibilityHierarchyMsgOutProto
          */
-        AccessibilityHierarchyMsgOutProto.fromObject = function fromObject(object) {
+        AccessibilityHierarchyMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -1656,7 +1680,7 @@ $root.appFrameProtoOut = (function() {
         function FocusEventMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1755,9 +1779,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        FocusEventMsgOutProto.decode = function decode(reader, length, error) {
+        FocusEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.FocusEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -1801,7 +1829,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1818,9 +1846,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.FocusEventMsgOutProto} FocusEventMsgOutProto
          */
-        FocusEventMsgOutProto.fromObject = function fromObject(object) {
+        FocusEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.FocusEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.FocusEventMsgOutProto();
             switch (object.type) {
             default:
@@ -1976,7 +2008,7 @@ $root.appFrameProtoOut = (function() {
         function StartApplicationMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2003,9 +2035,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        StartApplicationMsgOutProto.decode = function decode(reader, length, error) {
+        StartApplicationMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.StartApplicationMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -2013,7 +2049,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2028,9 +2064,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.StartApplicationMsgOutProto} StartApplicationMsgOutProto
          */
-        StartApplicationMsgOutProto.fromObject = function fromObject(object) {
+        StartApplicationMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.StartApplicationMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.appFrameProtoOut.StartApplicationMsgOutProto();
         };
 
@@ -2097,7 +2137,7 @@ $root.appFrameProtoOut = (function() {
         function LinkActionMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2140,9 +2180,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        LinkActionMsgOutProto.decode = function decode(reader, length, error) {
+        LinkActionMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.LinkActionMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -2158,7 +2202,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2177,9 +2221,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.LinkActionMsgOutProto} LinkActionMsgOutProto
          */
-        LinkActionMsgOutProto.fromObject = function fromObject(object) {
+        LinkActionMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.LinkActionMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.LinkActionMsgOutProto();
             switch (object.action) {
             default:
@@ -2306,7 +2354,7 @@ $root.appFrameProtoOut = (function() {
         function WindowMoveActionMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2381,9 +2429,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowMoveActionMsgOutProto.decode = function decode(reader, length, error) {
+        WindowMoveActionMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowMoveActionMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -2415,7 +2467,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2430,9 +2482,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.WindowMoveActionMsgOutProto} WindowMoveActionMsgOutProto
          */
-        WindowMoveActionMsgOutProto.fromObject = function fromObject(object) {
+        WindowMoveActionMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowMoveActionMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.WindowMoveActionMsgOutProto();
             if (object.sx != null)
                 message.sx = object.sx | 0;
@@ -2539,7 +2595,7 @@ $root.appFrameProtoOut = (function() {
             this.files = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2606,9 +2662,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        CopyEventMsgOutProto.decode = function decode(reader, length, error) {
+        CopyEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.CopyEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -2638,7 +2698,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2653,9 +2713,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.CopyEventMsgOutProto} CopyEventMsgOutProto
          */
-        CopyEventMsgOutProto.fromObject = function fromObject(object) {
+        CopyEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.CopyEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.CopyEventMsgOutProto();
             if (object.text != null)
                 message.text = String(object.text);
@@ -2771,7 +2835,7 @@ $root.appFrameProtoOut = (function() {
         function PasteRequestMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2814,9 +2878,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PasteRequestMsgOutProto.decode = function decode(reader, length, error) {
+        PasteRequestMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PasteRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -2832,7 +2900,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2847,9 +2915,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.PasteRequestMsgOutProto} PasteRequestMsgOutProto
          */
-        PasteRequestMsgOutProto.fromObject = function fromObject(object) {
+        PasteRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PasteRequestMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.PasteRequestMsgOutProto();
             if (object.title != null)
                 message.title = String(object.title);
@@ -2938,7 +3010,7 @@ $root.appFrameProtoOut = (function() {
         function FileDialogEventMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3029,9 +3101,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        FileDialogEventMsgOutProto.decode = function decode(reader, length, error) {
+        FileDialogEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.FileDialogEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -3071,7 +3147,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -3088,9 +3164,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.FileDialogEventMsgOutProto} FileDialogEventMsgOutProto
          */
-        FileDialogEventMsgOutProto.fromObject = function fromObject(object) {
+        FileDialogEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.FileDialogEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.FileDialogEventMsgOutProto();
             switch (object.eventType) {
             default:
@@ -3244,7 +3324,7 @@ $root.appFrameProtoOut = (function() {
         function WindowSwitchMsg(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3295,9 +3375,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowSwitchMsg.decode = function decode(reader, length, error) {
+        WindowSwitchMsg.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowSwitchMsg();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -3317,7 +3401,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -3334,9 +3418,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.WindowSwitchMsg} WindowSwitchMsg
          */
-        WindowSwitchMsg.fromObject = function fromObject(object) {
+        WindowSwitchMsg.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowSwitchMsg)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.WindowSwitchMsg();
             if (object.id != null)
                 message.id = String(object.id);
@@ -3441,7 +3529,7 @@ $root.appFrameProtoOut = (function() {
             this.internalWindows = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3604,9 +3692,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowMsgOutProto.decode = function decode(reader, length, error) {
+        WindowMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -3620,7 +3712,7 @@ $root.appFrameProtoOut = (function() {
                 case 2: {
                         if (!(message.content && message.content.length))
                             message.content = [];
-                        message.content.push($root.appFrameProtoOut.WindowPartialContentMsgOutProto.decode(reader, reader.uint32()));
+                        message.content.push($root.appFrameProtoOut.WindowPartialContentMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 3: {
@@ -3670,7 +3762,7 @@ $root.appFrameProtoOut = (function() {
                 case 14: {
                         if (!(message.internalWindows && message.internalWindows.length))
                             message.internalWindows = [];
-                        message.internalWindows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32()));
+                        message.internalWindows.push($root.appFrameProtoOut.WindowMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 15: {
@@ -3686,7 +3778,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -3703,9 +3795,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.WindowMsgOutProto} WindowMsgOutProto
          */
-        WindowMsgOutProto.fromObject = function fromObject(object) {
+        WindowMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.WindowMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -3716,7 +3812,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.content.length; ++i) {
                     if (typeof object.content[i] !== "object")
                         throw TypeError(".appFrameProtoOut.WindowMsgOutProto.content: object expected");
-                    message.content[i] = $root.appFrameProtoOut.WindowPartialContentMsgOutProto.fromObject(object.content[i]);
+                    message.content[i] = $root.appFrameProtoOut.WindowPartialContentMsgOutProto.fromObject(object.content[i], long + 1);
                 }
             }
             if (object.directDraw != null)
@@ -3777,7 +3873,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.internalWindows.length; ++i) {
                     if (typeof object.internalWindows[i] !== "object")
                         throw TypeError(".appFrameProtoOut.WindowMsgOutProto.internalWindows: object expected");
-                    message.internalWindows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.internalWindows[i]);
+                    message.internalWindows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.internalWindows[i], long + 1);
                 }
             }
             switch (object.dockMode) {
@@ -4063,7 +4159,7 @@ $root.appFrameProtoOut = (function() {
         function WindowSwitchMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4114,9 +4210,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowSwitchMsgOutProto.decode = function decode(reader, length, error) {
+        WindowSwitchMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowSwitchMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -4136,7 +4236,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4153,9 +4253,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.WindowSwitchMsgOutProto} WindowSwitchMsgOutProto
          */
-        WindowSwitchMsgOutProto.fromObject = function fromObject(object) {
+        WindowSwitchMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowSwitchMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.WindowSwitchMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -4246,7 +4350,7 @@ $root.appFrameProtoOut = (function() {
         function WindowPartialContentMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4313,9 +4417,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        WindowPartialContentMsgOutProto.decode = function decode(reader, length, error) {
+        WindowPartialContentMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.WindowPartialContentMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -4343,7 +4451,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4358,9 +4466,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.WindowPartialContentMsgOutProto} WindowPartialContentMsgOutProto
          */
-        WindowPartialContentMsgOutProto.fromObject = function fromObject(object) {
+        WindowPartialContentMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowPartialContentMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.WindowPartialContentMsgOutProto();
             if (object.positionX != null)
                 message.positionX = object.positionX | 0;
@@ -4507,7 +4619,7 @@ $root.appFrameProtoOut = (function() {
             this.garbageIds = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4582,9 +4694,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsEvalRequestMsgOutProto.decode = function decode(reader, length, error) {
+        JsEvalRequestMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsEvalRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -4610,7 +4726,7 @@ $root.appFrameProtoOut = (function() {
                 case 5: {
                         if (!(message.params && message.params.length))
                             message.params = [];
-                        message.params.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
+                        message.params.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 6: {
@@ -4620,7 +4736,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4635,9 +4751,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.JsEvalRequestMsgOutProto} JsEvalRequestMsgOutProto
          */
-        JsEvalRequestMsgOutProto.fromObject = function fromObject(object) {
+        JsEvalRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsEvalRequestMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.JsEvalRequestMsgOutProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -4688,7 +4808,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.params.length; ++i) {
                     if (typeof object.params[i] !== "object")
                         throw TypeError(".appFrameProtoOut.JsEvalRequestMsgOutProto.params: object expected");
-                    message.params[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.params[i]);
+                    message.params[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.params[i], long + 1);
                 }
             }
             if (object.garbageIds) {
@@ -4822,7 +4942,7 @@ $root.appFrameProtoOut = (function() {
             this.array = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4881,9 +5001,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsParamMsgOutProto.decode = function decode(reader, length, error) {
+        JsParamMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsParamMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -4895,21 +5019,21 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 2: {
-                        message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.decode(reader, reader.uint32());
+                        message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 3: {
-                        message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.decode(reader, reader.uint32());
+                        message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 4: {
                         if (!(message.array && message.array.length))
                             message.array = [];
-                        message.array.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32()));
+                        message.array.push($root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4924,21 +5048,25 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.JsParamMsgOutProto} JsParamMsgOutProto
          */
-        JsParamMsgOutProto.fromObject = function fromObject(object) {
+        JsParamMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsParamMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.JsParamMsgOutProto();
             if (object.primitive != null)
                 message.primitive = String(object.primitive);
             if (object.jsObject != null) {
                 if (typeof object.jsObject !== "object")
                     throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.jsObject: object expected");
-                message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.fromObject(object.jsObject);
+                message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.fromObject(object.jsObject, long + 1);
             }
             if (object.javaObject != null) {
                 if (typeof object.javaObject !== "object")
                     throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.javaObject: object expected");
-                message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.fromObject(object.javaObject);
+                message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.fromObject(object.javaObject, long + 1);
             }
             if (object.array) {
                 if (!Array.isArray(object.array))
@@ -4947,7 +5075,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.array.length; ++i) {
                     if (typeof object.array[i] !== "object")
                         throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.array: object expected");
-                    message.array[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.array[i]);
+                    message.array[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.array[i], long + 1);
                 }
             }
             return message;
@@ -5036,7 +5164,7 @@ $root.appFrameProtoOut = (function() {
         function JSObjectMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5071,9 +5199,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JSObjectMsgOutProto.decode = function decode(reader, length, error) {
+        JSObjectMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JSObjectMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -5085,7 +5217,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5100,9 +5232,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.JSObjectMsgOutProto} JSObjectMsgOutProto
          */
-        JSObjectMsgOutProto.fromObject = function fromObject(object) {
+        JSObjectMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JSObjectMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.JSObjectMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -5180,7 +5316,7 @@ $root.appFrameProtoOut = (function() {
             this.methods = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5223,9 +5359,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JavaObjectRefMsgOutProto.decode = function decode(reader, length, error) {
+        JavaObjectRefMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JavaObjectRefMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -5243,7 +5383,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5258,9 +5398,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.JavaObjectRefMsgOutProto} JavaObjectRefMsgOutProto
          */
-        JavaObjectRefMsgOutProto.fromObject = function fromObject(object) {
+        JavaObjectRefMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JavaObjectRefMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.JavaObjectRefMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -5352,7 +5496,7 @@ $root.appFrameProtoOut = (function() {
         function JsResultMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5403,9 +5547,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        JsResultMsgOutProto.decode = function decode(reader, length, error) {
+        JsResultMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.JsResultMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -5421,11 +5569,11 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 case 3: {
-                        message.value = $root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32());
+                        message.value = $root.appFrameProtoOut.JsParamMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5440,9 +5588,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.JsResultMsgOutProto} JsResultMsgOutProto
          */
-        JsResultMsgOutProto.fromObject = function fromObject(object) {
+        JsResultMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsResultMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.JsResultMsgOutProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -5451,7 +5603,7 @@ $root.appFrameProtoOut = (function() {
             if (object.value != null) {
                 if (typeof object.value !== "object")
                     throw TypeError(".appFrameProtoOut.JsResultMsgOutProto.value: object expected");
-                message.value = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.value);
+                message.value = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.value, long + 1);
             }
             return message;
         };
@@ -5533,7 +5685,7 @@ $root.appFrameProtoOut = (function() {
         function PlaybackInfoMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5576,9 +5728,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PlaybackInfoMsgOutProto.decode = function decode(reader, length, error) {
+        PlaybackInfoMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PlaybackInfoMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -5594,7 +5750,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5609,9 +5765,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.PlaybackInfoMsgOutProto} PlaybackInfoMsgOutProto
          */
-        PlaybackInfoMsgOutProto.fromObject = function fromObject(object) {
+        PlaybackInfoMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PlaybackInfoMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.PlaybackInfoMsgOutProto();
             if (object.current != null)
                 message.current = object.current >>> 0;
@@ -5697,7 +5857,7 @@ $root.appFrameProtoOut = (function() {
         function PixelsAreaRequestMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5764,9 +5924,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        PixelsAreaRequestMsgOutProto.decode = function decode(reader, length, error) {
+        PixelsAreaRequestMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -5794,7 +5958,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5809,9 +5973,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.PixelsAreaRequestMsgOutProto} PixelsAreaRequestMsgOutProto
          */
-        PixelsAreaRequestMsgOutProto.fromObject = function fromObject(object) {
+        PixelsAreaRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -5920,7 +6088,7 @@ $root.appFrameProtoOut = (function() {
             this.components = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6043,9 +6211,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ComponentTreeMsgOutProto.decode = function decode(reader, length, error) {
+        ComponentTreeMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.ComponentTreeMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -6091,7 +6263,7 @@ $root.appFrameProtoOut = (function() {
                 case 10: {
                         if (!(message.components && message.components.length))
                             message.components = [];
-                        message.components.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32()));
+                        message.components.push($root.appFrameProtoOut.ComponentTreeMsgOutProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 11: {
@@ -6103,7 +6275,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6118,9 +6290,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.ComponentTreeMsgOutProto} ComponentTreeMsgOutProto
          */
-        ComponentTreeMsgOutProto.fromObject = function fromObject(object) {
+        ComponentTreeMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.ComponentTreeMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.ComponentTreeMsgOutProto();
             if (object.componentType != null)
                 message.componentType = String(object.componentType);
@@ -6147,7 +6323,7 @@ $root.appFrameProtoOut = (function() {
                 for (var i = 0; i < object.components.length; ++i) {
                     if (typeof object.components[i] !== "object")
                         throw TypeError(".appFrameProtoOut.ComponentTreeMsgOutProto.components: object expected");
-                    message.components[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.components[i]);
+                    message.components[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.components[i], long + 1);
                 }
             }
             if (object.hidden != null)
@@ -6267,7 +6443,7 @@ $root.appFrameProtoOut = (function() {
         function ActionEventMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6326,9 +6502,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ActionEventMsgOutProto.decode = function decode(reader, length, error) {
+        ActionEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.ActionEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -6352,7 +6532,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6367,9 +6547,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.ActionEventMsgOutProto} ActionEventMsgOutProto
          */
-        ActionEventMsgOutProto.fromObject = function fromObject(object) {
+        ActionEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.ActionEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.ActionEventMsgOutProto();
             if (object.actionName != null)
                 message.actionName = String(object.actionName);
@@ -6474,7 +6658,7 @@ $root.appFrameProtoOut = (function() {
         function AudioEventMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6541,9 +6725,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        AudioEventMsgOutProto.decode = function decode(reader, length, error) {
+        AudioEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.AudioEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -6571,7 +6759,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6586,9 +6774,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.AudioEventMsgOutProto} AudioEventMsgOutProto
          */
-        AudioEventMsgOutProto.fromObject = function fromObject(object) {
+        AudioEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AudioEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.AudioEventMsgOutProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -6739,7 +6931,7 @@ $root.appFrameProtoOut = (function() {
         function CursorChangeEventMsgOutProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6814,9 +7006,13 @@ $root.appFrameProtoOut = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        CursorChangeEventMsgOutProto.decode = function decode(reader, length, error) {
+        CursorChangeEventMsgOutProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.appFrameProtoOut.CursorChangeEventMsgOutProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -6848,7 +7044,7 @@ $root.appFrameProtoOut = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6863,9 +7059,13 @@ $root.appFrameProtoOut = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoOut.CursorChangeEventMsgOutProto} CursorChangeEventMsgOutProto
          */
-        CursorChangeEventMsgOutProto.fromObject = function fromObject(object) {
+        CursorChangeEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.CursorChangeEventMsgOutProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.CursorChangeEventMsgOutProto();
             if (object.cursor != null)
                 message.cursor = String(object.cursor);

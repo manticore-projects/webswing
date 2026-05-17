@@ -39,7 +39,7 @@ $root.commonProto = (function() {
         function ParamMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -101,9 +101,13 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ParamMsgInProto.decode = function decode(reader, length, error) {
+        ParamMsgInProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.ParamMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -119,7 +123,7 @@ $root.commonProto = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -134,9 +138,13 @@ $root.commonProto = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {commonProto.ParamMsgInProto} ParamMsgInProto
          */
-        ParamMsgInProto.fromObject = function fromObject(object) {
+        ParamMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.ParamMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.commonProto.ParamMsgInProto();
             if (object.name != null)
                 message.name = String(object.name);
@@ -254,7 +262,7 @@ $root.commonProto = (function() {
         function SimpleEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -306,9 +314,13 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SimpleEventMsgInProto.decode = function decode(reader, length, error) {
+        SimpleEventMsgInProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.SimpleEventMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -320,7 +332,7 @@ $root.commonProto = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -335,9 +347,13 @@ $root.commonProto = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {commonProto.SimpleEventMsgInProto} SimpleEventMsgInProto
          */
-        SimpleEventMsgInProto.fromObject = function fromObject(object) {
+        SimpleEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.SimpleEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.commonProto.SimpleEventMsgInProto();
             switch (object.type) {
             default:
@@ -542,7 +558,7 @@ $root.commonProto = (function() {
             this.params = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -755,9 +771,13 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        ConnectionHandshakeMsgInProto.decode = function decode(reader, length, error) {
+        ConnectionHandshakeMsgInProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.ConnectionHandshakeMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -803,7 +823,7 @@ $root.commonProto = (function() {
                 case 10: {
                         if (!(message.params && message.params.length))
                             message.params = [];
-                        message.params.push($root.commonProto.ParamMsgInProto.decode(reader, reader.uint32()));
+                        message.params.push($root.commonProto.ParamMsgInProto.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 case 11: {
@@ -835,7 +855,7 @@ $root.commonProto = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -850,9 +870,13 @@ $root.commonProto = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {commonProto.ConnectionHandshakeMsgInProto} ConnectionHandshakeMsgInProto
          */
-        ConnectionHandshakeMsgInProto.fromObject = function fromObject(object) {
+        ConnectionHandshakeMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.ConnectionHandshakeMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.commonProto.ConnectionHandshakeMsgInProto();
             if (object.instanceId != null)
                 message.instanceId = String(object.instanceId);
@@ -879,7 +903,7 @@ $root.commonProto = (function() {
                 for (var i = 0; i < object.params.length; ++i) {
                     if (typeof object.params[i] !== "object")
                         throw TypeError(".commonProto.ConnectionHandshakeMsgInProto.params: object expected");
-                    message.params[i] = $root.commonProto.ParamMsgInProto.fromObject(object.params[i]);
+                    message.params[i] = $root.commonProto.ParamMsgInProto.fromObject(object.params[i], long + 1);
                 }
             }
             if (object.locale != null)
@@ -1024,7 +1048,7 @@ $root.commonProto = (function() {
         function TimestampsMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1106,9 +1130,13 @@ $root.commonProto = (function() {
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        TimestampsMsgInProto.decode = function decode(reader, length, error) {
+        TimestampsMsgInProto.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var end = length === undefined ? reader.len : reader.pos + length, message = new $root.commonProto.TimestampsMsgInProto();
             while (reader.pos < end) {
                 var tag = reader.uint32();
@@ -1132,7 +1160,7 @@ $root.commonProto = (function() {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1147,9 +1175,13 @@ $root.commonProto = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {commonProto.TimestampsMsgInProto} TimestampsMsgInProto
          */
-        TimestampsMsgInProto.fromObject = function fromObject(object) {
+        TimestampsMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.TimestampsMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.commonProto.TimestampsMsgInProto();
             if (object.startTimestamp != null)
                 message.startTimestamp = String(object.startTimestamp);

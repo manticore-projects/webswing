@@ -72,7 +72,7 @@ $root.org = (function() {
                         this.fontFaces = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -127,9 +127,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    WebImageProto.decode = function decode(reader, length, error) {
+                    WebImageProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.WebImageProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -147,23 +151,23 @@ $root.org = (function() {
                             case 3: {
                                     if (!(message.instructions && message.instructions.length))
                                         message.instructions = [];
-                                    message.instructions.push($root.org.webswing.directdraw.proto.DrawInstructionProto.decode(reader, reader.uint32()));
+                                    message.instructions.push($root.org.webswing.directdraw.proto.DrawInstructionProto.decode(reader, reader.uint32(), undefined, long + 1));
                                     break;
                                 }
                             case 4: {
                                     if (!(message.constants && message.constants.length))
                                         message.constants = [];
-                                    message.constants.push($root.org.webswing.directdraw.proto.DrawConstantProto.decode(reader, reader.uint32()));
+                                    message.constants.push($root.org.webswing.directdraw.proto.DrawConstantProto.decode(reader, reader.uint32(), undefined, long + 1));
                                     break;
                                 }
                             case 5: {
                                     if (!(message.fontFaces && message.fontFaces.length))
                                         message.fontFaces = [];
-                                    message.fontFaces.push($root.org.webswing.directdraw.proto.FontFaceProto.decode(reader, reader.uint32()));
+                                    message.fontFaces.push($root.org.webswing.directdraw.proto.FontFaceProto.decode(reader, reader.uint32(), undefined, long + 1));
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -182,9 +186,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.WebImageProto} WebImageProto
                      */
-                    WebImageProto.fromObject = function fromObject(object) {
+                    WebImageProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.WebImageProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.WebImageProto();
                         if (object.width != null)
                             message.width = object.width >>> 0;
@@ -197,7 +205,7 @@ $root.org = (function() {
                             for (var i = 0; i < object.instructions.length; ++i) {
                                 if (typeof object.instructions[i] !== "object")
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.instructions: object expected");
-                                message.instructions[i] = $root.org.webswing.directdraw.proto.DrawInstructionProto.fromObject(object.instructions[i]);
+                                message.instructions[i] = $root.org.webswing.directdraw.proto.DrawInstructionProto.fromObject(object.instructions[i], long + 1);
                             }
                         }
                         if (object.constants) {
@@ -207,7 +215,7 @@ $root.org = (function() {
                             for (var i = 0; i < object.constants.length; ++i) {
                                 if (typeof object.constants[i] !== "object")
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.constants: object expected");
-                                message.constants[i] = $root.org.webswing.directdraw.proto.DrawConstantProto.fromObject(object.constants[i]);
+                                message.constants[i] = $root.org.webswing.directdraw.proto.DrawConstantProto.fromObject(object.constants[i], long + 1);
                             }
                         }
                         if (object.fontFaces) {
@@ -217,7 +225,7 @@ $root.org = (function() {
                             for (var i = 0; i < object.fontFaces.length; ++i) {
                                 if (typeof object.fontFaces[i] !== "object")
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.fontFaces: object expected");
-                                message.fontFaces[i] = $root.org.webswing.directdraw.proto.FontFaceProto.fromObject(object.fontFaces[i]);
+                                message.fontFaces[i] = $root.org.webswing.directdraw.proto.FontFaceProto.fromObject(object.fontFaces[i], long + 1);
                             }
                         }
                         return message;
@@ -319,7 +327,7 @@ $root.org = (function() {
                         this.args = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -358,9 +366,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    DrawInstructionProto.decode = function decode(reader, length, error) {
+                    DrawInstructionProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.DrawInstructionProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -387,7 +399,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -404,9 +416,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.DrawInstructionProto} DrawInstructionProto
                      */
-                    DrawInstructionProto.fromObject = function fromObject(object) {
+                    DrawInstructionProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.DrawInstructionProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.DrawInstructionProto();
                         switch (object.inst) {
                         default:
@@ -635,7 +651,7 @@ $root.org = (function() {
                     function DrawConstantProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -802,9 +818,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    DrawConstantProto.decode = function decode(reader, length, error) {
+                    DrawConstantProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.DrawConstantProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -816,15 +836,15 @@ $root.org = (function() {
                                     break;
                                 }
                             case 2: {
-                                    message.color = $root.org.webswing.directdraw.proto.ColorProto.decode(reader, reader.uint32());
+                                    message.color = $root.org.webswing.directdraw.proto.ColorProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 3: {
-                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
+                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 4: {
-                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
+                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 5: {
@@ -832,63 +852,63 @@ $root.org = (function() {
                                     break;
                                 }
                             case 6: {
-                                    message.path = $root.org.webswing.directdraw.proto.PathProto.decode(reader, reader.uint32());
+                                    message.path = $root.org.webswing.directdraw.proto.PathProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 7: {
-                                    message.font = $root.org.webswing.directdraw.proto.FontProto.decode(reader, reader.uint32());
+                                    message.font = $root.org.webswing.directdraw.proto.FontProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 8: {
-                                    message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.decode(reader, reader.uint32());
+                                    message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 9: {
-                                    message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.decode(reader, reader.uint32());
+                                    message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 10: {
-                                    message.points = $root.org.webswing.directdraw.proto.PointsProto.decode(reader, reader.uint32());
+                                    message.points = $root.org.webswing.directdraw.proto.PointsProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 11: {
-                                    message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
+                                    message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 12: {
-                                    message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.decode(reader, reader.uint32());
+                                    message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 13: {
-                                    message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.decode(reader, reader.uint32());
+                                    message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 14: {
-                                    message.arc = $root.org.webswing.directdraw.proto.ArcProto.decode(reader, reader.uint32());
+                                    message.arc = $root.org.webswing.directdraw.proto.ArcProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 15: {
-                                    message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.decode(reader, reader.uint32());
+                                    message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 16: {
-                                    message.composite = $root.org.webswing.directdraw.proto.CompositeProto.decode(reader, reader.uint32());
+                                    message.composite = $root.org.webswing.directdraw.proto.CompositeProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 17: {
-                                    message.texture = $root.org.webswing.directdraw.proto.TextureProto.decode(reader, reader.uint32());
+                                    message.texture = $root.org.webswing.directdraw.proto.TextureProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 18: {
-                                    message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.decode(reader, reader.uint32());
+                                    message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 19: {
-                                    message.combined = $root.org.webswing.directdraw.proto.CombinedProto.decode(reader, reader.uint32());
+                                    message.combined = $root.org.webswing.directdraw.proto.CombinedProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -905,98 +925,102 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.DrawConstantProto} DrawConstantProto
                      */
-                    DrawConstantProto.fromObject = function fromObject(object) {
+                    DrawConstantProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.DrawConstantProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.DrawConstantProto();
                         if (object.id != null)
                             message.id = object.id >>> 0;
                         if (object.color != null) {
                             if (typeof object.color !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.color: object expected");
-                            message.color = $root.org.webswing.directdraw.proto.ColorProto.fromObject(object.color);
+                            message.color = $root.org.webswing.directdraw.proto.ColorProto.fromObject(object.color, long + 1);
                         }
                         if (object.image != null) {
                             if (typeof object.image !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.image: object expected");
-                            message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image);
+                            message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image, long + 1);
                         }
                         if (object.transform != null) {
                             if (typeof object.transform !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.transform: object expected");
-                            message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform);
+                            message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform, long + 1);
                         }
                         if (object.string != null)
                             message.string = String(object.string);
                         if (object.path != null) {
                             if (typeof object.path !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.path: object expected");
-                            message.path = $root.org.webswing.directdraw.proto.PathProto.fromObject(object.path);
+                            message.path = $root.org.webswing.directdraw.proto.PathProto.fromObject(object.path, long + 1);
                         }
                         if (object.font != null) {
                             if (typeof object.font !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.font: object expected");
-                            message.font = $root.org.webswing.directdraw.proto.FontProto.fromObject(object.font);
+                            message.font = $root.org.webswing.directdraw.proto.FontProto.fromObject(object.font, long + 1);
                         }
                         if (object.linearGrad != null) {
                             if (typeof object.linearGrad !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.linearGrad: object expected");
-                            message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.fromObject(object.linearGrad);
+                            message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.fromObject(object.linearGrad, long + 1);
                         }
                         if (object.radialGrad != null) {
                             if (typeof object.radialGrad !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.radialGrad: object expected");
-                            message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.fromObject(object.radialGrad);
+                            message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.fromObject(object.radialGrad, long + 1);
                         }
                         if (object.points != null) {
                             if (typeof object.points !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.points: object expected");
-                            message.points = $root.org.webswing.directdraw.proto.PointsProto.fromObject(object.points);
+                            message.points = $root.org.webswing.directdraw.proto.PointsProto.fromObject(object.points, long + 1);
                         }
                         if (object.rectangle != null) {
                             if (typeof object.rectangle !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.rectangle: object expected");
-                            message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.rectangle);
+                            message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.rectangle, long + 1);
                         }
                         if (object.ellipse != null) {
                             if (typeof object.ellipse !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.ellipse: object expected");
-                            message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.fromObject(object.ellipse);
+                            message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.fromObject(object.ellipse, long + 1);
                         }
                         if (object.roundRectangle != null) {
                             if (typeof object.roundRectangle !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.roundRectangle: object expected");
-                            message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.fromObject(object.roundRectangle);
+                            message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.fromObject(object.roundRectangle, long + 1);
                         }
                         if (object.arc != null) {
                             if (typeof object.arc !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.arc: object expected");
-                            message.arc = $root.org.webswing.directdraw.proto.ArcProto.fromObject(object.arc);
+                            message.arc = $root.org.webswing.directdraw.proto.ArcProto.fromObject(object.arc, long + 1);
                         }
                         if (object.stroke != null) {
                             if (typeof object.stroke !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.stroke: object expected");
-                            message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.fromObject(object.stroke);
+                            message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.fromObject(object.stroke, long + 1);
                         }
                         if (object.composite != null) {
                             if (typeof object.composite !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.composite: object expected");
-                            message.composite = $root.org.webswing.directdraw.proto.CompositeProto.fromObject(object.composite);
+                            message.composite = $root.org.webswing.directdraw.proto.CompositeProto.fromObject(object.composite, long + 1);
                         }
                         if (object.texture != null) {
                             if (typeof object.texture !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.texture: object expected");
-                            message.texture = $root.org.webswing.directdraw.proto.TextureProto.fromObject(object.texture);
+                            message.texture = $root.org.webswing.directdraw.proto.TextureProto.fromObject(object.texture, long + 1);
                         }
                         if (object.glyph != null) {
                             if (typeof object.glyph !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.glyph: object expected");
-                            message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.fromObject(object.glyph);
+                            message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.fromObject(object.glyph, long + 1);
                         }
                         if (object.combined != null) {
                             if (typeof object.combined !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.combined: object expected");
-                            message.combined = $root.org.webswing.directdraw.proto.CombinedProto.fromObject(object.combined);
+                            message.combined = $root.org.webswing.directdraw.proto.CombinedProto.fromObject(object.combined, long + 1);
                         }
                         return message;
                     };
@@ -1127,7 +1151,7 @@ $root.org = (function() {
                     function FontFaceProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1166,9 +1190,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    FontFaceProto.decode = function decode(reader, length, error) {
+                    FontFaceProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.FontFaceProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1188,7 +1216,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1207,9 +1235,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.FontFaceProto} FontFaceProto
                      */
-                    FontFaceProto.fromObject = function fromObject(object) {
+                    FontFaceProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.FontFaceProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.FontFaceProto();
                         if (object.name != null)
                             message.name = String(object.name);
@@ -1305,7 +1337,7 @@ $root.org = (function() {
                     function ColorProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1328,9 +1360,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ColorProto.decode = function decode(reader, length, error) {
+                    ColorProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ColorProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1342,7 +1378,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1359,9 +1395,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.ColorProto} ColorProto
                      */
-                    ColorProto.fromObject = function fromObject(object) {
+                    ColorProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ColorProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.ColorProto();
                         if (object.rgba != null)
                             message.rgba = object.rgba >>> 0;
@@ -1437,7 +1477,7 @@ $root.org = (function() {
                     function ImageProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1460,9 +1500,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ImageProto.decode = function decode(reader, length, error) {
+                    ImageProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ImageProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1474,7 +1518,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1491,9 +1535,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.ImageProto} ImageProto
                      */
-                    ImageProto.fromObject = function fromObject(object) {
+                    ImageProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ImageProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.ImageProto();
                         if (object.data != null)
                             if (typeof object.data === "string")
@@ -1583,7 +1631,7 @@ $root.org = (function() {
                     function TransformProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1646,9 +1694,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    TransformProto.decode = function decode(reader, length, error) {
+                    TransformProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.TransformProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1680,7 +1732,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1695,9 +1747,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.TransformProto} TransformProto
                      */
-                    TransformProto.fromObject = function fromObject(object) {
+                    TransformProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.TransformProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.TransformProto();
                         if (object.m00 != null)
                             message.m00 = Number(object.m00);
@@ -1800,7 +1856,7 @@ $root.org = (function() {
                         this.ids = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1823,9 +1879,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    CombinedProto.decode = function decode(reader, length, error) {
+                    CombinedProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.CombinedProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1844,7 +1904,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1859,9 +1919,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.CombinedProto} CombinedProto
                      */
-                    CombinedProto.fromObject = function fromObject(object) {
+                    CombinedProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.CombinedProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.CombinedProto();
                         if (object.ids) {
                             if (!Array.isArray(object.ids))
@@ -1945,7 +2009,7 @@ $root.org = (function() {
                     function GlyphProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -1968,9 +2032,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    GlyphProto.decode = function decode(reader, length, error) {
+                    GlyphProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.GlyphProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -1982,7 +2050,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -1997,9 +2065,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.GlyphProto} GlyphProto
                      */
-                    GlyphProto.fromObject = function fromObject(object) {
+                    GlyphProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.GlyphProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.GlyphProto();
                         if (object.data != null)
                             if (typeof object.data === "string")
@@ -2087,7 +2159,7 @@ $root.org = (function() {
                     function RectangleProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -2134,9 +2206,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RectangleProto.decode = function decode(reader, length, error) {
+                    RectangleProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RectangleProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -2160,7 +2236,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -2183,9 +2259,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.RectangleProto} RectangleProto
                      */
-                    RectangleProto.fromObject = function fromObject(object) {
+                    RectangleProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RectangleProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.RectangleProto();
                         if (object.x != null)
                             message.x = Number(object.x);
@@ -2280,7 +2360,7 @@ $root.org = (function() {
                     function EllipseProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -2327,9 +2407,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    EllipseProto.decode = function decode(reader, length, error) {
+                    EllipseProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.EllipseProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -2353,7 +2437,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -2376,9 +2460,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.EllipseProto} EllipseProto
                      */
-                    EllipseProto.fromObject = function fromObject(object) {
+                    EllipseProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.EllipseProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.EllipseProto();
                         if (object.x != null)
                             message.x = Number(object.x);
@@ -2475,7 +2563,7 @@ $root.org = (function() {
                     function RoundRectangleProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -2538,9 +2626,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RoundRectangleProto.decode = function decode(reader, length, error) {
+                    RoundRectangleProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RoundRectangleProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -2572,7 +2664,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -2595,9 +2687,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.RoundRectangleProto} RoundRectangleProto
                      */
-                    RoundRectangleProto.fromObject = function fromObject(object) {
+                    RoundRectangleProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RoundRectangleProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.RoundRectangleProto();
                         if (object.x != null)
                             message.x = Number(object.x);
@@ -2705,7 +2801,7 @@ $root.org = (function() {
                     function ArcProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -2776,9 +2872,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ArcProto.decode = function decode(reader, length, error) {
+                    ArcProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.ArcProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -2814,7 +2914,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -2837,9 +2937,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.ArcProto} ArcProto
                      */
-                    ArcProto.fromObject = function fromObject(object) {
+                    ArcProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ArcProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.ArcProto();
                         if (object.x != null)
                             message.x = Number(object.x);
@@ -2984,7 +3088,7 @@ $root.org = (function() {
                         this.points = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -3023,9 +3127,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    PathProto.decode = function decode(reader, length, error) {
+                    PathProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.PathProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -3059,7 +3167,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -3076,9 +3184,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.PathProto} PathProto
                      */
-                    PathProto.fromObject = function fromObject(object) {
+                    PathProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.PathProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.PathProto();
                         if (object.windingOdd != null)
                             message.windingOdd = Boolean(object.windingOdd);
@@ -3232,7 +3344,7 @@ $root.org = (function() {
                     function FontProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -3287,9 +3399,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    FontProto.decode = function decode(reader, length, error) {
+                    FontProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.FontProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -3309,7 +3425,7 @@ $root.org = (function() {
                                     break;
                                 }
                             case 4: {
-                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32());
+                                    message.transform = $root.org.webswing.directdraw.proto.TransformProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 5: {
@@ -3317,7 +3433,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -3334,9 +3450,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.FontProto} FontProto
                      */
-                    FontProto.fromObject = function fromObject(object) {
+                    FontProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.FontProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.FontProto();
                         if (object.family != null)
                             message.family = String(object.family);
@@ -3369,7 +3489,7 @@ $root.org = (function() {
                         if (object.transform != null) {
                             if (typeof object.transform !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.FontProto.transform: object expected");
-                            message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform);
+                            message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform, long + 1);
                         }
                         if (object.fontProvided != null)
                             message.fontProvided = Boolean(object.fontProvided);
@@ -3482,7 +3602,7 @@ $root.org = (function() {
                         this.dash = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -3545,9 +3665,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    StrokeProto.decode = function decode(reader, length, error) {
+                    StrokeProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.StrokeProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -3586,7 +3710,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -3603,9 +3727,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.StrokeProto} StrokeProto
                      */
-                    StrokeProto.fromObject = function fromObject(object) {
+                    StrokeProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.StrokeProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.StrokeProto();
                         if (object.width != null)
                             message.width = Number(object.width);
@@ -3792,7 +3920,7 @@ $root.org = (function() {
                         this.fractions = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -3863,9 +3991,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    LinearGradientProto.decode = function decode(reader, length, error) {
+                    LinearGradientProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.LinearGradientProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -3915,7 +4047,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -3940,9 +4072,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.LinearGradientProto} LinearGradientProto
                      */
-                    LinearGradientProto.fromObject = function fromObject(object) {
+                    LinearGradientProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.LinearGradientProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.LinearGradientProto();
                         if (object.xStart != null)
                             message.xStart = object.xStart | 0;
@@ -4094,7 +4230,7 @@ $root.org = (function() {
                         this.fractions = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -4173,9 +4309,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    RadialGradientProto.decode = function decode(reader, length, error) {
+                    RadialGradientProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.RadialGradientProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -4229,7 +4369,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -4256,9 +4396,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.RadialGradientProto} RadialGradientProto
                      */
-                    RadialGradientProto.fromObject = function fromObject(object) {
+                    RadialGradientProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RadialGradientProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.RadialGradientProto();
                         if (object.xCenter != null)
                             message.xCenter = object.xCenter | 0;
@@ -4423,7 +4567,7 @@ $root.org = (function() {
                         this.points = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -4446,9 +4590,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    PointsProto.decode = function decode(reader, length, error) {
+                    PointsProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.PointsProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -4467,7 +4615,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -4482,9 +4630,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.PointsProto} PointsProto
                      */
-                    PointsProto.fromObject = function fromObject(object) {
+                    PointsProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.PointsProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.PointsProto();
                         if (object.points) {
                             if (!Array.isArray(object.points))
@@ -4570,7 +4722,7 @@ $root.org = (function() {
                     function CompositeProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -4609,9 +4761,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    CompositeProto.decode = function decode(reader, length, error) {
+                    CompositeProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.CompositeProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -4631,7 +4787,7 @@ $root.org = (function() {
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -4648,9 +4804,13 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.CompositeProto} CompositeProto
                      */
-                    CompositeProto.fromObject = function fromObject(object) {
+                    CompositeProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.CompositeProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.CompositeProto();
                         switch (object.type) {
                         default:
@@ -4832,7 +4992,7 @@ $root.org = (function() {
                     function TextureProto(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
                                     this[keys[i]] = properties[keys[i]];
                     }
 
@@ -4863,9 +5023,13 @@ $root.org = (function() {
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    TextureProto.decode = function decode(reader, length, error) {
+                    TextureProto.decode = function decode(reader, length, error, long) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var end = length === undefined ? reader.len : reader.pos + length, message = new $root.org.webswing.directdraw.proto.TextureProto();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
@@ -4873,15 +5037,15 @@ $root.org = (function() {
                                 break;
                             switch (tag >>> 3) {
                             case 1: {
-                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32());
+                                    message.image = $root.org.webswing.directdraw.proto.ImageProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             case 2: {
-                                    message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32());
+                                    message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.decode(reader, reader.uint32(), undefined, long + 1);
                                     break;
                                 }
                             default:
-                                reader.skipType(tag & 7);
+                                reader.skipType(tag & 7, long);
                                 break;
                             }
                         }
@@ -4900,19 +5064,23 @@ $root.org = (function() {
                      * @param {Object.<string,*>} object Plain object
                      * @returns {org.webswing.directdraw.proto.TextureProto} TextureProto
                      */
-                    TextureProto.fromObject = function fromObject(object) {
+                    TextureProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.TextureProto)
                             return object;
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $util.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.TextureProto();
                         if (object.image != null) {
                             if (typeof object.image !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.TextureProto.image: object expected");
-                            message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image);
+                            message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image, long + 1);
                         }
                         if (object.anchor != null) {
                             if (typeof object.anchor !== "object")
                                 throw TypeError(".org.webswing.directdraw.proto.TextureProto.anchor: object expected");
-                            message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.anchor);
+                            message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.anchor, long + 1);
                         }
                         return message;
                     };

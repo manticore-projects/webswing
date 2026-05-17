@@ -49,7 +49,7 @@ $root.appFrameProtoIn = (function() {
             this.events = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -199,9 +199,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.AppFrameMsgInProto} AppFrameMsgInProto
          */
-        AppFrameMsgInProto.fromObject = function fromObject(object) {
+        AppFrameMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.AppFrameMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.AppFrameMsgInProto();
             if (object.events) {
                 if (!Array.isArray(object.events))
@@ -210,58 +214,58 @@ $root.appFrameProtoIn = (function() {
                 for (var i = 0; i < object.events.length; ++i) {
                     if (typeof object.events[i] !== "object")
                         throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.events: object expected");
-                    message.events[i] = $root.appFrameProtoIn.InputEventMsgInProto.fromObject(object.events[i]);
+                    message.events[i] = $root.appFrameProtoIn.InputEventMsgInProto.fromObject(object.events[i], long + 1);
                 }
             }
             if (object.paste != null) {
                 if (typeof object.paste !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.paste: object expected");
-                message.paste = $root.appFrameProtoIn.PasteEventMsgInProto.fromObject(object.paste);
+                message.paste = $root.appFrameProtoIn.PasteEventMsgInProto.fromObject(object.paste, long + 1);
             }
             if (object.copy != null) {
                 if (typeof object.copy !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.copy: object expected");
-                message.copy = $root.appFrameProtoIn.CopyEventMsgInProto.fromObject(object.copy);
+                message.copy = $root.appFrameProtoIn.CopyEventMsgInProto.fromObject(object.copy, long + 1);
             }
             if (object.upload != null) {
                 if (typeof object.upload !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.upload: object expected");
-                message.upload = $root.appFrameProtoIn.UploadEventMsgInProto.fromObject(object.upload);
+                message.upload = $root.appFrameProtoIn.UploadEventMsgInProto.fromObject(object.upload, long + 1);
             }
             if (object.selected != null) {
                 if (typeof object.selected !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.selected: object expected");
-                message.selected = $root.appFrameProtoIn.FilesSelectedEventMsgInProto.fromObject(object.selected);
+                message.selected = $root.appFrameProtoIn.FilesSelectedEventMsgInProto.fromObject(object.selected, long + 1);
             }
             if (object.jsResponse != null) {
                 if (typeof object.jsResponse !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.jsResponse: object expected");
-                message.jsResponse = $root.appFrameProtoIn.JsResultMsgInProto.fromObject(object.jsResponse);
+                message.jsResponse = $root.appFrameProtoIn.JsResultMsgInProto.fromObject(object.jsResponse, long + 1);
             }
             if (object.javaRequest != null) {
                 if (typeof object.javaRequest !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.javaRequest: object expected");
-                message.javaRequest = $root.appFrameProtoIn.JavaEvalRequestMsgInProto.fromObject(object.javaRequest);
+                message.javaRequest = $root.appFrameProtoIn.JavaEvalRequestMsgInProto.fromObject(object.javaRequest, long + 1);
             }
             if (object.pixelsResponse != null) {
                 if (typeof object.pixelsResponse !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.pixelsResponse: object expected");
-                message.pixelsResponse = $root.appFrameProtoIn.PixelsAreaResponseMsgInProto.fromObject(object.pixelsResponse);
+                message.pixelsResponse = $root.appFrameProtoIn.PixelsAreaResponseMsgInProto.fromObject(object.pixelsResponse, long + 1);
             }
             if (object.window != null) {
                 if (typeof object.window !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.window: object expected");
-                message.window = $root.appFrameProtoIn.WindowEventMsgInProto.fromObject(object.window);
+                message.window = $root.appFrameProtoIn.WindowEventMsgInProto.fromObject(object.window, long + 1);
             }
             if (object.action != null) {
                 if (typeof object.action !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.action: object expected");
-                message.action = $root.appFrameProtoIn.ActionEventMsgInProto.fromObject(object.action);
+                message.action = $root.appFrameProtoIn.ActionEventMsgInProto.fromObject(object.action, long + 1);
             }
             if (object.audio != null) {
                 if (typeof object.audio !== "object")
                     throw TypeError(".appFrameProtoIn.AppFrameMsgInProto.audio: object expected");
-                message.audio = $root.appFrameProtoIn.AudioEventMsgInProto.fromObject(object.audio);
+                message.audio = $root.appFrameProtoIn.AudioEventMsgInProto.fromObject(object.audio, long + 1);
             }
             return message;
         };
@@ -372,7 +376,7 @@ $root.appFrameProtoIn = (function() {
         function InputEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -441,24 +445,28 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.InputEventMsgInProto} InputEventMsgInProto
          */
-        InputEventMsgInProto.fromObject = function fromObject(object) {
+        InputEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.InputEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.InputEventMsgInProto();
             if (object.key != null) {
                 if (typeof object.key !== "object")
                     throw TypeError(".appFrameProtoIn.InputEventMsgInProto.key: object expected");
-                message.key = $root.appFrameProtoIn.KeyboardEventMsgInProto.fromObject(object.key);
+                message.key = $root.appFrameProtoIn.KeyboardEventMsgInProto.fromObject(object.key, long + 1);
             }
             if (object.mouse != null) {
                 if (typeof object.mouse !== "object")
                     throw TypeError(".appFrameProtoIn.InputEventMsgInProto.mouse: object expected");
-                message.mouse = $root.appFrameProtoIn.MouseEventMsgInProto.fromObject(object.mouse);
+                message.mouse = $root.appFrameProtoIn.MouseEventMsgInProto.fromObject(object.mouse, long + 1);
             }
             if (object.focus != null) {
                 if (typeof object.focus !== "object")
                     throw TypeError(".appFrameProtoIn.InputEventMsgInProto.focus: object expected");
-                message.focus = $root.appFrameProtoIn.WindowFocusMsgInProto.fromObject(object.focus);
+                message.focus = $root.appFrameProtoIn.WindowFocusMsgInProto.fromObject(object.focus, long + 1);
             }
             return message;
         };
@@ -540,7 +548,7 @@ $root.appFrameProtoIn = (function() {
         function WindowFocusMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -599,9 +607,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.WindowFocusMsgInProto} WindowFocusMsgInProto
          */
-        WindowFocusMsgInProto.fromObject = function fromObject(object) {
+        WindowFocusMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.WindowFocusMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.WindowFocusMsgInProto();
             if (object.windowId != null)
                 message.windowId = String(object.windowId);
@@ -689,7 +701,7 @@ $root.appFrameProtoIn = (function() {
         function KeyboardEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -798,9 +810,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.KeyboardEventMsgInProto} KeyboardEventMsgInProto
          */
-        KeyboardEventMsgInProto.fromObject = function fromObject(object) {
+        KeyboardEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.KeyboardEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.KeyboardEventMsgInProto();
             switch (object.type) {
             default:
@@ -952,7 +968,7 @@ $root.appFrameProtoIn = (function() {
         function MouseEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1111,9 +1127,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.MouseEventMsgInProto} MouseEventMsgInProto
          */
-        MouseEventMsgInProto.fromObject = function fromObject(object) {
+        MouseEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.MouseEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.MouseEventMsgInProto();
             switch (object.type) {
             default:
@@ -1292,7 +1312,7 @@ $root.appFrameProtoIn = (function() {
         function CopyEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1351,9 +1371,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.CopyEventMsgInProto} CopyEventMsgInProto
          */
-        CopyEventMsgInProto.fromObject = function fromObject(object) {
+        CopyEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.CopyEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.CopyEventMsgInProto();
             switch (object.type) {
             default:
@@ -1472,7 +1496,7 @@ $root.appFrameProtoIn = (function() {
         function PasteEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1551,9 +1575,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.PasteEventMsgInProto} PasteEventMsgInProto
          */
-        PasteEventMsgInProto.fromObject = function fromObject(object) {
+        PasteEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.PasteEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.PasteEventMsgInProto();
             if (object.text != null)
                 message.text = String(object.text);
@@ -1646,7 +1674,7 @@ $root.appFrameProtoIn = (function() {
             this.files = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1696,9 +1724,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.FilesSelectedEventMsgInProto} FilesSelectedEventMsgInProto
          */
-        FilesSelectedEventMsgInProto.fromObject = function fromObject(object) {
+        FilesSelectedEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.FilesSelectedEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.FilesSelectedEventMsgInProto();
             if (object.files) {
                 if (!Array.isArray(object.files))
@@ -1782,7 +1814,7 @@ $root.appFrameProtoIn = (function() {
         function UploadEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1831,9 +1863,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.UploadEventMsgInProto} UploadEventMsgInProto
          */
-        UploadEventMsgInProto.fromObject = function fromObject(object) {
+        UploadEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.UploadEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.UploadEventMsgInProto();
             if (object.fileId != null)
                 message.fileId = String(object.fileId);
@@ -1913,7 +1949,7 @@ $root.appFrameProtoIn = (function() {
             this.params = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1993,9 +2029,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.JavaEvalRequestMsgInProto} JavaEvalRequestMsgInProto
          */
-        JavaEvalRequestMsgInProto.fromObject = function fromObject(object) {
+        JavaEvalRequestMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.JavaEvalRequestMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.JavaEvalRequestMsgInProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -2010,7 +2050,7 @@ $root.appFrameProtoIn = (function() {
                 for (var i = 0; i < object.params.length; ++i) {
                     if (typeof object.params[i] !== "object")
                         throw TypeError(".appFrameProtoIn.JavaEvalRequestMsgInProto.params: object expected");
-                    message.params[i] = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.params[i]);
+                    message.params[i] = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.params[i], long + 1);
                 }
             }
             return message;
@@ -2101,7 +2141,7 @@ $root.appFrameProtoIn = (function() {
         function JsResultMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2170,9 +2210,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.JsResultMsgInProto} JsResultMsgInProto
          */
-        JsResultMsgInProto.fromObject = function fromObject(object) {
+        JsResultMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.JsResultMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.JsResultMsgInProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -2181,7 +2225,7 @@ $root.appFrameProtoIn = (function() {
             if (object.value != null) {
                 if (typeof object.value !== "object")
                     throw TypeError(".appFrameProtoIn.JsResultMsgInProto.value: object expected");
-                message.value = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.value);
+                message.value = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.value, long + 1);
             }
             return message;
         };
@@ -2266,7 +2310,7 @@ $root.appFrameProtoIn = (function() {
             this.array = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2346,21 +2390,25 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.JsParamMsgInProto} JsParamMsgInProto
          */
-        JsParamMsgInProto.fromObject = function fromObject(object) {
+        JsParamMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.JsParamMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.JsParamMsgInProto();
             if (object.primitive != null)
                 message.primitive = String(object.primitive);
             if (object.jsObject != null) {
                 if (typeof object.jsObject !== "object")
                     throw TypeError(".appFrameProtoIn.JsParamMsgInProto.jsObject: object expected");
-                message.jsObject = $root.appFrameProtoIn.JSObjectMsgInProto.fromObject(object.jsObject);
+                message.jsObject = $root.appFrameProtoIn.JSObjectMsgInProto.fromObject(object.jsObject, long + 1);
             }
             if (object.javaObject != null) {
                 if (typeof object.javaObject !== "object")
                     throw TypeError(".appFrameProtoIn.JsParamMsgInProto.javaObject: object expected");
-                message.javaObject = $root.appFrameProtoIn.JavaObjectRefMsgInProto.fromObject(object.javaObject);
+                message.javaObject = $root.appFrameProtoIn.JavaObjectRefMsgInProto.fromObject(object.javaObject, long + 1);
             }
             if (object.array) {
                 if (!Array.isArray(object.array))
@@ -2369,7 +2417,7 @@ $root.appFrameProtoIn = (function() {
                 for (var i = 0; i < object.array.length; ++i) {
                     if (typeof object.array[i] !== "object")
                         throw TypeError(".appFrameProtoIn.JsParamMsgInProto.array: object expected");
-                    message.array[i] = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.array[i]);
+                    message.array[i] = $root.appFrameProtoIn.JsParamMsgInProto.fromObject(object.array[i], long + 1);
                 }
             }
             return message;
@@ -2460,7 +2508,7 @@ $root.appFrameProtoIn = (function() {
             this.methods = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2520,9 +2568,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.JavaObjectRefMsgInProto} JavaObjectRefMsgInProto
          */
-        JavaObjectRefMsgInProto.fromObject = function fromObject(object) {
+        JavaObjectRefMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.JavaObjectRefMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.JavaObjectRefMsgInProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -2612,7 +2664,7 @@ $root.appFrameProtoIn = (function() {
         function JSObjectMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2661,9 +2713,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.JSObjectMsgInProto} JSObjectMsgInProto
          */
-        JSObjectMsgInProto.fromObject = function fromObject(object) {
+        JSObjectMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.JSObjectMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.JSObjectMsgInProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -2740,7 +2796,7 @@ $root.appFrameProtoIn = (function() {
         function PixelsAreaResponseMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2799,9 +2855,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.PixelsAreaResponseMsgInProto} PixelsAreaResponseMsgInProto
          */
-        PixelsAreaResponseMsgInProto.fromObject = function fromObject(object) {
+        PixelsAreaResponseMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.PixelsAreaResponseMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.PixelsAreaResponseMsgInProto();
             if (object.correlationId != null)
                 message.correlationId = String(object.correlationId);
@@ -2888,7 +2948,7 @@ $root.appFrameProtoIn = (function() {
         function WindowEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2987,9 +3047,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.WindowEventMsgInProto} WindowEventMsgInProto
          */
-        WindowEventMsgInProto.fromObject = function fromObject(object) {
+        WindowEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.WindowEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.WindowEventMsgInProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -3151,7 +3215,7 @@ $root.appFrameProtoIn = (function() {
         function AudioEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3220,9 +3284,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.AudioEventMsgInProto} AudioEventMsgInProto
          */
-        AudioEventMsgInProto.fromObject = function fromObject(object) {
+        AudioEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.AudioEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.AudioEventMsgInProto();
             if (object.id != null)
                 message.id = String(object.id);
@@ -3313,7 +3381,7 @@ $root.appFrameProtoIn = (function() {
         function ActionEventMsgInProto(properties) {
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3402,9 +3470,13 @@ $root.appFrameProtoIn = (function() {
          * @param {Object.<string,*>} object Plain object
          * @returns {appFrameProtoIn.ActionEventMsgInProto} ActionEventMsgInProto
          */
-        ActionEventMsgInProto.fromObject = function fromObject(object) {
+        ActionEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoIn.ActionEventMsgInProto)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoIn.ActionEventMsgInProto();
             if (object.actionName != null)
                 message.actionName = String(object.actionName);
