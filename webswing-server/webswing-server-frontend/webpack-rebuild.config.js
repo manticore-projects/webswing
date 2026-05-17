@@ -5,7 +5,7 @@ const DESTINATION = path.resolve(__dirname, "../webswing-server-war/target/websw
 
 module.exports = merge(commonConfig, {
     mode: "development",
-    devtool: "eval-cheap-source-map",
+    devtool: "cheap-source-map",
     output: {
         path: DESTINATION
     }

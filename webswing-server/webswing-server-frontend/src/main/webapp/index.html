@@ -5,17 +5,17 @@
     <title>VBox</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <!--
-        CSP: connect-src restricts XHR/WebSocket targets.
-        script-src 'self' prevents injection of external/inline scripts.
-        Remove 'unsafe-inline' from any future additions — use nonces instead.
+        CSP: script-src 'self' blocks injected inline/external scripts.
+        All JS lives in javascript/webswing-init.js — no unsafe-inline needed.
+        connect-src includes ws:/wss: to allow the Webswing WebSocket connection.
     -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'none'; connect-src 'self' ws: wss: data:; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self';">
+          content="default-src 'none'; connect-src 'self' ws: wss: data:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; worker-src blob:;">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="icon" href="favicon.ico"/>
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="manifest.json"/>
 </head>
 
 <body>
@@ -32,117 +32,13 @@
     </div>
 </div>
 
-<script>
-    /**
-     * Returns a same-origin base URL derived from the current page location.
-     * Validated to ensure it never escapes the current origin.
-     */
-    function getSameOriginBaseUrl() {
-        // Only trust the parsed origin and pathname — never raw href.
-        var origin   = window.location.origin;
-        var pathname = window.location.pathname;
-
-        // Guard: origin must be http or https.
-        if (!/^https?:\/\//.test(origin)) {
-            throw new Error("Unexpected origin scheme.");
-        }
-
-        var base = origin + pathname;
-        // Ensure trailing slash so relative paths resolve correctly.
-        if (base.charAt(base.length - 1) !== "/") {
-            base = base + "/";
-        }
-        return base;
-    }
-
-    /**
-     * Reads a single named query-string parameter from the current URL.
-     * Returns null if the parameter is absent.
-     * NOTE: values are only passed to the Webswing JS API (not injected into
-     * the DOM), so URL-decoding is sufficient here.  If you ever place these
-     * values into innerHTML / script / href, apply further context-specific
-     * encoding at that point.
-     */
-    function getParam(name) {
-        // Use URLSearchParams when available (all modern browsers).
-        try {
-            return new URLSearchParams(window.location.search).get(name);
-        } catch (e) {
-            // IE11 fallback — keep the original regex but avoid eval paths.
-            var safeName = name.replace(/[[\]]/g, "\\$&");
-            var results  = new RegExp("[?&]" + safeName + "=([^&#]*)").exec(window.location.search);
-            return results === null ? null : decodeURIComponent(results[1]);
-        }
-    }
-
-    var webswingInstance0 = {
-        options: {
-            autoStart:         true,
-            args:              getParam('args'),
-            recording:         getParam('recording'),
-            debugPort:         getParam('debugPort'),
-            recordingPlayback: getParam('recordingPlayback'),
-            securityToken:     getParam('securityToken'),
-            realm:             getParam('realm'),
-            debugLog:          getParam('debugLog')
-        }
-    };
-</script>
-
-<script data-webswing-global-var="webswing">
-    (function (window, document) {
-        var loader = function () {
-            // IE11 compat: synthesise origin if absent.
-            if (!window.location.origin) {
-                window.location.origin =
-                    window.location.protocol + "//" + window.location.hostname +
-                    (window.location.port ? ":" + window.location.port : "");
-            }
-
-            var baseUrl;
-            try {
-                baseUrl = getSameOriginBaseUrl();   // defined in the first <script> block
-            } catch (e) {
-                // Refuse to proceed if the origin looks wrong.
-                console.error("Blocked script load: unexpected origin.", e);
-                return;
-            }
-
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState !== XMLHttpRequest.DONE) { return; }
-
-                // FIX: validate the version string before embedding it in a URL.
-                // Only alphanumeric chars, dots, hyphens, and underscores are
-                // accepted.  Anything else falls back to "undefined" so the
-                // server can handle cache-busting gracefully.
-                var rawVersion = xmlhttp.status === 200 ? xmlhttp.responseText.trim() : "";
-                var version    = /^[\w.\-]{1,64}$/.test(rawVersion) ? rawVersion : "undefined";
-
-                // FIX: use encodeURIComponent as a second layer of defence even
-                // after the allowlist check above.
-                var script = document.createElement("script");
-                script.src = baseUrl + "javascript/webswing-embed.js?version=" +
-                             encodeURIComponent(version);
-
-                // FIX: do NOT use innerHTML or document.write to inject the tag.
-                // insertBefore is safe because script.src (a reflected-string
-                // attribute) is set programmatically, not via innerHTML.
-                var tag = document.getElementsByTagName("script")[0];
-                tag.parentNode.insertBefore(script, tag);
-            };
-
-            xmlhttp.open("GET", baseUrl + "rest/version", true);
-            xmlhttp.send();
-        };
-
-        if (window.addEventListener) {
-            window.addEventListener("load", loader, false);
-        } else {
-            window.attachEvent("onload", loader);
-        }
-    })(window, document);
-</script>
+<!--
+    Single external script covers webswingInstance0 config and the
+    webswing-embed.js loader.
+    data-webswing-global-var tells webswing-embed.js to expose its API as window.webswing.
+-->
+<script data-webswing-global-var="webswing" src="webswing-loader-stub.js"></script>
+<script src="javascript/webswing-init.js"></script>
 </body>
 
 </html>

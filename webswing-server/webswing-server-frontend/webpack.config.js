@@ -80,6 +80,9 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
+        { from: ROOT + '/webswing-init.js',                  to: DESTINATION + '/webswing-init.js' },
+        { from: ROOT + '/admin-console-login-init.js',       to: DESTINATION + '/admin-console-login-init.js' },
+        { from: ROOT + '/admin-console-login-error-init.js', to: DESTINATION + '/admin-console-login-error-init.js' },
         { from: NODE_PATH + '/pdfjs-dist-viewer-min/build/minified/build', to: TARGET + '/print/build' },
         {
           from: NODE_PATH + '/pdfjs-dist-viewer-min/build/minified/web',
@@ -111,6 +114,6 @@ module.exports = {
   entry: {
     "webswing-selector": "./webswing-selector.ts",
     "webswing-security": "./webswing-security.ts",
-    "webswing-embed": "./webswing-embed.ts"
+    "webswing-embed": "./webswing-embed.ts",
   }
 };
