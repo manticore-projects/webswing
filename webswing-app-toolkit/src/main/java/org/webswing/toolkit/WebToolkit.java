@@ -108,6 +108,31 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
       Collections.synchronizedList(new ArrayList<>());
 
   public void init() {
+    // ── JBR incompatibility guard ─────────────────────────────────────────────
+    // JetBrains Runtime (JBR) patches sun.awt.SunToolkit.shouldNativelyFocusHeavyweight(),
+    // KeyboardFocusManager event dispatch, and SunToolkit internal field layout in ways
+    // that are incompatible with WebToolkit. The result is that ALL keyboard input is
+    // silently dropped — mouse/rendering still work because they use a different dispatch
+    // path that JBR does not patch. This affects every JBR version from 21 through 25+.
+    // Standard OpenJDK distributions (Eclipse Temurin, Amazon Corretto, standard OpenJDK)
+    // are not affected.
+    String _javaVendor = System.getProperty("java.vendor", "");
+    String _vmName = System.getProperty("java.vm.name", "");
+    String _runtimeName = System.getProperty("java.runtime.name", "");
+    if (_javaVendor.contains("JetBrains") || _vmName.contains("JBR")
+        || _runtimeName.contains("JBR")) {
+        AppLogger.error(  "\n╔══════════════════════════════════════════════════════════════════════╗"
+                                  + "\n║  INCOMPATIBLE JDK: JetBrains Runtime (JBR) is not supported.         ║"
+                                  + "\n║  Keyboard input WILL NOT work — all key events will be dropped.      ║"
+                                  + "\n║  Switch to Eclipse Temurin, Amazon Corretto, or standard OpenJDK.    ║"
+                                  + "\n║  JBR patches shouldNativelyFocusHeavyweight() and                    ║"
+                                  + "\n║  KeyboardFocusManager in ways incompatible with WebToolkit.          ║"
+                                  + "\n║  Detected: "
+                                  + (_vmName + " / " + _javaVendor + "                                      ")
+                                            .substring(0, 60) + "║"
+                                  + "\n╚══════════════════════════════════════════════════════════════════════╝");
+    }
+
     try {
       if (!System.getProperty("os.name", "").startsWith("Windows")
           && !System.getProperty("os.name", "").startsWith("Mac")) {
@@ -194,10 +219,60 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
           AppLogger.error("Font config path is not a valid file: " + fontConfig);
           return;
         }
-        // Derive the trusted directory that all font files must reside under.
-        // Font configs typically reference files relative to their own directory
-        // or to well-known system font directories that share the same parent.
+        // Build the set of trusted font directories.
+        //
+        // 1. The font config file's own directory is always trusted (covers
+        // relative font references that live alongside the config file).
+        //
+        // 2. webswing.rootDir is always trusted when set, because all fonts in
+        // the standard Webswing config are expressed as
+        // "${webswing.rootDir}/fonts/..." and resolve under that root.
+        // This covers every entry in the default fontConfig block without
+        // requiring any extra configuration from the operator.
+        //
+        // 3. Additional directories can be added via:
+        // -Dwebswing.trustedFontDirs=/extra/path1:/extra/path2
+        // (paths separated by the OS path separator).
         Path trustedFontDir = fontConfigFile.getParentFile().getCanonicalFile().toPath();
+        java.util.Set<Path> trustedFontDirs = new java.util.HashSet<>();
+        trustedFontDirs.add(trustedFontDir); // (1) config parent
+
+        String webswingRootDir = System.getProperty("webswing.rootDir", "");
+        if (!webswingRootDir.isEmpty()) {
+          try {
+            File rootDir = new File(webswingRootDir).getCanonicalFile();
+            if (rootDir.isDirectory()) {
+              trustedFontDirs.add(rootDir.toPath()); // (2) app root
+              AppLogger.debug("Webswing root trusted for fonts: " + rootDir);
+            } else {
+              AppLogger.warn(
+                  "webswing.rootDir is not a directory, skipping font trust: " + webswingRootDir);
+            }
+          } catch (IOException e) {
+            AppLogger.warn("Could not resolve webswing.rootDir for font trust: " + webswingRootDir);
+          }
+        }
+
+        String extraDirsProperty = System.getProperty("webswing.trustedFontDirs", "");
+        if (!extraDirsProperty.isEmpty()) {
+          for (String extraEntry : extraDirsProperty.split(File.pathSeparator)) {
+            String trimmed = extraEntry.trim();
+            if (trimmed.isEmpty()) {
+              continue;
+            }
+            try {
+              File extraDir = new File(trimmed).getCanonicalFile();
+              if (extraDir.isDirectory()) {
+                trustedFontDirs.add(extraDir.toPath()); // (3) extra dirs
+                AppLogger.info("Additional trusted font directory: " + extraDir);
+              } else {
+                AppLogger.warn("Configured font directory does not exist, skipping: " + trimmed);
+              }
+            } catch (IOException e) {
+              AppLogger.warn("Invalid trusted font directory path, skipping: " + trimmed);
+            }
+          }
+        }
 
         try (FileInputStream fis = new FileInputStream(fontConfigFile)) {
           fontsProp.load(fis);
@@ -210,8 +285,11 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
             // reach arbitrary filesystem locations. Reject any path that
             // resolves outside the trusted font directory.
             File fontFile = new File(filePath).getCanonicalFile();
-            if (!fontFile.toPath().startsWith(trustedFontDir)) {
-              AppLogger.error("Font file outside trusted directory, skipping: " + filePath);
+            boolean trusted =
+                trustedFontDirs.stream().anyMatch(d -> fontFile.toPath().startsWith(d));
+            if (!trusted) {
+              AppLogger.error("Font file outside trusted directory, skipping: " + filePath
+                  + "  (add its parent to -Dwebswing.trustedFontDirs to allow it)");
               continue;
             }
             if (!fontFile.isFile()) {
