@@ -455,53 +455,55 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
   }
 
   @Override
-    public AccessibilityMsgOut getAccessible(Window window, WindowActionType action,
-                                             Point mousePointer) {
-        if (!action.isButtonActionType()) return null;
+  public AccessibilityMsgOut getAccessible(Window window, WindowActionType action,
+      Point mousePointer) {
+    if (!action.isButtonActionType())
+      return null;
 
-        AccessibilityMsgOut result = new AccessibilityMsgOut();
-        result.setId(System.identityHashCode(window) + "-" + action.name());
-        result.setRole("decorationbutton"); // not a real ARIA role
+    AccessibilityMsgOut result = new AccessibilityMsgOut();
+    result.setId(System.identityHashCode(window) + "-" + action.name());
+    result.setRole("decorationbutton"); // not a real ARIA role
 
-        List<String> states = new ArrayList<>();
-        states.add("ENABLED");
-        result.setStates(states);
+    List<String> states = new ArrayList<>();
+    states.add("ENABLED");
+    result.setStates(states);
 
-        Rectangle rect = null;
-        switch (action) {
-            case dock, undock -> {
-                rect = getDockUndockRect(window);
-                result.setText("accessibility.window.button.toggleDock");
-            }
-            case close -> {
-                rect = getCloseRect(window);
-                result.setText("accessibility.window.button.close");
-            }
-            case maximize -> {
-                rect = getMaximizeRect(window);
-                if (window instanceof Frame frame
-                            && (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != 0) {
-                    result.setText("accessibility.window.button.restore");
-                } else {
-                    result.setText("accessibility.window.button.maximize");
-                }
-            }
-            case minimize -> {
-                rect = getHideRect(window);
-                result.setText("accessibility.window.button.minimize");
-            }
-            default -> { /* nothing */ }
+    Rectangle rect = null;
+    switch (action) {
+      case dock, undock -> {
+        rect = getDockUndockRect(window);
+        result.setText("accessibility.window.button.toggleDock");
+      }
+      case close -> {
+        rect = getCloseRect(window);
+        result.setText("accessibility.window.button.close");
+      }
+      case maximize -> {
+        rect = getMaximizeRect(window);
+        if (window instanceof Frame frame
+            && (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != 0) {
+          result.setText("accessibility.window.button.restore");
+        } else {
+          result.setText("accessibility.window.button.maximize");
         }
-
-        if (rect != null) {
-            Point loc = window.getLocationOnScreen();
-            result.setScreenX(loc.x + rect.x);
-            result.setScreenY(loc.y + rect.y);
-            result.setWidth(rect.width);
-            result.setHeight(rect.height);
-        }
-        return result;
+      }
+      case minimize -> {
+        rect = getHideRect(window);
+        result.setText("accessibility.window.button.minimize");
+      }
+      default -> {
+        /* nothing */ }
     }
+
+    if (rect != null) {
+      Point loc = window.getLocationOnScreen();
+      result.setScreenX(loc.x + rect.x);
+      result.setScreenY(loc.y + rect.y);
+      result.setWidth(rect.width);
+      result.setHeight(rect.height);
+    }
+    return result;
+  }
 
   // =========================================================================
   // Visibility & resize predicates — preserved verbatim from the bitmap impl.
@@ -526,8 +528,13 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
         || ((w instanceof Frame f) && f.isResizable());
   }
 
-  private boolean isDockButtonVisible(
-      Object w) {return switch(Util.getDockMode()){case"ALL"->true;case"MARKED"->w instanceof Dockable;default->false;};}
+  private boolean isDockButtonVisible(Object w) {
+    return switch (Util.getDockMode()) {
+      case "ALL" -> true;
+      case "MARKED" -> w instanceof Dockable;
+      default -> false;
+    };
+  }
 
   // =========================================================================
   // Optional FlatLaf bridge — call once at startup, after UIManager.setLookAndFeel(...)
