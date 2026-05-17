@@ -67,7 +67,21 @@ LABEL maintainer="Manticore Projects <info@manticore-projects.com>" \
 
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
-# X11 / AWT dependencies for headless Swing rendering.
+# Runtime dependencies for truly headless Swing rendering.
+#
+# Webswing 26.4+ runs without any X server: java.desktop is patched via
+# --patch-module so GraphicsEnvironment, PlatformGraphicsInfo, and
+# FontManagerFactory all bypass X11GraphicsEnvironment / X11FontManager.
+# The native library libawt_xawt.so is never loaded.  This means no Xvfb,
+# no libxext6 / libxi6 / libxtst6 / libxrender1, no /tmp/.X11-unix.
+#
+# What we DO still need:
+#   - libfontconfig1   font discovery via the fontconfig API (called by
+#                      WebFontManager's native font registration path)
+#   - fonts-dejavu-core  fallback fonts for Java's logical Dialog / Serif /
+#                        Sans Serif / Monospaced families when an app does
+#                        not ship its own
+#
 # apt-get upgrade picks up OS-level security patches since the base image build.
 # curl is intentionally absent — wget (already in the temurin base image) is
 # used for the HEALTHCHECK instead, removing curl's CVE surface entirely.
@@ -79,11 +93,6 @@ SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends \
-        xvfb \
-        libxext6 \
-        libxi6 \
-        libxtst6 \
-        libxrender1 \
         libfontconfig1 \
         fonts-dejavu-core \
     && apt-get purge -y --auto-remove \
@@ -108,13 +117,12 @@ COPY --from=builder --chown=webswing:webswing /opt/webswing /opt/webswing
 
 WORKDIR /opt/webswing
 
-# Logging, data, and X11 directories (writable by webswing user)
-RUN mkdir -p logs tmp /tmp/.X11-unix \
-    && chown -R webswing:webswing logs tmp \
-    && chmod 1777 /tmp/.X11-unix
+# Logging and data directories (writable by webswing user).
+# No /tmp/.X11-unix — the container runs truly headless.
+RUN mkdir -p logs tmp \
+    && chown -R webswing:webswing logs tmp
 
 ENV JAVA_HOME="/opt/java/openjdk" \
-    DISPLAY=":99" \
     WEBSWING_HOME="/opt/webswing"
 
 # JVM flags — mirrors run.sh but without daemonization
@@ -154,10 +162,8 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
 
 USER webswing
 
-# Start Xvfb in background, then run Webswing in foreground.
+# Start Webswing directly — no Xvfb, no X server, no DISPLAY required.
 # WAR filename is resolved at runtime so versioned names work.
 CMD sh -c '\
-    Xvfb ${DISPLAY} -screen 0 1024x768x24 -nolisten tcp &\
-    sleep 1 && \
     WAR=$(ls ${WEBSWING_HOME}/webswing-server*.war 2>/dev/null | head -1) && \
     exec java ${JAVA_OPTS} -jar ${WAR} ${WEBSWING_OPTS}'

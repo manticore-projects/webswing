@@ -122,59 +122,48 @@ public abstract class WebToolkit extends SunToolkit implements WebswingApiProvid
     if (_javaVendor.contains("JetBrains") || _vmName.contains("JBR")
         || _runtimeName.contains("JBR")) {
       AppLogger.error("\n╔══════════════════════════════════════════════════════════════════════╗"
-          + "\n║  INCOMPATIBLE JDK: JetBrains Runtime (JBR) is not supported.         ║"
-          + "\n║  Keyboard input WILL NOT work — all key events will be dropped.      ║"
-          + "\n║  Switch to Eclipse Temurin, Amazon Corretto, or standard OpenJDK.    ║"
-          + "\n║  JBR patches shouldNativelyFocusHeavyweight() and                    ║"
-          + "\n║  KeyboardFocusManager in ways incompatible with WebToolkit.          ║"
+          + "\n║  INCOMPATIBLE JDK: JetBrains Runtime (JBR) is not supported.       ║"
+          + "\n║  Keyboard input WILL NOT work — all key events will be dropped.     ║"
+          + "\n║  Switch to Eclipse Temurin, Amazon Corretto, or standard OpenJDK.  ║"
+          + "\n║  JBR patches shouldNativelyFocusHeavyweight() and                  ║"
+          + "\n║  KeyboardFocusManager in ways incompatible with WebToolkit.         ║"
           + "\n║  Detected: "
-          + (_vmName + " / " + _javaVendor + "                                      ").substring(0,
-              60)
+          + (_vmName + " / " + _javaVendor + "                                        ")
+              .substring(0, 60)
           + "║" + "\n╚══════════════════════════════════════════════════════════════════════╝");
     }
 
+    // No X11 initialisation needed: with WebGraphicsEnvironment11 set via
+    // java.awt.graphicsenv, WebFontManager set via sun.font.fontmanager, and
+    // the Java2D OpenGL/XRender pipelines disabled via JVM flags, nothing in
+    // the AWT init chain ever queries the X11 graphics environment. The
+    // process is truly headless and runs identically with or without Xvfb /
+    // a real X display.
+
+
+    // GraphicsEnvironment is now created correctly by sun.awt.PlatformGraphicsInfo,
+    // which is patched via `--patch-module java.desktop=webswing-jdk-patch.jar` in
+    // SwingProcessServiceImpl. PlatformGraphicsInfo.createGE() returns
+    // WebGraphicsEnvironment11 directly, so no Unsafe overwrite of LocalGE.INSTANCE
+    // is needed and X11 is never touched. The previous Unsafe-based workaround
+    // required Xvfb because it ran AFTER X11GraphicsEnvironment had already been
+    // instantiated.
+    //
+    // Sanity check: confirm the patch is active. If the patch JAR was not on the
+    // --patch-module path, getLocalGraphicsEnvironment() would have thrown an
+    // AWTError above. If it returns the wrong type, the user is running with
+    // Xvfb fallback and should be warned.
     try {
-      if (!System.getProperty("os.name", "").startsWith("Windows")
-          && !System.getProperty("os.name", "").startsWith("Mac")) {
-        Class<?> c = ClassLoader.getSystemClassLoader().loadClass("sun.awt.X11GraphicsEnvironment");
-        Method initDisplayMethod = c.getDeclaredMethod("initDisplay", Boolean.TYPE);
-        initDisplayMethod.setAccessible(true);
-        initDisplayMethod.invoke(null, false);
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      String geClass = ge.getClass().getName();
+      if (geClass.startsWith("org.webswing.")) {
+        AppLogger.info("GraphicsEnvironment is " + geClass + " (headless, JDK patch active)");
+      } else {
+        AppLogger.warn("GraphicsEnvironment is " + geClass + " — JDK patch missing? "
+            + "Falling back to display-dependent mode.");
       }
-    } catch (Exception e) {
-      AppLogger.error("Failed to init X11 display: ", e.getMessage());
-    }
-
-    // JDK 21: GraphicsEnvironment.getLocalGraphicsEnvironment() ignores the
-    // java.awt.graphicsenv system property and returns X11GraphicsEnvironment.
-    // Replace the cached singleton with WebGraphicsEnvironment11 so that all
-    // screen bounds queries return virtual screen dimensions.
-    try {
-      String geName = System.getProperty("java.awt.graphicsenv");
-      if (geName != null) {
-        // Force initialization of the LocalGE holder (triggers createGE)
-        GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-        // Use Unsafe (via reflection) to replace the final static INSTANCE field
-        Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-        Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        Object unsafe = unsafeField.get(null);
-        Method staticFieldOffsetMethod = unsafeClass.getMethod("staticFieldOffset", Field.class);
-        Method putObjectMethod =
-            unsafeClass.getMethod("putObject", Object.class, long.class, Object.class);
-
-        Class<?> localGEClass = Class.forName("java.awt.GraphicsEnvironment$LocalGE");
-        Field instanceField = localGEClass.getDeclaredField("INSTANCE");
-        long offset = (long) staticFieldOffsetMethod.invoke(unsafe, instanceField);
-
-        GraphicsEnvironment webGE =
-            (GraphicsEnvironment) Class.forName(geName).getDeclaredConstructor().newInstance();
-        putObjectMethod.invoke(unsafe, localGEClass, offset, webGE);
-        AppLogger.info("Replaced GraphicsEnvironment with: " + webGE.getClass().getName());
-      }
-    } catch (Exception e) {
-      AppLogger.error("Failed to replace GraphicsEnvironment: ", e.getMessage());
+    } catch (Throwable t) {
+      AppLogger.error("Failed to query GraphicsEnvironment: ", t);
     }
 
     if (System.getProperty("os.name", "").startsWith("Windows")) {

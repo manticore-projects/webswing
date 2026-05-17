@@ -1,11 +1,11 @@
 <div align="center">
 
-# WebSwing Lite 26.3
+# WebSwing Lite 26.4
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
 [![Build](https://img.shields.io/github/actions/workflow/status/manticore-projects/webswing/Gradle.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&label=Build)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
-[![Version](https://img.shields.io/badge/Version-26.3-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
+[![Version](https://img.shields.io/badge/Version-26.4-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
 [![JDK 17+](https://img.shields.io/badge/JDK-17%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Node.js 24](https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-red?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
@@ -61,6 +61,7 @@ Try the [Online JSQLFormatter using Webswing Lite](http://jsqlformatter.manticor
 
 ### Features
 
+- **Truly headless operation on Linux** — no X server, no Xvfb, no virtual framebuffer. AWT initialises against an `--patch-module`–injected `GraphicsEnvironment` + `FontManagerFactory` that bypass `libawt_xawt.so` entirely. A `*-jre-headless` JDK package is sufficient; container images shrink accordingly.
 - **Shiro Security Plugin** with hot configuration reloading provides authorization via AD/LDAP/Database/Text Files with or without 2FA (Second Factory authorization)
 - **SVG Application Icons**
 - better server start scripts supporting SSL certificate registration and WAR version numbers
@@ -104,16 +105,17 @@ This fork implements defence-in-depth for deployment at regulated financial inst
 
 | Component | Version |
 |-----------|---------|
-| JDK | 17 or later (21+ recommended; [Eclipse Temurin](https://adoptium.net/)) |
-| Xvfb | Required on headless Linux servers |
+| JDK | 17 or later (21+ recommended; [Eclipse Temurin](https://adoptium.net/)). A **headless** JDK distribution is sufficient on Linux servers — see below. |
+
+**No X server, no Xvfb, no virtual framebuffer required.** Webswing Lite 26.4 runs truly headless on Linux via `--patch-module java.desktop` replacements for `GraphicsEnvironment`, `PlatformGraphicsInfo`, and `FontManagerFactory`. The standard `*-jre-headless` package from your distribution (or any JRE/JDK without the GUI dependencies) is enough. `DISPLAY` is explicitly unset by the startup script; nothing in the child Swing JVM ever calls into `libawt_xawt.so` or attempts a display connection.
 
 ### Quick Start
 
 ```bash
 # Download the latest release
-curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.3.zip
-unzip webswing-26.3.zip
-cd webswing-26.3
+curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.4.zip
+unzip webswing-26.4.zip
+cd webswing-26.4
 
 # Start the server
 ./run.sh start
@@ -164,7 +166,7 @@ cd webswing
 
 ```bash
 # Extract to your deployment directory
-unzip build/dist/webswing-26.3.zip -d /opt/webswing
+unzip build/dist/webswing-26.4.zip -d /opt/webswing
 
 # Configure your Swing application in webswing.config
 vim /opt/webswing/webswing.config

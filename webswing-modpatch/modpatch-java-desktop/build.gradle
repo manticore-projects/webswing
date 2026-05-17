@@ -4,13 +4,13 @@
 // version via --patch-module, which breaks AWT native init on JDK 22+.
 // The shell folder classes are the only ones that need patching.
 
-sourceSets {
-    main {
-        java {
-            exclude '**/PlatformGraphicsInfo.java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            exclude '**/PlatformGraphicsInfo.java'
+//        }
+//    }
+//}
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.addAll([

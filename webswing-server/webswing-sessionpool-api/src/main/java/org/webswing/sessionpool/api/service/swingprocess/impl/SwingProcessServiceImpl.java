@@ -185,25 +185,25 @@ public class SwingProcessServiceImpl implements SwingProcessService {
 
       // --add-opens: reflective access needed by WebSwing internals
       modules.append(" --add-opens=java.base/java.net=ALL-UNNAMED"); // URLStreamHandler in
-                                                                     // SwingClassloader
+      // SwingClassloader
       modules.append(" --add-opens=java.base/java.util=ALL-UNNAMED"); // Collections in
-                                                                      // SwingClassloader
+      // SwingClassloader
       modules.append(" --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"); // Field.setAccessible
-                                                                              // in Main/WebToolkit
+      // in Main/WebToolkit
       modules.append(" --add-opens=java.base/sun.misc=ALL-UNNAMED"); // Unsafe in WebToolkit.init()
-                                                                     // GE replacement
+      // GE replacement
       modules.append(" --add-opens=java.desktop/java.awt=ALL-UNNAMED"); // EventQueue in SwingMain
       modules.append(" --add-opens=java.desktop/java.awt.event=ALL-UNNAMED"); // KeyEvent.extendedKeyCode
-                                                                              // in Util
+      // in Util
       modules.append(" --add-opens=java.desktop/javax.swing=ALL-UNNAMED"); // PopupFactory.popupType
-                                                                           // in CwmPaintDispatcher
+      // in CwmPaintDispatcher
       modules.append(" --add-opens=java.desktop/sun.java2d=ALL-UNNAMED"); // SunGraphics2D in
-                                                                          // DirectDraw
+      // DirectDraw
       modules.append(" --add-opens=java.desktop/sun.awt=ALL-UNNAMED"); // SunToolkit internals
       modules.append(" --add-opens=java.desktop/sun.awt.image=ALL-UNNAMED"); // SurfaceManager in
-                                                                             // WebComponentPeer
+      // WebComponentPeer
       modules.append(" --add-opens=java.desktop/sun.font=ALL-UNNAMED"); // GlyphList/FontInfo in
-                                                                        // DirectDraw
+      // DirectDraw
 
       // --add-exports: compile-time access to internal APIs
       modules.append(" --add-exports=java.desktop/java.awt=ALL-UNNAMED");
@@ -250,9 +250,48 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       // malformed bytecode (e.g. slf4j-api-1.8.0-beta4 has duplicate
       // LocalVariableTypeTable entries). Deprecated since JDK 13, will be
       // removed in a future JDK. Fix properly by upgrading SLF4J to 2.0.x.
-      processConfig.setJvmArgs(modules.toString() + " " + bootCp + debug
-          + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider" + " -noverify" + " "
-          + vmArgs);
+      //
+      // Java2D pipeline suppression: without these flags the JVM attempts to
+      // dlopen libGL (GLX pipeline) and libXrender (XRender pipeline) on Linux
+      // even when no DISPLAY is present, causing startup failures on headless
+      // servers that have no Xvfb installed. noddraw disables DirectDraw on
+      // Windows and is a no-op on Linux/Mac.
+      //
+      // JDK patch: --patch-module replaces sun.awt.PlatformGraphicsInfo so that
+      // createGE() returns WebGraphicsEnvironment11 instead of the JDK's
+      // hardcoded X11GraphicsEnvironment. This is what makes truly headless
+      // (no Xvfb / no DISPLAY) operation possible on JDK 21+.
+      //
+      // Patch JAR discovery, in order:
+      // 1. -Dwebswing.jdkPatchJar=<path> (explicit override)
+      // 2. ${webswing.rootDir}/modpatch-java.desktop.jar
+      // 3. ${webswing.rootDir}/lib/modpatch-java.desktop.jar
+      // 4. ${webswing.rootDir}/webswing-jdk-patch.jar
+      // First existing file wins. If none exist, the child JVM falls back to
+      // requiring Xvfb (a warning is logged).
+      String patchJar = resolveJdkPatchJar();
+      String patchModule = "";
+      if (patchJar != null) {
+        patchModule = " --patch-module java.desktop=" + patchJar;
+        log.info("Using JDK patch JAR for headless operation: {}", patchJar);
+      } else {
+        log.warn("No JDK patch JAR found — child JVM will require Xvfb or a real X server. "
+            + "Set -Dwebswing.jdkPatchJar=/path/to/jar to enable truly headless mode.");
+      }
+
+      processConfig.setJvmArgs(modules.toString() + " " + bootCp + debug + patchModule // headless:
+                                                                                       // replaces
+                                                                                       // PlatformGraphicsInfo
+          + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider"
+          + " -Dsun.font.fontmanager=org.webswing.toolkit.ge.WebFontManager"
+          // headless: prevents X11FontManager from being
+          // cached by FontManagerFactory.getInstance() —
+          // X11FontManager's native getFontPathNative()
+          // in libawt_xawt.so segfaults without X11.
+          + " -Dsun.java2d.opengl=false" // no GLX probe on headless Linux
+          + " -Dsun.java2d.xrender=false" // no XRender JNI load on headless Linux
+          + " -Dsun.java2d.noddraw=true" // no DirectDraw on Windows (no-op elsewhere)
+          + " -noverify" + " " + vmArgs);
 
       // ── System properties ───────────────────────────────────────────────
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID,
@@ -484,6 +523,40 @@ public class SwingProcessServiceImpl implements SwingProcessService {
   private String serializeAppConnectionSecret(String secret) {
     return new String(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)),
         StandardCharsets.UTF_8);
+  }
+
+  /**
+   * Locates the JDK patch JAR that supplies the replacement {@code sun.awt.PlatformGraphicsInfo}
+   * for truly headless operation.
+   *
+   * <p>
+   * Discovery order:
+   * <ol>
+   * <li>{@code -Dwebswing.jdkPatchJar=<path>} — explicit override</li>
+   * <li>{@code ${webswing.rootDir}/modpatch-java.desktop.jar}</li>
+   * <li>{@code ${webswing.rootDir}/lib/modpatch-java.desktop.jar}</li>
+   * <li>{@code ${webswing.rootDir}/webswing-jdk-patch.jar}</li>
+   * </ol>
+   * Returns the path of the first existing file, or {@code null} if none found.
+   */
+  private String resolveJdkPatchJar() {
+    String explicit = System.getProperty("webswing.jdkPatchJar", "").trim();
+    if (!explicit.isEmpty() && new File(explicit).isFile()) {
+      return explicit;
+    }
+    String rootDir = System.getProperty("webswing.rootDir", "");
+    if (rootDir.isEmpty()) {
+      return null;
+    }
+    String[] candidates = {rootDir + File.separator + "modpatch-java.desktop.jar",
+        rootDir + File.separator + "lib" + File.separator + "modpatch-java.desktop.jar",
+        rootDir + File.separator + "webswing-jdk-patch.jar"};
+    for (String candidate : candidates) {
+      if (new File(candidate).isFile()) {
+        return candidate;
+      }
+    }
+    return null;
   }
 
   private String getSessionLogDir() {

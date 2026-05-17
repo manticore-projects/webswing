@@ -8,7 +8,7 @@ CONFIG_DIR="."
 BASE="$(cd "$(dirname "$0")" && pwd -P)"
 JAVA_HOME="/usr/lib/jvm/default-runtime"
 LOGGING="-Djava.util.logging.config.file=${HOME}/.manticore/logging.properties"
-MIN_JAVA_VERSION=13
+MIN_JAVA_VERSION=17
 
 # SSL certificates to import into the JVM truststore on startup.
 # Format: alias|host|port (one per line)
@@ -259,39 +259,11 @@ check_java() {
 }
 
 check_xvfb() {
-    if [ -n "${DISPLAY:-}" ]; then
-        return 0
-    fi
-
-    if command -v Xvfb > /dev/null 2>&1; then
-        return 0
-    fi
-
-    distro=$(detect_distro)
-    echo "ERROR: Xvfb (X Virtual Framebuffer) not found."
-    echo ""
-    echo "  Xvfb is required on headless servers (no DISPLAY detected)."
-    echo ""
-    echo "  Install Xvfb for your distribution:"
-    echo ""
-    case "${distro}" in
-        arch|manjaro)
-            echo "    sudo pacman -S xorg-server-xvfb" ;;
-        ubuntu|debian|linuxmint|pop)
-            echo "    sudo apt update && sudo apt install xvfb" ;;
-        fedora)
-            echo "    sudo dnf install xorg-x11-server-Xvfb" ;;
-        rhel|centos|rocky|alma|ol)
-            echo "    sudo yum install xorg-x11-server-Xvfb" ;;
-        opensuse*|sles)
-            echo "    sudo zypper install xorg-x11-server-extra" ;;
-        alpine)
-            echo "    apk add xvfb" ;;
-        *)
-            echo "    Install the 'Xvfb' package from your distribution's repository." ;;
-    esac
-    echo ""
-    exit 1
+    # Webswing 26.4+ runs truly headless on JDK 21+ via java.desktop patches
+    # (modpatch-java_desktop). No X server, no Xvfb, no DISPLAY required.
+    # This function is kept as a no-op for backwards compatibility with any
+    # downstream tooling that calls it directly.
+    return 0
 }
 
 import_ssl_certs() {
@@ -392,15 +364,11 @@ is_running() {
 }
 
 ensure_xvfb() {
-    if [ -z "${DISPLAY:-}" ]; then
-        if ! pgrep -f "Xvfb :1" > /dev/null 2>&1; then
-            Xvfb :1 -screen 0 1024x768x24 &
-            echo "Started virtual framebuffer with PID $!"
-        fi
-        XAUTHORITY="${HOME}/.Xauthority"
-        DISPLAY=':1'
-        export XAUTHORITY DISPLAY
-    fi
+    # Webswing 26.4+ does not require X11 or Xvfb. Unset DISPLAY explicitly to
+    # prevent any inherited value from accidentally triggering X11 code paths
+    # in third-party libraries the child Swing app might pull in.
+    unset DISPLAY
+    unset XAUTHORITY
 }
 
 rotate_logs() {
@@ -463,7 +431,6 @@ cmd_start() {
     fi
 
     check_java
-    check_xvfb
     import_ssl_certs
 
     # Resolve WAR file
