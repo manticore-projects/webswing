@@ -30,8 +30,13 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 
   /**
    * Matches CR (\r) and LF (\n) characters, including URL-encoded variants (%0d / %0a,
-   * case-insensitive). Used to reject Origin header values that would otherwise allow CRLF
-   * injection into response headers.
+   * case-insensitive). Used to:
+   * <ol>
+   * <li>Reject Origin header values that would otherwise allow CRLF injection into response headers
+   * (early-return guard).</li>
+   * <li>Strip any residual CR/LF at the point of use (defense-in-depth sanitization that satisfies
+   * taint-tracking static analyzers).</li>
+   * </ol>
    */
   private static final Pattern CRLF_PATTERN =
       Pattern.compile("[\r\n]|%0[da]", Pattern.CASE_INSENSITIVE);
@@ -42,6 +47,22 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 
   public AbstractUrlHandler(UrlHandler parent) {
     this.parent = parent;
+  }
+
+  /**
+   * Strips CR, LF, and their URL-encoded forms (%0d / %0a) from a header value.
+   *
+   * <p>
+   * This is a defense-in-depth measure applied at every point where user-supplied data is written
+   * into a response header. It complements the early-return CRLF guard and ensures that
+   * taint-tracking static analyzers (Semgrep, SpotBugs, SonarQube, etc.) can verify the value is
+   * clean at the sink, regardless of control-flow assumptions.
+   *
+   * @param value the raw header value; may be {@code null}
+   * @return the sanitized value, or {@code null} if the input was {@code null}
+   */
+  private static String sanitizeHeaderValue(String value) {
+    return value == null ? null : CRLF_PATTERN.matcher(value).replaceAll("");
   }
 
   @Override
@@ -98,7 +119,7 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
     // before being reflected in the response.
     String origin = req.getHeader("Origin");
 
-    // FIX (CRLF injection): reject any Origin value containing CR, LF, or
+    // Guard (CRLF injection): reject any Origin value containing CR, LF, or
     // their URL-encoded equivalents (%0d / %0a). Reflecting such a value
     // into a response header would let an attacker inject arbitrary headers
     // or split the HTTP response. We drop the request rather than sanitise,
@@ -109,7 +130,12 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
     }
 
     if (origin != null && isOriginAllowed(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
+      // Sanitize at the point of use (defense-in-depth): strip any residual
+      // CR/LF characters so that taint-tracking static analyzers can verify
+      // the value written to the header is clean, independently of the
+      // early-return guard above.
+      String safeOrigin = sanitizeHeaderValue(origin);
+      res.setHeader("Access-Control-Allow-Origin", safeOrigin);
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.setHeader("Access-Control-Expose-Headers",
           Constants.HTTP_ATTR_ARGS + ", " + Constants.HTTP_ATTR_RECORDING_FLAG
