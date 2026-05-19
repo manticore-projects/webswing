@@ -63,9 +63,28 @@ public class InteractiveServerLauncher {
           continue;
         }
         if (rootFile.exists() && rootFile.canRead() && rootFile.isDirectory()) {
-          List<File> folders = Arrays.stream(rootFile.listFiles()).filter(file -> {
-            File configFile = new File(file, Constants.DEFAULT_CONFIG_FILE_NAME);
-            return configFile.exists() && configFile.isFile();
+          // FIX (path traversal / null-deref): listFiles() returns null on I/O
+          // error or permission denial; guard before streaming.
+          File[] listed = rootFile.listFiles();
+          if (listed == null) {
+            System.out.println("Could not list directory: " + root);
+            continue;
+          }
+            File finalRootFile = rootFile;
+            List<File> folders = Arrays.stream(listed).filter(file -> {
+            try {
+              // FIX (path traversal): canonicalize each child so that symlinks
+              // pointing outside rootFile are detected and rejected before the
+              // config file is accessed.
+              File canonicalChild = file.getCanonicalFile();
+              if (!canonicalChild.getPath().startsWith(finalRootFile.getPath())) {
+                return false;
+              }
+              File configFile = new File(canonicalChild, Constants.DEFAULT_CONFIG_FILE_NAME);
+              return configFile.exists() && configFile.isFile();
+            } catch (IOException e) {
+              return false;
+            }
           }).collect(Collectors.toList());
           if (firstRun && folders.size() > 0) {
             root = folders.get(0).getAbsolutePath();
