@@ -320,11 +320,14 @@ export function checkCookie() {
     if (navigator.cookieEnabled) {
         return true;
     }
-    // Create cookie
-    document.cookie = "cookietest=1";
+    // FIX (Sensitive Cookie Without 'Secure' Attribute): add Secure and
+    // SameSite=Strict to the probe cookie so it is never transmitted over
+    // plain HTTP and is not included on cross-site requests. The cookie
+    // carries no session data and is deleted immediately after the check,
+    // so these attributes do not affect functionality.
+    document.cookie = "cookietest=1; Secure; SameSite=Strict";
     const ret = document.cookie.indexOf("cookietest=") !== -1;
-    // Delete cookie
-    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT; Secure; SameSite=Strict";
     return ret;
 }
 
