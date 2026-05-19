@@ -70,8 +70,8 @@ public class InteractiveServerLauncher {
             System.out.println("Could not list directory: " + root);
             continue;
           }
-            File finalRootFile = rootFile;
-            List<File> folders = Arrays.stream(listed).filter(file -> {
+          File finalRootFile = rootFile;
+          List<File> folders = Arrays.stream(listed).filter(file -> {
             try {
               // FIX (path traversal): canonicalize each child so that symlinks
               // pointing outside rootFile are detected and rejected before the

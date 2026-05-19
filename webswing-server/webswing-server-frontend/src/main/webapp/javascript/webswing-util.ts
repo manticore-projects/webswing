@@ -320,14 +320,15 @@ export function checkCookie() {
     if (navigator.cookieEnabled) {
         return true;
     }
-    // FIX (Sensitive Cookie Without 'Secure' Attribute): add Secure and
-    // SameSite=Strict to the probe cookie so it is never transmitted over
-    // plain HTTP and is not included on cross-site requests. The cookie
-    // carries no session data and is deleted immediately after the check,
-    // so these attributes do not affect functionality.
-    document.cookie = "cookietest=1; Secure; SameSite=Strict";
+    // FIX (Sensitive Cookie Without 'Secure' Attribute): add SameSite=Strict
+    // unconditionally, and Secure only when the page is served over HTTPS.
+    // A hard-coded Secure flag on HTTP breaks the probe: the browser silently
+    // drops any cookie with Secure on a non-TLS connection, so the test always
+    // returns false even when cookies are fully functional.
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = "cookietest=1" + secure + "; SameSite=Strict";
     const ret = document.cookie.indexOf("cookietest=") !== -1;
-    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT; Secure; SameSite=Strict";
+    document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT" + secure + "; SameSite=Strict";
     return ret;
 }
 
@@ -383,15 +384,18 @@ export function createCookie(name: string, value: string, days: number) {
     // FIX: use encodeURIComponent instead of the deprecated escape(), which
     // incorrectly encodes non-ASCII characters and is absent in strict mode.
     //
-    // FIX: Secure ensures the cookie is never sent over plain HTTP,
-    // preventing session-token interception on mixed or downgraded connections.
+    // FIX: Secure ensures the cookie is never sent over plain HTTP when the
+    // page is served over HTTPS. The flag is applied conditionally: a hard-coded
+    // Secure on HTTP causes the browser to silently drop the cookie entirely,
+    // breaking session state and file downloads on non-TLS deployments.
     //
     // FIX: SameSite=Strict blocks the cookie from being included on
     // cross-site requests, mitigating CSRF.
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
     document.cookie =
         encodeURIComponent(name) + "=" + encodeURIComponent(value) +
         expires + "; path=/" +
-        "; Secure" +
+        secure +
         "; SameSite=Strict";
 }
 
