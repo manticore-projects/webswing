@@ -8,5 +8,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.node-gradle:gradle-node-plugin:7.1.0'
+    implementation 'com.github.node-gradle:gradle-node-plugin:+'
+
+    // jackson-core<2.15.0 can throw a StackoverflowError
+    // when processing deeply nested data
+    constraints {
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.+")
+    }
 }
