@@ -1,4 +1,66 @@
-# Webswing Changelog
+# webswing changelog
+
+Changelog of webswing.
+
+## 26.4.1 (2026-05-19)
+
+### Bug Fixes
+
+-  **security**  make Secure cookie flag conditional on HTTPS, add frame-src 'self' to CSP ([29fcc](https://github.com/manticore-projects/webswing/commit/29fccc295b60224) Andreas Reichel)  
+-  consolidate `--patch-module java.desktop` and avoid duplicates ([cec18](https://github.com/manticore-projects/webswing/commit/cec1856440bb500) Andreas Reichel)  
+-  **security**  avoid old Jackson libraries ([31d60](https://github.com/manticore-projects/webswing/commit/31d60a4942ab41f) Andreas Reichel)  
+-  **security**  guard listFiles() null return and canonicalize children against symlink escape ([0d0cf](https://github.com/manticore-projects/webswing/commit/0d0cff54d74d0ab) Andreas Reichel)  
+-  **security**  add Secure and SameSite=Strict to checkCookie probe cookie ([3d10c](https://github.com/manticore-projects/webswing/commit/3d10cbb1162a367) Andreas Reichel)  
+-  **security**  sanitize Origin header at CORS sink to resolve CRLF taint warning ([558e7](https://github.com/manticore-projects/webswing/commit/558e79bedd93f26) Andreas Reichel)  
+
+## 26.4 (2026-05-17)
+
+### Features
+
+-  **headless**  truly headless on JDK 21+ via java.desktop patch ([61409](https://github.com/manticore-projects/webswing/commit/61409b424bfc166) Andreas Reichel)  
+
+### Bug Fixes
+
+-  Warn about JetBrains JDK and accept fonts from WebSwing ROOT ([5f196](https://github.com/manticore-projects/webswing/commit/5f1960a485e6e9b) Andreas Reichel)  
+
+### Other changes
+
+**`fix(docker): pin base image digests, purge gnupg2/wget/shadow after use, replace healthcheck with bash /dev/tcp, suppress unfixable OS CVEs in .snyk`**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[65d77](https://github.com/manticore-projects/webswing/commit/65d774947c01939) Andreas Reichel *2026-05-14 01:00:52*
+
+**`fix(path-traversal): canonicalise font config and USERPROFILE paths, bound font files to trusted directory`**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[d00c5](https://github.com/manticore-projects/webswing/commit/d00c569843c6631) Andreas Reichel *2026-05-14 00:50:07*
+
+**`fix(cookies): add Secure and SameSite=Strict attributes, replace deprecated escape() with encodeURIComponent`**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[d8b35](https://github.com/manticore-projects/webswing/commit/d8b35f05f859589) Andreas Reichel *2026-05-14 00:42:25*
+
+**`fix(cors): reject CRLF-tainted Origin headers and fix scheme-stripping in isSameOrigin`**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[9cd73](https://github.com/manticore-projects/webswing/commit/9cd73607d9c4818) Andreas Reichel *2026-05-14 00:38:53*
+
+**`fix(xss): sanitise webswing version string and redirect URLs against DOM-based XSS`**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[d12ee](https://github.com/manticore-projects/webswing/commit/d12ee3fd6ed17a1) Andreas Reichel *2026-05-14 00:34:45*
+
+**Release 26.3**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[30979](https://github.com/manticore-projects/webswing/commit/309795de3d1e5f7) Andreas Reichel *2026-05-09 05:06:31*
+
 
 ## 26.3 (2026-05-09)
 
