@@ -179,8 +179,10 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       // Patch modules: WebSwing toolkit overrides
       modules.append(" --patch-module jdk.jsobject=")
           .append(CommonUtil.getBootClassPathForClass(JAVA9_PATCHED_JSOBJECT_MODULE_MARKER));
-      modules.append(" --patch-module java.desktop=")
-          .append(CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER));
+      // NOTE: --patch-module java.desktop is built later (after resolveJdkPatchJar()) so that
+      // the shell-folder-manager path and the headless patch JAR path can be merged into a
+      // single --patch-module argument. Passing --patch-module java.desktop= twice is a JVM
+      // error ("specified more than once") on strict JDK distributions (e.g. Liberica).
       modules.append(" --add-reads jdk.jsobject=ALL-UNNAMED");
 
       // --add-opens: reflective access needed by WebSwing internals
@@ -270,18 +272,27 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       // First existing file wins. If none exist, the child JVM falls back to
       // requiring Xvfb (a warning is logged).
       String patchJar = resolveJdkPatchJar();
-      String patchModule = "";
+      // Build a single --patch-module java.desktop=<paths> argument combining:
+      // 1. The shell-folder-manager JAR (always needed for PublicShellFolderManager)
+      // 2. The headless patch JAR (replaces PlatformGraphicsInfo, optional)
+      // Both paths are joined with File.pathSeparatorChar so the JVM sees only one
+      // --patch-module java.desktop directive — passing it twice is a fatal error on
+      // strict JDK distributions such as Liberica.
+      String shellFolderJarPath = CommonUtil.getBootClassPathForClass(SHELL_FOLDER_MANAGER);
+      String patchModule;
       if (patchJar != null) {
-        patchModule = " --patch-module java.desktop=" + patchJar;
         log.info("Using JDK patch JAR for headless operation: {}", patchJar);
+        patchModule = " --patch-module java.desktop=" + shellFolderJarPath + File.pathSeparatorChar
+            + patchJar;
       } else {
         log.warn("No JDK patch JAR found — child JVM will require Xvfb or a real X server. "
             + "Set -Dwebswing.jdkPatchJar=/path/to/jar to enable truly headless mode.");
+        patchModule = " --patch-module java.desktop=" + shellFolderJarPath;
       }
 
       processConfig.setJvmArgs(modules.toString() + " " + bootCp + debug + patchModule // headless:
-                                                                                       // replaces
-                                                                                       // PlatformGraphicsInfo
+      // replaces
+      // PlatformGraphicsInfo
           + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider"
           + " -Dsun.font.fontmanager=org.webswing.toolkit.ge.WebFontManager"
           // headless: prevents X11FontManager from being
