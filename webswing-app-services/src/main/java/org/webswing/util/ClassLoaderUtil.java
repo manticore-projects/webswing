@@ -46,7 +46,7 @@ public class ClassLoaderUtil {
   }
 
   public static List<Method> getAllConstructors(JavaClass clazz) {
-    List<Method> result = new ArrayList<Method>();
+    List<Method> result = new ArrayList<>();
     for (Method m : clazz.getMethods()) {
       if ("<init>".equals(m.getName())) {
         result.add(m);

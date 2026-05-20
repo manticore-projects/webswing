@@ -225,6 +225,9 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       modules.append(" --add-exports=java.base/sun.security.util=ALL-UNNAMED");
       modules.append(" --add-exports=java.base/sun.nio.cs=ALL-UNNAMED");
 
+      // JNA
+      modules.append(" --enable-native-access=ALL-UNNAMED");
+
       // ── Boot classpath ──────────────────────────────────────────────────
       String webSwingToolkitApiJarPath = CommonUtil.getBootClassPathForClass(WEB_API_CLASS_NAME);
       String webSwingCommonJarPath = CommonUtil.getBootClassPathForClass(Constants.class.getName());
@@ -248,11 +251,6 @@ public class SwingProcessServiceImpl implements SwingProcessService {
       String vmArgs = startupParams.getAppConfig().getVmArgs() == null ? ""
           : startupParams.getSubs().replace(startupParams.getAppConfig().getVmArgs());
 
-      // -noverify: required because some deployed application JARs contain
-      // malformed bytecode (e.g. slf4j-api-1.8.0-beta4 has duplicate
-      // LocalVariableTypeTable entries). Deprecated since JDK 13, will be
-      // removed in a future JDK. Fix properly by upgrading SLF4J to 2.0.x.
-      //
       // Java2D pipeline suppression: without these flags the JVM attempts to
       // dlopen libGL (GLX pipeline) and libXrender (XRender pipeline) on Linux
       // even when no DISPLAY is present, causing startup failures on headless
@@ -290,19 +288,30 @@ public class SwingProcessServiceImpl implements SwingProcessService {
         patchModule = " --patch-module java.desktop=" + shellFolderJarPath;
       }
 
-      processConfig.setJvmArgs(modules.toString() + " " + bootCp + debug + patchModule // headless:
-      // replaces
-      // PlatformGraphicsInfo
+      processConfig.setJvmArgs(modules + " " + bootCp + debug + patchModule // headless: replaces
+                                                                            // PlatformGraphicsInfo
           + " -Djavax.sound.sampled.Clip=org.webswing.audio.AudioMixerProvider"
-          + " -Dsun.font.fontmanager=org.webswing.toolkit.ge.WebFontManager"
-          // headless: prevents X11FontManager from being
-          // cached by FontManagerFactory.getInstance() —
-          // X11FontManager's native getFontPathNative()
-          // in libawt_xawt.so segfaults without X11.
+          + " -Dsun.font.fontmanager=org.webswing.toolkit.ge.WebFontManager" // headless: prevents
+                                                                             // X11FontManager from
+                                                                             // being
+                                                                             // cached by
+                                                                             // FontManagerFactory.getInstance()
+                                                                             // —
+                                                                             // X11FontManager's
+                                                                             // native
+                                                                             // getFontPathNative()
+                                                                             // in libawt_xawt.so
+                                                                             // segfaults without
+                                                                             // X11.
           + " -Dsun.java2d.opengl=false" // no GLX probe on headless Linux
           + " -Dsun.java2d.xrender=false" // no XRender JNI load on headless Linux
           + " -Dsun.java2d.noddraw=true" // no DirectDraw on Windows (no-op elsewhere)
-          + " -noverify" + " " + vmArgs);
+          /*
+          + " -noverify" // JDK 25 verifier rejects valid non-contiguous LocalVariableTypeTable
+                         // entries (ClassFormatError on slf4j-api LoggerFactory)
+                         // Related: https://github.com/qos-ch/slf4j/issues/483
+           */
+          + " " + vmArgs);
 
       // ── System properties ───────────────────────────────────────────────
       processConfig.addProperty(Constants.SWING_START_SYS_PROP_INSTANCE_ID,

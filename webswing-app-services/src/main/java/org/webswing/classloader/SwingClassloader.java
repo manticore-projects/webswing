@@ -8,6 +8,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LocalVariableTypeTable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.CHECKCAST;
@@ -29,6 +30,8 @@ import org.apache.commons.io.IOUtils;
 import org.webswing.util.AppLogger;
 import org.webswing.util.ClassLoaderUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -284,9 +287,9 @@ public class SwingClassloader extends URLClassLoader {
   }
 
   private Hashtable<String, Class<?>> classes = new Hashtable<String, Class<?>>(); // Hashtable is
-                                                                                   // synchronized
-                                                                                   // thus
-                                                                                   // thread-safe
+  // synchronized
+  // thus
+  // thread-safe
   private String[] ignoredPackages;
   private ClassModificationRegister modRegister = new ClassModificationRegister();
   private ClassLoaderRepository repository;
@@ -634,7 +637,7 @@ public class SwingClassloader extends URLClassLoader {
         // should not happen
       }
       ProtectionDomain allPermDomain = new ProtectionDomain(source, perms);
-      cl = defineClass(class_name, bytes, 0, bytes.length, allPermDomain);
+      cl = defineClassWithLvttFix(class_name, bytes, allPermDomain);
     } else {
       cl = Class.forName(class_name);
     }
@@ -676,6 +679,103 @@ public class SwingClassloader extends URLClassLoader {
     }
   }
 
+  /**
+   * Defines a class from raw bytes, with a targeted workaround for JDK 25's stricter
+   * {@code LocalVariableTypeTable} (LVTT) validation.
+   *
+   * <p>
+   * JDK 25 rejects {@code Code} attributes that contain either:
+   * <ul>
+   * <li>more than one {@code LocalVariableTypeTable} attribute per method, or</li>
+   * <li>duplicate entries (same name + slot) within a single table.</li>
+   * </ul>
+   * Both cases violate the JVM spec §4.7.14 as interpreted by JDK 25, but were silently accepted by
+   * earlier JDKs and masked by {@code -noverify}. The LVTT attribute is debug-only and has no
+   * runtime effect, so stripping duplicates is safe.
+   *
+   * <p>
+   * When a {@link ClassFormatError} citing {@code LocalVariableTypeTable} is caught, BCEL (already
+   * on the classpath) is used to remove duplicate LVTT attributes and deduplicate entries within
+   * the remaining one, then {@code defineClass} is retried.
+   *
+   * @see <a href="https://github.com/qos-ch/slf4j/issues/483">slf4j#483</a>
+   */
+  private Class<?> defineClassWithLvttFix(String className, byte[] bytes, ProtectionDomain domain) {
+    try {
+      return defineClass(className, bytes, 0, bytes.length, domain);
+    } catch (ClassFormatError e) {
+      if (e.getMessage() != null && e.getMessage().contains("LocalVariableTypeTable")) {
+        AppLogger.warn("JDK 25 verifier rejected '" + className
+            + "' due to duplicate LocalVariableTypeTable — stripping with BCEL and retrying: "
+            + e.getMessage());
+        byte[] fixed = removeDuplicateLocalVariableTypeTableAttributes(bytes, className);
+        return defineClass(className, fixed, 0, fixed.length, domain);
+      }
+      throw e;
+    }
+  }
+
+  /**
+   * Uses BCEL to remove duplicate {@code LocalVariableTypeTable} attributes from every method's
+   * {@code Code} attribute, and deduplicates entries within each surviving table.
+   *
+   * <p>
+   * For each method:
+   * <ol>
+   * <li>All but the first LVTT attribute are dropped (a second LVTT attribute carrying raw —
+   * non-generic — type signatures is the known compiler artifact).</li>
+   * <li>Within the surviving table, entries sharing the same (slot, name) pair are collapsed to the
+   * entry with the longest live range, preserving the most useful debug information.</li>
+   * </ol>
+   */
+  private static byte[] removeDuplicateLocalVariableTypeTableAttributes(byte[] classBytes,
+      String className) {
+    try {
+      ClassParser parser = new ClassParser(new ByteArrayInputStream(classBytes), className);
+      JavaClass javaClass = parser.parse();
+      boolean modified = false;
+
+      for (org.apache.bcel.classfile.Method method : javaClass.getMethods()) {
+        org.apache.bcel.classfile.Code code = method.getCode();
+        if (code == null) {
+          continue;
+        }
+        org.apache.bcel.classfile.Attribute[] attrs = code.getAttributes();
+        List<org.apache.bcel.classfile.Attribute> retained = new ArrayList<>(attrs.length);
+
+        for (org.apache.bcel.classfile.Attribute attr : attrs) {
+          if (attr instanceof LocalVariableTypeTable) {
+            // Drop ALL LocalVariableTypeTable attributes.
+            // JDK 25 verifier rejects a table that contains more than one entry
+            // for the same variable (e.g. non-contiguous live ranges for 'paths'
+            // in slf4j LoggerFactory). LVTT is a debug-only attribute with no
+            // runtime effect; removing it is safe.
+            // See: https://github.com/qos-ch/slf4j/issues/483
+          } else {
+            retained.add(attr);
+          }
+        }
+
+        if (retained.size() < attrs.length) {
+          code.setAttributes(retained.toArray(new org.apache.bcel.classfile.Attribute[0]));
+          modified = true;
+        }
+      }
+
+      if (modified) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        javaClass.dump(baos);
+        return baos.toByteArray();
+      }
+      return classBytes;
+
+    } catch (Exception e) {
+      AppLogger.warn("Could not remove duplicate LocalVariableTypeTable from '" + className + "': "
+          + e.getMessage());
+      return classBytes; // fall through; defineClass will rethrow the original error
+    }
+  }
+
   public static boolean isModified(Class<?> c) throws Exception {
     String classFile = c.getName().replace('.', '/');
     InputStream is = c.getClassLoader().getResourceAsStream(classFile + ".class");
@@ -709,8 +809,5 @@ public class SwingClassloader extends URLClassLoader {
       }
       return unsafe;
     }
-
-
-
   }
 }
