@@ -705,9 +705,8 @@ public class SwingClassloader extends URLClassLoader {
       return defineClass(className, bytes, 0, bytes.length, domain);
     } catch (ClassFormatError e) {
       if (e.getMessage() != null && e.getMessage().contains("LocalVariableTypeTable")) {
-        AppLogger.warn("JDK 25 verifier rejected '" + className
-            + "' due to duplicate LocalVariableTypeTable — stripping with BCEL and retrying: "
-            + e.getMessage());
+        AppLogger
+            .debug(className + " has duplicate LocalVariableTypeTable, try stripping with BCEL", e);
         byte[] fixed = removeDuplicateLocalVariableTypeTableAttributes(bytes, className);
         return defineClass(className, fixed, 0, fixed.length, domain);
       }
@@ -770,8 +769,7 @@ public class SwingClassloader extends URLClassLoader {
       return classBytes;
 
     } catch (Exception e) {
-      AppLogger.warn("Could not remove duplicate LocalVariableTypeTable from '" + className + "': "
-          + e.getMessage());
+      AppLogger.warn("Failed removing LocalVariableTypeTable from " + className, e);
       return classBytes; // fall through; defineClass will rethrow the original error
     }
   }

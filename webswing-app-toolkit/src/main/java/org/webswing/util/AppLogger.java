@@ -53,9 +53,9 @@ public class AppLogger {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             throwable.printStackTrace(pw);
-            sb.append(sw.toString());
+            sb.append(sw);
           } else {
-            sb.append(obj.toString());
+            sb.append(obj);
           }
           sb.append(" | ");
         }
