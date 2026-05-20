@@ -13,6 +13,8 @@ import org.webswing.server.common.service.security.SecurableService;
 import org.webswing.server.common.util.CommonUtil;
 import org.webswing.server.model.exception.WsException;
 
+import org.webswing.server.common.model.SecuredPathConfig;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +49,22 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
 
   public AbstractUrlHandler(UrlHandler parent) {
     this.parent = parent;
+  }
+
+  /**
+   * Returns the {@link SecuredPathConfig} that governs this handler, or {@code null} if none is
+   * available at this level of the hierarchy.
+   *
+   * <p>
+   * The default implementation returns {@code null}. Subclasses that own or have access to a
+   * {@code SecuredPathConfig} (e.g. the root secured-path handler) should override this method to
+   * return it. {@link #isOriginAllowed(String)} delegates here so that CORS decisions are always
+   * driven by the single authoritative config rather than a parallel in-memory set.
+   *
+   * @return the secured-path config, or {@code null}
+   */
+  protected SecuredPathConfig getSecuredPathConfig() {
+    return null;
   }
 
   /**
@@ -154,8 +172,44 @@ public abstract class AbstractUrlHandler implements UrlHandler, SecurableService
     }
   }
 
-  protected boolean isOriginAllowed(String header) {
-    return false;
+  /**
+   * Returns {@code true} if {@code origin} is permitted to make cross-origin requests to this
+   * handler, based on the {@code allowedCorsOrigins} list in {@link SecuredPathConfig}.
+   *
+   * <p>
+   * Behaviour:
+   * <ul>
+   * <li>If no {@link SecuredPathConfig} is available, or the list is null/empty: deny.</li>
+   * <li>If the list contains {@code "*"}: allow any origin. The wildcard is intentionally supported
+   * for backwards-compatibility with existing {@code webswing.config} files, but production
+   * deployments should replace it with explicit origin values. A warning is logged on every request
+   * when {@code "*"} is active.</li>
+   * <li>Otherwise: exact, case-sensitive membership test. Only a matching entry is allowed.</li>
+   * </ul>
+   *
+   * <p>
+   * Note: even when the wildcard is configured, the request's specific {@code Origin} value is
+   * reflected in the response (never the literal {@code "*"}), which is required for credentialled
+   * CORS requests.
+   *
+   * @param origin the sanitized Origin header value from the request
+   * @return {@code true} if the origin is permitted
+   */
+  protected boolean isOriginAllowed(String origin) {
+    SecuredPathConfig config = getSecuredPathConfig();
+    if (config == null) {
+      return false;
+    }
+    List<String> allowed = config.getAllowedCorsOrigins();
+    if (allowed == null || allowed.isEmpty()) {
+      return false;
+    }
+    if (allowed.contains("*")) {
+      log.warn("allowedCorsOrigins is set to \"*\" — all origins are permitted. "
+          + "Replace with explicit origins in webswing.config for production deployments.");
+      return true;
+    }
+    return allowed.contains(origin);
   }
 
   protected boolean isSameOrigin(HttpServletRequest req) {
