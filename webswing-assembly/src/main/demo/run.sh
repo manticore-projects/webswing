@@ -1,14 +1,18 @@
 #!/bin/sh
 
 set -eu
+unset DISPLAY XAUTHORITY   # ensure no inherited X11 state leaks into child processes
 
 APP="WebSwing"
 WAR_PREFIX="webswing-server"
-CONFIG_DIR="."
 BASE="$(cd "$(dirname "$0")" && pwd -P)"
+CONFIG_DIR="${BASE}"                          # absolute: immune to caller's working directory
 JAVA_HOME="/usr/lib/jvm/default-runtime"
-LOGGING="-Djava.util.logging.config.file=${HOME}/.manticore/logging.properties"
-MIN_JAVA_VERSION=17
+java_bin="${JAVA_HOME}/bin/java"              # may be overridden by check_java if JAVA_HOME is absent
+LOGGING="-Djava.util.logging.config.file=${CONFIG_DIR}/logging.properties"
+MIN_JAVA_VERSION=21
+PRELOAD="LD_PRELOAD=${BASE}/dist/ext-lib/libjemalloc.so.2"
+MALLOC_CONF="MALLOC_CONF=background_thread:true,metadata_thp:auto,dirty_decay_ms:5000,muzzy_decay_ms:5000,tcache_max:16384,narenas:4"
 
 # SSL certificates to import into the JVM truststore on startup.
 # Format: alias|host|port (one per line)
@@ -17,12 +21,18 @@ SSL_CERTS=""
 SSL_KEYSTORE="${JAVA_HOME}/lib/security/cacerts"
 SSL_KEYSTORE_PASS="changeit"
 
-# Server JVM flags
+# Server JVM flags — ZGC (generational, JDK 21+) for lowest GC latency
 JAVA_OPTS="\
  -server -Xmx2G -Xms256m -Xss228k \
+ -XX:+UseZGC -XX:+ZGenerational \
+ -XX:+AlwaysPreTouch \
+ -XX:+ExitOnOutOfMemoryError \
+ -XX:+HeapDumpOnOutOfMemoryError \
+ -XX:HeapDumpPath=${BASE}/logs/ \
+ -XX:ErrorFile=${BASE}/logs/hs_err_%p.log \
  -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true \
  -Dwebswing.websocketMessageSizeLimit=1024000 \
- -Djava.security.egd=file:/dev/urandom \
+ -Djsse.enableSNIExtension=false \
  --add-modules=java.desktop \
  --add-exports=java.desktop/sun.awt=ALL-UNNAMED \
  --add-exports=java.desktop/sun.awt.dnd=ALL-UNNAMED \
@@ -208,6 +218,7 @@ detect_distro() {
 }
 
 check_java() {
+    # Sets the global java_bin; cmd_start uses it so the fallback path is actually honoured.
     java_bin="${JAVA_HOME}/bin/java"
 
     if [ ! -x "${java_bin}" ]; then
@@ -258,13 +269,6 @@ check_java() {
     fi
 }
 
-check_xvfb() {
-    # Webswing 26.4+ runs truly headless on JDK 21+ via java.desktop patches
-    # (modpatch-java_desktop). No X server, no Xvfb, no DISPLAY required.
-    # This function is kept as a no-op for backwards compatibility with any
-    # downstream tooling that calls it directly.
-    return 0
-}
 
 import_ssl_certs() {
     if [ -z "${SSL_CERTS}" ]; then
@@ -363,19 +367,11 @@ is_running() {
     [ -f "${PID_FILE}" ] && kill -0 "$(cat "${PID_FILE}")" 2>/dev/null
 }
 
-ensure_xvfb() {
-    # Webswing 26.4+ does not require X11 or Xvfb. Unset DISPLAY explicitly to
-    # prevent any inherited value from accidentally triggering X11 code paths
-    # in third-party libraries the child Swing app might pull in.
-    unset DISPLAY
-    unset XAUTHORITY
-}
-
 rotate_logs() {
     find "${LOG_FILE}"* -type f -mtime "+${LOG_RETENTION_DAYS}" -delete 2>/dev/null || true
     if [ -f "${LOG_FILE}" ]; then
-        cp "${LOG_FILE}" "${LOG_FILE}_$(date '+%Y%m%d%H%M%S')"
-        : > "${LOG_FILE}"
+        mv "${LOG_FILE}" "${LOG_FILE}_$(date '+%Y%m%d%H%M%S')"
+        touch "${LOG_FILE}"
     fi
 }
 
@@ -385,6 +381,32 @@ kill_tail() {
         rm -f "${TAIL_PID_FILE}"
     fi
     pkill -f "tail -f ${LOG_FILE}" 2>/dev/null || true
+}
+
+# Detect a log-colorizing program and return a pipe expression, or empty string.
+# Probed in preference order:
+#   logalize  – Rust-based, regex-driven colorizer
+#   grc       – Generic Colouriser (grcat conf.log)
+#   ccze      – classic syslog/apache colorizer
+#   lnav      – log navigator (tailing mode)
+#   colorize  – Python colorize
+#   hl        – hl (highlight)
+detect_log_colorizer() {
+    if command -v logalize > /dev/null 2>&1; then
+        echo "logalize"
+    elif command -v grc > /dev/null 2>&1; then
+        echo "grc --colour=on cat"
+    elif command -v ccze > /dev/null 2>&1; then
+        echo "ccze -A"
+    elif command -v lnav > /dev/null 2>&1; then
+        echo "lnav -q"
+    elif command -v colorize > /dev/null 2>&1; then
+        echo "colorize"
+    elif command -v hl > /dev/null 2>&1; then
+        echo "hl"
+    else
+        echo ""
+    fi
 }
 
 # ── Commands ─────────────────────────────────────────────────────────────
@@ -445,11 +467,28 @@ cmd_start() {
     mkdir -p "${BASE}/logs"
 
     rotate_logs
-    ensure_xvfb
 
-    cmd="${JAVA_HOME}/bin/java ${JAVA_OPTS} ${LOGGING} -jar ${WAR_FILE} ${WEBSWING_OPTS}"
+    # Verify jemalloc is present; warn and skip LD_PRELOAD rather than silently misconfiguring
+    if [ ! -f "${BASE}/dist/ext-lib/libjemalloc.so.2" ]; then
+        echo "WARN: libjemalloc.so.2 not found at ${BASE}/dist/ext-lib/ — starting without jemalloc"
+        cmd="${java_bin} ${JAVA_OPTS} ${LOGGING} -jar ${WAR_FILE} ${WEBSWING_OPTS}"
+    else
+        cmd="${MALLOC_CONF} ${PRELOAD} ${java_bin} ${JAVA_OPTS} ${LOGGING} -jar ${WAR_FILE} ${WEBSWING_OPTS}"
+    fi
 
-    if nohup nice -n"${NICE_LEVEL}" sh -c \
+    # Raise fd limit — Webswing opens one fd per session plus Jetty workers;
+    # default 1024 is easily exhausted under real load
+    ulimit -n 65535 2>/dev/null || echo "WARN: Could not raise open file limit (ulimit -n 65535)"
+
+    # Prefer ionice + nice for both CPU and I/O scheduling; fall back to nice-only
+    if command -v ionice > /dev/null 2>&1; then
+        launcher="ionice -c 2 -n 4 nice -n${NICE_LEVEL}"
+    else
+        launcher="nice -n${NICE_LEVEL}"
+    fi
+
+    # shellcheck disable=SC2086
+    if nohup ${launcher} sh -c \
         "${cmd}; sleep 1; echo \"\$(date '+%Y-%m-%d %X'): ${APP} STOPPED\" >> '${LOG_FILE}'; rm -f '${PID_FILE}'" \
         >> "${LOG_FILE}" 2>&1 &
     then
@@ -459,8 +498,17 @@ cmd_start() {
         log_msg "${APP} v${WAR_VERSION} STARTED ($(basename "${WAR_FILE}"))"
 
         kill_tail
-        tail -f "${LOG_FILE}" &
-        echo $! > "${TAIL_PID_FILE}"
+        colorizer=$(detect_log_colorizer)
+        if [ -n "${colorizer}" ]; then
+            # shellcheck disable=SC2086
+            tail -f "${LOG_FILE}" | ${colorizer} &
+            # Save the tail PID so kill_tail can stop it cleanly
+            tail_pid=$( jobs -l | awk '/tail -f/ { print $2 }' | tail -1 )
+            echo "${tail_pid:-$!}" > "${TAIL_PID_FILE}"
+        else
+            tail -f "${LOG_FILE}" &
+            echo $! > "${TAIL_PID_FILE}"
+        fi
     else
         echo "Error starting ${APP}"
         rm -f "${PID_FILE}"
