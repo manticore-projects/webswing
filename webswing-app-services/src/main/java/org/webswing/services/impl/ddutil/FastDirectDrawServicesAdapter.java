@@ -19,8 +19,8 @@ import java.util.Set;
 
 public class FastDirectDrawServicesAdapter extends DirectDrawServicesAdapter {
   private static final Logger log = LoggerFactory.getLogger(FastDirectDrawServicesAdapter.class);
-  XXHashFactory hashfactory = XXHashFactory.fastestInstance();
-  Set<String> missingFonts = new HashSet<String>();
+  XXHashFactory hashfactory = XXHashFactory.safeInstance();
+  Set<String> missingFonts = new HashSet<>();
   long seed = 12345L;
 
   @Override
