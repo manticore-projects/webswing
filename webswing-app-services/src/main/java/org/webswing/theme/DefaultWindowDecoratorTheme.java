@@ -33,7 +33,7 @@ import java.util.List;
  * defaults.
  *
  * <h3>Configuration (system properties)</h3>
- * 
+ *
  * <pre>
  *   org.webswing.window.theme.primaryColor       (Color)  active title bar     default #030146 (navy)
  *   org.webswing.window.theme.secondaryColor     (Color)  inactive title bar   default #9e9e9e (gray)
@@ -172,6 +172,13 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
         if (oldInterp != null) {
           g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, oldInterp);
         }
+        // Subtle 1 px border so the icon remains visible when its colours
+        // blend into the title-bar background (e.g. same-hue branding icons).
+        // Uses the title-bar foreground at ~31 % opacity — adapts automatically
+        // to light-fg-on-dark (active/navy) and dark-fg-on-light (inactive/grey).
+        g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+        g2.setColor(new Color(fg.getRed(), fg.getGreen(), fg.getBlue(), 80));
+        g2.drawRect(ICON_LEFT_PAD, iconY, ICON_SIZE - 1, ICON_SIZE - 1);
         textX += ICON_SIZE + ICON_TEXT_GAP;
       }
 
@@ -730,6 +737,8 @@ public class DefaultWindowDecoratorTheme implements WindowDecoratorTheme {
     try {
       return Color.decode(v.trim());
     } catch (NumberFormatException ex) {
+      System.err.println("DefaultWindowDecoratorTheme: cannot parse " + prop + "=\"" + v + "\" — "
+          + ex.getMessage() + " (falling back to default)");
       return null;
     }
   }
