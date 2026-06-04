@@ -9,8 +9,11 @@ import sun.java2d.SunGraphics2D;
 import sun.java2d.loops.FontInfo;
 
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.font.TextAttribute;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.*;
 import java.io.File;
 import java.text.AttributedCharacterIterator.Attribute;
@@ -23,17 +26,25 @@ public class DirectDrawUtils {
   public static final Map<String, String> WEB_FONTS = Map.of("Dialog", "sans-serif", "DialogInput",
       "monospace", "Serif", "serif", "SansSerif", "sans-serif", "Monospaced", "monospace");
   private static final String DELIMITER = "|";
-  private static SunGraphics2D sgHelper;
 
-  static {
-    sgHelper = (SunGraphics2D) new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
-    sgHelper.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+  /**
+   * Per-thread font-measuring graphics. Previously a single shared static {@link SunGraphics2D} was
+   * mutated ({@code setFont}) and read ({@code getFontInfo}) without synchronisation, so concurrent
+   * callers raced on its font state and could observe a {@link FontInfo} for the wrong font. Each
+   * thread now gets its own 1x1 helper, which is correct and contention-free.
+   */
+  private static final ThreadLocal<SunGraphics2D> sgHelper = ThreadLocal.withInitial(() -> {
+    SunGraphics2D sg =
+        (SunGraphics2D) new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
+    sg.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-  }
+    return sg;
+  });
 
   public static FontInfo getFontInfo(Font font) {
-    sgHelper.setFont(font);
-    return sgHelper.getFontInfo();
+    SunGraphics2D sg = sgHelper.get();
+    sg.setFont(font);
+    return sg.getFontInfo();
   }
 
   /**
@@ -104,11 +115,16 @@ public class DirectDrawUtils {
     if (clip == null) {
       return 0;
     }
+    final double[] cum = cumulativeAdvances(s, fm);
+    final Rectangle2D clipBounds = clip.getBounds2D();
+    final double yTop = y - fm.getAscent();
+    final double h = fm.getDescent() + fm.getAscent();
+    final int len = s.length();
     int idx = 0;
     int idxMin = 0;
-    int idxMax = s.length();
+    int idxMax = len;
     while (true) {
-      VisibilityHints hints = getVisibilityHintsForIndex(idx, s, x, y, clip, fm);
+      VisibilityHints hints = getVisibilityHintsForIndex(idx, len, cum, x, yTop, h, clipBounds);
       if (hints.leftVisible) {
         idxMax = idx - 1;
       } else {
@@ -118,7 +134,7 @@ public class DirectDrawUtils {
           if (hints.rightVisible) {
             idxMin = idx + 1;
           } else {
-            return s.length(); // invalid option
+            return len; // invalid option
           }
         }
       }
@@ -128,25 +144,30 @@ public class DirectDrawUtils {
 
   public static int findLastVisibleIndex(int firstIndex, String s, double x, double y, Shape clip,
       FontMetrics fm) {
-    if (clip == null || firstIndex == s.length()) {
-      return s.length();
+    final int len = s.length();
+    if (clip == null || firstIndex == len) {
+      return len;
     }
-    int idx = s.length();
+    final double[] cum = cumulativeAdvances(s, fm);
+    final Rectangle2D clipBounds = clip.getBounds2D();
+    final double yTop = y - fm.getAscent();
+    final double h = fm.getDescent() + fm.getAscent();
+    int idx = len;
     int idxMin = firstIndex;
-    int idxMax = s.length();
+    int idxMax = len;
 
     while (true) {
-      VisibilityHints hints = getVisibilityHintsForIndex(idx, s, x, y, clip, fm);
+      VisibilityHints hints = getVisibilityHintsForIndex(idx, len, cum, x, yTop, h, clipBounds);
       if (hints.rightVisible) {
         idxMin = idx + 1;
       } else {
         if (hints.indexVisible) {
-          return Math.min(idx + 1, s.length());
+          return Math.min(idx + 1, len);
         } else {
           if (hints.leftVisible) {
             idxMax = idx - 1;
           } else {
-            return s.length(); // invalid option
+            return len; // invalid option
           }
         }
       }
@@ -154,34 +175,71 @@ public class DirectDrawUtils {
     }
   }
 
-  private static VisibilityHints getVisibilityHintsForIndex(int index, String s, double x, double y,
-      Shape clip, FontMetrics fm) {
+  /**
+   * Cumulative glyph advances as doubles: {@code cum[i]} is the x-advance from the string origin to
+   * the start of glyph {@code i} (so {@code cum[0] == 0} and {@code cum[s.length()]} is the full
+   * advance). Taken from a {@link GlyphVector}, i.e. the true fractional positions the text is laid
+   * out at, computed once per string (O(n)).
+   *
+   * <p>
+   * This deliberately does not sum per-character {@link FontMetrics#charWidth}: under fractional
+   * metrics each char's advance rounds independently, so the running sum drifts from the real
+   * layout by up to ~half a pixel per character and can push the last glyph just past a tight clip
+   * edge, dropping a trailing character. Double precision from the glyph vector has no such drift.
+   *
+   * <p>
+   * Falls back to exact per-prefix {@link FontMetrics#stringWidth} only when the glyph count does
+   * not match the character count (complex shaping / surrogate pairs), where indexing the glyph
+   * vector by character index would be wrong; such strings are short in practice.
+   */
+  private static double[] cumulativeAdvances(String s, FontMetrics fm) {
+    final int len = s.length();
+    double[] cum = new double[len + 1];
+    GlyphVector gv = fm.getFont().createGlyphVector(fm.getFontRenderContext(), s);
+    if (gv.getNumGlyphs() == len) {
+      for (int i = 0; i <= len; i++) {
+        cum[i] = gv.getGlyphPosition(i).getX();
+      }
+    } else {
+      for (int i = 1; i <= len; i++) {
+        cum[i] = fm.stringWidth(s.substring(0, i));
+      }
+    }
+    return cum;
+  }
+
+  /**
+   * O(1) visibility hint for a glyph index, using precomputed cumulative advances and the clip's
+   * bounding box. Glyph spans are tested against the clip's {@link Rectangle2D} bounds rather than
+   * the clip shape itself: this method only decides which glyphs are worth serialising, and the
+   * true clip is re-applied at render time (see {@code RenderUtil.iprtDrawString}), so testing the
+   * bounds is a safe over-approximation (bounds contains shape, so no visible glyph is ever
+   * dropped) while avoiding {@code Path2D.contains} / {@code rectCrossings}, which dominated the
+   * EDT under DirectDraw.
+   */
+  private static VisibilityHints getVisibilityHintsForIndex(int index, int len, double[] cum,
+      double x, double yTop, double h, Rectangle2D clipBounds) {
     VisibilityHints result = new VisibilityHints();
-    y = y - fm.getAscent();
-    double h = fm.getDescent() + fm.getAscent();
 
-    String txtL = s.substring(0, index);
-    String txtI = s.substring(index, Math.min(index + 1, s.length()));
-    String txtR = s.substring(Math.min(index + 1, s.length()));
-
-    double wL = fm.stringWidth(txtL);
+    double wL = cum[index]; // advance of s[0..index)
     double xL = x;
-    if (clip.contains(xL, y, wL, h) || clip.intersects(xL, y, wL, h)) {
+    if (clipBounds.contains(xL, yTop, wL, h) || clipBounds.intersects(xL, yTop, wL, h)) {
       result.leftVisible = true;
     }
 
-    double wI = fm.stringWidth(txtI);
+    int iEnd = Math.min(index + 1, len);
+    double wI = cum[iEnd] - cum[index]; // advance of s[index]
     wI = wI == 0 ? 0.0001 : wI; // clip.contains always returns false if wI is 0 (causing accent
-                                // thai
-                                // chars not render on top of last char)
+    // thai
+    // chars not render on top of last char)
     double xI = xL + wL;
-    if (clip.contains(xI, y, wI, h) || clip.intersects(xI, y, wI, h)) {
+    if (clipBounds.contains(xI, yTop, wI, h) || clipBounds.intersects(xI, yTop, wI, h)) {
       result.indexVisible = true;
     }
 
-    double wR = fm.stringWidth(txtR);
+    double wR = cum[len] - cum[iEnd]; // advance of s[index+1..end)
     double xR = xI + wI;
-    if (clip.contains(xR, y, wR, h) || clip.intersects(xR, y, wR, h)) {
+    if (clipBounds.contains(xR, yTop, wR, h) || clipBounds.intersects(xR, yTop, wR, h)) {
       result.rightVisible = true;
     }
     return result;
@@ -367,7 +425,7 @@ public class DirectDrawUtils {
         } else {
           String name = fileName.hashCode() + new File(fileName).getName();
           name = name.length() > 20 ? name.substring(0, 20) : name; // IE will ignore the font if
-                                                                    // name is longer than 31 chars
+          // name is longer than 31 chars
           return name;
         }
       } else {

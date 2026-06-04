@@ -4,6 +4,14 @@ import org.webswing.directdraw.model.DrawConstant;
 
 import java.util.HashMap;
 
+/**
+ * LRU cache for {@link DrawConstant} entries. NOT thread-safe by design: all access goes through
+ * {@code DrawConstantPool.addToCache}, which is only ever called from
+ * {@code WebImage.toMessageInternal} on the single (per-{@code DirectDraw}-context) encode path.
+ * {@code toMessageInternal} resets the overflow counters and builds one proto by sequential
+ * {@code addToCache} calls, so serialized encoding is already a correctness requirement independent
+ * of this class. Do not assume any method here is safe to call concurrently.
+ */
 public class LRUDrawConstantPoolCache {
 
   private final HashMap<DrawConstant<?>, DoubleLinkedListNode> map =
@@ -34,7 +42,7 @@ public class LRUDrawConstantPoolCache {
     }
   }
 
-  public synchronized boolean contains(DrawConstant<?> constant) {
+  public boolean contains(DrawConstant<?> constant) {
     return map.containsKey(constant);
   }
 

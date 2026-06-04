@@ -182,12 +182,21 @@ public class RenderUtil {
 
   private static void iprtCopyArea(Graphics2D g, DrawInstruction di, BufferedImage result) {
     int[] points = getValue(0, di);
+    // result is both source and destination here. Drawing an image onto its own raster corrupts
+    // overlapping regions (the blit reads pixels it has already overwritten in the same pass),
+    // which smears the leading band on any scroll-style copyArea. Read from a stable snapshot so
+    // source and destination are distinct rasters; output is otherwise identical.
+    BufferedImage src =
+        new BufferedImage(result.getWidth(), result.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    Graphics2D sg = src.createGraphics();
+    sg.drawImage(result, 0, 0, null);
+    sg.dispose();
     g.setClip(getShape(1, di));
     AffineTransform original = g.getTransform();
     g.setTransform(new AffineTransform(1, 0, 0, 1, 0, 0));
     g.clipRect(points[0], points[1], points[2], points[3]);
     g.translate(points[4], points[5]);
-    g.drawImage(result, 0, 0, null);
+    g.drawImage(src, 0, 0, null);
     g.setTransform(original);
   }
 
