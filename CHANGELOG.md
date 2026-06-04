@@ -2,6 +2,38 @@
 
 Changelog of webswing.
 
+## 26.4.3 (2026-06-04)
+
+### Features
+
+-  render a subtle outline around the logo ([89749](https://github.com/manticore-projects/webswing/commit/897491b9c14d810) Andreas Reichel)  
+-  avoid UNSAFE ([ad336](https://github.com/manticore-projects/webswing/commit/ad3363f47d489e6) Andreas Reichel)  
+-  use ZGC, JEMALLOC and colorise log file ([7e06c](https://github.com/manticore-projects/webswing/commit/7e06cbf326dc9ec) Andreas Reichel)  
+
+### Bug Fixes
+
+-  **deps**  override uuid ^11.1.1 to clear sockjs/webpack-dev-server advisory ([8f331](https://github.com/manticore-projects/webswing/commit/8f331f9e085bcb9) Andreas Reichel)  
+-  **directdraw**  prevent EDT freeze when scrolling long text ([50074](https://github.com/manticore-projects/webswing/commit/500749134bb60bf) Andreas Reichel)  
+-  NPM TMP has Path Traversal enabling directory escape ([b76cf](https://github.com/manticore-projects/webswing/commit/b76cf69b65f832c) Andreas Reichel)  
+-  **classloader**  strip LocalVariableTypeTable attributes on ClassFormatError to handle JDK 25 strict verifier ([80b82](https://github.com/manticore-projects/webswing/commit/80b82d20f8abde9) Andreas Reichel)  
+-  **classloader**  strip LocalVariableTypeTable attributes on ClassFormatError to handle JDK 25 strict verifier ([17749](https://github.com/manticore-projects/webswing/commit/17749ca915d82b8) Andreas Reichel)  
+-  **security**  wire isOriginAllowed() to SecuredPathConfig.getAllowedCorsOrigins(), warn on wildcard ([c465e](https://github.com/manticore-projects/webswing/commit/c465e41e499ba01) Andreas Reichel)  
+
+### Other changes
+
+**release 26.4.1**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[c8465](https://github.com/manticore-projects/webswing/commit/c84653892f10825) Andreas Reichel *2026-05-19 07:32:49*
+
+**release 26.4.1**
+
+* Signed-off-by: Andreas Reichel &lt;andreas@manticore-projects.com&gt; 
+
+[5c220](https://github.com/manticore-projects/webswing/commit/5c2202e40ee2cb9) Andreas Reichel *2026-05-19 07:29:39*
+
+
 ## 26.4.1 (2026-05-19)
 
 ### Bug Fixes
