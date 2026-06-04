@@ -311,7 +311,8 @@ public class DirectDrawUtils {
           mergedStatus.composite = graphicsCreate.getArg(3);
           mergedStatus.paint = graphicsCreate.getArg(4);
           mergedStatus.font = graphicsCreate.getArg(5);
-        } else {// if graphics switch instruction and the create instruction already in result array
+        } else {
+          // if graphics switch instruction and the create instruction already in result array
           // then add all status change for old graphics and add the switch inst
           setGraphicsStatus(ctx, newInstructions, mergedStatus);
           mergedStatus.reset();
@@ -353,7 +354,7 @@ public class DirectDrawUtils {
   }
 
   private static boolean equals(Object a, Object b) {
-    return (a == b) || (a != null && a.equals(b));
+    return Objects.equals(a, b);
   }
 
   private static DrawInstruction createGraphics(DirectDraw ctx, DrawConstant<?> id,

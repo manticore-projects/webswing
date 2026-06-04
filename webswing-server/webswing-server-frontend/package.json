@@ -27,7 +27,8 @@
   "author": "Viktor Meszaros",
   "overrides": {
     "glob": "^12.0.0",
-    "inflight": "^2.0.0"
+    "inflight": "^2.0.0",
+    "uuid": "^11.1.1"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.0",
@@ -64,5 +65,9 @@
     "jquery.iframe-transport": "^1.0.0",
     "pdfjs-dist-viewer-min": "^2.4.456",
     "dompurify": "^3.2.4"
+  },
+  "allowScripts": {
+    "protobufjs@7.5.8": true,
+    "@parcel/watcher@2.5.6": true
   }
 }
