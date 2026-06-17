@@ -357,6 +357,45 @@ ${line}"
     rm -rf "${tmp_cert_dir}"
 }
 
+# ── Webswing server cert → CHILD app JVM truststore ──────────────────────
+# Exported from the server keystore and imported into the JDK that Webswing
+# launches the Swing apps with (NOT necessarily $JAVA_HOME).
+APP_JDK_HOME="/home/manticore/jdk-25.0.3-lite"
+APP_TRUSTSTORE="${APP_JDK_HOME}/lib/security/cacerts"
+APP_TRUSTSTORE_PASS="changeit"
+KEYSTORE="/vboxapp/vbox/ssl/keystore.jks"
+KEYSTORE_PASS="restore@123"
+SERVER_CERT_ALIASES="fcmbroot"   # space-separated; add the leaf if it doesn't chain to root
+
+import_server_cert() {
+    keytool_bin="${JAVA_HOME}/bin/keytool"
+    [ -x "${keytool_bin}" ] || keytool_bin="keytool"
+
+    [ -f "${KEYSTORE}" ]      || { echo "  WARN: ${KEYSTORE} missing, skip server-cert import"; return 0; }
+    [ -w "${APP_TRUSTSTORE}" ] || { echo "  WARN: ${APP_TRUSTSTORE} not writable, skip"; return 0; }
+
+    tmp_dir=$(mktemp -d)
+    for alias in ${SERVER_CERT_ALIASES}; do
+        crt="${tmp_dir}/${alias}.crt"
+        if ! "${keytool_bin}" -exportcert -rfc \
+                -keystore "${KEYSTORE}" -storepass "${KEYSTORE_PASS}" \
+                -alias "${alias}" -file "${crt}" 2>/dev/null; then
+            echo "  WARN: alias '${alias}' not in keystore, skip"; continue
+        fi
+        "${keytool_bin}" -delete \
+            -keystore "${APP_TRUSTSTORE}" -storepass "${APP_TRUSTSTORE_PASS}" \
+            -alias "webswing-${alias}" 2>/dev/null || true
+        if "${keytool_bin}" -importcert -noprompt -trustcacerts \
+                -keystore "${APP_TRUSTSTORE}" -storepass "${APP_TRUSTSTORE_PASS}" \
+                -alias "webswing-${alias}" -file "${crt}" 2>/dev/null; then
+            echo "  Imported '${alias}' into app truststore"
+        else
+            echo "  WARN: failed to import '${alias}'"
+        fi
+    done
+    rm -rf "${tmp_dir}"
+}
+
 # ── Helpers ──────────────────────────────────────────────────────────────
 
 log_msg() {

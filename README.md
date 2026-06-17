@@ -1,11 +1,11 @@
 <div align="center">
 
-# WebSwing Lite 26.4.3
+# WebSwing Lite 26.4.4
 
 ### Enterprise Java Swing Applications — Delivered Through Your Browser
 
 [![Build](https://img.shields.io/github/actions/workflow/status/manticore-projects/webswing/Gradle.yml?branch=master&style=for-the-badge&logo=githubactions&logoColor=white&label=Build)](https://github.com/manticore-projects/webswing/actions/workflows/Gradle.yml)
-[![Version](https://img.shields.io/badge/Version-26.4.3-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
+[![Version](https://img.shields.io/badge/Version-26.4.4-orange?style=for-the-badge)](https://github.com/manticore-projects/webswing/releases)
 [![JDK 17+](https://img.shields.io/badge/JDK-17%2B%20%7C%2021%20%7C%2025%20%7C%2026-blue?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Node.js 24](https://img.shields.io/badge/Node.js-24%20LTS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-red?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
@@ -107,15 +107,15 @@ This fork implements defence-in-depth for deployment at regulated financial inst
 |-----------|---------|
 | JDK | 17 or later (21+ recommended; [Eclipse Temurin](https://adoptium.net/)). A **headless** JDK distribution is sufficient on Linux servers — see below. |
 
-**No X server, no Xvfb, no virtual framebuffer required.** Webswing Lite 26.4.3 runs truly headless on Linux via `--patch-module java.desktop` replacements for `GraphicsEnvironment`, `PlatformGraphicsInfo`, and `FontManagerFactory`. The standard `*-jre-headless` package from your distribution (or any JRE/JDK without the GUI dependencies) is enough. `DISPLAY` is explicitly unset by the startup script; nothing in the child Swing JVM ever calls into `libawt_xawt.so` or attempts a display connection.
+**No X server, no Xvfb, no virtual framebuffer required.** Webswing Lite 26.4.4 runs truly headless on Linux via `--patch-module java.desktop` replacements for `GraphicsEnvironment`, `PlatformGraphicsInfo`, and `FontManagerFactory`. The standard `*-jre-headless` package from your distribution (or any JRE/JDK without the GUI dependencies) is enough. `DISPLAY` is explicitly unset by the startup script; nothing in the child Swing JVM ever calls into `libawt_xawt.so` or attempts a display connection.
 
 ### Quick Start
 
 ```bash
 # Download the latest release
-curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.4.3.zip
-unzip webswing-26.4.3.zip
-cd webswing-26.4.3
+curl -LO https://github.com/manticore-projects/webswing/releases/latest/download/webswing-26.4.4.zip
+unzip webswing-26.4.4.zip
+cd webswing-26.4.4
 
 # Start the server
 ./run.sh start
@@ -166,7 +166,7 @@ cd webswing
 
 ```bash
 # Extract to your deployment directory
-unzip build/dist/webswing-26.4.3.zip -d /opt/webswing
+unzip build/dist/webswing-26.4.4.zip -d /opt/webswing
 
 # Configure your Swing application in webswing.config
 vim /opt/webswing/webswing.config

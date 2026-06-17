@@ -1,7 +1,7 @@
 package org.directdraw.webswing.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.webswing.directdraw.DirectDraw;
 import org.webswing.directdraw.model.DrawInstruction;
 import org.webswing.directdraw.toolkit.DrawInstructionFactory;
@@ -15,21 +15,21 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DirectDrawUtilsTest {
+class DirectDrawUtilsTest {
 
   DirectDraw dd;
   private DrawInstructionFactory f;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     dd = new DirectDraw();
     f = dd.getInstructionFactory();
   }
 
   @Test
-  public void testGroupedGraphicsCreate() {
+  void testGroupedGraphicsCreate() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -52,16 +52,16 @@ public class DirectDrawUtilsTest {
     inst.add(f.setStroke(new BasicStroke(1)));
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
-    assertEquals("Count not valid", 2, inst.size());
-    assertEquals("Transform not expected", new AffineTransform(1, 0, 0, 1, 20, 20),
-        inst.get(0).getArg(1).getValue());
-    assertEquals("Stroke not expected", new BasicStroke(2), inst.get(0).getArg(2).getValue());
-    assertEquals("Composite not expected", AlphaComposite.Src, inst.get(0).getArg(3).getValue());
-    assertEquals("Color not expected", Color.blue, inst.get(0).getArg(4).getValue());
+    assertEquals(2, inst.size(), "Count not valid");
+    assertEquals(new AffineTransform(1, 0, 0, 1, 20, 20), inst.get(0).getArg(1).getValue(),
+        "Transform not expected");
+    assertEquals(new BasicStroke(2), inst.get(0).getArg(2).getValue(), "Stroke not expected");
+    assertEquals(AlphaComposite.Src, inst.get(0).getArg(3).getValue(), "Composite not expected");
+    assertEquals(Color.blue, inst.get(0).getArg(4).getValue(), "Color not expected");
   }
 
   @Test
-  public void testUnusedGraphicsCreate() {
+  void testUnusedGraphicsCreate() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -84,23 +84,23 @@ public class DirectDrawUtilsTest {
 
     inst.add(f.draw(new Rectangle(), null)); // draw
 
-    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // ingored
+    inst.add(f.createGraphics((WebGraphics) webImage.getGraphics())); // ignored
     inst.add(f.transform(new AffineTransform(1, 0, 0, 1, 10, 10)));
     inst.add(f.setPaint(Color.black));
     inst.add(f.setComposite(AlphaComposite.Dst));
     inst.add(f.setStroke(new BasicStroke(1)));
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
-    assertEquals("Count not valid", 2, inst.size());
-    assertEquals("Transform not expected", new AffineTransform(1, 0, 0, 1, 10, 10),
-        inst.get(0).getArg(1).getValue());
-    assertEquals("Stroke not expected", new BasicStroke(2), inst.get(0).getArg(2).getValue());
-    assertEquals("Composite not expected", AlphaComposite.Dst, inst.get(0).getArg(3).getValue());
-    assertEquals("Color not expected", Color.blue, inst.get(0).getArg(4).getValue());
+    assertEquals(2, inst.size(), "Count not valid");
+    assertEquals(new AffineTransform(1, 0, 0, 1, 10, 10), inst.get(0).getArg(1).getValue(),
+        "Transform not expected");
+    assertEquals(new BasicStroke(2), inst.get(0).getArg(2).getValue(), "Stroke not expected");
+    assertEquals(AlphaComposite.Dst, inst.get(0).getArg(3).getValue(), "Composite not expected");
+    assertEquals(Color.blue, inst.get(0).getArg(4).getValue(), "Color not expected");
   }
 
   @Test
-  public void testMergedPaints() {
+  void testMergedPaints() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -115,12 +115,12 @@ public class DirectDrawUtilsTest {
     inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
-    assertEquals("Count not valid", 4, inst.size());
-    assertEquals("Color not expected", Color.green, inst.get(2).getArg(0).getValue());
+    assertEquals(4, inst.size(), "Count not valid");
+    assertEquals(Color.green, inst.get(2).getArg(0).getValue(), "Color not expected");
   }
 
   @Test
-  public void testMergedTransforms() {
+  void testMergedTransforms() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -134,13 +134,13 @@ public class DirectDrawUtilsTest {
     inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
-    assertEquals("Count not valid", 4, inst.size());
-    assertEquals("Transform not expected", new AffineTransform(1, 0, 0, 1, 20, 70),
-        inst.get(2).getArg(0).getValue());
+    assertEquals(4, inst.size(), "Count not valid");
+    assertEquals(new AffineTransform(1, 0, 0, 1, 20, 70), inst.get(2).getArg(0).getValue(),
+        "Transform not expected");
   }
 
   @Test
-  public void testMergedComposites() {
+  void testMergedComposites() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -154,13 +154,13 @@ public class DirectDrawUtilsTest {
     inst.add(f.draw(new Rectangle(), null)); // draw
 
     DirectDrawUtils.optimizeInstructions(dd, inst);
-    assertEquals("Count not valid", 4, inst.size());
-    assertEquals("Composite not expected", AlphaComposite.SrcAtop,
-        inst.get(2).getArg(0).getValue());
+    assertEquals(4, inst.size(), "Count not valid");
+    assertEquals(AlphaComposite.SrcAtop, inst.get(2).getArg(0).getValue(),
+        "Composite not expected");
   }
 
   @Test
-  public void testCreateAfterTransform() {
+  void testCreateAfterTransform() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -182,23 +182,23 @@ public class DirectDrawUtilsTest {
 
     List<DrawInstruction> originalInstructions = new ArrayList<DrawInstruction>(inst);
     assertEquals(9, inst.size());
-    assertEquals("Create graphics 1", originalInstructions.get(0), inst.get(0));
-    assertEquals("Draw rectangle 1", originalInstructions.get(1), inst.get(1));
-    assertEquals("Transform 1", new AffineTransform(1, 0, 0, 1, 5, 3),
-        inst.get(2).getArg(0).getValue());
+    assertEquals(originalInstructions.get(0), inst.get(0), "Create graphics 1");
+    assertEquals(originalInstructions.get(1), inst.get(1), "Draw rectangle 1");
+    assertEquals(new AffineTransform(1, 0, 0, 1, 5, 3), inst.get(2).getArg(0).getValue(),
+        "Transform 1");
 
-    assertEquals("Create graphics 2", originalInstructions.get(3), inst.get(3));
-    assertEquals("Draw rectangle 2", originalInstructions.get(4), inst.get(4));
-    assertEquals("Dispose graphics 2", originalInstructions.get(5), inst.get(5));
+    assertEquals(originalInstructions.get(3), inst.get(3), "Create graphics 2");
+    assertEquals(originalInstructions.get(4), inst.get(4), "Draw rectangle 2");
+    assertEquals(originalInstructions.get(5), inst.get(5), "Dispose graphics 2");
 
-    assertEquals("Switch graphics", originalInstructions.get(6), inst.get(6));
-    assertEquals("Transform 2", new AffineTransform(1, 0, 0, 1, -5, -3),
-        inst.get(7).getArg(0).getValue());
-    assertEquals("Draw rectangle 2", originalInstructions.get(8), inst.get(8));
+    assertEquals(originalInstructions.get(6), inst.get(6), "Switch graphics");
+    assertEquals(new AffineTransform(1, 0, 0, 1, -5, -3), inst.get(7).getArg(0).getValue(),
+        "Transform 2");
+    assertEquals(originalInstructions.get(8), inst.get(8), "Draw rectangle 2");
   }
 
   @Test
-  public void testCreateGraphicsWithSingleTransform() {
+  void testCreateGraphicsWithSingleTransform() {
     WebImage webImage = new WebImage(dd, 10, 10);
     List<DrawInstruction> inst = new ArrayList<DrawInstruction>();
 
@@ -220,10 +220,10 @@ public class DirectDrawUtilsTest {
 
     List<DrawInstruction> originalInstructions = new ArrayList<DrawInstruction>(inst);
     assertEquals(4, inst.size());
-    assertEquals("Create graphics 1", originalInstructions.get(0), inst.get(0));
-    assertEquals("Draw rectangle 1", originalInstructions.get(1), inst.get(1));
+    assertEquals(originalInstructions.get(0), inst.get(0), "Create graphics 1");
+    assertEquals(originalInstructions.get(1), inst.get(1), "Draw rectangle 1");
 
-    assertEquals("Switch graphics", originalInstructions.get(2), inst.get(2));
-    assertEquals("Draw rectangle 2", originalInstructions.get(3), inst.get(3));
+    assertEquals(originalInstructions.get(2), inst.get(2), "Switch graphics");
+    assertEquals(originalInstructions.get(3), inst.get(3), "Draw rectangle 2");
   }
 }

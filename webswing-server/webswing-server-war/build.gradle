@@ -1,6 +1,6 @@
 plugins {
     id 'war'
-    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
+    id 'com.gorylenko.gradle-git-properties' version 'latest.release'
 }
 
 dependencies {
@@ -20,7 +20,6 @@ dependencies {
 
     // Used directly in this module (not transitive via implementation scope)
     implementation "com.google.inject:guice:${guiceVersion}"
-    implementation 'com.google.inject.extensions:guice-multibindings:4.2.3'
     implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "tools.jackson.core:jackson-core:${jacksonVersion}"
     implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
@@ -50,8 +49,6 @@ tasks.register('copyWebswingProperties', Copy) {
 //
 // Class isolation is handled at runtime by Main.java, which reads
 // WEB-INF/lib/ with different whitelist filters per classloader.
-//
-
 def explodedDir = layout.buildDirectory.dir("libs/exploded/${webswingWarName}")
 
 def frontendProject       = project(':webswing-server:webswing-server-frontend')
@@ -121,9 +118,10 @@ tasks.register('repackageWar', Zip) {
     destinationDirectory = layout.buildDirectory.dir('libs')
 
     into('META-INF') {
-        from({
+        from(project.provider {
             def gitProps = new Properties()
             def gitFile = layout.buildDirectory.file('resources/main/git.properties').get().asFile
+
             if (gitFile.exists()) {
                 gitFile.withInputStream { gitProps.load(it) }
             }
@@ -141,9 +139,9 @@ tasks.register('repackageWar', Zip) {
                     "commitTime: ${gitProps.getProperty('git.commit.time', '')}",
                     "buildTime: ${gitProps.getProperty('git.build.time', '')}",
                     "Ignore-Scanning-Packages: com,org,net",
-                    "",
+                    ""
             ].join('\n')
-            mf
+            return mf
         })
     }
 }

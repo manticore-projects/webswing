@@ -430,38 +430,40 @@ $root.appFrameProtoOut = (function() {
         AppFrameMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AppFrameMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
                 throw Error("maximum nesting depth exceeded");
             var message = new $root.appFrameProtoOut.AppFrameMsgOutProto();
             if (object.startApplication != null) {
-                if (typeof object.startApplication !== "object")
+                if (!$util.isObject(object.startApplication))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.startApplication: object expected");
                 message.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.fromObject(object.startApplication, long + 1);
             }
             if (object.linkAction != null) {
-                if (typeof object.linkAction !== "object")
+                if (!$util.isObject(object.linkAction))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.linkAction: object expected");
                 message.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.fromObject(object.linkAction, long + 1);
             }
             if (object.moveAction != null) {
-                if (typeof object.moveAction !== "object")
+                if (!$util.isObject(object.moveAction))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.moveAction: object expected");
                 message.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.fromObject(object.moveAction, long + 1);
             }
             if (object.copyEvent != null) {
-                if (typeof object.copyEvent !== "object")
+                if (!$util.isObject(object.copyEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.copyEvent: object expected");
                 message.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.fromObject(object.copyEvent, long + 1);
             }
             if (object.pasteRequest != null) {
-                if (typeof object.pasteRequest !== "object")
+                if (!$util.isObject(object.pasteRequest))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.pasteRequest: object expected");
                 message.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.fromObject(object.pasteRequest, long + 1);
             }
             if (object.fileDialogEvent != null) {
-                if (typeof object.fileDialogEvent !== "object")
+                if (!$util.isObject(object.fileDialogEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.fileDialogEvent: object expected");
                 message.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.fromObject(object.fileDialogEvent, long + 1);
             }
@@ -470,13 +472,13 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windows: array expected");
                 message.windows = [];
                 for (var i = 0; i < object.windows.length; ++i) {
-                    if (typeof object.windows[i] !== "object")
+                    if (!$util.isObject(object.windows[i]))
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windows: object expected");
                     message.windows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.windows[i], long + 1);
                 }
             }
             if (object.closedWindow != null) {
-                if (typeof object.closedWindow !== "object")
+                if (!$util.isObject(object.closedWindow))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.closedWindow: object expected");
                 message.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.closedWindow, long + 1);
             }
@@ -537,22 +539,22 @@ $root.appFrameProtoOut = (function() {
                 break;
             }
             if (object.jsRequest != null) {
-                if (typeof object.jsRequest !== "object")
+                if (!$util.isObject(object.jsRequest))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.jsRequest: object expected");
                 message.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.fromObject(object.jsRequest, long + 1);
             }
             if (object.javaResponse != null) {
-                if (typeof object.javaResponse !== "object")
+                if (!$util.isObject(object.javaResponse))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.javaResponse: object expected");
                 message.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.fromObject(object.javaResponse, long + 1);
             }
             if (object.pixelsRequest != null) {
-                if (typeof object.pixelsRequest !== "object")
+                if (!$util.isObject(object.pixelsRequest))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.pixelsRequest: object expected");
                 message.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.fromObject(object.pixelsRequest, long + 1);
             }
             if (object.playback != null) {
-                if (typeof object.playback !== "object")
+                if (!$util.isObject(object.playback))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.playback: object expected");
                 message.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.fromObject(object.playback, long + 1);
             }
@@ -563,7 +565,7 @@ $root.appFrameProtoOut = (function() {
             if (object.sendTimestamp != null)
                 message.sendTimestamp = String(object.sendTimestamp);
             if (object.focusEvent != null) {
-                if (typeof object.focusEvent !== "object")
+                if (!$util.isObject(object.focusEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.focusEvent: object expected");
                 message.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.fromObject(object.focusEvent, long + 1);
             }
@@ -572,7 +574,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.componentTree: array expected");
                 message.componentTree = [];
                 for (var i = 0; i < object.componentTree.length; ++i) {
-                    if (typeof object.componentTree[i] !== "object")
+                    if (!$util.isObject(object.componentTree[i]))
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.componentTree: object expected");
                     message.componentTree[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.componentTree[i], long + 1);
                 }
@@ -580,19 +582,19 @@ $root.appFrameProtoOut = (function() {
             if (object.directDraw != null)
                 message.directDraw = Boolean(object.directDraw);
             if (object.actionEvent != null) {
-                if (typeof object.actionEvent !== "object")
+                if (!$util.isObject(object.actionEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.actionEvent: object expected");
                 message.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.fromObject(object.actionEvent, long + 1);
             }
             if (object.compositingWM != null)
                 message.compositingWM = Boolean(object.compositingWM);
             if (object.audioEvent != null) {
-                if (typeof object.audioEvent !== "object")
+                if (!$util.isObject(object.audioEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.audioEvent: object expected");
                 message.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.fromObject(object.audioEvent, long + 1);
             }
             if (object.accessible != null) {
-                if (typeof object.accessible !== "object")
+                if (!$util.isObject(object.accessible))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.accessible: object expected");
                 message.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.fromObject(object.accessible, long + 1);
             }
@@ -601,13 +603,13 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windowSwitchList: array expected");
                 message.windowSwitchList = [];
                 for (var i = 0; i < object.windowSwitchList.length; ++i) {
-                    if (typeof object.windowSwitchList[i] !== "object")
+                    if (!$util.isObject(object.windowSwitchList[i]))
                         throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.windowSwitchList: object expected");
                     message.windowSwitchList[i] = $root.appFrameProtoOut.WindowSwitchMsgOutProto.fromObject(object.windowSwitchList[i], long + 1);
                 }
             }
             if (object.cursorChangeEvent != null) {
-                if (typeof object.cursorChangeEvent !== "object")
+                if (!$util.isObject(object.cursorChangeEvent))
                     throw TypeError(".appFrameProtoOut.AppFrameMsgOutProto.cursorChangeEvent: object expected");
                 message.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.fromObject(object.cursorChangeEvent, long + 1);
             }
@@ -623,9 +625,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        AppFrameMsgOutProto.toObject = function toObject(message, options) {
+        AppFrameMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults) {
                 object.windows = [];
@@ -656,65 +662,65 @@ $root.appFrameProtoOut = (function() {
                 object.accessible = null;
                 object.cursorChangeEvent = null;
             }
-            if (message.startApplication != null && message.hasOwnProperty("startApplication"))
-                object.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.toObject(message.startApplication, options);
-            if (message.linkAction != null && message.hasOwnProperty("linkAction"))
-                object.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.toObject(message.linkAction, options);
-            if (message.moveAction != null && message.hasOwnProperty("moveAction"))
-                object.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.toObject(message.moveAction, options);
-            if (message.copyEvent != null && message.hasOwnProperty("copyEvent"))
-                object.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.toObject(message.copyEvent, options);
-            if (message.pasteRequest != null && message.hasOwnProperty("pasteRequest"))
-                object.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.toObject(message.pasteRequest, options);
-            if (message.fileDialogEvent != null && message.hasOwnProperty("fileDialogEvent"))
-                object.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.toObject(message.fileDialogEvent, options);
+            if (message.startApplication != null && Object.hasOwnProperty.call(message, "startApplication"))
+                object.startApplication = $root.appFrameProtoOut.StartApplicationMsgOutProto.toObject(message.startApplication, options, q + 1);
+            if (message.linkAction != null && Object.hasOwnProperty.call(message, "linkAction"))
+                object.linkAction = $root.appFrameProtoOut.LinkActionMsgOutProto.toObject(message.linkAction, options, q + 1);
+            if (message.moveAction != null && Object.hasOwnProperty.call(message, "moveAction"))
+                object.moveAction = $root.appFrameProtoOut.WindowMoveActionMsgOutProto.toObject(message.moveAction, options, q + 1);
+            if (message.copyEvent != null && Object.hasOwnProperty.call(message, "copyEvent"))
+                object.copyEvent = $root.appFrameProtoOut.CopyEventMsgOutProto.toObject(message.copyEvent, options, q + 1);
+            if (message.pasteRequest != null && Object.hasOwnProperty.call(message, "pasteRequest"))
+                object.pasteRequest = $root.appFrameProtoOut.PasteRequestMsgOutProto.toObject(message.pasteRequest, options, q + 1);
+            if (message.fileDialogEvent != null && Object.hasOwnProperty.call(message, "fileDialogEvent"))
+                object.fileDialogEvent = $root.appFrameProtoOut.FileDialogEventMsgOutProto.toObject(message.fileDialogEvent, options, q + 1);
             if (message.windows && message.windows.length) {
                 object.windows = [];
                 for (var j = 0; j < message.windows.length; ++j)
-                    object.windows[j] = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.windows[j], options);
+                    object.windows[j] = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.windows[j], options, q + 1);
             }
-            if (message.closedWindow != null && message.hasOwnProperty("closedWindow"))
-                object.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.closedWindow, options);
-            if (message.event != null && message.hasOwnProperty("event"))
+            if (message.closedWindow != null && Object.hasOwnProperty.call(message, "closedWindow"))
+                object.closedWindow = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.closedWindow, options, q + 1);
+            if (message.event != null && Object.hasOwnProperty.call(message, "event"))
                 object.event = options.enums === String ? $root.appFrameProtoOut.SimpleEventMsgOutProto[message.event] === undefined ? message.event : $root.appFrameProtoOut.SimpleEventMsgOutProto[message.event] : message.event;
-            if (message.jsRequest != null && message.hasOwnProperty("jsRequest"))
-                object.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.toObject(message.jsRequest, options);
-            if (message.javaResponse != null && message.hasOwnProperty("javaResponse"))
-                object.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.toObject(message.javaResponse, options);
-            if (message.pixelsRequest != null && message.hasOwnProperty("pixelsRequest"))
-                object.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.toObject(message.pixelsRequest, options);
-            if (message.playback != null && message.hasOwnProperty("playback"))
-                object.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.toObject(message.playback, options);
-            if (message.instanceId != null && message.hasOwnProperty("instanceId"))
+            if (message.jsRequest != null && Object.hasOwnProperty.call(message, "jsRequest"))
+                object.jsRequest = $root.appFrameProtoOut.JsEvalRequestMsgOutProto.toObject(message.jsRequest, options, q + 1);
+            if (message.javaResponse != null && Object.hasOwnProperty.call(message, "javaResponse"))
+                object.javaResponse = $root.appFrameProtoOut.JsResultMsgOutProto.toObject(message.javaResponse, options, q + 1);
+            if (message.pixelsRequest != null && Object.hasOwnProperty.call(message, "pixelsRequest"))
+                object.pixelsRequest = $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto.toObject(message.pixelsRequest, options, q + 1);
+            if (message.playback != null && Object.hasOwnProperty.call(message, "playback"))
+                object.playback = $root.appFrameProtoOut.PlaybackInfoMsgOutProto.toObject(message.playback, options, q + 1);
+            if (message.instanceId != null && Object.hasOwnProperty.call(message, "instanceId"))
                 object.instanceId = message.instanceId;
-            if (message.startTimestamp != null && message.hasOwnProperty("startTimestamp"))
+            if (message.startTimestamp != null && Object.hasOwnProperty.call(message, "startTimestamp"))
                 object.startTimestamp = message.startTimestamp;
-            if (message.sendTimestamp != null && message.hasOwnProperty("sendTimestamp"))
+            if (message.sendTimestamp != null && Object.hasOwnProperty.call(message, "sendTimestamp"))
                 object.sendTimestamp = message.sendTimestamp;
-            if (message.focusEvent != null && message.hasOwnProperty("focusEvent"))
-                object.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.toObject(message.focusEvent, options);
+            if (message.focusEvent != null && Object.hasOwnProperty.call(message, "focusEvent"))
+                object.focusEvent = $root.appFrameProtoOut.FocusEventMsgOutProto.toObject(message.focusEvent, options, q + 1);
             if (message.componentTree && message.componentTree.length) {
                 object.componentTree = [];
                 for (var j = 0; j < message.componentTree.length; ++j)
-                    object.componentTree[j] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.toObject(message.componentTree[j], options);
+                    object.componentTree[j] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.toObject(message.componentTree[j], options, q + 1);
             }
-            if (message.directDraw != null && message.hasOwnProperty("directDraw"))
+            if (message.directDraw != null && Object.hasOwnProperty.call(message, "directDraw"))
                 object.directDraw = message.directDraw;
-            if (message.actionEvent != null && message.hasOwnProperty("actionEvent"))
-                object.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.toObject(message.actionEvent, options);
-            if (message.compositingWM != null && message.hasOwnProperty("compositingWM"))
+            if (message.actionEvent != null && Object.hasOwnProperty.call(message, "actionEvent"))
+                object.actionEvent = $root.appFrameProtoOut.ActionEventMsgOutProto.toObject(message.actionEvent, options, q + 1);
+            if (message.compositingWM != null && Object.hasOwnProperty.call(message, "compositingWM"))
                 object.compositingWM = message.compositingWM;
-            if (message.audioEvent != null && message.hasOwnProperty("audioEvent"))
-                object.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.toObject(message.audioEvent, options);
-            if (message.accessible != null && message.hasOwnProperty("accessible"))
-                object.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.toObject(message.accessible, options);
+            if (message.audioEvent != null && Object.hasOwnProperty.call(message, "audioEvent"))
+                object.audioEvent = $root.appFrameProtoOut.AudioEventMsgOutProto.toObject(message.audioEvent, options, q + 1);
+            if (message.accessible != null && Object.hasOwnProperty.call(message, "accessible"))
+                object.accessible = $root.appFrameProtoOut.AccessibilityMsgOutProto.toObject(message.accessible, options, q + 1);
             if (message.windowSwitchList && message.windowSwitchList.length) {
                 object.windowSwitchList = [];
                 for (var j = 0; j < message.windowSwitchList.length; ++j)
-                    object.windowSwitchList[j] = $root.appFrameProtoOut.WindowSwitchMsgOutProto.toObject(message.windowSwitchList[j], options);
+                    object.windowSwitchList[j] = $root.appFrameProtoOut.WindowSwitchMsgOutProto.toObject(message.windowSwitchList[j], options, q + 1);
             }
-            if (message.cursorChangeEvent != null && message.hasOwnProperty("cursorChangeEvent"))
-                object.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.toObject(message.cursorChangeEvent, options);
+            if (message.cursorChangeEvent != null && Object.hasOwnProperty.call(message, "cursorChangeEvent"))
+                object.cursorChangeEvent = $root.appFrameProtoOut.CursorChangeEventMsgOutProto.toObject(message.cursorChangeEvent, options, q + 1);
             return object;
         };
 
@@ -1208,6 +1214,8 @@ $root.appFrameProtoOut = (function() {
         AccessibilityMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AccessibilityMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.AccessibilityMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -1279,7 +1287,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.AccessibilityMsgOutProto.hierarchy: array expected");
                 message.hierarchy = [];
                 for (var i = 0; i < object.hierarchy.length; ++i) {
-                    if (typeof object.hierarchy[i] !== "object")
+                    if (!$util.isObject(object.hierarchy[i]))
                         throw TypeError(".appFrameProtoOut.AccessibilityMsgOutProto.hierarchy: object expected");
                     message.hierarchy[i] = $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.fromObject(object.hierarchy[i], long + 1);
                 }
@@ -1296,9 +1304,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        AccessibilityMsgOutProto.toObject = function toObject(message, options) {
+        AccessibilityMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults) {
                 object.states = [];
@@ -1333,69 +1345,69 @@ $root.appFrameProtoOut = (function() {
                 object.width = 0;
                 object.height = 0;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
-            if (message.role != null && message.hasOwnProperty("role"))
+            if (message.role != null && Object.hasOwnProperty.call(message, "role"))
                 object.role = message.role;
-            if (message.text != null && message.hasOwnProperty("text"))
+            if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                 object.text = message.text;
-            if (message.tooltip != null && message.hasOwnProperty("tooltip"))
+            if (message.tooltip != null && Object.hasOwnProperty.call(message, "tooltip"))
                 object.tooltip = message.tooltip;
-            if (message.value != null && message.hasOwnProperty("value"))
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                 object.value = message.value;
-            if (message.description != null && message.hasOwnProperty("description"))
+            if (message.description != null && Object.hasOwnProperty.call(message, "description"))
                 object.description = message.description;
-            if (message.columnheader != null && message.hasOwnProperty("columnheader"))
+            if (message.columnheader != null && Object.hasOwnProperty.call(message, "columnheader"))
                 object.columnheader = message.columnheader;
-            if (message.password != null && message.hasOwnProperty("password"))
+            if (message.password != null && Object.hasOwnProperty.call(message, "password"))
                 object.password = message.password;
-            if (message.toggle != null && message.hasOwnProperty("toggle"))
+            if (message.toggle != null && Object.hasOwnProperty.call(message, "toggle"))
                 object.toggle = message.toggle;
-            if (message.selstart != null && message.hasOwnProperty("selstart"))
+            if (message.selstart != null && Object.hasOwnProperty.call(message, "selstart"))
                 object.selstart = message.selstart;
-            if (message.selend != null && message.hasOwnProperty("selend"))
+            if (message.selend != null && Object.hasOwnProperty.call(message, "selend"))
                 object.selend = message.selend;
-            if (message.rowheight != null && message.hasOwnProperty("rowheight"))
+            if (message.rowheight != null && Object.hasOwnProperty.call(message, "rowheight"))
                 object.rowheight = message.rowheight;
-            if (message.rows != null && message.hasOwnProperty("rows"))
+            if (message.rows != null && Object.hasOwnProperty.call(message, "rows"))
                 object.rows = message.rows;
-            if (message.size != null && message.hasOwnProperty("size"))
+            if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                 object.size = message.size;
-            if (message.position != null && message.hasOwnProperty("position"))
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
                 object.position = message.position;
-            if (message.level != null && message.hasOwnProperty("level"))
+            if (message.level != null && Object.hasOwnProperty.call(message, "level"))
                 object.level = message.level;
-            if (message.colindex != null && message.hasOwnProperty("colindex"))
+            if (message.colindex != null && Object.hasOwnProperty.call(message, "colindex"))
                 object.colindex = message.colindex;
-            if (message.rowindex != null && message.hasOwnProperty("rowindex"))
+            if (message.rowindex != null && Object.hasOwnProperty.call(message, "rowindex"))
                 object.rowindex = message.rowindex;
-            if (message.colcount != null && message.hasOwnProperty("colcount"))
+            if (message.colcount != null && Object.hasOwnProperty.call(message, "colcount"))
                 object.colcount = message.colcount;
-            if (message.rowcount != null && message.hasOwnProperty("rowcount"))
+            if (message.rowcount != null && Object.hasOwnProperty.call(message, "rowcount"))
                 object.rowcount = message.rowcount;
             if (message.states && message.states.length) {
                 object.states = [];
                 for (var j = 0; j < message.states.length; ++j)
                     object.states[j] = message.states[j];
             }
-            if (message.min != null && message.hasOwnProperty("min"))
+            if (message.min != null && Object.hasOwnProperty.call(message, "min"))
                 object.min = message.min;
-            if (message.max != null && message.hasOwnProperty("max"))
+            if (message.max != null && Object.hasOwnProperty.call(message, "max"))
                 object.max = message.max;
-            if (message.val != null && message.hasOwnProperty("val"))
+            if (message.val != null && Object.hasOwnProperty.call(message, "val"))
                 object.val = message.val;
-            if (message.screenX != null && message.hasOwnProperty("screenX"))
+            if (message.screenX != null && Object.hasOwnProperty.call(message, "screenX"))
                 object.screenX = message.screenX;
-            if (message.screenY != null && message.hasOwnProperty("screenY"))
+            if (message.screenY != null && Object.hasOwnProperty.call(message, "screenY"))
                 object.screenY = message.screenY;
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 object.width = message.width;
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 object.height = message.height;
             if (message.hierarchy && message.hierarchy.length) {
                 object.hierarchy = [];
                 for (var j = 0; j < message.hierarchy.length; ++j)
-                    object.hierarchy[j] = $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.toObject(message.hierarchy[j], options);
+                    object.hierarchy[j] = $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto.toObject(message.hierarchy[j], options, q + 1);
             }
             return object;
         };
@@ -1572,6 +1584,8 @@ $root.appFrameProtoOut = (function() {
         AccessibilityHierarchyMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AccessibilityHierarchyMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.AccessibilityHierarchyMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -1599,9 +1613,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        AccessibilityHierarchyMsgOutProto.toObject = function toObject(message, options) {
+        AccessibilityHierarchyMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.id = "";
@@ -1610,15 +1628,15 @@ $root.appFrameProtoOut = (function() {
                 object.position = 0;
                 object.size = 0;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
-            if (message.role != null && message.hasOwnProperty("role"))
+            if (message.role != null && Object.hasOwnProperty.call(message, "role"))
                 object.role = message.role;
-            if (message.text != null && message.hasOwnProperty("text"))
+            if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                 object.text = message.text;
-            if (message.position != null && message.hasOwnProperty("position"))
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
                 object.position = message.position;
-            if (message.size != null && message.hasOwnProperty("size"))
+            if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                 object.size = message.size;
             return object;
         };
@@ -1833,7 +1851,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("type"))
+            if (!Object.hasOwnProperty.call(message, "type"))
                 throw $util.ProtocolError("missing required 'type'", { instance: message });
             return message;
         };
@@ -1849,6 +1867,8 @@ $root.appFrameProtoOut = (function() {
         FocusEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.FocusEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.FocusEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -1906,9 +1926,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        FocusEventMsgOutProto.toObject = function toObject(message, options) {
+        FocusEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.type = options.enums === String ? "focusLost" : 1;
@@ -1921,23 +1945,23 @@ $root.appFrameProtoOut = (function() {
                 object.caretH = 0;
                 object.editable = false;
             }
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 object.type = options.enums === String ? $root.appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.FocusEventMsgOutProto.FocusEventTypeProto[message.type] : message.type;
-            if (message.x != null && message.hasOwnProperty("x"))
+            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                 object.x = message.x;
-            if (message.y != null && message.hasOwnProperty("y"))
+            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                 object.y = message.y;
-            if (message.w != null && message.hasOwnProperty("w"))
+            if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                 object.w = message.w;
-            if (message.h != null && message.hasOwnProperty("h"))
+            if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                 object.h = message.h;
-            if (message.caretX != null && message.hasOwnProperty("caretX"))
+            if (message.caretX != null && Object.hasOwnProperty.call(message, "caretX"))
                 object.caretX = message.caretX;
-            if (message.caretY != null && message.hasOwnProperty("caretY"))
+            if (message.caretY != null && Object.hasOwnProperty.call(message, "caretY"))
                 object.caretY = message.caretY;
-            if (message.caretH != null && message.hasOwnProperty("caretH"))
+            if (message.caretH != null && Object.hasOwnProperty.call(message, "caretH"))
                 object.caretH = message.caretH;
-            if (message.editable != null && message.hasOwnProperty("editable"))
+            if (message.editable != null && Object.hasOwnProperty.call(message, "editable"))
                 object.editable = message.editable;
             return object;
         };
@@ -2067,10 +2091,6 @@ $root.appFrameProtoOut = (function() {
         StartApplicationMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.StartApplicationMsgOutProto)
                 return object;
-            if (long === undefined)
-                long = 0;
-            if (long > $util.recursionLimit)
-                throw Error("maximum nesting depth exceeded");
             return new $root.appFrameProtoOut.StartApplicationMsgOutProto();
         };
 
@@ -2206,9 +2226,9 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("action"))
+            if (!Object.hasOwnProperty.call(message, "action"))
                 throw $util.ProtocolError("missing required 'action'", { instance: message });
-            if (!message.hasOwnProperty("src"))
+            if (!Object.hasOwnProperty.call(message, "src"))
                 throw $util.ProtocolError("missing required 'src'", { instance: message });
             return message;
         };
@@ -2224,6 +2244,8 @@ $root.appFrameProtoOut = (function() {
         LinkActionMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.LinkActionMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.LinkActionMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -2267,17 +2289,21 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        LinkActionMsgOutProto.toObject = function toObject(message, options) {
+        LinkActionMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.action = options.enums === String ? "file" : 0;
                 object.src = "";
             }
-            if (message.action != null && message.hasOwnProperty("action"))
+            if (message.action != null && Object.hasOwnProperty.call(message, "action"))
                 object.action = options.enums === String ? $root.appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto[message.action] === undefined ? message.action : $root.appFrameProtoOut.LinkActionMsgOutProto.LinkActionTypeProto[message.action] : message.action;
-            if (message.src != null && message.hasOwnProperty("src"))
+            if (message.src != null && Object.hasOwnProperty.call(message, "src"))
                 object.src = message.src;
             return object;
         };
@@ -2485,6 +2511,8 @@ $root.appFrameProtoOut = (function() {
         WindowMoveActionMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowMoveActionMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.WindowMoveActionMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -2514,9 +2542,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        WindowMoveActionMsgOutProto.toObject = function toObject(message, options) {
+        WindowMoveActionMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.sx = 0;
@@ -2526,17 +2558,17 @@ $root.appFrameProtoOut = (function() {
                 object.width = 0;
                 object.height = 0;
             }
-            if (message.sx != null && message.hasOwnProperty("sx"))
+            if (message.sx != null && Object.hasOwnProperty.call(message, "sx"))
                 object.sx = message.sx;
-            if (message.sy != null && message.hasOwnProperty("sy"))
+            if (message.sy != null && Object.hasOwnProperty.call(message, "sy"))
                 object.sy = message.sy;
-            if (message.dx != null && message.hasOwnProperty("dx"))
+            if (message.dx != null && Object.hasOwnProperty.call(message, "dx"))
                 object.dx = message.dx;
-            if (message.dy != null && message.hasOwnProperty("dy"))
+            if (message.dy != null && Object.hasOwnProperty.call(message, "dy"))
                 object.dy = message.dy;
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 object.width = message.width;
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 object.height = message.height;
             return object;
         };
@@ -2716,6 +2748,8 @@ $root.appFrameProtoOut = (function() {
         CopyEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.CopyEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.CopyEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -2751,9 +2785,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        CopyEventMsgOutProto.toObject = function toObject(message, options) {
+        CopyEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults)
                 object.files = [];
@@ -2769,18 +2807,18 @@ $root.appFrameProtoOut = (function() {
                 }
                 object.other = false;
             }
-            if (message.text != null && message.hasOwnProperty("text"))
+            if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                 object.text = message.text;
-            if (message.html != null && message.hasOwnProperty("html"))
+            if (message.html != null && Object.hasOwnProperty.call(message, "html"))
                 object.html = message.html;
-            if (message.img != null && message.hasOwnProperty("img"))
+            if (message.img != null && Object.hasOwnProperty.call(message, "img"))
                 object.img = options.bytes === String ? $util.base64.encode(message.img, 0, message.img.length) : options.bytes === Array ? Array.prototype.slice.call(message.img) : message.img;
             if (message.files && message.files.length) {
                 object.files = [];
                 for (var j = 0; j < message.files.length; ++j)
                     object.files[j] = message.files[j];
             }
-            if (message.other != null && message.hasOwnProperty("other"))
+            if (message.other != null && Object.hasOwnProperty.call(message, "other"))
                 object.other = message.other;
             return object;
         };
@@ -2918,6 +2956,8 @@ $root.appFrameProtoOut = (function() {
         PasteRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PasteRequestMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.PasteRequestMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -2939,17 +2979,21 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        PasteRequestMsgOutProto.toObject = function toObject(message, options) {
+        PasteRequestMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.title = "";
                 object.message = "";
             }
-            if (message.title != null && message.hasOwnProperty("title"))
+            if (message.title != null && Object.hasOwnProperty.call(message, "title"))
                 object.title = message.title;
-            if (message.message != null && message.hasOwnProperty("message"))
+            if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                 object.message = message.message;
             return object;
         };
@@ -3151,7 +3195,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("eventType"))
+            if (!Object.hasOwnProperty.call(message, "eventType"))
                 throw $util.ProtocolError("missing required 'eventType'", { instance: message });
             return message;
         };
@@ -3167,6 +3211,8 @@ $root.appFrameProtoOut = (function() {
         FileDialogEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.FileDialogEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.FileDialogEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -3222,9 +3268,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        FileDialogEventMsgOutProto.toObject = function toObject(message, options) {
+        FileDialogEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.eventType = options.enums === String ? "Open" : 0;
@@ -3236,21 +3286,21 @@ $root.appFrameProtoOut = (function() {
                 object.selection = "";
                 object.customDialog = false;
             }
-            if (message.eventType != null && message.hasOwnProperty("eventType"))
+            if (message.eventType != null && Object.hasOwnProperty.call(message, "eventType"))
                 object.eventType = options.enums === String ? $root.appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoOut.FileDialogEventMsgOutProto.FileDialogEventTypeProto[message.eventType] : message.eventType;
-            if (message.allowDownload != null && message.hasOwnProperty("allowDownload"))
+            if (message.allowDownload != null && Object.hasOwnProperty.call(message, "allowDownload"))
                 object.allowDownload = message.allowDownload;
-            if (message.allowUpload != null && message.hasOwnProperty("allowUpload"))
+            if (message.allowUpload != null && Object.hasOwnProperty.call(message, "allowUpload"))
                 object.allowUpload = message.allowUpload;
-            if (message.allowDelete != null && message.hasOwnProperty("allowDelete"))
+            if (message.allowDelete != null && Object.hasOwnProperty.call(message, "allowDelete"))
                 object.allowDelete = message.allowDelete;
-            if (message.filter != null && message.hasOwnProperty("filter"))
+            if (message.filter != null && Object.hasOwnProperty.call(message, "filter"))
                 object.filter = message.filter;
-            if (message.isMultiSelection != null && message.hasOwnProperty("isMultiSelection"))
+            if (message.isMultiSelection != null && Object.hasOwnProperty.call(message, "isMultiSelection"))
                 object.isMultiSelection = message.isMultiSelection;
-            if (message.selection != null && message.hasOwnProperty("selection"))
+            if (message.selection != null && Object.hasOwnProperty.call(message, "selection"))
                 object.selection = message.selection;
-            if (message.customDialog != null && message.hasOwnProperty("customDialog"))
+            if (message.customDialog != null && Object.hasOwnProperty.call(message, "customDialog"))
                 object.customDialog = message.customDialog;
             return object;
         };
@@ -3405,7 +3455,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("id"))
+            if (!Object.hasOwnProperty.call(message, "id"))
                 throw $util.ProtocolError("missing required 'id'", { instance: message });
             return message;
         };
@@ -3421,6 +3471,8 @@ $root.appFrameProtoOut = (function() {
         WindowSwitchMsg.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowSwitchMsg)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.WindowSwitchMsg: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -3444,20 +3496,24 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        WindowSwitchMsg.toObject = function toObject(message, options) {
+        WindowSwitchMsg.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.id = "";
                 object.title = "";
                 object.modalBlocked = false;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
-            if (message.title != null && message.hasOwnProperty("title"))
+            if (message.title != null && Object.hasOwnProperty.call(message, "title"))
                 object.title = message.title;
-            if (message.modalBlocked != null && message.hasOwnProperty("modalBlocked"))
+            if (message.modalBlocked != null && Object.hasOwnProperty.call(message, "modalBlocked"))
                 object.modalBlocked = message.modalBlocked;
             return object;
         };
@@ -3782,7 +3838,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("id"))
+            if (!Object.hasOwnProperty.call(message, "id"))
                 throw $util.ProtocolError("missing required 'id'", { instance: message });
             return message;
         };
@@ -3798,6 +3854,8 @@ $root.appFrameProtoOut = (function() {
         WindowMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.WindowMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -3810,7 +3868,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.WindowMsgOutProto.content: array expected");
                 message.content = [];
                 for (var i = 0; i < object.content.length; ++i) {
-                    if (typeof object.content[i] !== "object")
+                    if (!$util.isObject(object.content[i]))
                         throw TypeError(".appFrameProtoOut.WindowMsgOutProto.content: object expected");
                     message.content[i] = $root.appFrameProtoOut.WindowPartialContentMsgOutProto.fromObject(object.content[i], long + 1);
                 }
@@ -3871,7 +3929,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.WindowMsgOutProto.internalWindows: array expected");
                 message.internalWindows = [];
                 for (var i = 0; i < object.internalWindows.length; ++i) {
-                    if (typeof object.internalWindows[i] !== "object")
+                    if (!$util.isObject(object.internalWindows[i]))
                         throw TypeError(".appFrameProtoOut.WindowMsgOutProto.internalWindows: object expected");
                     message.internalWindows[i] = $root.appFrameProtoOut.WindowMsgOutProto.fromObject(object.internalWindows[i], long + 1);
                 }
@@ -3960,9 +4018,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        WindowMsgOutProto.toObject = function toObject(message, options) {
+        WindowMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults) {
                 object.content = [];
@@ -3991,45 +4053,45 @@ $root.appFrameProtoOut = (function() {
                 object.dockState = options.enums === String ? "docked" : 1;
                 object.classType = options.enums === String ? "other" : 1;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
             if (message.content && message.content.length) {
                 object.content = [];
                 for (var j = 0; j < message.content.length; ++j)
-                    object.content[j] = $root.appFrameProtoOut.WindowPartialContentMsgOutProto.toObject(message.content[j], options);
+                    object.content[j] = $root.appFrameProtoOut.WindowPartialContentMsgOutProto.toObject(message.content[j], options, q + 1);
             }
-            if (message.directDraw != null && message.hasOwnProperty("directDraw"))
+            if (message.directDraw != null && Object.hasOwnProperty.call(message, "directDraw"))
                 object.directDraw = options.bytes === String ? $util.base64.encode(message.directDraw, 0, message.directDraw.length) : options.bytes === Array ? Array.prototype.slice.call(message.directDraw) : message.directDraw;
-            if (message.title != null && message.hasOwnProperty("title"))
+            if (message.title != null && Object.hasOwnProperty.call(message, "title"))
                 object.title = message.title;
-            if (message.posX != null && message.hasOwnProperty("posX"))
+            if (message.posX != null && Object.hasOwnProperty.call(message, "posX"))
                 object.posX = message.posX;
-            if (message.posY != null && message.hasOwnProperty("posY"))
+            if (message.posY != null && Object.hasOwnProperty.call(message, "posY"))
                 object.posY = message.posY;
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 object.width = message.width;
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 object.height = message.height;
-            if (message.name != null && message.hasOwnProperty("name"))
+            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                 object.name = message.name;
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 object.type = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.WindowMsgOutProto.WindowTypeProto[message.type] : message.type;
-            if (message.modalBlocked != null && message.hasOwnProperty("modalBlocked"))
+            if (message.modalBlocked != null && Object.hasOwnProperty.call(message, "modalBlocked"))
                 object.modalBlocked = message.modalBlocked;
-            if (message.ownerId != null && message.hasOwnProperty("ownerId"))
+            if (message.ownerId != null && Object.hasOwnProperty.call(message, "ownerId"))
                 object.ownerId = message.ownerId;
-            if (message.state != null && message.hasOwnProperty("state"))
+            if (message.state != null && Object.hasOwnProperty.call(message, "state"))
                 object.state = message.state;
             if (message.internalWindows && message.internalWindows.length) {
                 object.internalWindows = [];
                 for (var j = 0; j < message.internalWindows.length; ++j)
-                    object.internalWindows[j] = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.internalWindows[j], options);
+                    object.internalWindows[j] = $root.appFrameProtoOut.WindowMsgOutProto.toObject(message.internalWindows[j], options, q + 1);
             }
-            if (message.dockMode != null && message.hasOwnProperty("dockMode"))
+            if (message.dockMode != null && Object.hasOwnProperty.call(message, "dockMode"))
                 object.dockMode = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockModeProto[message.dockMode] === undefined ? message.dockMode : $root.appFrameProtoOut.WindowMsgOutProto.DockModeProto[message.dockMode] : message.dockMode;
-            if (message.dockState != null && message.hasOwnProperty("dockState"))
+            if (message.dockState != null && Object.hasOwnProperty.call(message, "dockState"))
                 object.dockState = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.DockStateProto[message.dockState] === undefined ? message.dockState : $root.appFrameProtoOut.WindowMsgOutProto.DockStateProto[message.dockState] : message.dockState;
-            if (message.classType != null && message.hasOwnProperty("classType"))
+            if (message.classType != null && Object.hasOwnProperty.call(message, "classType"))
                 object.classType = options.enums === String ? $root.appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto[message.classType] === undefined ? message.classType : $root.appFrameProtoOut.WindowMsgOutProto.WindowClassTypeProto[message.classType] : message.classType;
             return object;
         };
@@ -4240,7 +4302,7 @@ $root.appFrameProtoOut = (function() {
                     break;
                 }
             }
-            if (!message.hasOwnProperty("id"))
+            if (!Object.hasOwnProperty.call(message, "id"))
                 throw $util.ProtocolError("missing required 'id'", { instance: message });
             return message;
         };
@@ -4256,6 +4318,8 @@ $root.appFrameProtoOut = (function() {
         WindowSwitchMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowSwitchMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.WindowSwitchMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -4279,20 +4343,24 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        WindowSwitchMsgOutProto.toObject = function toObject(message, options) {
+        WindowSwitchMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.id = "";
                 object.title = "";
                 object.modalBlocked = false;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
-            if (message.title != null && message.hasOwnProperty("title"))
+            if (message.title != null && Object.hasOwnProperty.call(message, "title"))
                 object.title = message.title;
-            if (message.modalBlocked != null && message.hasOwnProperty("modalBlocked"))
+            if (message.modalBlocked != null && Object.hasOwnProperty.call(message, "modalBlocked"))
                 object.modalBlocked = message.modalBlocked;
             return object;
         };
@@ -4469,6 +4537,8 @@ $root.appFrameProtoOut = (function() {
         WindowPartialContentMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.WindowPartialContentMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.WindowPartialContentMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -4499,9 +4569,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        WindowPartialContentMsgOutProto.toObject = function toObject(message, options) {
+        WindowPartialContentMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.positionX = 0;
@@ -4516,15 +4590,15 @@ $root.appFrameProtoOut = (function() {
                         object.base64Content = $util.newBuffer(object.base64Content);
                 }
             }
-            if (message.positionX != null && message.hasOwnProperty("positionX"))
+            if (message.positionX != null && Object.hasOwnProperty.call(message, "positionX"))
                 object.positionX = message.positionX;
-            if (message.positionY != null && message.hasOwnProperty("positionY"))
+            if (message.positionY != null && Object.hasOwnProperty.call(message, "positionY"))
                 object.positionY = message.positionY;
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 object.width = message.width;
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 object.height = message.height;
-            if (message.base64Content != null && message.hasOwnProperty("base64Content"))
+            if (message.base64Content != null && Object.hasOwnProperty.call(message, "base64Content"))
                 object.base64Content = options.bytes === String ? $util.base64.encode(message.base64Content, 0, message.base64Content.length) : options.bytes === Array ? Array.prototype.slice.call(message.base64Content) : message.base64Content;
             return object;
         };
@@ -4754,6 +4828,8 @@ $root.appFrameProtoOut = (function() {
         JsEvalRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsEvalRequestMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.JsEvalRequestMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -4806,7 +4882,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.JsEvalRequestMsgOutProto.params: array expected");
                 message.params = [];
                 for (var i = 0; i < object.params.length; ++i) {
-                    if (typeof object.params[i] !== "object")
+                    if (!$util.isObject(object.params[i]))
                         throw TypeError(".appFrameProtoOut.JsEvalRequestMsgOutProto.params: object expected");
                     message.params[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.params[i], long + 1);
                 }
@@ -4830,9 +4906,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        JsEvalRequestMsgOutProto.toObject = function toObject(message, options) {
+        JsEvalRequestMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults) {
                 object.params = [];
@@ -4844,18 +4924,18 @@ $root.appFrameProtoOut = (function() {
                 object.type = options.enums === String ? "eval" : 0;
                 object.evalString = "";
             }
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 object.correlationId = message.correlationId;
-            if (message.thisObjectId != null && message.hasOwnProperty("thisObjectId"))
+            if (message.thisObjectId != null && Object.hasOwnProperty.call(message, "thisObjectId"))
                 object.thisObjectId = message.thisObjectId;
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 object.type = options.enums === String ? $root.appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto[message.type] === undefined ? message.type : $root.appFrameProtoOut.JsEvalRequestMsgOutProto.JsEvalRequestTypeProto[message.type] : message.type;
-            if (message.evalString != null && message.hasOwnProperty("evalString"))
+            if (message.evalString != null && Object.hasOwnProperty.call(message, "evalString"))
                 object.evalString = message.evalString;
             if (message.params && message.params.length) {
                 object.params = [];
                 for (var j = 0; j < message.params.length; ++j)
-                    object.params[j] = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.params[j], options);
+                    object.params[j] = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.params[j], options, q + 1);
             }
             if (message.garbageIds && message.garbageIds.length) {
                 object.garbageIds = [];
@@ -5051,6 +5131,8 @@ $root.appFrameProtoOut = (function() {
         JsParamMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsParamMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.JsParamMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -5059,12 +5141,12 @@ $root.appFrameProtoOut = (function() {
             if (object.primitive != null)
                 message.primitive = String(object.primitive);
             if (object.jsObject != null) {
-                if (typeof object.jsObject !== "object")
+                if (!$util.isObject(object.jsObject))
                     throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.jsObject: object expected");
                 message.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.fromObject(object.jsObject, long + 1);
             }
             if (object.javaObject != null) {
-                if (typeof object.javaObject !== "object")
+                if (!$util.isObject(object.javaObject))
                     throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.javaObject: object expected");
                 message.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.fromObject(object.javaObject, long + 1);
             }
@@ -5073,7 +5155,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.array: array expected");
                 message.array = [];
                 for (var i = 0; i < object.array.length; ++i) {
-                    if (typeof object.array[i] !== "object")
+                    if (!$util.isObject(object.array[i]))
                         throw TypeError(".appFrameProtoOut.JsParamMsgOutProto.array: object expected");
                     message.array[i] = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.array[i], long + 1);
                 }
@@ -5090,9 +5172,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        JsParamMsgOutProto.toObject = function toObject(message, options) {
+        JsParamMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults)
                 object.array = [];
@@ -5101,16 +5187,16 @@ $root.appFrameProtoOut = (function() {
                 object.jsObject = null;
                 object.javaObject = null;
             }
-            if (message.primitive != null && message.hasOwnProperty("primitive"))
+            if (message.primitive != null && Object.hasOwnProperty.call(message, "primitive"))
                 object.primitive = message.primitive;
-            if (message.jsObject != null && message.hasOwnProperty("jsObject"))
-                object.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.toObject(message.jsObject, options);
-            if (message.javaObject != null && message.hasOwnProperty("javaObject"))
-                object.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.toObject(message.javaObject, options);
+            if (message.jsObject != null && Object.hasOwnProperty.call(message, "jsObject"))
+                object.jsObject = $root.appFrameProtoOut.JSObjectMsgOutProto.toObject(message.jsObject, options, q + 1);
+            if (message.javaObject != null && Object.hasOwnProperty.call(message, "javaObject"))
+                object.javaObject = $root.appFrameProtoOut.JavaObjectRefMsgOutProto.toObject(message.javaObject, options, q + 1);
             if (message.array && message.array.length) {
                 object.array = [];
                 for (var j = 0; j < message.array.length; ++j)
-                    object.array[j] = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.array[j], options);
+                    object.array[j] = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.array[j], options, q + 1);
             }
             return object;
         };
@@ -5235,6 +5321,8 @@ $root.appFrameProtoOut = (function() {
         JSObjectMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JSObjectMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.JSObjectMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -5254,13 +5342,17 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        JSObjectMsgOutProto.toObject = function toObject(message, options) {
+        JSObjectMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults)
                 object.id = "";
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
             return object;
         };
@@ -5401,6 +5493,8 @@ $root.appFrameProtoOut = (function() {
         JavaObjectRefMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JavaObjectRefMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.JavaObjectRefMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -5427,15 +5521,19 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        JavaObjectRefMsgOutProto.toObject = function toObject(message, options) {
+        JavaObjectRefMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults)
                 object.methods = [];
             if (options.defaults)
                 object.id = "";
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
             if (message.methods && message.methods.length) {
                 object.methods = [];
@@ -5591,6 +5689,8 @@ $root.appFrameProtoOut = (function() {
         JsResultMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.JsResultMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.JsResultMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -5601,7 +5701,7 @@ $root.appFrameProtoOut = (function() {
             if (object.error != null)
                 message.error = String(object.error);
             if (object.value != null) {
-                if (typeof object.value !== "object")
+                if (!$util.isObject(object.value))
                     throw TypeError(".appFrameProtoOut.JsResultMsgOutProto.value: object expected");
                 message.value = $root.appFrameProtoOut.JsParamMsgOutProto.fromObject(object.value, long + 1);
             }
@@ -5617,21 +5717,25 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        JsResultMsgOutProto.toObject = function toObject(message, options) {
+        JsResultMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.correlationId = "";
                 object.error = "";
                 object.value = null;
             }
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 object.correlationId = message.correlationId;
-            if (message.error != null && message.hasOwnProperty("error"))
+            if (message.error != null && Object.hasOwnProperty.call(message, "error"))
                 object.error = message.error;
-            if (message.value != null && message.hasOwnProperty("value"))
-                object.value = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.value, options);
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
+                object.value = $root.appFrameProtoOut.JsParamMsgOutProto.toObject(message.value, options, q + 1);
             return object;
         };
 
@@ -5768,6 +5872,8 @@ $root.appFrameProtoOut = (function() {
         PlaybackInfoMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PlaybackInfoMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.PlaybackInfoMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -5789,17 +5895,21 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        PlaybackInfoMsgOutProto.toObject = function toObject(message, options) {
+        PlaybackInfoMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.current = 0;
                 object.total = 0;
             }
-            if (message.current != null && message.hasOwnProperty("current"))
+            if (message.current != null && Object.hasOwnProperty.call(message, "current"))
                 object.current = message.current;
-            if (message.total != null && message.hasOwnProperty("total"))
+            if (message.total != null && Object.hasOwnProperty.call(message, "total"))
                 object.total = message.total;
             return object;
         };
@@ -5976,6 +6086,8 @@ $root.appFrameProtoOut = (function() {
         PixelsAreaRequestMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.PixelsAreaRequestMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.PixelsAreaRequestMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -6003,9 +6115,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        PixelsAreaRequestMsgOutProto.toObject = function toObject(message, options) {
+        PixelsAreaRequestMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.correlationId = "";
@@ -6014,15 +6130,15 @@ $root.appFrameProtoOut = (function() {
                 object.w = 0;
                 object.h = 0;
             }
-            if (message.correlationId != null && message.hasOwnProperty("correlationId"))
+            if (message.correlationId != null && Object.hasOwnProperty.call(message, "correlationId"))
                 object.correlationId = message.correlationId;
-            if (message.x != null && message.hasOwnProperty("x"))
+            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                 object.x = message.x;
-            if (message.y != null && message.hasOwnProperty("y"))
+            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                 object.y = message.y;
-            if (message.w != null && message.hasOwnProperty("w"))
+            if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                 object.w = message.w;
-            if (message.h != null && message.hasOwnProperty("h"))
+            if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                 object.h = message.h;
             return object;
         };
@@ -6293,6 +6409,8 @@ $root.appFrameProtoOut = (function() {
         ComponentTreeMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.ComponentTreeMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.ComponentTreeMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -6321,7 +6439,7 @@ $root.appFrameProtoOut = (function() {
                     throw TypeError(".appFrameProtoOut.ComponentTreeMsgOutProto.components: array expected");
                 message.components = [];
                 for (var i = 0; i < object.components.length; ++i) {
-                    if (typeof object.components[i] !== "object")
+                    if (!$util.isObject(object.components[i]))
                         throw TypeError(".appFrameProtoOut.ComponentTreeMsgOutProto.components: object expected");
                     message.components[i] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.fromObject(object.components[i], long + 1);
                 }
@@ -6342,9 +6460,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        ComponentTreeMsgOutProto.toObject = function toObject(message, options) {
+        ComponentTreeMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults)
                 object.components = [];
@@ -6361,32 +6483,32 @@ $root.appFrameProtoOut = (function() {
                 object.hidden = false;
                 object.selected = false;
             }
-            if (message.componentType != null && message.hasOwnProperty("componentType"))
+            if (message.componentType != null && Object.hasOwnProperty.call(message, "componentType"))
                 object.componentType = message.componentType;
-            if (message.name != null && message.hasOwnProperty("name"))
+            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                 object.name = message.name;
-            if (message.value != null && message.hasOwnProperty("value"))
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                 object.value = message.value;
-            if (message.screenX != null && message.hasOwnProperty("screenX"))
+            if (message.screenX != null && Object.hasOwnProperty.call(message, "screenX"))
                 object.screenX = message.screenX;
-            if (message.screenY != null && message.hasOwnProperty("screenY"))
+            if (message.screenY != null && Object.hasOwnProperty.call(message, "screenY"))
                 object.screenY = message.screenY;
-            if (message.width != null && message.hasOwnProperty("width"))
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                 object.width = message.width;
-            if (message.height != null && message.hasOwnProperty("height"))
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 object.height = message.height;
-            if (message.enabled != null && message.hasOwnProperty("enabled"))
+            if (message.enabled != null && Object.hasOwnProperty.call(message, "enabled"))
                 object.enabled = message.enabled;
-            if (message.visible != null && message.hasOwnProperty("visible"))
+            if (message.visible != null && Object.hasOwnProperty.call(message, "visible"))
                 object.visible = message.visible;
             if (message.components && message.components.length) {
                 object.components = [];
                 for (var j = 0; j < message.components.length; ++j)
-                    object.components[j] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.toObject(message.components[j], options);
+                    object.components[j] = $root.appFrameProtoOut.ComponentTreeMsgOutProto.toObject(message.components[j], options, q + 1);
             }
-            if (message.hidden != null && message.hasOwnProperty("hidden"))
+            if (message.hidden != null && Object.hasOwnProperty.call(message, "hidden"))
                 object.hidden = message.hidden;
-            if (message.selected != null && message.hasOwnProperty("selected"))
+            if (message.selected != null && Object.hasOwnProperty.call(message, "selected"))
                 object.selected = message.selected;
             return object;
         };
@@ -6550,6 +6672,8 @@ $root.appFrameProtoOut = (function() {
         ActionEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.ActionEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.ActionEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -6578,9 +6702,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        ActionEventMsgOutProto.toObject = function toObject(message, options) {
+        ActionEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.actionName = "";
@@ -6594,13 +6722,13 @@ $root.appFrameProtoOut = (function() {
                 }
                 object.windowId = "";
             }
-            if (message.actionName != null && message.hasOwnProperty("actionName"))
+            if (message.actionName != null && Object.hasOwnProperty.call(message, "actionName"))
                 object.actionName = message.actionName;
-            if (message.data != null && message.hasOwnProperty("data"))
+            if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                 object.data = message.data;
-            if (message.binaryData != null && message.hasOwnProperty("binaryData"))
+            if (message.binaryData != null && Object.hasOwnProperty.call(message, "binaryData"))
                 object.binaryData = options.bytes === String ? $util.base64.encode(message.binaryData, 0, message.binaryData.length) : options.bytes === Array ? Array.prototype.slice.call(message.binaryData) : message.binaryData;
-            if (message.windowId != null && message.hasOwnProperty("windowId"))
+            if (message.windowId != null && Object.hasOwnProperty.call(message, "windowId"))
                 object.windowId = message.windowId;
             return object;
         };
@@ -6777,6 +6905,8 @@ $root.appFrameProtoOut = (function() {
         AudioEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.AudioEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.AudioEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -6829,9 +6959,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        AudioEventMsgOutProto.toObject = function toObject(message, options) {
+        AudioEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.id = "";
@@ -6846,15 +6980,15 @@ $root.appFrameProtoOut = (function() {
                 object.time = 0;
                 object.loop = 0;
             }
-            if (message.id != null && message.hasOwnProperty("id"))
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                 object.id = message.id;
-            if (message.eventType != null && message.hasOwnProperty("eventType"))
+            if (message.eventType != null && Object.hasOwnProperty.call(message, "eventType"))
                 object.eventType = options.enums === String ? $root.appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto[message.eventType] === undefined ? message.eventType : $root.appFrameProtoOut.AudioEventMsgOutProto.AudioEventTypeProto[message.eventType] : message.eventType;
-            if (message.data != null && message.hasOwnProperty("data"))
+            if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                 object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data;
-            if (message.time != null && message.hasOwnProperty("time"))
+            if (message.time != null && Object.hasOwnProperty.call(message, "time"))
                 object.time = options.json && !isFinite(message.time) ? String(message.time) : message.time;
-            if (message.loop != null && message.hasOwnProperty("loop"))
+            if (message.loop != null && Object.hasOwnProperty.call(message, "loop"))
                 object.loop = message.loop;
             return object;
         };
@@ -7062,6 +7196,8 @@ $root.appFrameProtoOut = (function() {
         CursorChangeEventMsgOutProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.appFrameProtoOut.CursorChangeEventMsgOutProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".appFrameProtoOut.CursorChangeEventMsgOutProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -7094,9 +7230,13 @@ $root.appFrameProtoOut = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        CursorChangeEventMsgOutProto.toObject = function toObject(message, options) {
+        CursorChangeEventMsgOutProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.cursor = "";
@@ -7112,17 +7252,17 @@ $root.appFrameProtoOut = (function() {
                 object.y = 0;
                 object.winId = "";
             }
-            if (message.cursor != null && message.hasOwnProperty("cursor"))
+            if (message.cursor != null && Object.hasOwnProperty.call(message, "cursor"))
                 object.cursor = message.cursor;
-            if (message.b64img != null && message.hasOwnProperty("b64img"))
+            if (message.b64img != null && Object.hasOwnProperty.call(message, "b64img"))
                 object.b64img = options.bytes === String ? $util.base64.encode(message.b64img, 0, message.b64img.length) : options.bytes === Array ? Array.prototype.slice.call(message.b64img) : message.b64img;
-            if (message.curFile != null && message.hasOwnProperty("curFile"))
+            if (message.curFile != null && Object.hasOwnProperty.call(message, "curFile"))
                 object.curFile = message.curFile;
-            if (message.x != null && message.hasOwnProperty("x"))
+            if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                 object.x = message.x;
-            if (message.y != null && message.hasOwnProperty("y"))
+            if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                 object.y = message.y;
-            if (message.winId != null && message.hasOwnProperty("winId"))
+            if (message.winId != null && Object.hasOwnProperty.call(message, "winId"))
                 object.winId = message.winId;
             return object;
         };

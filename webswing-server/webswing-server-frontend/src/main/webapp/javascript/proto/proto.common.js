@@ -80,9 +80,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        ParamMsgInProto.encode = function encode(message, writer) {
+        ParamMsgInProto.encode = function encode(message, writer, q) {
             if (!writer)
                 writer = $Writer.create();
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
             if (message.value != null && Object.hasOwnProperty.call(message, "value"))
@@ -141,6 +145,8 @@ $root.commonProto = (function() {
         ParamMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.ParamMsgInProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".commonProto.ParamMsgInProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -162,17 +168,21 @@ $root.commonProto = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        ParamMsgInProto.toObject = function toObject(message, options) {
+        ParamMsgInProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.name = "";
                 object.value = "";
             }
-            if (message.name != null && message.hasOwnProperty("name"))
+            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                 object.name = message.name;
-            if (message.value != null && message.hasOwnProperty("value"))
+            if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                 object.value = message.value;
             return object;
         };
@@ -295,9 +305,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SimpleEventMsgInProto.encode = function encode(message, writer) {
+        SimpleEventMsgInProto.encode = function encode(message, writer, q) {
             if (!writer)
                 writer = $Writer.create();
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.type);
             return writer;
@@ -350,6 +364,8 @@ $root.commonProto = (function() {
         SimpleEventMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.SimpleEventMsgInProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".commonProto.SimpleEventMsgInProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -439,13 +455,17 @@ $root.commonProto = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        SimpleEventMsgInProto.toObject = function toObject(message, options) {
+        SimpleEventMsgInProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults)
                 object.type = options.enums === String ? "unload" : 0;
-            if (message.type != null && message.hasOwnProperty("type"))
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                 object.type = options.enums === String ? $root.commonProto.SimpleEventMsgInProto.SimpleEventTypeProto[message.type] === undefined ? message.type : $root.commonProto.SimpleEventMsgInProto.SimpleEventTypeProto[message.type] : message.type;
             return object;
         };
@@ -719,9 +739,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        ConnectionHandshakeMsgInProto.encode = function encode(message, writer) {
+        ConnectionHandshakeMsgInProto.encode = function encode(message, writer, q) {
             if (!writer)
                 writer = $Writer.create();
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             if (message.instanceId != null && Object.hasOwnProperty.call(message, "instanceId"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.instanceId);
             if (message.viewId != null && Object.hasOwnProperty.call(message, "viewId"))
@@ -742,7 +766,7 @@ $root.commonProto = (function() {
                 writer.uint32(/* id 9, wireType 2 =*/74).string(message.documentBase);
             if (message.params != null && message.params.length)
                 for (var i = 0; i < message.params.length; ++i)
-                    $root.commonProto.ParamMsgInProto.encode(message.params[i], writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                    $root.commonProto.ParamMsgInProto.encode(message.params[i], writer.uint32(/* id 10, wireType 2 =*/82).fork(), q + 1).ldelim();
             if (message.locale != null && Object.hasOwnProperty.call(message, "locale"))
                 writer.uint32(/* id 11, wireType 2 =*/90).string(message.locale);
             if (message.url != null && Object.hasOwnProperty.call(message, "url"))
@@ -873,6 +897,8 @@ $root.commonProto = (function() {
         ConnectionHandshakeMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.ConnectionHandshakeMsgInProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".commonProto.ConnectionHandshakeMsgInProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -901,7 +927,7 @@ $root.commonProto = (function() {
                     throw TypeError(".commonProto.ConnectionHandshakeMsgInProto.params: array expected");
                 message.params = [];
                 for (var i = 0; i < object.params.length; ++i) {
-                    if (typeof object.params[i] !== "object")
+                    if (!$util.isObject(object.params[i]))
                         throw TypeError(".commonProto.ConnectionHandshakeMsgInProto.params: object expected");
                     message.params[i] = $root.commonProto.ParamMsgInProto.fromObject(object.params[i], long + 1);
                 }
@@ -932,9 +958,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        ConnectionHandshakeMsgInProto.toObject = function toObject(message, options) {
+        ConnectionHandshakeMsgInProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.arrays || options.defaults)
                 object.params = [];
@@ -956,42 +986,42 @@ $root.commonProto = (function() {
                 object.accessiblityEnabled = false;
                 object.tabId = "";
             }
-            if (message.instanceId != null && message.hasOwnProperty("instanceId"))
+            if (message.instanceId != null && Object.hasOwnProperty.call(message, "instanceId"))
                 object.instanceId = message.instanceId;
-            if (message.viewId != null && message.hasOwnProperty("viewId"))
+            if (message.viewId != null && Object.hasOwnProperty.call(message, "viewId"))
                 object.viewId = message.viewId;
-            if (message.browserId != null && message.hasOwnProperty("browserId"))
+            if (message.browserId != null && Object.hasOwnProperty.call(message, "browserId"))
                 object.browserId = message.browserId;
-            if (message.desktopWidth != null && message.hasOwnProperty("desktopWidth"))
+            if (message.desktopWidth != null && Object.hasOwnProperty.call(message, "desktopWidth"))
                 object.desktopWidth = message.desktopWidth;
-            if (message.desktopHeight != null && message.hasOwnProperty("desktopHeight"))
+            if (message.desktopHeight != null && Object.hasOwnProperty.call(message, "desktopHeight"))
                 object.desktopHeight = message.desktopHeight;
-            if (message.applicationName != null && message.hasOwnProperty("applicationName"))
+            if (message.applicationName != null && Object.hasOwnProperty.call(message, "applicationName"))
                 object.applicationName = message.applicationName;
-            if (message.mirrored != null && message.hasOwnProperty("mirrored"))
+            if (message.mirrored != null && Object.hasOwnProperty.call(message, "mirrored"))
                 object.mirrored = message.mirrored;
-            if (message.directDrawSupported != null && message.hasOwnProperty("directDrawSupported"))
+            if (message.directDrawSupported != null && Object.hasOwnProperty.call(message, "directDrawSupported"))
                 object.directDrawSupported = message.directDrawSupported;
-            if (message.documentBase != null && message.hasOwnProperty("documentBase"))
+            if (message.documentBase != null && Object.hasOwnProperty.call(message, "documentBase"))
                 object.documentBase = message.documentBase;
             if (message.params && message.params.length) {
                 object.params = [];
                 for (var j = 0; j < message.params.length; ++j)
-                    object.params[j] = $root.commonProto.ParamMsgInProto.toObject(message.params[j], options);
+                    object.params[j] = $root.commonProto.ParamMsgInProto.toObject(message.params[j], options, q + 1);
             }
-            if (message.locale != null && message.hasOwnProperty("locale"))
+            if (message.locale != null && Object.hasOwnProperty.call(message, "locale"))
                 object.locale = message.locale;
-            if (message.url != null && message.hasOwnProperty("url"))
+            if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                 object.url = message.url;
-            if (message.timeZone != null && message.hasOwnProperty("timeZone"))
+            if (message.timeZone != null && Object.hasOwnProperty.call(message, "timeZone"))
                 object.timeZone = message.timeZone;
-            if (message.dockingSupported != null && message.hasOwnProperty("dockingSupported"))
+            if (message.dockingSupported != null && Object.hasOwnProperty.call(message, "dockingSupported"))
                 object.dockingSupported = message.dockingSupported;
-            if (message.touchMode != null && message.hasOwnProperty("touchMode"))
+            if (message.touchMode != null && Object.hasOwnProperty.call(message, "touchMode"))
                 object.touchMode = message.touchMode;
-            if (message.accessiblityEnabled != null && message.hasOwnProperty("accessiblityEnabled"))
+            if (message.accessiblityEnabled != null && Object.hasOwnProperty.call(message, "accessiblityEnabled"))
                 object.accessiblityEnabled = message.accessiblityEnabled;
-            if (message.tabId != null && message.hasOwnProperty("tabId"))
+            if (message.tabId != null && Object.hasOwnProperty.call(message, "tabId"))
                 object.tabId = message.tabId;
             return object;
         };
@@ -1105,9 +1135,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        TimestampsMsgInProto.encode = function encode(message, writer) {
+        TimestampsMsgInProto.encode = function encode(message, writer, q) {
             if (!writer)
                 writer = $Writer.create();
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             if (message.startTimestamp != null && Object.hasOwnProperty.call(message, "startTimestamp"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.startTimestamp);
             if (message.sendTimestamp != null && Object.hasOwnProperty.call(message, "sendTimestamp"))
@@ -1178,6 +1212,8 @@ $root.commonProto = (function() {
         TimestampsMsgInProto.fromObject = function fromObject(object, long) {
             if (object instanceof $root.commonProto.TimestampsMsgInProto)
                 return object;
+            if (!$util.isObject(object))
+                throw TypeError(".commonProto.TimestampsMsgInProto: object expected");
             if (long === undefined)
                 long = 0;
             if (long > $util.recursionLimit)
@@ -1203,9 +1239,13 @@ $root.commonProto = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        TimestampsMsgInProto.toObject = function toObject(message, options) {
+        TimestampsMsgInProto.toObject = function toObject(message, options, q) {
             if (!options)
                 options = {};
+            if (q === undefined)
+                q = 0;
+            if (q > $util.recursionLimit)
+                throw Error("max depth exceeded");
             var object = {};
             if (options.defaults) {
                 object.startTimestamp = "";
@@ -1213,13 +1253,13 @@ $root.commonProto = (function() {
                 object.renderingTime = "";
                 object.ping = 0;
             }
-            if (message.startTimestamp != null && message.hasOwnProperty("startTimestamp"))
+            if (message.startTimestamp != null && Object.hasOwnProperty.call(message, "startTimestamp"))
                 object.startTimestamp = message.startTimestamp;
-            if (message.sendTimestamp != null && message.hasOwnProperty("sendTimestamp"))
+            if (message.sendTimestamp != null && Object.hasOwnProperty.call(message, "sendTimestamp"))
                 object.sendTimestamp = message.sendTimestamp;
-            if (message.renderingTime != null && message.hasOwnProperty("renderingTime"))
+            if (message.renderingTime != null && Object.hasOwnProperty.call(message, "renderingTime"))
                 object.renderingTime = message.renderingTime;
-            if (message.ping != null && message.hasOwnProperty("ping"))
+            if (message.ping != null && Object.hasOwnProperty.call(message, "ping"))
                 object.ping = message.ping;
             return object;
         };

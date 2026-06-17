@@ -1,6 +1,6 @@
 plugins {
     id 'distribution'
-    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
+    id 'com.gorylenko.gradle-git-properties' version 'latest.release'
 }
 
 // This module produces distribution archives, not a jar or resources.
@@ -30,8 +30,6 @@ tasks.register('copyVersionInfo', Copy) {
 }
 
 // ── Main distribution ────────────────────────────────────────────────
-// NOTE: Adapt the contents block below to match your src/main/assembly/dist.xml
-// descriptor. The structure below is a starting template.
 def warProject = project(':webswing-server:webswing-server-war')
 
 distributions {
@@ -44,12 +42,12 @@ distributions {
             }
 
             from(project(':webswing-server:webswing-server-security').layout.buildDirectory.dir('libs')) {
-                include 'webswing-server-security-${project.version}.jar'
+                include "webswing-server-security-${project.version}.jar"
                 into '/api'
             }
 
             from(project(':webswing-api').layout.buildDirectory.dir('libs')) {
-                include 'webswing-api-${project.version}.jar'
+                include "webswing-api-${project.version}.jar"
                 into '/api'
             }
 
@@ -63,21 +61,18 @@ distributions {
                 into '/'
             }
 
+            // FIX: Replaced 'mode' with 'fileMode' for Gradle 9 configuration compliance
             filesMatching('**/*.sh') {
-                mode = 0755
+                permissions {
+                    unix('rwxr-xr-x')
+                }
             }
-
-//            from(rootProject.layout.buildDirectory.dir('reports')) {
-//                include 'bom.json'
-//                rename 'bom.json', 'sbom.cdx.json'
-//                into '/'
-//            }
         }
     }
 }
 
 distZip {
-    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties' /*, ':cyclonedxBom'*/
+    dependsOn ':webswing-server:webswing-server-war:assemble', 'copyVersionInfo', 'generateGitProperties'
     destinationDirectory = layout.buildDirectory.dir('dist')
 }
 
@@ -113,6 +108,7 @@ if (project.hasProperty('docker')) {
                 from(layout.buildDirectory.dir('dist-meta')) {
                     include 'git.info'
                     include 'version.info'
+                    into '/' // FIX: Provided explicit destination path structure
                 }
             }
         }
@@ -122,6 +118,7 @@ if (project.hasProperty('docker')) {
         destinationDirectory = file("${projectDir}/dist/docker")
     }
 
+    // FIX: Configured directly at task-definition root instead of wrapping in invalid execution hooks
     tasks.register('dockerBuild', Exec) {
         dependsOn 'dockerDistZip', 'copyDockerfile'
         workingDir "${projectDir}/dist/docker"

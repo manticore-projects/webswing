@@ -171,9 +171,9 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("width"))
+                        if (!Object.hasOwnProperty.call(message, "width"))
                             throw $util.ProtocolError("missing required 'width'", { instance: message });
-                        if (!message.hasOwnProperty("height"))
+                        if (!Object.hasOwnProperty.call(message, "height"))
                             throw $util.ProtocolError("missing required 'height'", { instance: message });
                         return message;
                     };
@@ -189,6 +189,8 @@ $root.org = (function() {
                     WebImageProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.WebImageProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.WebImageProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -203,7 +205,7 @@ $root.org = (function() {
                                 throw TypeError(".org.webswing.directdraw.proto.WebImageProto.instructions: array expected");
                             message.instructions = [];
                             for (var i = 0; i < object.instructions.length; ++i) {
-                                if (typeof object.instructions[i] !== "object")
+                                if (!$util.isObject(object.instructions[i]))
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.instructions: object expected");
                                 message.instructions[i] = $root.org.webswing.directdraw.proto.DrawInstructionProto.fromObject(object.instructions[i], long + 1);
                             }
@@ -213,7 +215,7 @@ $root.org = (function() {
                                 throw TypeError(".org.webswing.directdraw.proto.WebImageProto.constants: array expected");
                             message.constants = [];
                             for (var i = 0; i < object.constants.length; ++i) {
-                                if (typeof object.constants[i] !== "object")
+                                if (!$util.isObject(object.constants[i]))
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.constants: object expected");
                                 message.constants[i] = $root.org.webswing.directdraw.proto.DrawConstantProto.fromObject(object.constants[i], long + 1);
                             }
@@ -223,7 +225,7 @@ $root.org = (function() {
                                 throw TypeError(".org.webswing.directdraw.proto.WebImageProto.fontFaces: array expected");
                             message.fontFaces = [];
                             for (var i = 0; i < object.fontFaces.length; ++i) {
-                                if (typeof object.fontFaces[i] !== "object")
+                                if (!$util.isObject(object.fontFaces[i]))
                                     throw TypeError(".org.webswing.directdraw.proto.WebImageProto.fontFaces: object expected");
                                 message.fontFaces[i] = $root.org.webswing.directdraw.proto.FontFaceProto.fromObject(object.fontFaces[i], long + 1);
                             }
@@ -240,9 +242,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    WebImageProto.toObject = function toObject(message, options) {
+                    WebImageProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults) {
                             object.instructions = [];
@@ -253,24 +259,24 @@ $root.org = (function() {
                             object.width = 0;
                             object.height = 0;
                         }
-                        if (message.width != null && message.hasOwnProperty("width"))
+                        if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                             object.width = message.width;
-                        if (message.height != null && message.hasOwnProperty("height"))
+                        if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                             object.height = message.height;
                         if (message.instructions && message.instructions.length) {
                             object.instructions = [];
                             for (var j = 0; j < message.instructions.length; ++j)
-                                object.instructions[j] = $root.org.webswing.directdraw.proto.DrawInstructionProto.toObject(message.instructions[j], options);
+                                object.instructions[j] = $root.org.webswing.directdraw.proto.DrawInstructionProto.toObject(message.instructions[j], options, q + 1);
                         }
                         if (message.constants && message.constants.length) {
                             object.constants = [];
                             for (var j = 0; j < message.constants.length; ++j)
-                                object.constants[j] = $root.org.webswing.directdraw.proto.DrawConstantProto.toObject(message.constants[j], options);
+                                object.constants[j] = $root.org.webswing.directdraw.proto.DrawConstantProto.toObject(message.constants[j], options, q + 1);
                         }
                         if (message.fontFaces && message.fontFaces.length) {
                             object.fontFaces = [];
                             for (var j = 0; j < message.fontFaces.length; ++j)
-                                object.fontFaces[j] = $root.org.webswing.directdraw.proto.FontFaceProto.toObject(message.fontFaces[j], options);
+                                object.fontFaces[j] = $root.org.webswing.directdraw.proto.FontFaceProto.toObject(message.fontFaces[j], options, q + 1);
                         }
                         return object;
                     };
@@ -403,7 +409,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("inst"))
+                        if (!Object.hasOwnProperty.call(message, "inst"))
                             throw $util.ProtocolError("missing required 'inst'", { instance: message });
                         return message;
                     };
@@ -419,6 +425,8 @@ $root.org = (function() {
                     DrawInstructionProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.DrawInstructionProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.DrawInstructionProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -516,9 +524,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    DrawInstructionProto.toObject = function toObject(message, options) {
+                    DrawInstructionProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults)
                             object.args = [];
@@ -532,14 +544,14 @@ $root.org = (function() {
                                     object.webImage = $util.newBuffer(object.webImage);
                             }
                         }
-                        if (message.inst != null && message.hasOwnProperty("inst"))
+                        if (message.inst != null && Object.hasOwnProperty.call(message, "inst"))
                             object.inst = options.enums === String ? $root.org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto[message.inst] === undefined ? message.inst : $root.org.webswing.directdraw.proto.DrawInstructionProto.InstructionProto[message.inst] : message.inst;
                         if (message.args && message.args.length) {
                             object.args = [];
                             for (var j = 0; j < message.args.length; ++j)
                                 object.args[j] = message.args[j];
                         }
-                        if (message.webImage != null && message.hasOwnProperty("webImage"))
+                        if (message.webImage != null && Object.hasOwnProperty.call(message, "webImage"))
                             object.webImage = options.bytes === String ? $util.base64.encode(message.webImage, 0, message.webImage.length) : options.bytes === Array ? Array.prototype.slice.call(message.webImage) : message.webImage;
                         return object;
                     };
@@ -912,7 +924,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("id"))
+                        if (!Object.hasOwnProperty.call(message, "id"))
                             throw $util.ProtocolError("missing required 'id'", { instance: message });
                         return message;
                     };
@@ -928,6 +940,8 @@ $root.org = (function() {
                     DrawConstantProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.DrawConstantProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -936,89 +950,89 @@ $root.org = (function() {
                         if (object.id != null)
                             message.id = object.id >>> 0;
                         if (object.color != null) {
-                            if (typeof object.color !== "object")
+                            if (!$util.isObject(object.color))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.color: object expected");
                             message.color = $root.org.webswing.directdraw.proto.ColorProto.fromObject(object.color, long + 1);
                         }
                         if (object.image != null) {
-                            if (typeof object.image !== "object")
+                            if (!$util.isObject(object.image))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.image: object expected");
                             message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image, long + 1);
                         }
                         if (object.transform != null) {
-                            if (typeof object.transform !== "object")
+                            if (!$util.isObject(object.transform))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.transform: object expected");
                             message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform, long + 1);
                         }
                         if (object.string != null)
                             message.string = String(object.string);
                         if (object.path != null) {
-                            if (typeof object.path !== "object")
+                            if (!$util.isObject(object.path))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.path: object expected");
                             message.path = $root.org.webswing.directdraw.proto.PathProto.fromObject(object.path, long + 1);
                         }
                         if (object.font != null) {
-                            if (typeof object.font !== "object")
+                            if (!$util.isObject(object.font))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.font: object expected");
                             message.font = $root.org.webswing.directdraw.proto.FontProto.fromObject(object.font, long + 1);
                         }
                         if (object.linearGrad != null) {
-                            if (typeof object.linearGrad !== "object")
+                            if (!$util.isObject(object.linearGrad))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.linearGrad: object expected");
                             message.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.fromObject(object.linearGrad, long + 1);
                         }
                         if (object.radialGrad != null) {
-                            if (typeof object.radialGrad !== "object")
+                            if (!$util.isObject(object.radialGrad))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.radialGrad: object expected");
                             message.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.fromObject(object.radialGrad, long + 1);
                         }
                         if (object.points != null) {
-                            if (typeof object.points !== "object")
+                            if (!$util.isObject(object.points))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.points: object expected");
                             message.points = $root.org.webswing.directdraw.proto.PointsProto.fromObject(object.points, long + 1);
                         }
                         if (object.rectangle != null) {
-                            if (typeof object.rectangle !== "object")
+                            if (!$util.isObject(object.rectangle))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.rectangle: object expected");
                             message.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.rectangle, long + 1);
                         }
                         if (object.ellipse != null) {
-                            if (typeof object.ellipse !== "object")
+                            if (!$util.isObject(object.ellipse))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.ellipse: object expected");
                             message.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.fromObject(object.ellipse, long + 1);
                         }
                         if (object.roundRectangle != null) {
-                            if (typeof object.roundRectangle !== "object")
+                            if (!$util.isObject(object.roundRectangle))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.roundRectangle: object expected");
                             message.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.fromObject(object.roundRectangle, long + 1);
                         }
                         if (object.arc != null) {
-                            if (typeof object.arc !== "object")
+                            if (!$util.isObject(object.arc))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.arc: object expected");
                             message.arc = $root.org.webswing.directdraw.proto.ArcProto.fromObject(object.arc, long + 1);
                         }
                         if (object.stroke != null) {
-                            if (typeof object.stroke !== "object")
+                            if (!$util.isObject(object.stroke))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.stroke: object expected");
                             message.stroke = $root.org.webswing.directdraw.proto.StrokeProto.fromObject(object.stroke, long + 1);
                         }
                         if (object.composite != null) {
-                            if (typeof object.composite !== "object")
+                            if (!$util.isObject(object.composite))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.composite: object expected");
                             message.composite = $root.org.webswing.directdraw.proto.CompositeProto.fromObject(object.composite, long + 1);
                         }
                         if (object.texture != null) {
-                            if (typeof object.texture !== "object")
+                            if (!$util.isObject(object.texture))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.texture: object expected");
                             message.texture = $root.org.webswing.directdraw.proto.TextureProto.fromObject(object.texture, long + 1);
                         }
                         if (object.glyph != null) {
-                            if (typeof object.glyph !== "object")
+                            if (!$util.isObject(object.glyph))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.glyph: object expected");
                             message.glyph = $root.org.webswing.directdraw.proto.GlyphProto.fromObject(object.glyph, long + 1);
                         }
                         if (object.combined != null) {
-                            if (typeof object.combined !== "object")
+                            if (!$util.isObject(object.combined))
                                 throw TypeError(".org.webswing.directdraw.proto.DrawConstantProto.combined: object expected");
                             message.combined = $root.org.webswing.directdraw.proto.CombinedProto.fromObject(object.combined, long + 1);
                         }
@@ -1034,9 +1048,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    DrawConstantProto.toObject = function toObject(message, options) {
+                    DrawConstantProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.id = 0;
@@ -1059,44 +1077,44 @@ $root.org = (function() {
                             object.glyph = null;
                             object.combined = null;
                         }
-                        if (message.id != null && message.hasOwnProperty("id"))
+                        if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                             object.id = message.id;
-                        if (message.color != null && message.hasOwnProperty("color"))
-                            object.color = $root.org.webswing.directdraw.proto.ColorProto.toObject(message.color, options);
-                        if (message.image != null && message.hasOwnProperty("image"))
-                            object.image = $root.org.webswing.directdraw.proto.ImageProto.toObject(message.image, options);
-                        if (message.transform != null && message.hasOwnProperty("transform"))
-                            object.transform = $root.org.webswing.directdraw.proto.TransformProto.toObject(message.transform, options);
-                        if (message.string != null && message.hasOwnProperty("string"))
+                        if (message.color != null && Object.hasOwnProperty.call(message, "color"))
+                            object.color = $root.org.webswing.directdraw.proto.ColorProto.toObject(message.color, options, q + 1);
+                        if (message.image != null && Object.hasOwnProperty.call(message, "image"))
+                            object.image = $root.org.webswing.directdraw.proto.ImageProto.toObject(message.image, options, q + 1);
+                        if (message.transform != null && Object.hasOwnProperty.call(message, "transform"))
+                            object.transform = $root.org.webswing.directdraw.proto.TransformProto.toObject(message.transform, options, q + 1);
+                        if (message.string != null && Object.hasOwnProperty.call(message, "string"))
                             object.string = message.string;
-                        if (message.path != null && message.hasOwnProperty("path"))
-                            object.path = $root.org.webswing.directdraw.proto.PathProto.toObject(message.path, options);
-                        if (message.font != null && message.hasOwnProperty("font"))
-                            object.font = $root.org.webswing.directdraw.proto.FontProto.toObject(message.font, options);
-                        if (message.linearGrad != null && message.hasOwnProperty("linearGrad"))
-                            object.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.toObject(message.linearGrad, options);
-                        if (message.radialGrad != null && message.hasOwnProperty("radialGrad"))
-                            object.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.toObject(message.radialGrad, options);
-                        if (message.points != null && message.hasOwnProperty("points"))
-                            object.points = $root.org.webswing.directdraw.proto.PointsProto.toObject(message.points, options);
-                        if (message.rectangle != null && message.hasOwnProperty("rectangle"))
-                            object.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.toObject(message.rectangle, options);
-                        if (message.ellipse != null && message.hasOwnProperty("ellipse"))
-                            object.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.toObject(message.ellipse, options);
-                        if (message.roundRectangle != null && message.hasOwnProperty("roundRectangle"))
-                            object.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.toObject(message.roundRectangle, options);
-                        if (message.arc != null && message.hasOwnProperty("arc"))
-                            object.arc = $root.org.webswing.directdraw.proto.ArcProto.toObject(message.arc, options);
-                        if (message.stroke != null && message.hasOwnProperty("stroke"))
-                            object.stroke = $root.org.webswing.directdraw.proto.StrokeProto.toObject(message.stroke, options);
-                        if (message.composite != null && message.hasOwnProperty("composite"))
-                            object.composite = $root.org.webswing.directdraw.proto.CompositeProto.toObject(message.composite, options);
-                        if (message.texture != null && message.hasOwnProperty("texture"))
-                            object.texture = $root.org.webswing.directdraw.proto.TextureProto.toObject(message.texture, options);
-                        if (message.glyph != null && message.hasOwnProperty("glyph"))
-                            object.glyph = $root.org.webswing.directdraw.proto.GlyphProto.toObject(message.glyph, options);
-                        if (message.combined != null && message.hasOwnProperty("combined"))
-                            object.combined = $root.org.webswing.directdraw.proto.CombinedProto.toObject(message.combined, options);
+                        if (message.path != null && Object.hasOwnProperty.call(message, "path"))
+                            object.path = $root.org.webswing.directdraw.proto.PathProto.toObject(message.path, options, q + 1);
+                        if (message.font != null && Object.hasOwnProperty.call(message, "font"))
+                            object.font = $root.org.webswing.directdraw.proto.FontProto.toObject(message.font, options, q + 1);
+                        if (message.linearGrad != null && Object.hasOwnProperty.call(message, "linearGrad"))
+                            object.linearGrad = $root.org.webswing.directdraw.proto.LinearGradientProto.toObject(message.linearGrad, options, q + 1);
+                        if (message.radialGrad != null && Object.hasOwnProperty.call(message, "radialGrad"))
+                            object.radialGrad = $root.org.webswing.directdraw.proto.RadialGradientProto.toObject(message.radialGrad, options, q + 1);
+                        if (message.points != null && Object.hasOwnProperty.call(message, "points"))
+                            object.points = $root.org.webswing.directdraw.proto.PointsProto.toObject(message.points, options, q + 1);
+                        if (message.rectangle != null && Object.hasOwnProperty.call(message, "rectangle"))
+                            object.rectangle = $root.org.webswing.directdraw.proto.RectangleProto.toObject(message.rectangle, options, q + 1);
+                        if (message.ellipse != null && Object.hasOwnProperty.call(message, "ellipse"))
+                            object.ellipse = $root.org.webswing.directdraw.proto.EllipseProto.toObject(message.ellipse, options, q + 1);
+                        if (message.roundRectangle != null && Object.hasOwnProperty.call(message, "roundRectangle"))
+                            object.roundRectangle = $root.org.webswing.directdraw.proto.RoundRectangleProto.toObject(message.roundRectangle, options, q + 1);
+                        if (message.arc != null && Object.hasOwnProperty.call(message, "arc"))
+                            object.arc = $root.org.webswing.directdraw.proto.ArcProto.toObject(message.arc, options, q + 1);
+                        if (message.stroke != null && Object.hasOwnProperty.call(message, "stroke"))
+                            object.stroke = $root.org.webswing.directdraw.proto.StrokeProto.toObject(message.stroke, options, q + 1);
+                        if (message.composite != null && Object.hasOwnProperty.call(message, "composite"))
+                            object.composite = $root.org.webswing.directdraw.proto.CompositeProto.toObject(message.composite, options, q + 1);
+                        if (message.texture != null && Object.hasOwnProperty.call(message, "texture"))
+                            object.texture = $root.org.webswing.directdraw.proto.TextureProto.toObject(message.texture, options, q + 1);
+                        if (message.glyph != null && Object.hasOwnProperty.call(message, "glyph"))
+                            object.glyph = $root.org.webswing.directdraw.proto.GlyphProto.toObject(message.glyph, options, q + 1);
+                        if (message.combined != null && Object.hasOwnProperty.call(message, "combined"))
+                            object.combined = $root.org.webswing.directdraw.proto.CombinedProto.toObject(message.combined, options, q + 1);
                         return object;
                     };
 
@@ -1220,9 +1238,9 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("name"))
+                        if (!Object.hasOwnProperty.call(message, "name"))
                             throw $util.ProtocolError("missing required 'name'", { instance: message });
-                        if (!message.hasOwnProperty("font"))
+                        if (!Object.hasOwnProperty.call(message, "font"))
                             throw $util.ProtocolError("missing required 'font'", { instance: message });
                         return message;
                     };
@@ -1238,6 +1256,8 @@ $root.org = (function() {
                     FontFaceProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.FontFaceProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.FontFaceProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -1264,9 +1284,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    FontFaceProto.toObject = function toObject(message, options) {
+                    FontFaceProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.name = "";
@@ -1279,11 +1303,11 @@ $root.org = (function() {
                             }
                             object.style = "";
                         }
-                        if (message.name != null && message.hasOwnProperty("name"))
+                        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                             object.name = message.name;
-                        if (message.font != null && message.hasOwnProperty("font"))
+                        if (message.font != null && Object.hasOwnProperty.call(message, "font"))
                             object.font = options.bytes === String ? $util.base64.encode(message.font, 0, message.font.length) : options.bytes === Array ? Array.prototype.slice.call(message.font) : message.font;
-                        if (message.style != null && message.hasOwnProperty("style"))
+                        if (message.style != null && Object.hasOwnProperty.call(message, "style"))
                             object.style = message.style;
                         return object;
                     };
@@ -1382,7 +1406,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("rgba"))
+                        if (!Object.hasOwnProperty.call(message, "rgba"))
                             throw $util.ProtocolError("missing required 'rgba'", { instance: message });
                         return message;
                     };
@@ -1398,6 +1422,8 @@ $root.org = (function() {
                     ColorProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ColorProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.ColorProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -1417,13 +1443,17 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    ColorProto.toObject = function toObject(message, options) {
+                    ColorProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults)
                             object.rgba = 0;
-                        if (message.rgba != null && message.hasOwnProperty("rgba"))
+                        if (message.rgba != null && Object.hasOwnProperty.call(message, "rgba"))
                             object.rgba = message.rgba;
                         return object;
                     };
@@ -1522,7 +1552,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("data"))
+                        if (!Object.hasOwnProperty.call(message, "data"))
                             throw $util.ProtocolError("missing required 'data'", { instance: message });
                         return message;
                     };
@@ -1538,6 +1568,8 @@ $root.org = (function() {
                     ImageProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ImageProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.ImageProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -1560,9 +1592,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    ImageProto.toObject = function toObject(message, options) {
+                    ImageProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults)
                             if (options.bytes === String)
@@ -1572,7 +1608,7 @@ $root.org = (function() {
                                 if (options.bytes !== Array)
                                     object.data = $util.newBuffer(object.data);
                             }
-                        if (message.data != null && message.hasOwnProperty("data"))
+                        if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                             object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data;
                         return object;
                     };
@@ -1750,6 +1786,8 @@ $root.org = (function() {
                     TransformProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.TransformProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.TransformProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -1779,9 +1817,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    TransformProto.toObject = function toObject(message, options) {
+                    TransformProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.m00 = 1;
@@ -1791,17 +1833,17 @@ $root.org = (function() {
                             object.m02 = 0;
                             object.m12 = 0;
                         }
-                        if (message.m00 != null && message.hasOwnProperty("m00"))
+                        if (message.m00 != null && Object.hasOwnProperty.call(message, "m00"))
                             object.m00 = options.json && !isFinite(message.m00) ? String(message.m00) : message.m00;
-                        if (message.m10 != null && message.hasOwnProperty("m10"))
+                        if (message.m10 != null && Object.hasOwnProperty.call(message, "m10"))
                             object.m10 = options.json && !isFinite(message.m10) ? String(message.m10) : message.m10;
-                        if (message.m01 != null && message.hasOwnProperty("m01"))
+                        if (message.m01 != null && Object.hasOwnProperty.call(message, "m01"))
                             object.m01 = options.json && !isFinite(message.m01) ? String(message.m01) : message.m01;
-                        if (message.m11 != null && message.hasOwnProperty("m11"))
+                        if (message.m11 != null && Object.hasOwnProperty.call(message, "m11"))
                             object.m11 = options.json && !isFinite(message.m11) ? String(message.m11) : message.m11;
-                        if (message.m02 != null && message.hasOwnProperty("m02"))
+                        if (message.m02 != null && Object.hasOwnProperty.call(message, "m02"))
                             object.m02 = options.json && !isFinite(message.m02) ? String(message.m02) : message.m02;
-                        if (message.m12 != null && message.hasOwnProperty("m12"))
+                        if (message.m12 != null && Object.hasOwnProperty.call(message, "m12"))
                             object.m12 = options.json && !isFinite(message.m12) ? String(message.m12) : message.m12;
                         return object;
                     };
@@ -1922,6 +1964,8 @@ $root.org = (function() {
                     CombinedProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.CombinedProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.CombinedProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -1946,9 +1990,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    CombinedProto.toObject = function toObject(message, options) {
+                    CombinedProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults)
                             object.ids = [];
@@ -2068,6 +2116,8 @@ $root.org = (function() {
                     GlyphProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.GlyphProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.GlyphProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -2090,9 +2140,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    GlyphProto.toObject = function toObject(message, options) {
+                    GlyphProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults)
                             if (options.bytes === String)
@@ -2102,7 +2156,7 @@ $root.org = (function() {
                                 if (options.bytes !== Array)
                                     object.data = $util.newBuffer(object.data);
                             }
-                        if (message.data != null && message.hasOwnProperty("data"))
+                        if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                             object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data;
                         return object;
                     };
@@ -2240,13 +2294,13 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("x"))
+                        if (!Object.hasOwnProperty.call(message, "x"))
                             throw $util.ProtocolError("missing required 'x'", { instance: message });
-                        if (!message.hasOwnProperty("y"))
+                        if (!Object.hasOwnProperty.call(message, "y"))
                             throw $util.ProtocolError("missing required 'y'", { instance: message });
-                        if (!message.hasOwnProperty("w"))
+                        if (!Object.hasOwnProperty.call(message, "w"))
                             throw $util.ProtocolError("missing required 'w'", { instance: message });
-                        if (!message.hasOwnProperty("h"))
+                        if (!Object.hasOwnProperty.call(message, "h"))
                             throw $util.ProtocolError("missing required 'h'", { instance: message });
                         return message;
                     };
@@ -2262,6 +2316,8 @@ $root.org = (function() {
                     RectangleProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RectangleProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.RectangleProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -2287,9 +2343,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    RectangleProto.toObject = function toObject(message, options) {
+                    RectangleProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.x = 0;
@@ -2297,13 +2357,13 @@ $root.org = (function() {
                             object.w = 0;
                             object.h = 0;
                         }
-                        if (message.x != null && message.hasOwnProperty("x"))
+                        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                             object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-                        if (message.y != null && message.hasOwnProperty("y"))
+                        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                             object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-                        if (message.w != null && message.hasOwnProperty("w"))
+                        if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                             object.w = options.json && !isFinite(message.w) ? String(message.w) : message.w;
-                        if (message.h != null && message.hasOwnProperty("h"))
+                        if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                             object.h = options.json && !isFinite(message.h) ? String(message.h) : message.h;
                         return object;
                     };
@@ -2441,13 +2501,13 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("x"))
+                        if (!Object.hasOwnProperty.call(message, "x"))
                             throw $util.ProtocolError("missing required 'x'", { instance: message });
-                        if (!message.hasOwnProperty("y"))
+                        if (!Object.hasOwnProperty.call(message, "y"))
                             throw $util.ProtocolError("missing required 'y'", { instance: message });
-                        if (!message.hasOwnProperty("w"))
+                        if (!Object.hasOwnProperty.call(message, "w"))
                             throw $util.ProtocolError("missing required 'w'", { instance: message });
-                        if (!message.hasOwnProperty("h"))
+                        if (!Object.hasOwnProperty.call(message, "h"))
                             throw $util.ProtocolError("missing required 'h'", { instance: message });
                         return message;
                     };
@@ -2463,6 +2523,8 @@ $root.org = (function() {
                     EllipseProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.EllipseProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.EllipseProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -2488,9 +2550,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    EllipseProto.toObject = function toObject(message, options) {
+                    EllipseProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.x = 0;
@@ -2498,13 +2564,13 @@ $root.org = (function() {
                             object.w = 0;
                             object.h = 0;
                         }
-                        if (message.x != null && message.hasOwnProperty("x"))
+                        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                             object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-                        if (message.y != null && message.hasOwnProperty("y"))
+                        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                             object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-                        if (message.w != null && message.hasOwnProperty("w"))
+                        if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                             object.w = options.json && !isFinite(message.w) ? String(message.w) : message.w;
-                        if (message.h != null && message.hasOwnProperty("h"))
+                        if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                             object.h = options.json && !isFinite(message.h) ? String(message.h) : message.h;
                         return object;
                     };
@@ -2668,13 +2734,13 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("x"))
+                        if (!Object.hasOwnProperty.call(message, "x"))
                             throw $util.ProtocolError("missing required 'x'", { instance: message });
-                        if (!message.hasOwnProperty("y"))
+                        if (!Object.hasOwnProperty.call(message, "y"))
                             throw $util.ProtocolError("missing required 'y'", { instance: message });
-                        if (!message.hasOwnProperty("w"))
+                        if (!Object.hasOwnProperty.call(message, "w"))
                             throw $util.ProtocolError("missing required 'w'", { instance: message });
-                        if (!message.hasOwnProperty("h"))
+                        if (!Object.hasOwnProperty.call(message, "h"))
                             throw $util.ProtocolError("missing required 'h'", { instance: message });
                         return message;
                     };
@@ -2690,6 +2756,8 @@ $root.org = (function() {
                     RoundRectangleProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RoundRectangleProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.RoundRectangleProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -2719,9 +2787,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    RoundRectangleProto.toObject = function toObject(message, options) {
+                    RoundRectangleProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.x = 0;
@@ -2731,17 +2803,17 @@ $root.org = (function() {
                             object.arcW = 0;
                             object.arcH = 0;
                         }
-                        if (message.x != null && message.hasOwnProperty("x"))
+                        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                             object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-                        if (message.y != null && message.hasOwnProperty("y"))
+                        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                             object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-                        if (message.w != null && message.hasOwnProperty("w"))
+                        if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                             object.w = options.json && !isFinite(message.w) ? String(message.w) : message.w;
-                        if (message.h != null && message.hasOwnProperty("h"))
+                        if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                             object.h = options.json && !isFinite(message.h) ? String(message.h) : message.h;
-                        if (message.arcW != null && message.hasOwnProperty("arcW"))
+                        if (message.arcW != null && Object.hasOwnProperty.call(message, "arcW"))
                             object.arcW = options.json && !isFinite(message.arcW) ? String(message.arcW) : message.arcW;
-                        if (message.arcH != null && message.hasOwnProperty("arcH"))
+                        if (message.arcH != null && Object.hasOwnProperty.call(message, "arcH"))
                             object.arcH = options.json && !isFinite(message.arcH) ? String(message.arcH) : message.arcH;
                         return object;
                     };
@@ -2918,13 +2990,13 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("x"))
+                        if (!Object.hasOwnProperty.call(message, "x"))
                             throw $util.ProtocolError("missing required 'x'", { instance: message });
-                        if (!message.hasOwnProperty("y"))
+                        if (!Object.hasOwnProperty.call(message, "y"))
                             throw $util.ProtocolError("missing required 'y'", { instance: message });
-                        if (!message.hasOwnProperty("w"))
+                        if (!Object.hasOwnProperty.call(message, "w"))
                             throw $util.ProtocolError("missing required 'w'", { instance: message });
-                        if (!message.hasOwnProperty("h"))
+                        if (!Object.hasOwnProperty.call(message, "h"))
                             throw $util.ProtocolError("missing required 'h'", { instance: message });
                         return message;
                     };
@@ -2940,6 +3012,8 @@ $root.org = (function() {
                     ArcProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.ArcProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.ArcProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -2989,9 +3063,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    ArcProto.toObject = function toObject(message, options) {
+                    ArcProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.x = 0;
@@ -3002,19 +3080,19 @@ $root.org = (function() {
                             object.extent = 0;
                             object.type = options.enums === String ? "OPEN" : 0;
                         }
-                        if (message.x != null && message.hasOwnProperty("x"))
+                        if (message.x != null && Object.hasOwnProperty.call(message, "x"))
                             object.x = options.json && !isFinite(message.x) ? String(message.x) : message.x;
-                        if (message.y != null && message.hasOwnProperty("y"))
+                        if (message.y != null && Object.hasOwnProperty.call(message, "y"))
                             object.y = options.json && !isFinite(message.y) ? String(message.y) : message.y;
-                        if (message.w != null && message.hasOwnProperty("w"))
+                        if (message.w != null && Object.hasOwnProperty.call(message, "w"))
                             object.w = options.json && !isFinite(message.w) ? String(message.w) : message.w;
-                        if (message.h != null && message.hasOwnProperty("h"))
+                        if (message.h != null && Object.hasOwnProperty.call(message, "h"))
                             object.h = options.json && !isFinite(message.h) ? String(message.h) : message.h;
-                        if (message.start != null && message.hasOwnProperty("start"))
+                        if (message.start != null && Object.hasOwnProperty.call(message, "start"))
                             object.start = options.json && !isFinite(message.start) ? String(message.start) : message.start;
-                        if (message.extent != null && message.hasOwnProperty("extent"))
+                        if (message.extent != null && Object.hasOwnProperty.call(message, "extent"))
                             object.extent = options.json && !isFinite(message.extent) ? String(message.extent) : message.extent;
-                        if (message.type != null && message.hasOwnProperty("type"))
+                        if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                             object.type = options.enums === String ? $root.org.webswing.directdraw.proto.ArcProto.ArcTypeProto[message.type] === undefined ? message.type : $root.org.webswing.directdraw.proto.ArcProto.ArcTypeProto[message.type] : message.type;
                         return object;
                     };
@@ -3171,7 +3249,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("windingOdd"))
+                        if (!Object.hasOwnProperty.call(message, "windingOdd"))
                             throw $util.ProtocolError("missing required 'windingOdd'", { instance: message });
                         return message;
                     };
@@ -3187,6 +3265,8 @@ $root.org = (function() {
                     PathProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.PathProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.PathProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -3246,9 +3326,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    PathProto.toObject = function toObject(message, options) {
+                    PathProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults) {
                             object.type = [];
@@ -3256,7 +3340,7 @@ $root.org = (function() {
                         }
                         if (options.defaults)
                             object.windingOdd = false;
-                        if (message.windingOdd != null && message.hasOwnProperty("windingOdd"))
+                        if (message.windingOdd != null && Object.hasOwnProperty.call(message, "windingOdd"))
                             object.windingOdd = message.windingOdd;
                         if (message.type && message.type.length) {
                             object.type = [];
@@ -3437,7 +3521,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("family"))
+                        if (!Object.hasOwnProperty.call(message, "family"))
                             throw $util.ProtocolError("missing required 'family'", { instance: message });
                         return message;
                     };
@@ -3453,6 +3537,8 @@ $root.org = (function() {
                     FontProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.FontProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.FontProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -3487,7 +3573,7 @@ $root.org = (function() {
                         if (object.size != null)
                             message.size = object.size >>> 0;
                         if (object.transform != null) {
-                            if (typeof object.transform !== "object")
+                            if (!$util.isObject(object.transform))
                                 throw TypeError(".org.webswing.directdraw.proto.FontProto.transform: object expected");
                             message.transform = $root.org.webswing.directdraw.proto.TransformProto.fromObject(object.transform, long + 1);
                         }
@@ -3505,9 +3591,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    FontProto.toObject = function toObject(message, options) {
+                    FontProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.family = "";
@@ -3516,15 +3606,15 @@ $root.org = (function() {
                             object.transform = null;
                             object.fontProvided = false;
                         }
-                        if (message.family != null && message.hasOwnProperty("family"))
+                        if (message.family != null && Object.hasOwnProperty.call(message, "family"))
                             object.family = message.family;
-                        if (message.style != null && message.hasOwnProperty("style"))
+                        if (message.style != null && Object.hasOwnProperty.call(message, "style"))
                             object.style = options.enums === String ? $root.org.webswing.directdraw.proto.FontProto.StyleProto[message.style] === undefined ? message.style : $root.org.webswing.directdraw.proto.FontProto.StyleProto[message.style] : message.style;
-                        if (message.size != null && message.hasOwnProperty("size"))
+                        if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                             object.size = message.size;
-                        if (message.transform != null && message.hasOwnProperty("transform"))
-                            object.transform = $root.org.webswing.directdraw.proto.TransformProto.toObject(message.transform, options);
-                        if (message.fontProvided != null && message.hasOwnProperty("fontProvided"))
+                        if (message.transform != null && Object.hasOwnProperty.call(message, "transform"))
+                            object.transform = $root.org.webswing.directdraw.proto.TransformProto.toObject(message.transform, options, q + 1);
+                        if (message.fontProvided != null && Object.hasOwnProperty.call(message, "fontProvided"))
                             object.fontProvided = message.fontProvided;
                         return object;
                     };
@@ -3714,7 +3804,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("width"))
+                        if (!Object.hasOwnProperty.call(message, "width"))
                             throw $util.ProtocolError("missing required 'width'", { instance: message });
                         return message;
                     };
@@ -3730,6 +3820,8 @@ $root.org = (function() {
                     StrokeProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.StrokeProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.StrokeProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -3800,9 +3892,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    StrokeProto.toObject = function toObject(message, options) {
+                    StrokeProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults)
                             object.dash = [];
@@ -3813,20 +3909,20 @@ $root.org = (function() {
                             object.cap = options.enums === String ? "CAP_BUTT" : 0;
                             object.dashOffset = 0;
                         }
-                        if (message.width != null && message.hasOwnProperty("width"))
+                        if (message.width != null && Object.hasOwnProperty.call(message, "width"))
                             object.width = options.json && !isFinite(message.width) ? String(message.width) : message.width;
-                        if (message.miterLimit != null && message.hasOwnProperty("miterLimit"))
+                        if (message.miterLimit != null && Object.hasOwnProperty.call(message, "miterLimit"))
                             object.miterLimit = options.json && !isFinite(message.miterLimit) ? String(message.miterLimit) : message.miterLimit;
-                        if (message.join != null && message.hasOwnProperty("join"))
+                        if (message.join != null && Object.hasOwnProperty.call(message, "join"))
                             object.join = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto[message.join] === undefined ? message.join : $root.org.webswing.directdraw.proto.StrokeProto.StrokeJoinProto[message.join] : message.join;
-                        if (message.cap != null && message.hasOwnProperty("cap"))
+                        if (message.cap != null && Object.hasOwnProperty.call(message, "cap"))
                             object.cap = options.enums === String ? $root.org.webswing.directdraw.proto.StrokeProto.StrokeCapProto[message.cap] === undefined ? message.cap : $root.org.webswing.directdraw.proto.StrokeProto.StrokeCapProto[message.cap] : message.cap;
                         if (message.dash && message.dash.length) {
                             object.dash = [];
                             for (var j = 0; j < message.dash.length; ++j)
                                 object.dash[j] = options.json && !isFinite(message.dash[j]) ? String(message.dash[j]) : message.dash[j];
                         }
-                        if (message.dashOffset != null && message.hasOwnProperty("dashOffset"))
+                        if (message.dashOffset != null && Object.hasOwnProperty.call(message, "dashOffset"))
                             object.dashOffset = options.json && !isFinite(message.dashOffset) ? String(message.dashOffset) : message.dashOffset;
                         return object;
                     };
@@ -4051,15 +4147,15 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("xStart"))
+                        if (!Object.hasOwnProperty.call(message, "xStart"))
                             throw $util.ProtocolError("missing required 'xStart'", { instance: message });
-                        if (!message.hasOwnProperty("yStart"))
+                        if (!Object.hasOwnProperty.call(message, "yStart"))
                             throw $util.ProtocolError("missing required 'yStart'", { instance: message });
-                        if (!message.hasOwnProperty("xEnd"))
+                        if (!Object.hasOwnProperty.call(message, "xEnd"))
                             throw $util.ProtocolError("missing required 'xEnd'", { instance: message });
-                        if (!message.hasOwnProperty("yEnd"))
+                        if (!Object.hasOwnProperty.call(message, "yEnd"))
                             throw $util.ProtocolError("missing required 'yEnd'", { instance: message });
-                        if (!message.hasOwnProperty("repeat"))
+                        if (!Object.hasOwnProperty.call(message, "repeat"))
                             throw $util.ProtocolError("missing required 'repeat'", { instance: message });
                         return message;
                     };
@@ -4075,6 +4171,8 @@ $root.org = (function() {
                     LinearGradientProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.LinearGradientProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.LinearGradientProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -4134,9 +4232,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    LinearGradientProto.toObject = function toObject(message, options) {
+                    LinearGradientProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults) {
                             object.colors = [];
@@ -4149,13 +4251,13 @@ $root.org = (function() {
                             object.yEnd = 0;
                             object.repeat = options.enums === String ? "NO_CYCLE" : 0;
                         }
-                        if (message.xStart != null && message.hasOwnProperty("xStart"))
+                        if (message.xStart != null && Object.hasOwnProperty.call(message, "xStart"))
                             object.xStart = message.xStart;
-                        if (message.yStart != null && message.hasOwnProperty("yStart"))
+                        if (message.yStart != null && Object.hasOwnProperty.call(message, "yStart"))
                             object.yStart = message.yStart;
-                        if (message.xEnd != null && message.hasOwnProperty("xEnd"))
+                        if (message.xEnd != null && Object.hasOwnProperty.call(message, "xEnd"))
                             object.xEnd = message.xEnd;
-                        if (message.yEnd != null && message.hasOwnProperty("yEnd"))
+                        if (message.yEnd != null && Object.hasOwnProperty.call(message, "yEnd"))
                             object.yEnd = message.yEnd;
                         if (message.colors && message.colors.length) {
                             object.colors = [];
@@ -4167,7 +4269,7 @@ $root.org = (function() {
                             for (var j = 0; j < message.fractions.length; ++j)
                                 object.fractions[j] = options.json && !isFinite(message.fractions[j]) ? String(message.fractions[j]) : message.fractions[j];
                         }
-                        if (message.repeat != null && message.hasOwnProperty("repeat"))
+                        if (message.repeat != null && Object.hasOwnProperty.call(message, "repeat"))
                             object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] === undefined ? message.repeat : $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
                         return object;
                     };
@@ -4373,17 +4475,17 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("xCenter"))
+                        if (!Object.hasOwnProperty.call(message, "xCenter"))
                             throw $util.ProtocolError("missing required 'xCenter'", { instance: message });
-                        if (!message.hasOwnProperty("yCenter"))
+                        if (!Object.hasOwnProperty.call(message, "yCenter"))
                             throw $util.ProtocolError("missing required 'yCenter'", { instance: message });
-                        if (!message.hasOwnProperty("xFocus"))
+                        if (!Object.hasOwnProperty.call(message, "xFocus"))
                             throw $util.ProtocolError("missing required 'xFocus'", { instance: message });
-                        if (!message.hasOwnProperty("yFocus"))
+                        if (!Object.hasOwnProperty.call(message, "yFocus"))
                             throw $util.ProtocolError("missing required 'yFocus'", { instance: message });
-                        if (!message.hasOwnProperty("radius"))
+                        if (!Object.hasOwnProperty.call(message, "radius"))
                             throw $util.ProtocolError("missing required 'radius'", { instance: message });
-                        if (!message.hasOwnProperty("repeat"))
+                        if (!Object.hasOwnProperty.call(message, "repeat"))
                             throw $util.ProtocolError("missing required 'repeat'", { instance: message });
                         return message;
                     };
@@ -4399,6 +4501,8 @@ $root.org = (function() {
                     RadialGradientProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.RadialGradientProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.RadialGradientProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -4460,9 +4564,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    RadialGradientProto.toObject = function toObject(message, options) {
+                    RadialGradientProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults) {
                             object.colors = [];
@@ -4476,15 +4584,15 @@ $root.org = (function() {
                             object.radius = 0;
                             object.repeat = options.enums === String ? "NO_CYCLE" : 0;
                         }
-                        if (message.xCenter != null && message.hasOwnProperty("xCenter"))
+                        if (message.xCenter != null && Object.hasOwnProperty.call(message, "xCenter"))
                             object.xCenter = message.xCenter;
-                        if (message.yCenter != null && message.hasOwnProperty("yCenter"))
+                        if (message.yCenter != null && Object.hasOwnProperty.call(message, "yCenter"))
                             object.yCenter = message.yCenter;
-                        if (message.xFocus != null && message.hasOwnProperty("xFocus"))
+                        if (message.xFocus != null && Object.hasOwnProperty.call(message, "xFocus"))
                             object.xFocus = message.xFocus;
-                        if (message.yFocus != null && message.hasOwnProperty("yFocus"))
+                        if (message.yFocus != null && Object.hasOwnProperty.call(message, "yFocus"))
                             object.yFocus = message.yFocus;
-                        if (message.radius != null && message.hasOwnProperty("radius"))
+                        if (message.radius != null && Object.hasOwnProperty.call(message, "radius"))
                             object.radius = message.radius;
                         if (message.colors && message.colors.length) {
                             object.colors = [];
@@ -4496,7 +4604,7 @@ $root.org = (function() {
                             for (var j = 0; j < message.fractions.length; ++j)
                                 object.fractions[j] = options.json && !isFinite(message.fractions[j]) ? String(message.fractions[j]) : message.fractions[j];
                         }
-                        if (message.repeat != null && message.hasOwnProperty("repeat"))
+                        if (message.repeat != null && Object.hasOwnProperty.call(message, "repeat"))
                             object.repeat = options.enums === String ? $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] === undefined ? message.repeat : $root.org.webswing.directdraw.proto.CyclicMethodProto[message.repeat] : message.repeat;
                         return object;
                     };
@@ -4633,6 +4741,8 @@ $root.org = (function() {
                     PointsProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.PointsProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.PointsProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -4657,9 +4767,13 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    PointsProto.toObject = function toObject(message, options) {
+                    PointsProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.arrays || options.defaults)
                             object.points = [];
@@ -4791,7 +4905,7 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("type"))
+                        if (!Object.hasOwnProperty.call(message, "type"))
                             throw $util.ProtocolError("missing required 'type'", { instance: message });
                         return message;
                     };
@@ -4807,6 +4921,8 @@ $root.org = (function() {
                     CompositeProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.CompositeProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.CompositeProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
@@ -4888,20 +5004,24 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    CompositeProto.toObject = function toObject(message, options) {
+                    CompositeProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.type = options.enums === String ? "CLEAR" : 1;
                             object.alpha = 1;
                             object.color = 0;
                         }
-                        if (message.type != null && message.hasOwnProperty("type"))
+                        if (message.type != null && Object.hasOwnProperty.call(message, "type"))
                             object.type = options.enums === String ? $root.org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto[message.type] === undefined ? message.type : $root.org.webswing.directdraw.proto.CompositeProto.CompositeTypeProto[message.type] : message.type;
-                        if (message.alpha != null && message.hasOwnProperty("alpha"))
+                        if (message.alpha != null && Object.hasOwnProperty.call(message, "alpha"))
                             object.alpha = options.json && !isFinite(message.alpha) ? String(message.alpha) : message.alpha;
-                        if (message.color != null && message.hasOwnProperty("color"))
+                        if (message.color != null && Object.hasOwnProperty.call(message, "color"))
                             object.color = message.color;
                         return object;
                     };
@@ -5049,9 +5169,9 @@ $root.org = (function() {
                                 break;
                             }
                         }
-                        if (!message.hasOwnProperty("image"))
+                        if (!Object.hasOwnProperty.call(message, "image"))
                             throw $util.ProtocolError("missing required 'image'", { instance: message });
-                        if (!message.hasOwnProperty("anchor"))
+                        if (!Object.hasOwnProperty.call(message, "anchor"))
                             throw $util.ProtocolError("missing required 'anchor'", { instance: message });
                         return message;
                     };
@@ -5067,18 +5187,20 @@ $root.org = (function() {
                     TextureProto.fromObject = function fromObject(object, long) {
                         if (object instanceof $root.org.webswing.directdraw.proto.TextureProto)
                             return object;
+                        if (!$util.isObject(object))
+                            throw TypeError(".org.webswing.directdraw.proto.TextureProto: object expected");
                         if (long === undefined)
                             long = 0;
                         if (long > $util.recursionLimit)
                             throw Error("maximum nesting depth exceeded");
                         var message = new $root.org.webswing.directdraw.proto.TextureProto();
                         if (object.image != null) {
-                            if (typeof object.image !== "object")
+                            if (!$util.isObject(object.image))
                                 throw TypeError(".org.webswing.directdraw.proto.TextureProto.image: object expected");
                             message.image = $root.org.webswing.directdraw.proto.ImageProto.fromObject(object.image, long + 1);
                         }
                         if (object.anchor != null) {
-                            if (typeof object.anchor !== "object")
+                            if (!$util.isObject(object.anchor))
                                 throw TypeError(".org.webswing.directdraw.proto.TextureProto.anchor: object expected");
                             message.anchor = $root.org.webswing.directdraw.proto.RectangleProto.fromObject(object.anchor, long + 1);
                         }
@@ -5094,18 +5216,22 @@ $root.org = (function() {
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    TextureProto.toObject = function toObject(message, options) {
+                    TextureProto.toObject = function toObject(message, options, q) {
                         if (!options)
                             options = {};
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
                         var object = {};
                         if (options.defaults) {
                             object.image = null;
                             object.anchor = null;
                         }
-                        if (message.image != null && message.hasOwnProperty("image"))
-                            object.image = $root.org.webswing.directdraw.proto.ImageProto.toObject(message.image, options);
-                        if (message.anchor != null && message.hasOwnProperty("anchor"))
-                            object.anchor = $root.org.webswing.directdraw.proto.RectangleProto.toObject(message.anchor, options);
+                        if (message.image != null && Object.hasOwnProperty.call(message, "image"))
+                            object.image = $root.org.webswing.directdraw.proto.ImageProto.toObject(message.image, options, q + 1);
+                        if (message.anchor != null && Object.hasOwnProperty.call(message, "anchor"))
+                            object.anchor = $root.org.webswing.directdraw.proto.RectangleProto.toObject(message.anchor, options, q + 1);
                         return object;
                     };
 

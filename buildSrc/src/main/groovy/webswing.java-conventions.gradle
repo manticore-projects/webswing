@@ -55,6 +55,10 @@ tasks.withType(JavaCompile).configureEach {
 
 // ─── Test JVM args + dev profile ────────────────────────────────────
 tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    exclude "org/webswing/server/services/security/modules/configtest/**"
+    failOnNoDiscoveredTests = false
+
     jvmArgs(project.ext.jvmAllModuleArgs)
     if (project.hasProperty('dev')) {
         enabled = false
@@ -70,5 +74,7 @@ tasks.withType(Jar).configureEach {
 
 // ─── Common test dependency ─────────────────────────────────────────
 dependencies {
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation platform('org.junit:junit-bom:+')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

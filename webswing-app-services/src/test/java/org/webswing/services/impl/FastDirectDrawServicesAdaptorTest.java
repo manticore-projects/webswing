@@ -1,7 +1,7 @@
 package org.webswing.services.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.webswing.directdraw.DirectDrawServicesAdapter;
 import org.webswing.services.impl.ddutil.FastDirectDrawServicesAdapter;
 
@@ -9,21 +9,21 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class FastDirectDrawServicesAdaptorTest {
+class FastDirectDrawServicesAdaptorTest {
   FastDirectDrawServicesAdapter dd;
   private DirectDrawServicesAdapter ddOrig;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     dd = new FastDirectDrawServicesAdapter();
     ddOrig = new DirectDrawServicesAdapter();
   }
 
   @Test
-  public void testXXHashFromBufferedImage() {
+  void testXXHashFromBufferedImage() {
     BufferedImage img1 = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
     Graphics g1 = img1.getGraphics();
     g1.setColor(Color.yellow);
@@ -45,11 +45,11 @@ public class FastDirectDrawServicesAdaptorTest {
     long h3 = ddOrig.computeHash(img3);
     assertEquals(h1, h2);
     assertNotEquals(h1, h3);
+
     h1 = dd.computeHash(img1);
     h2 = dd.computeHash(img2);
     h3 = dd.computeHash(img3);
     assertEquals(h1, h2);
     assertNotEquals(h1, h3);
-
   }
 }

@@ -41,6 +41,7 @@
     "webpack-merge": "^6.0.0"
   },
   "allowScripts": {
-    "protobufjs@7.5.8": true
+    "protobufjs": true,
+    "@parcel/watcher": true
   }
 }
