@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -140,27 +140,33 @@ public class ServerUtil {
   }
 
   public static URL getFileResource(String resource, File folder) {
-    URL result = null;
-    if (folder != null && folder.isDirectory()) {
-      File file = new File(folder, resource);
-      if (file.isFile()) {
-        try {
-          String folderUrl = folder.getCanonicalPath();
-          String fileUrl = file.getCanonicalPath();
-          if (fileUrl.contains(folderUrl)) {
-            result = file.toURI().toURL();
-          }
-        } catch (IOException e) {
-          log.error("Failed to get file from Folder.", e);
-        }
-      }
+    if (resource == null || folder == null || !folder.isDirectory()) {
+      return null;
     }
-    return result;
+    try {
+      // Resolve and canonicalize both paths, then verify the resolved file is strictly
+      // contained within the folder. Path.startsWith is a component-wise check (not a
+      // substring check), so it correctly blocks traversal sequences such as
+      // "../../etc/passwd" in the user-provided resource. (CWE-22)
+      Path base = folder.getCanonicalFile().toPath();
+      Path target = new File(folder, resource).getCanonicalFile().toPath();
+      if (!target.startsWith(base)) {
+        log.warn("Blocked path traversal attempt for resource: {}", sanitizeForLog(resource));
+        return null;
+      }
+      File file = target.toFile();
+      if (file.isFile()) {
+        return file.toURI().toURL();
+      }
+    } catch (IOException e) {
+      log.error("Failed to get file from Folder.", e);
+    }
+    return null;
   }
 
   public static URL getWebResource(String resource, ServletContext servletContext, File webFolder) {
     URL result = getFileResource(resource, webFolder);
-    if (result == null) {
+    if (result == null && isSafeContextResourcePath(resource)) {
       try {
         result = servletContext.getResource(resource);
       } catch (MalformedURLException e) {
@@ -168,6 +174,27 @@ public class ServerUtil {
       }
     }
     return result;
+  }
+
+  /**
+   * Validate a path before it is resolved against the servlet context. The path must be non-empty,
+   * must not reference a network/URL location, and must not contain any traversal segment. This
+   * keeps {@link ServletContext#getResource(String)} confined to the web application root. (CWE-22)
+   */
+  private static boolean isSafeContextResourcePath(String resource) {
+    if (resource == null || resource.isEmpty()) {
+      return false;
+    }
+    // Reject protocol-relative / absolute URLs and backslash separators.
+    if (resource.contains("://") || resource.startsWith("//") || resource.indexOf('\\') >= 0) {
+      return false;
+    }
+    // Reject any traversal segment, then confirm the normalized form stays in-context.
+    if (resource.contains("..")) {
+      return false;
+    }
+    Path normalized = Paths.get(resource).normalize();
+    return !normalized.startsWith("..");
   }
 
   public static boolean isFileLocked(File file) {
@@ -259,7 +286,7 @@ public class ServerUtil {
       return "/";
     }
 
-    // 3. Normalize to an absolute path so the browser can't reinterpret it
+    // 3. Normalize to a context-absolute path so the browser can't reinterpret it
     if (!relativeUrl.startsWith("/")) {
       String requestPath =
           ServerUtil.getContextPath(req.getServletContext()) + CommonUtil.toPath(req.getPathInfo());
@@ -270,52 +297,16 @@ public class ServerUtil {
       relativeUrl = requestPathBase + relativeUrl;
     }
 
-    // 4. Build the full URL using validated forwarding headers
-    String proto = getValidatedProto(req);
-    String host = getValidatedHost(req);
-
-    if (proto != null && host != null) {
-      return proto + "://" + host + relativeUrl;
+    // 4. Final guard: only ever return a same-origin path beginning with a single "/".
+    // We deliberately do NOT build an absolute URL from forwarding headers
+    // (X-Forwarded-Host / X-Forwarded-Proto): those values are client-influenced and only
+    // format-validated, so concatenating them would re-introduce an open-redirect /
+    // host-header-injection vector (CWE-601). A relative Location header is resolved
+    // correctly by the servlet container and by any trusted reverse proxy.
+    if (relativeUrl.startsWith("/") && !relativeUrl.startsWith("//")) {
+      return relativeUrl;
     }
-
-    // No forwarding headers — return path only, servlet container resolves it
-    return relativeUrl;
-  }
-
-  private static final Set<String> ALLOWED_PROTOCOLS = Set.of("http", "https");
-
-  private static String getValidatedProto(HttpServletRequest req) {
-    String proto = req.getHeader("X-Forwarded-Proto");
-    if (proto == null) {
-      return null;
-    }
-    proto = proto.trim().toLowerCase();
-    if (!ALLOWED_PROTOCOLS.contains(proto)) {
-      log.warn("Blocked invalid X-Forwarded-Proto: {}", sanitizeForLog(proto));
-      return null;
-    }
-    return proto;
-  }
-
-  private static final Pattern VALID_HOST = Pattern.compile("^[a-zA-Z0-9._-]+(:[0-9]{1,5})?$");
-
-  private static String getValidatedHost(HttpServletRequest req) {
-    String host = req.getHeader("X-Forwarded-Host");
-    if (host == null) {
-      return null;
-    }
-
-    // X-Forwarded-Host can be comma-separated; take the first (leftmost proxy)
-    if (host.contains(",")) {
-      host = host.substring(0, host.indexOf(","));
-    }
-    host = host.trim();
-
-    if (!VALID_HOST.matcher(host).matches()) {
-      log.warn("Blocked invalid X-Forwarded-Host: {}", sanitizeForLog(host));
-      return null;
-    }
-    return host;
+    return "/";
   }
 
   public static String normalizeForFileName(String text) {

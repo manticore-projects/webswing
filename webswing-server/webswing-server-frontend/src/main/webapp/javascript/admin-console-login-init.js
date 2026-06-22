@@ -49,7 +49,9 @@
             return new URLSearchParams(window.location.search).get(name);
         } catch (e) {
             // IE11 fallback.
-            var safeName = name.replace(/[[\]]/g, "\\$&");
+            // Escape every RegExp metacharacter (including backslash) so the name is matched
+            // literally; escaping only the brackets leaves a backslash injection gap. (CWE-116)
+            var safeName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             var results  = new RegExp("[?&]" + safeName + "=([^&#]*)").exec(window.location.search);
             return results === null ? null : decodeURIComponent(results[1]);
         }

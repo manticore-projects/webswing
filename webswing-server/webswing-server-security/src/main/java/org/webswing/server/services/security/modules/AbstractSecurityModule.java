@@ -571,14 +571,14 @@ public abstract class AbstractSecurityModule<T extends WebswingSecurityModuleCon
   }
 
   /**
-   * Sanitize a string for safe inclusion in HTTP response headers. Strips CR and LF characters to
-   * prevent HTTP response header injection.
+   * Sanitize a string for safe inclusion in HTTP response headers. Strips CR, LF and every other
+   * control character to prevent HTTP response header injection / response splitting. (CWE-113)
    */
   private static String sanitizeHeaderValue(String value) {
     if (value == null) {
       return "";
     }
-    return value.replaceAll("[\\r\\n]", "");
+    return value.replaceAll("[\\p{Cc}\\r\\n]", "");
   }
 
   /**

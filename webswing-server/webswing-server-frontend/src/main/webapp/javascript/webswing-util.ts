@@ -269,7 +269,9 @@ export function getToken() {
 }
 
 export function getParam(name: string) {
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    // Escape every RegExp metacharacter (including backslash) globally so the parameter name is
+    // matched literally. A non-global replace only escapes the first occurrence. (CWE-116)
+    name = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const results = new RegExp("[\\?&]" + name + "=([^&#]*)").exec(location.href);
     return results == null ? undefined : decodeURIComponent(results[1]);
 }

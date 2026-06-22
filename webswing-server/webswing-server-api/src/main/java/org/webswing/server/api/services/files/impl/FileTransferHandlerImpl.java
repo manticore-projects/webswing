@@ -154,10 +154,14 @@ public class FileTransferHandlerImpl extends AbstractUrlHandler implements FileT
         response.setContentType("application/octet-stream");
         Long longSize = Longs.tryParse(fileSize);
         if (longSize != null && longSize > 0) {
-          response.setHeader("Content-Length", fileSize);
+          // Emit the parsed numeric length, never the raw user-controlled string. (CWE-113)
+          response.setContentLengthLong(longSize);
         }
+        // Strip CR/LF and other control characters before the value reaches a response header,
+        // then percent-encode. This prevents HTTP response splitting via the file name. (CWE-113)
+        String safeName = fileName == null ? "file" : fileName.replaceAll("[\\p{Cc}\\r\\n]", "");
         String encodedName =
-            URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+            URLEncoder.encode(safeName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
         response.setHeader("Content-Disposition",
             "attachment; filename=\"" + encodedName + "\"; filename*=UTF-8''" + encodedName);
         BufferedInputStream input = null;
