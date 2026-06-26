@@ -41,18 +41,24 @@ public class ShiroSecurityModule
   private volatile SecurityManager securityManager;
   private ShiroConfigMonitor configMonitor;
 
-  // Reflection helper to access protected Shiro methods for dynamic discovery
-  private static Method getAuthorizationInfoMethod;
+  // Reflection handle for the protected AuthorizingRealm.getAuthorizationInfo(PrincipalCollection).
+  // Shiro exposes no public API to enumerate a principal's roles, so this is the supported route
+  // to fully dynamic role discovery. Resolved once; null means discovery is unavailable and the
+  // module fails CLOSED (grants no roles) rather than guessing.
+  private static final Method GET_AUTHORIZATION_INFO;
 
   static {
+    Method m = null;
     try {
-      getAuthorizationInfoMethod = AuthorizingRealm.class.getDeclaredMethod("getAuthorizationInfo",
+      m = AuthorizingRealm.class.getDeclaredMethod("getAuthorizationInfo",
           PrincipalCollection.class);
-      getAuthorizationInfoMethod.setAccessible(true);
-    } catch (NoSuchMethodException e) {
-      log.error("Failed to setup dynamic role discovery: getAuthorizationInfo method not found.",
-          e);
+      m.setAccessible(true);
+    } catch (NoSuchMethodException | RuntimeException e) {
+      log.error("Dynamic role discovery unavailable: cannot access "
+          + "AuthorizingRealm.getAuthorizationInfo(PrincipalCollection). "
+          + "All logins will resolve to zero roles (fail-closed) until this is corrected.", e);
     }
+    GET_AUTHORIZATION_INFO = m;
   }
 
   public ShiroSecurityModule(ShiroSecurityModuleConfig config) {
@@ -145,32 +151,18 @@ public class ShiroSecurityModule
 
       PrincipalCollection principals = authInfo.getPrincipals();
 
-      Set<String> authorizedRoles = new HashSet<>();
+      // Fully dynamic discovery: collect exactly the roles the realm(s) assign this principal.
+      // Fail-CLOSED by construction -- any failure yields an empty set, never a fallback grant.
+      Set<String> authorizedRoles = discoverRoles(currentMgr, principals, user);
 
-      // NEW DYNAMIC LOGIC: Querying realms directly for assigned roles
-      if (currentMgr instanceof RealmSecurityManager manager) {
-        for (Realm realm : manager.getRealms()) {
-          if (realm instanceof AuthorizingRealm) {
-            try {
-              AuthorizationInfo info =
-                  (AuthorizationInfo) getAuthorizationInfoMethod.invoke(realm, principals);
-              if (info != null && info.getRoles() != null) {
-                authorizedRoles.addAll(info.getRoles());
-              }
-            } catch (Exception e) {
-              log.debug("Could not extract roles from realm: {}", realm.getName());
-            }
-          }
-        }
-      }
-
-
-      // Apply default roles if no roles were discovered
       if (authorizedRoles.isEmpty()) {
-        authorizedRoles.addAll(getDefaultRoles());
+        log.warn("User '{}' authenticated but resolved to NO roles. Verify the [users]/[roles] "
+            + "sections of the Shiro INI assign this account at least one role. Access denied "
+            + "at the role level (no fallback grant).", user);
       }
 
-      log.info("User {} authenticated. Discovered roles: {}", user, authorizedRoles);
+      log.info("User {} authenticated. Resolved {} role(s): {}", user, authorizedRoles.size(),
+          authorizedRoles);
       return new ShiroWebswingUser(user, password, new ArrayList<>(authorizedRoles));
     }
 
@@ -178,16 +170,54 @@ public class ShiroSecurityModule
         WebswingAuthenticationException.CONFIG_ERROR);
   }
 
-  private List<String> getDefaultRoles() {
-    List<String> defaults = new ArrayList<>();
-    for (String a : new String[] {"IFRSBOX", "ETLBOX", "RISKBOX", "PROFITBOX", "IMPALA",
-        "ALMBOX"}) {
-      for (String r : new String[] {"OFFICER", "MANAGER", "ADMIN", "OPERATOR", "REPORTER",
-          "AUDITOR", "GUEST"}) {
-        defaults.add(a + "_" + r);
+  /**
+   * Enumerates every role assigned to the given principals by interrogating each
+   * {@link AuthorizingRealm} managed by the {@link SecurityManager}. Returns whatever the realms
+   * actually grant -- no hardcoded role universe. Any failure (missing reflection handle, wrong
+   * SecurityManager type, no authorizing realm, or a realm throwing) is logged at ERROR and yields
+   * no roles from the affected source. This method never escalates on error.
+   */
+  private Set<String> discoverRoles(SecurityManager mgr, PrincipalCollection principals,
+      String user) {
+    Set<String> roles = new LinkedHashSet<>();
+
+    if (GET_AUTHORIZATION_INFO == null) {
+      log.error("Cannot resolve roles for user '{}': role-discovery reflection handle is "
+          + "unavailable. Granting no roles (fail-closed).", user);
+      return roles;
+    }
+
+    if (!(mgr instanceof RealmSecurityManager rsm)) {
+      log.error(
+          "Cannot resolve roles for user '{}': SecurityManager is not a "
+              + "RealmSecurityManager ({}). Granting no roles (fail-closed).",
+          user, mgr.getClass().getName());
+      return roles;
+    }
+
+    boolean queriedAnyRealm = false;
+    for (Realm realm : rsm.getRealms()) {
+      if (realm instanceof AuthorizingRealm) {
+        queriedAnyRealm = true;
+        try {
+          Object result = GET_AUTHORIZATION_INFO.invoke(realm, principals);
+          if (result instanceof AuthorizationInfo info && info.getRoles() != null) {
+            roles.addAll(info.getRoles());
+          }
+        } catch (Exception e) {
+          // Surface loudly; never escalate on failure.
+          log.error("Role discovery failed on realm '{}' for user '{}'. "
+              + "Granting no roles from this realm (fail-closed).", realm.getName(), user, e);
+        }
       }
     }
-    return defaults;
+
+    if (!queriedAnyRealm) {
+      log.error("Cannot resolve roles for user '{}': no AuthorizingRealm present in the "
+          + "SecurityManager. Granting no roles (fail-closed).", user);
+    }
+
+    return roles;
   }
 
   private String resolvePath(String path) {
