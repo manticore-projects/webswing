@@ -60,7 +60,7 @@
     "jquery": "^3.7.0",
     "jquery-ui": "^1.14.0",
     "bootstrap-sass": "^3.4.3",
-    "protobufjs": "^7.4.0",
+    "protobufjs": "^7.6.5",
     "webswing-directdraw-javascript": "../../webswing-directdraw/webswing-directdraw-javascript",
     "blueimp-file-upload": "^10.1.0",
     "jquery.iframe-transport": "^1.0.0",
